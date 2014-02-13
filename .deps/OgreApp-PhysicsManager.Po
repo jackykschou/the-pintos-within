@@ -1,0 +1,3 @@
+OgreApp-PhysicsManager.o: PhysicsManager.cpp Singleton.h
+
+Singleton.h:
