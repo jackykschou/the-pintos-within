@@ -4,9 +4,6 @@
 *.o
 *.obj
 *.log
-*.Po
-*.cache
-
 # Compiled Dynamic libraries
 *.so
 *.dylib
@@ -22,3 +19,4 @@
 *.exe
 *.out
 *.app
+OgreApp
