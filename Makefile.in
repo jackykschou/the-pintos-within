@@ -53,8 +53,7 @@ CONFIG_CLEAN_FILES =
 CONFIG_CLEAN_VPATH_FILES =
 am__installdirs = "$(DESTDIR)$(bindir)"
 PROGRAMS = $(bin_PROGRAMS)
-am_OgreApp_OBJECTS = OgreApp-BaseApplication.$(OBJEXT) \
-	OgreApp-Singleton.$(OBJEXT) OgreApp-PhysicsManager.$(OBJEXT)
+am_OgreApp_OBJECTS = OgreApp-BaseApplication.$(OBJEXT)
 OgreApp_OBJECTS = $(am_OgreApp_OBJECTS)
 am__DEPENDENCIES_1 =
 OgreApp_DEPENDENCIES = $(am__DEPENDENCIES_1) $(am__DEPENDENCIES_1)
@@ -220,9 +219,9 @@ top_build_prefix = @top_build_prefix@
 top_builddir = @top_builddir@
 top_srcdir = @top_srcdir@
 ACLOCAL_AMFLAGS = -I m4
-noinst_HEADERS = BaseApplication.h Singleton.h PhysicsManager.h
+noinst_HEADERS = BaseApplication.h
 OgreApp_CPPFLAGS = -I$(top_srcdir)
-OgreApp_SOURCES = BaseApplication.cpp Singleton.cpp PhysicsManager.cpp
+OgreApp_SOURCES = BaseApplication.cpp
 OgreApp_CXXFLAGS = $(OGRE_CFLAGS) $(OIS_CFLAGS)
 OgreApp_LDADD = $(OGRE_LIBS) $(OIS_LIBS)
 EXTRA_DIST = buildit makeit
@@ -335,8 +334,6 @@ distclean-compile:
 	-rm -f *.tab.c
 
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/OgreApp-BaseApplication.Po@am__quote@
-@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/OgreApp-PhysicsManager.Po@am__quote@
-@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/OgreApp-Singleton.Po@am__quote@
 
 .cpp.o:
 @am__fastdepCXX_TRUE@	$(CXXCOMPILE) -MT $@ -MD -MP -MF $(DEPDIR)/$*.Tpo -c -o $@ $<
@@ -372,34 +369,6 @@ OgreApp-BaseApplication.obj: BaseApplication.cpp
 @AMDEP_TRUE@@am__fastdepCXX_FALSE@	source='BaseApplication.cpp' object='OgreApp-BaseApplication.obj' libtool=no @AMDEPBACKSLASH@
 @AMDEP_TRUE@@am__fastdepCXX_FALSE@	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
 @am__fastdepCXX_FALSE@	$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(OgreApp_CPPFLAGS) $(CPPFLAGS) $(OgreApp_CXXFLAGS) $(CXXFLAGS) -c -o OgreApp-BaseApplication.obj `if test -f 'BaseApplication.cpp'; then $(CYGPATH_W) 'BaseApplication.cpp'; else $(CYGPATH_W) '$(srcdir)/BaseApplication.cpp'; fi`
-
-OgreApp-Singleton.o: Singleton.cpp
-@am__fastdepCXX_TRUE@	$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(OgreApp_CPPFLAGS) $(CPPFLAGS) $(OgreApp_CXXFLAGS) $(CXXFLAGS) -MT OgreApp-Singleton.o -MD -MP -MF $(DEPDIR)/OgreApp-Singleton.Tpo -c -o OgreApp-Singleton.o `test -f 'Singleton.cpp' || echo '$(srcdir)/'`Singleton.cpp
-@am__fastdepCXX_TRUE@	$(am__mv) $(DEPDIR)/OgreApp-Singleton.Tpo $(DEPDIR)/OgreApp-Singleton.Po
-@AMDEP_TRUE@@am__fastdepCXX_FALSE@	source='Singleton.cpp' object='OgreApp-Singleton.o' libtool=no @AMDEPBACKSLASH@
-@AMDEP_TRUE@@am__fastdepCXX_FALSE@	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
-@am__fastdepCXX_FALSE@	$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(OgreApp_CPPFLAGS) $(CPPFLAGS) $(OgreApp_CXXFLAGS) $(CXXFLAGS) -c -o OgreApp-Singleton.o `test -f 'Singleton.cpp' || echo '$(srcdir)/'`Singleton.cpp
-
-OgreApp-Singleton.obj: Singleton.cpp
-@am__fastdepCXX_TRUE@	$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(OgreApp_CPPFLAGS) $(CPPFLAGS) $(OgreApp_CXXFLAGS) $(CXXFLAGS) -MT OgreApp-Singleton.obj -MD -MP -MF $(DEPDIR)/OgreApp-Singleton.Tpo -c -o OgreApp-Singleton.obj `if test -f 'Singleton.cpp'; then $(CYGPATH_W) 'Singleton.cpp'; else $(CYGPATH_W) '$(srcdir)/Singleton.cpp'; fi`
-@am__fastdepCXX_TRUE@	$(am__mv) $(DEPDIR)/OgreApp-Singleton.Tpo $(DEPDIR)/OgreApp-Singleton.Po
-@AMDEP_TRUE@@am__fastdepCXX_FALSE@	source='Singleton.cpp' object='OgreApp-Singleton.obj' libtool=no @AMDEPBACKSLASH@
-@AMDEP_TRUE@@am__fastdepCXX_FALSE@	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
-@am__fastdepCXX_FALSE@	$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(OgreApp_CPPFLAGS) $(CPPFLAGS) $(OgreApp_CXXFLAGS) $(CXXFLAGS) -c -o OgreApp-Singleton.obj `if test -f 'Singleton.cpp'; then $(CYGPATH_W) 'Singleton.cpp'; else $(CYGPATH_W) '$(srcdir)/Singleton.cpp'; fi`
-
-OgreApp-PhysicsManager.o: PhysicsManager.cpp
-@am__fastdepCXX_TRUE@	$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(OgreApp_CPPFLAGS) $(CPPFLAGS) $(OgreApp_CXXFLAGS) $(CXXFLAGS) -MT OgreApp-PhysicsManager.o -MD -MP -MF $(DEPDIR)/OgreApp-PhysicsManager.Tpo -c -o OgreApp-PhysicsManager.o `test -f 'PhysicsManager.cpp' || echo '$(srcdir)/'`PhysicsManager.cpp
-@am__fastdepCXX_TRUE@	$(am__mv) $(DEPDIR)/OgreApp-PhysicsManager.Tpo $(DEPDIR)/OgreApp-PhysicsManager.Po
-@AMDEP_TRUE@@am__fastdepCXX_FALSE@	source='PhysicsManager.cpp' object='OgreApp-PhysicsManager.o' libtool=no @AMDEPBACKSLASH@
-@AMDEP_TRUE@@am__fastdepCXX_FALSE@	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
-@am__fastdepCXX_FALSE@	$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(OgreApp_CPPFLAGS) $(CPPFLAGS) $(OgreApp_CXXFLAGS) $(CXXFLAGS) -c -o OgreApp-PhysicsManager.o `test -f 'PhysicsManager.cpp' || echo '$(srcdir)/'`PhysicsManager.cpp
-
-OgreApp-PhysicsManager.obj: PhysicsManager.cpp
-@am__fastdepCXX_TRUE@	$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(OgreApp_CPPFLAGS) $(CPPFLAGS) $(OgreApp_CXXFLAGS) $(CXXFLAGS) -MT OgreApp-PhysicsManager.obj -MD -MP -MF $(DEPDIR)/OgreApp-PhysicsManager.Tpo -c -o OgreApp-PhysicsManager.obj `if test -f 'PhysicsManager.cpp'; then $(CYGPATH_W) 'PhysicsManager.cpp'; else $(CYGPATH_W) '$(srcdir)/PhysicsManager.cpp'; fi`
-@am__fastdepCXX_TRUE@	$(am__mv) $(DEPDIR)/OgreApp-PhysicsManager.Tpo $(DEPDIR)/OgreApp-PhysicsManager.Po
-@AMDEP_TRUE@@am__fastdepCXX_FALSE@	source='PhysicsManager.cpp' object='OgreApp-PhysicsManager.obj' libtool=no @AMDEPBACKSLASH@
-@AMDEP_TRUE@@am__fastdepCXX_FALSE@	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
-@am__fastdepCXX_FALSE@	$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(OgreApp_CPPFLAGS) $(CPPFLAGS) $(OgreApp_CXXFLAGS) $(CXXFLAGS) -c -o OgreApp-PhysicsManager.obj `if test -f 'PhysicsManager.cpp'; then $(CYGPATH_W) 'PhysicsManager.cpp'; else $(CYGPATH_W) '$(srcdir)/PhysicsManager.cpp'; fi`
 
 mostlyclean-libtool:
 	-rm -f *.lo
