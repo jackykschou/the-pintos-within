@@ -42,7 +42,10 @@ DIST_COMMON = $(am__configure_deps) $(noinst_HEADERS) \
 	$(srcdir)/config.h.in $(top_srcdir)/configure config.guess \
 	config.sub depcomp install-sh ltmain.sh missing
 ACLOCAL_M4 = $(top_srcdir)/aclocal.m4
-am__aclocal_m4_deps = $(top_srcdir)/configure.ac
+am__aclocal_m4_deps = $(top_srcdir)/m4/libtool.m4 \
+	$(top_srcdir)/m4/ltoptions.m4 $(top_srcdir)/m4/ltsugar.m4 \
+	$(top_srcdir)/m4/ltversion.m4 $(top_srcdir)/m4/lt~obsolete.m4 \
+	$(top_srcdir)/configure.ac
 am__configure_deps = $(am__aclocal_m4_deps) $(CONFIGURE_DEPENDENCIES) \
 	$(ACLOCAL_M4)
 am__CONFIG_DISTCLEAN_FILES = config.status config.cache config.log \
@@ -93,12 +96,12 @@ distuninstallcheck_listfiles = find . -type f -print
 am__distuninstallcheck_listfiles = $(distuninstallcheck_listfiles) \
   | sed 's|^\./|$(prefix)/|' | grep -v '$(infodir)/dir$$'
 distcleancheck_listfiles = find . -type f -print
-ACLOCAL = ${SHELL} /u/jpv362/cs354r/assignment2/missing --run aclocal-1.11
+ACLOCAL = ${SHELL} /u/jackyc/GameTech/assignment2/missing --run aclocal-1.11
 AMTAR = $${TAR-tar}
 AR = ar
-AUTOCONF = ${SHELL} /u/jpv362/cs354r/assignment2/missing --run autoconf
-AUTOHEADER = ${SHELL} /u/jpv362/cs354r/assignment2/missing --run autoheader
-AUTOMAKE = ${SHELL} /u/jpv362/cs354r/assignment2/missing --run automake-1.11
+AUTOCONF = ${SHELL} /u/jackyc/GameTech/assignment2/missing --run autoconf
+AUTOHEADER = ${SHELL} /u/jackyc/GameTech/assignment2/missing --run autoheader
+AUTOMAKE = ${SHELL} /u/jackyc/GameTech/assignment2/missing --run automake-1.11
 AWK = gawk
 CC = gcc
 CCDEPMODE = depmode=gcc3
@@ -135,7 +138,7 @@ LIBTOOL = $(SHELL) $(top_builddir)/libtool
 LIPO = 
 LN_S = ln -s
 LTLIBOBJS = 
-MAKEINFO = ${SHELL} /u/jpv362/cs354r/assignment2/missing --run makeinfo
+MAKEINFO = ${SHELL} /u/jackyc/GameTech/assignment2/missing --run makeinfo
 MANIFEST_TOOL = :
 MKDIR_P = /bin/mkdir -p
 NM = /usr/bin/nm -B
@@ -165,10 +168,10 @@ SET_MAKE =
 SHELL = /bin/bash
 STRIP = strip
 VERSION = 0.1
-abs_builddir = /u/jpv362/cs354r/assignment2
-abs_srcdir = /u/jpv362/cs354r/assignment2
-abs_top_builddir = /u/jpv362/cs354r/assignment2
-abs_top_srcdir = /u/jpv362/cs354r/assignment2
+abs_builddir = /u/jackyc/GameTech/assignment2
+abs_srcdir = /u/jackyc/GameTech/assignment2
+abs_top_builddir = /u/jackyc/GameTech/assignment2
+abs_top_srcdir = /u/jackyc/GameTech/assignment2
 ac_ct_AR = ar
 ac_ct_CC = gcc
 ac_ct_CXX = g++
@@ -198,7 +201,7 @@ host_vendor = unknown
 htmldir = ${docdir}
 includedir = ${prefix}/include
 infodir = ${datarootdir}/info
-install_sh = ${SHELL} /u/jpv362/cs354r/assignment2/install-sh
+install_sh = ${SHELL} /u/jackyc/GameTech/assignment2/install-sh
 libdir = ${exec_prefix}/lib
 libexecdir = ${exec_prefix}/libexec
 localedir = ${datarootdir}/locale
