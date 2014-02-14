@@ -23,3 +23,8 @@ OgreApp
 
 Makefile
 Makefile.in
+autom4te.cache/
+config.status
+configure
+libtool
+aclocal.m4
