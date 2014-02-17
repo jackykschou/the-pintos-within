@@ -24,12 +24,14 @@
 #include "AudioManager.h"
 #include "SceneManager.h"
 #include "PhysicsManager.h"
+#include "InputManager.h"
 
 #include "Scene.h"
 
 #include "GameObject.h"
 
 #include "Component.h"
+#include "Transform.h"
 #include "Camera.h"
 
 

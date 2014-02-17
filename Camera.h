@@ -9,12 +9,13 @@ class Camera : Component
 		Transform* _transform;
 
 	public:
+		Camera();
+		~Camera();
+
 		Ogre::Viewport* view_port;
 		Ogre::Camera* camera;
 
-		void Initialize(GameObject gameObject);
-		void Update();
-		void Finalize();
+		virtual void update();
 };
 
 #endif // #ifndef __Camera_h_

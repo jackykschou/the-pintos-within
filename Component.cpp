@@ -1,18 +1,18 @@
 #include "Component.h"
 
-Component::~Component()
-{
-	Finalize();
-}
-
-void Component::initialize(GameObject* gameObject)
+Component::Component(GameObject* gameObject)
 {
 	_gameObject = gameObject;
 	gameObject->addComponent(this);
+	active = true;
 }
 
-void Component::update(){}
-void Component::finalize()
+Component::~Component()
 {
 	gameObject->removeComponent(this);
 }
+
+void Component::update()
+{
+}
+

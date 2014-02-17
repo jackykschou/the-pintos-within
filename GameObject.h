@@ -6,14 +6,16 @@
 class GameObject
 {
 protected:
-	int _id;
 	std::vector<Component*> _components;
+	int component_id_assigner;
 
 public:
+	int id;
 	bool active;
+	Scene* scene;
 
-	GameObject();
-	~GameObject();
+	virtual GameObject();
+	virtual ~GameObject();
 
 	template<typename T>
 	T* getComponent<T>()
@@ -38,10 +40,10 @@ public:
 			if(component != NULL)
 				components.push_back(component);
 		}
-		if()
+		if(components.empty())
 			return NULL;
 		else
-			return vect
+			return components;
 	}
 
 	template<typename T>
@@ -50,10 +52,10 @@ public:
 		return getComponent<T>() != NULL;
 	}
 
-	void setId(int);
 	Component* addComponent(Component* component);
-	Component* removeComponent(Component* component);
-	void update();
+	void removeComponent(Component* component);
+
+	virtual void update();
 
 };
 

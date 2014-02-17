@@ -1,15 +1,13 @@
 #include "Camera.h"
 
-void initialize(GameObject gameObject, string name)
+void Camera::Camera(GameObject gameObject, string name) : Component(gameObject)
 {
-	Component::initialize(gameObject);
-
 	if((_transform = gameObject.GetComponent<Transform>()) == NULL)
 	{
 		_transform = GameObject.addComponent(new Transform());
 	}
 
-	camera = SceneManager->_current_scene->scene_manager->createCamera(name);
+	camera = SceneManager->_current_scene->manager->createCamera(name);
 
     camera->setPosition(Ogre::Vector3(0,0,0));
     camera->lookAt(Ogre::Vector3(0,0,0));
@@ -22,15 +20,14 @@ void initialize(GameObject gameObject, string name)
     vp->setBackgroundColour(Ogre::ColourValue(0,0,0));
 }
 
+void Camera::~Camera()
+{
+}
+
 void update()
 {
 	Component::update();
 
 	camera->setPosition(_transform.posX, _transform.posY, _transform.posZ);
 	camera->setOrientation(Ogre::Quaternion(_transform.rotW, _transform.rotX, _transform.rotY, _transform.rotZ));
-}
-
-void finalize()
-{
-	Component::finalize();
 }

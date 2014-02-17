@@ -1,35 +1,59 @@
 #include "Scene.h"
 
-Scene::Scene(): _game_objects(), _cameras()
+Scene::Scene(): _game_objects(),
 {
-	_manager = GraphicsManager::instance()->getRenderRoot->CreateSceneManager(Ogre::ST_GENERIC);;
-	_physics_world = PhysicsManager::instance()->CreatePhysicsWorld();
+	manager = GraphicsManager::instance()->getRenderRoot->CreateSceneManager(Ogre::ST_GENERIC);;
+	physics_world = PhysicsManager::instance()->CreatePhysicsWorld();
 	_game_object_id_assigner = 0;
 }
 
-virtual int Scene::addGameObject(GameObject* gameObject)
+Scene::~Scene()
 {
-	gameObject->setId(_game_object_id_assigner++);
+	for(auto gameObject : _game_objects)
+	{
+		delete gameObject;
+	}
+
+	delete manager;
+	delete physics_world;
+
+	SceneManager::instance()->removeScene(this);
+}
+
+int Scene::addGameObject(GameObject* gameObject)
+{
+	gameObject->id = (++_game_object_id_assigner);
 	_game_objects.push_back(gameObject);
 }
 
-virtual GameObject* Scene::getGameObject(unsigned int index)
+void Scene::removeGameObject(GameObject* gameObject)
 {
-	return _game_objects[index];
+	int i = 0;
+	for(auto g in _game_objects)
+	{
+		if(g->id == gameObject->id)
+		{
+			_game_objects.erase(_game_objects.begin() + i);
+			delete g;
+		}
+		++i;
+	}
 }
 
-virtual void Scene::addCamera(Camera* camera)
+GameObject* Scene::getGameObject(int id)
 {
-
+	for(auto gameObject : _game_objects)
+	{
+		if(gameObject->id == id)
+			return gameObject;
+	}
 }
-
-virtual void Scene::getCamera(int);
 
 void Scene::update()
 {
 	for (auto gameObject : _game_objects)
-  	{  
-     	gameObject.update();
-  	}
+  { 
+  		if(gameObject->active)
+     		gameObject->update();
+  }
 }
-

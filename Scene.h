@@ -8,22 +8,18 @@ class Scene
 {
 protected:
 		std::vector<GameObject*> _game_objects;
-		std::vector<Camera*> _cameras;
-		Ogre::SceneManager* _manager;
-		btDiscreteDynamicsWorld* physics_world;
-
-		int _game_object_id_assigner;
+		int _game_object_id_assigner = 0;
 public:
-	btDiscreteDynamicsWorld* physics_world;
+		btDiscreteDynamicsWorld* physics_world;
+		Ogre::SceneManager* manager;
 
 		Scene();
+		~Scene();
 
-		virtual void addGameObject(GameObject*);
-		virtual void getGameObject(unsigned int);
-		virtual void getManager();
-		virtual void addCamera(Camera*);
-		virtual void getCamera(unsigned int);
-		virtual void update();
+		void addGameObject(GameObject*);
+		void removeGameObject(GameObject*);
+		bool containsGameObject(GameObject*);
+		void update();
 };
 
 #endif // #ifndef __Scene_h_

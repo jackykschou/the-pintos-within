@@ -6,14 +6,16 @@
 class Component
 {
 private:
-	GameObject _gameObject;
+	GameObject* _gameObject;
 	
 public:
-	~Component();
+	int id;
+	bool active;
 
-	virtual void initialize(GameObject);
+	virtual Component();
+	virtual ~Component();
+
 	virtual void update();
-	virtual void finalize();
 };
 
 #endif // #ifndef __Component_h_
