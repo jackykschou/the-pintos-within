@@ -1,6 +1,10 @@
 #ifndef __PhysicsManager_h_
 #define __PhysicsManager_h_
 
+
+#include <btBulletDynamicsCommon.h>
+#include "Singleton.h"
+
 class PhysicsManager : Singleton<PhysicsManager> {
 
 	protected:
@@ -8,14 +12,14 @@ class PhysicsManager : Singleton<PhysicsManager> {
 		btCollisionDispatcher* dispatcher;
 		btBroadphaseInterface* overlappingPairCache;
 		btSequentialImpulseConstraintSolver* solver;
-		btDiscreteDynamicsWorld* dynamicsWorld;
+		// btDiscreteDynamicsWorld* dynamicsWorld;
 		btConstraintSolver* mConstraintsolver;
 		btCollisionWorld* mWorld;
 
 	public:
 		virtual void initialize();
-		virtual void updatePhysics (const float elapsedTime, int maxSubSteps, const float fixedTimestep);
-
+		virtual void updatePhysics (btDiscreteDynamicsWorld *dynamicsWorld, const float elapsedTime);
+		virtual btDiscreteDynamicsWorld *createDynamicsWorld();
 
 };
 

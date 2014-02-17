@@ -1,10 +1,11 @@
 #ifndef __Component_h_
 #define __Component_h_
 
-class Component
-{
+#include "common.h"
+#include "GameObject.h"
+class Component {
 public:
-	Component(GameObject);
+	Component(GameObject g);
 	~Component();
 
 	/* data */

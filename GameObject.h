@@ -2,9 +2,9 @@
 #define __GameObject_h_
 
 #include "Component.h"
+#include "Vector3.h"
 
-class GameObject
-{
+class GameObject {
 public:
 
 	bool active;
