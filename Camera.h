@@ -5,15 +5,16 @@
 
 class Camera : Component
 {
-	private:
-		 Ogre::Viewport* _view_port;
-		 Ogre::Camera* _camera;
+	protected:
+		Transform* _transform;
+
 	public:
-		Camera();
-		virtual ~Camera(void);
+		Ogre::Viewport* view_port;
+		Ogre::Camera* camera;
 
-
-
+		void Initialize(GameObject gameObject);
+		void Update();
+		void Finalize();
 };
 
 #endif // #ifndef __Camera_h_

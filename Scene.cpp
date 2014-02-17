@@ -2,8 +2,8 @@
 
 Scene::Scene(): _game_objects(), _cameras()
 {
-	_manager = GraphicsManager.instance()->getRenderRoot->CreateSceneManager(Ogre::ST_GENERIC);;
-	_physics_world = PhysicsManager.instance()->CreatePhysicsWorld();
+	_manager = GraphicsManager::instance()->getRenderRoot->CreateSceneManager(Ogre::ST_GENERIC);;
+	_physics_world = PhysicsManager::instance()->CreatePhysicsWorld();
 	_game_object_id_assigner = 0;
 }
 
@@ -18,14 +18,18 @@ virtual GameObject* Scene::getGameObject(unsigned int index)
 	return _game_objects[index];
 }
 
-virtual void Scene::addCamera(Camera);
-virtual void Scene::getCamera(unsigned int);
+virtual void Scene::addCamera(Camera* camera)
+{
 
-void Scene::UpdateScene()
+}
+
+virtual void Scene::getCamera(int);
+
+void Scene::update()
 {
 	for (auto gameObject : _game_objects)
-  {  
-      gameObject.update();
-  }
+  	{  
+     	gameObject.update();
+  	}
 }
 

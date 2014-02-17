@@ -20,6 +20,7 @@ public:
 protected:
 	Ogre::Root* _root;
 	Ogre::RenderWindow* _window;
+	clock_t last_render_time;
 	bool _shutdown;
 
 	bool frameRenderingQueued(const Ogre::FrameEvent& evt);

@@ -9,11 +9,11 @@ private:
 	GameObject _gameObject;
 	
 public:
-	Component();
-	virtual ~Component();
+	~Component();
 
-	virtual void Start();
-	virtual void Update();
+	virtual void initialize(GameObject);
+	virtual void update();
+	virtual void finalize();
 };
 
 #endif // #ifndef __Component_h_

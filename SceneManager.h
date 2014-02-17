@@ -6,19 +6,18 @@
 class : Singleton<SceneManager>
 {
 public:
-    SceneManager(void);
-    virtual ~SceneManager(void);
+	Scene* _current_scene;
 
-    virtual int addScene(Scene*);
-    virtual void removeScene(int);
+    SceneManager();
+    ~SceneManager();
 
-    virtual Scene* GetScene()
+    int addScene(Scene*);
+    void removeScene(int);
+    Scene* GetScene(int);
+    void updateCurrentScene();
 
 protected:
-    
-    Scene* _current_scene;
     std::vector<Scene*> _scenes;
-
 };
 
 #endif // #ifndef __SceneManager_h_

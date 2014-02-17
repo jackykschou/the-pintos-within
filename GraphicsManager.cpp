@@ -2,13 +2,16 @@
 
 bool GraphicsManager::frameRenderingQueued(const Ogre::FrameEvent& evt)
 {
+    last_render_time = clock();
+    //CLOCKS_PER_SEC
+
     if(_window->isClosed())
         return false;
 
     if(_shutdown)
         return false;
 
-    //!Need to update game objects in the current scene
+    SceneManager::instance()->updateCurrentScene();
 
     //!Need to update physics manager
 
@@ -81,7 +84,7 @@ void GraphicsManager::windowClosed()
 
 void GraphicsManager::initializeRoot()
 {
-	_root = new Ogre::Root(ResourcesManager.instance()->getPluginsCfg());
+	_root = new Ogre::Root(ResourcesManager::instance()->getPluginsCfg());
 }
 
 bool GraphicsManager::configureWindow(std::string window_name)
