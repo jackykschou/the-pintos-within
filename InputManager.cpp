@@ -40,10 +40,15 @@ void InputManager::capture() {
 	_mMouse->capture();
 	// flush old events
 	delete _lastKeyPressedEvt;
+	_lastKeyPressedEvt    = NULL;
 	delete _lastKeyReleasedEvt;
+	_lastKeyReleasedEvt   = NULL;
 	delete _lastMouseMovedEvt;
+	_lastKeyReleasedEvt   = NULL;
 	delete _lastMousePressedEvt;
+	_lastMousePressedEvt  = NULL;
 	delete _lastMouseReleasedEvt;
+	_lastMouseReleasedEvt = NULL;
 }
 
 // Methods used for polling input
