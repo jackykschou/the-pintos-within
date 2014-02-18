@@ -40,8 +40,9 @@ class InputManager : public Singleton<InputManager>,
     bool isKeyUp(OIS::KeyCode kc);
     bool isMouseDown(OIS::MouseButtonID button);
     bool isMouseUp(OIS::MouseButtonID button);
-    OIS::KeyEvent* getKeyPressedEvent();
-    OIS::KeyEvent* getKeyReleasedEvent();
+
+    OIS::KeyEvent*   getKeyPressedEvent();
+    OIS::KeyEvent*   getKeyReleasedEvent();
     OIS::MouseEvent* getMouseMovedEvent();
     OIS::MouseEvent* getMousePressedEvent();
     OIS::MouseEvent* getMouseReleasedEvent();
