@@ -41,7 +41,10 @@ void Rigidbody::~Rigidbody() {
 	delete rigidBody;
 }
 
+	void Rigidbody::OnCollision (btManifoldPoint &cp, const btCollisionObject *colObj0, const btCollisionObject *colObj1) 
+	{
 
+	}
 	//! If you don't want to consider collisions where the bodies are joined by a constraint, override needsCollision:
 	/*! However, if you use a btCollisionObject for #body instead of a btRigidBody,
 	 *  then this is unnecessary—checkCollideWithOverride isn't available */
@@ -65,6 +68,7 @@ void Rigidbody::~Rigidbody() {
 			assert(colObj1->m_collisionObject==&body && "body does not match either collision object");
 			pt = cp.m_localPointB;
 		}
+		OnCollision();
 		// do stuff with the collision point
 		return 0; // not actually sure if return value is used for anything...?
 	}

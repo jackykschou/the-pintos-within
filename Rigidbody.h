@@ -16,7 +16,7 @@ class Rigidbody : public Component, public ContactResultCallback {
 		virtual btScalar addSingleResult(btManifoldPoint& cp,
 		    const btCollisionObjectWrapper* colObj0,int partId0,int index0,
 		    const btCollisionObjectWrapper* colObj1,int partId1,int index1);
-		virtual void OnCollision (); //TODO: FINISH
+		virtual void OnCollision (btManifoldPoint &cp, const btCollisionObject *colObj0, const btCollisionObject *colObj1); //TODO: FINISH
 
 		Transform* _transform;
 		btCollisionShape* collisionShape;
