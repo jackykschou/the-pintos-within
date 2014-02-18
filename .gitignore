@@ -8,6 +8,7 @@
 *.so
 *.dylib
 *.dll
+*.gch
 
 # Compiled Static libraries
 *.lai
