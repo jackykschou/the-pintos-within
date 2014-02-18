@@ -1,7 +1,7 @@
 class SphereRigidbody
 {
 public:
-	SphereRigidbody();
+	SphereRigidbody(GameObject gameObject);
 	~SphereRigidbody();
 
 	/* data */
