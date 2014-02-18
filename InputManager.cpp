@@ -112,7 +112,13 @@ bool InputManager::mouseReleased(const OIS::MouseEvent &arg, OIS::MouseButtonID 
 
 // Event handlers for window events
 void InputManager::windowResized(Ogre::RenderWindow* rw) {
+	unsigned int width, height, depth;
+	int left, top;
+	rw->getMetrics(width, height, depth, left, top);
 
+	const OIS::MouseState &ms = _mMouse->getMouseState();
+	ms.width = width;
+	ms.height = height;
 }
 
 void InputManager::windowClosed(Ogre::RenderWindow* rw) {
@@ -242,18 +248,6 @@ void InputManager::windowClosed(Ogre::RenderWindow* rw) {
 //     if (mTrayMgr->injectMouseUp(arg, id)) return true;
 //     mCameraMan->injectMouseUp(arg, id);
 //     return true;
-// }
-
-// //Adjust mouse clipping area
-// void BaseApplication::windowResized(Ogre::RenderWindow* rw)
-// {
-//     unsigned int width, height, depth;
-//     int left, top;
-//     rw->getMetrics(width, height, depth, left, top);
-
-//     const OIS::MouseState &ms = mMouse->getMouseState();
-//     ms.width = width;
-//     ms.height = height;
 // }
 
 // //Unattach OIS before window shutdown (very important under Linux)
