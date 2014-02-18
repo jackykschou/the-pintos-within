@@ -9,7 +9,6 @@ Component::Component(GameObject* gameObject)
 
 Component::~Component()
 {
-	gameObject->removeComponent(this);
 }
 
 void Component::update()

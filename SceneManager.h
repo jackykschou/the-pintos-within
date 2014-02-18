@@ -1,23 +1,24 @@
 #ifndef __SceneManager_h_
 #define __SceneManager_h_
 
-#include "Scene.h"
+#include "common.h"
 
-class : Singleton<SceneManager>
+class SceneManager: Singleton<SceneManager>
 {
 public:
-	Scene* _current_scene;
+	Scene* current_scene;
 
-    SceneManager();
     ~SceneManager();
 
+	void initialize();    
     int addScene(Scene*);
-    void removeScene(int);
-    Scene* GetScene(int);
-    void updateCurrentScene();
+    void removeScene(Scene*);
+    Scene* getScene(std::string);
+    void changeCurrentScene(Scene*);
 
 protected:
     std::vector<Scene*> _scenes;
+    int _scene_id_assigner;
 };
 
 #endif // #ifndef __SceneManager_h_

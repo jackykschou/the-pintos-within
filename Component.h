@@ -1,7 +1,7 @@
 #ifndef __Component_h_
 #define __Component_h_
 
-#include "GameObject.h"
+#include "common.h"
 
 class Component
 {

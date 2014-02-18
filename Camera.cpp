@@ -1,6 +1,6 @@
 #include "Camera.h"
 
-void Camera::Camera(GameObject gameObject, string name) : Component(gameObject)
+void Camera::Camera(GameObject gameObject, std::string name) : Component(gameObject)
 {
 	if((_transform = gameObject.GetComponent<Transform>()) == NULL)
 	{
@@ -9,12 +9,12 @@ void Camera::Camera(GameObject gameObject, string name) : Component(gameObject)
 
 	camera = SceneManager->_current_scene->manager->createCamera(name);
 
-    camera->setPosition(Ogre::Vector3(0,0,0));
-    camera->lookAt(Ogre::Vector3(0,0,0));
-    camera->setNearClipDistance(5);
+  camera->setPosition(Ogre::Vector3(0,0,0));
+  camera->lookAt(Ogre::Vector3(0,0,0));
+  camera->setNearClipDistance(5);
 
-    camera->setAspectRatio(
-        Ogre::Real(vp->getActualWidth()) / Ogre::Real(vp->getActualHeight()));
+  camera->setAspectRatio(
+      Ogre::Real(vp->getActualWidth()) / Ogre::Real(vp->getActualHeight()));
 
 	viewport = GraphicsManager::instance()->getRenderWindow()->addViewport(camera);
     vp->setBackgroundColour(Ogre::ColourValue(0,0,0));
@@ -22,6 +22,8 @@ void Camera::Camera(GameObject gameObject, string name) : Component(gameObject)
 
 void Camera::~Camera()
 {
+	delete camera;
+	delete viewport;
 }
 
 void update()

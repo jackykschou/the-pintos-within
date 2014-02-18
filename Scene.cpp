@@ -1,10 +1,13 @@
 #include "Scene.h"
 
-Scene::Scene(): _game_objects(),
+Scene::Scene(std::string n)
 {
+	name = n;
 	manager = GraphicsManager::instance()->getRenderRoot->CreateSceneManager(Ogre::ST_GENERIC);;
 	physics_world = PhysicsManager::instance()->CreatePhysicsWorld();
 	_game_object_id_assigner = 0;
+
+	SceneManager::instance()->addScene(this);
 }
 
 Scene::~Scene()
@@ -16,8 +19,6 @@ Scene::~Scene()
 
 	delete manager;
 	delete physics_world;
-
-	SceneManager::instance()->removeScene(this);
 }
 
 int Scene::addGameObject(GameObject* gameObject)
@@ -40,13 +41,18 @@ void Scene::removeGameObject(GameObject* gameObject)
 	}
 }
 
-GameObject* Scene::getGameObject(int id)
+std::vector<GameObject*> Scene::getGameObjectsOfTag(std::string tag)
 {
+	std::vector<T*> gameObjects;
 	for(auto gameObject : _game_objects)
 	{
-		if(gameObject->id == id)
-			return gameObject;
+		if(gameObject->tag == tag)
+			gameObjects.push_back(gameObject);
 	}
+	if(gameObjects.empty())
+		return NULL;
+	else
+		return gameObjects;
 }
 
 void Scene::update()

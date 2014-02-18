@@ -9,7 +9,7 @@ class Camera : Component
 		Transform* _transform;
 
 	public:
-		Camera();
+		Camera(GameObject gameObject, std::string name);
 		~Camera();
 
 		Ogre::Viewport* view_port;

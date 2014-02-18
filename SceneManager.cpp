@@ -1,24 +1,58 @@
 #include "SceneManager.h"
 
+SceneManager::~SceneManager()
+{
+	for(auto scene: _scenes)
+	{
+		delete scene;
+	}
+}
+
+void SceneManager::initialize()
+{
+	_scene_id_assigner = 0;
+}
+
 int SceneManager::addScene(Scene* scene)
 {
+	scene.id = ++_scene_id_assigner;
 	_scenes.push_back(scene);
 }
+
 void SceneManager::removeScene(Scene* scene)
 {
-	Scene* scene = *(_scenes.begin() + index);
-	if(scene == _current_scene)
-		std::cout << "Cannot erase current scene" << std::endl;
-	else
-		_scenes.erase(_scenes.begin() + index);
+	int i = 0;
+	for(auto s : _scenes)
+	{
+		if(s->name == scene->name)
+		{
+			if(s == current_scene)
+			{
+				std::cout << "Cannot erase current scene" << std::endl;
+				return;
+			}
+			else
+			{
+				_scenes.erase(_scenes.begin() + i);
+				delete s;
+			}
+		}
+		++i;
+	}
 }
 
-Scene* SceneManager::GetScene(int index)
+Scene* SceneManager::getScene(std::string name)
 {
-	return _scenes[index];
+	for(auto scene : _scenes)
+	{
+		if(scene->name == name)
+			return scene;
+	}
+	return NULL;
 }
 
-void SceneManager::updateCurrentScene()
+void SceneManager::changeCurrentScene(Scene* scene)
 {
-	_current_scene->update();
+	current_scene = scene;
 }
+

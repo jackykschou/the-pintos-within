@@ -2,18 +2,18 @@
 
 bool GraphicsManager::frameRenderingQueued(const Ogre::FrameEvent& evt)
 {
-    last_render_time = clock();
-    //CLOCKS_PER_SEC
-
     if(_window->isClosed())
         return false;
 
     if(_shutdown)
         return false;
 
-    SceneManager::instance()->updateCurrentScene();
+    last_render_time = clock();
 
-    //!Need to update physics manager
+    SceneManager::instance()->currentScene()->update();
+
+    SceneManager::instance()->currentScene()->physics_world->stepSimulation(((double)(clock() - last_render_time)) / CLOCKS_PER_SEC);
+
 
     //Need to capture/update each device
     //!mKeyboard->capture();

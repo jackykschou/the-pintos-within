@@ -1,4 +1,19 @@
-#include "ApplicationManager.h"
+#include "common.h"
+
+#define APPLICATION_NAME "THE EPIC GAME"
+
+void initializeGame()
+{
+    ResourcesManager::instance()->initialize();
+    GraphicsManager::instance()->initialize(APPLICATION_NAME);
+    InputManager::instance()->initialize();
+    PhysicsManager::initialize()->initialize();
+    SceneManager::initialize()->initialize();
+    AudioManager::initialize()->initialize();
+}
+void createGameContents();
+void startGame();
+
 
 /****************************************************************************
 *                                                                           *
@@ -21,8 +36,11 @@ extern "C" {
     int main(int argc, char *argv[])
 #endif
     {
-        try {
-            ApplicationManager.instance().startApplication();
+        try 
+        {
+            initializeGame();
+            createGameContents();
+            startGame();
         } catch( Ogre::Exception& e ) {
 #if OGRE_PLATFORM == OGRE_PLATFORM_WIN32
             MessageBox( NULL, e.getFullDescription().c_str(), "An exception has occured!", MB_OK | MB_ICONERROR | MB_TASKMODAL);

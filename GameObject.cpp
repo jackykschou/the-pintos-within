@@ -1,7 +1,8 @@
 #include "GameObject.h"
 
-GameObject::GameObject(Scene* s) : _components()
+GameObject::GameObject(std::string t, Scene* s)
 {
+	tag = t;
 	scene = s;
 	scene->addGameObject(this);
 	active = true;
@@ -13,7 +14,6 @@ GameObject::~GameObject()
 	{
 			delete c;
 	}
-	scene->removeGameObject(this);
 }
 
 Component* GameObject::addComponent(Component* component)

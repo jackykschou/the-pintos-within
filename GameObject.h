@@ -10,11 +10,12 @@ protected:
 	int component_id_assigner;
 
 public:
+	std::string tag;
 	int id;
 	bool active;
 	Scene* scene;
 
-	virtual GameObject();
+	virtual GameObject(std::string, Scene*);
 	virtual ~GameObject();
 
 	template<typename T>

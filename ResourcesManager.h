@@ -3,7 +3,7 @@
 
 #include <OgreConfigFile.h>
 
-#include "GraphicsManager.h"
+#include "common.h"
 
 #define RESOURCES_PATH "resources.cfg"
 #define RESOURCES_DEBUG_PATH "resources_d.cfg"

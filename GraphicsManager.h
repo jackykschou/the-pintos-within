@@ -4,7 +4,7 @@
 #include <OgreRenderWindow.h>
 #include <OgreRoot.h>
 
-#include <string>
+#include "common.h"
 
 class GraphicsManager : Singleton<GraphicsManager>, public Ogre::FrameListener
 {
