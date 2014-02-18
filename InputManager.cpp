@@ -11,8 +11,10 @@ void InputManager::initialize() {
 	OIS::ParamList pl;
     size_t windowHnd = 0;
     std::ostringstream windowHndStr;
+    Ogre::RenderWindow* mWindow;
 
-    //!mWindow->getCustomAttribute("WINDOW", &windowHnd);
+	//mWindow = GraphicsManager::instance()->getRenderWindow();
+    mWindow->getCustomAttribute("WINDOW", &windowHnd);
     windowHndStr << windowHnd;
     pl.insert(std::make_pair(std::string("WINDOW"), windowHndStr.str()));
 
@@ -26,38 +28,89 @@ void InputManager::initialize() {
 	_mKeyboard->setEventCallback(this);
 
 	// Set initial mouse clipping size
-    //!windowResized(GraphicsManager::instance().getWindow());
+    windowResized(mWindow);
 
 	// Register as a Window listener
-		//Ogre::WindowEventUtilities::addWindowEventListener(mWindow, this);
+	Ogre::WindowEventUtilities::addWindowEventListener(mWindow, this);
 }
 
 // Called every frame to snatch the input buffer from the device thread
 void InputManager::capture() {
 	_mKeyboard->capture();
 	_mMouse->capture();
+	// flush old events
+	delete _lastKeyPressedEvt;
+	delete _lastKeyReleasedEvt;
+	delete _lastMouseMovedEvt;
+	delete _lastMousePressedEvt;
+	delete _lastMouseReleasedEvt;
 }
 
-bool InputManager::keyPressed(const OIS::KeyEvent &arg) {
+// Methods used for polling input
+bool InputManager::isKeyDown(OIS::KeyCode kc) {
+	return _mKeyboard->isKeyDown(kc);
+}
 
+bool InputManager::isKeyUp(OIS::KeyCode kc) {
+	return !isKeyDown(kc);
+}
+
+bool InputManager::isMouseDown(OIS::MouseButtonID button) {
+	const OIS::MouseState &ms = _mMouse->getMouseState();
+	return ms.buttonDown(button);
+}
+
+bool InputManager::isMouseUp(OIS::MouseButtonID button) {
+	return !isMouseDown(button);
+}
+
+OIS::KeyEvent* InputManager::getKeyPressedEvent() {
+	return _lastKeyPressedEvt;
+}
+
+OIS::KeyEvent* InputManager::getKeyReleasedEvent() {
+	return _lastKeyReleasedEvt;
+}
+
+OIS::MouseEvent* InputManager::getMouseMovedEvent() {
+	return _lastMouseMovedEvt;
+}
+
+OIS::MouseEvent* InputManager::getMousePressedEvent() {
+	return _lastMousePressedEvt;
+}
+
+OIS::MouseEvent* InputManager::getMouseReleasedEvent() {
+	return _lastMouseReleasedEvt;
+}
+
+// Input callbacks
+bool InputManager::keyPressed(const OIS::KeyEvent &arg) {
+	_lastKeyPressedEvt = new OIS::KeyEvent(arg);
+	return true;
 }
 
 bool InputManager::keyReleased(const OIS::KeyEvent &arg) {
-
+	_lastKeyReleasedEvt = new OIS::KeyEvent(arg);
+	return true;
 }
 
 bool InputManager::mouseMoved(const OIS::MouseEvent &arg) {
-
+	_lastMouseMovedEvt = new OIS::MouseEvent(arg);
+	return true;
 }
 
 bool InputManager::mousePressed(const OIS::MouseEvent &arg, OIS::MouseButtonID id) {
-
+	_lastMousePressedEvt = new OIS::MouseEvent(arg);
+	return true;
 }
 
 bool InputManager::mouseReleased(const OIS::MouseEvent &arg, OIS::MouseButtonID id) {
-
+	_lastMouseReleasedEvt = new OIS::MouseEvent(arg);
+	return true;
 }
 
+// Event handlers for window events
 void InputManager::windowResized(Ogre::RenderWindow* rw) {
 
 }
