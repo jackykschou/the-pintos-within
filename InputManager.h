@@ -8,19 +8,43 @@
 #include <OISKeyboard.h>
 #include <OISMouse.h>
 #include <OgreRenderWindow.h>
+#include <OgreWindowEventUtilities.h>
 
 
-class InputManager : public Singleton<InputManager>, public OIS::KeyListener, public OIS::MouseListener {
+class InputManager : public Singleton<InputManager>,
+                     public Ogre::WindowEventListener,
+                     public OIS::KeyListener,
+                     public OIS::MouseListener {
+  private:
+
+    // OIS Input devices
+    OIS::InputManager* _mInputManager;
+    OIS::Mouse*        _mMouse;
+    OIS::Keyboard*     _mKeyboard;
+
+    // "Buffered" input events are stored by the InputManager
+    OIS::KeyEvent*     _lastKeyPressedEvt;
+    OIS::KeyEvent*     _lastKeyReleasedEvt;
+    OIS::MouseEvent*   _lastMouseMovedEvt;
+    OIS::MouseEvent*   _lastMousePressedEvt;
+    OIS::MouseEvent*   _lastMouseReleasedEvt;
+
   public:
   	InputManager();
 
   	void initialize();
   	void capture();
 
-    // OIS Input devices
-    OIS::InputManager* _mInputManager;
-    OIS::Mouse*        _mMouse;
-    OIS::Keyboard*     _mKeyboard;
+    // Synchronous methods for checking state input
+    bool isKeyDown(OIS::KeyCode kc);
+    bool isKeyUp(OIS::KeyCode kc);
+    bool isMouseDown(OIS::MouseButtonID button);
+    bool isMouseUp(OIS::MouseButtonID button);
+    OIS::KeyEvent* getKeyPressedEvent();
+    OIS::KeyEvent* getKeyReleasedEvent();
+    OIS::MouseEvent* getMouseMovedEvent();
+    OIS::MouseEvent* getMousePressedEvent();
+    OIS::MouseEvent* getMouseReleasedEvent();
 
     // OIS::KeyListener callbacks
     virtual bool keyPressed(const OIS::KeyEvent &arg);
@@ -31,7 +55,7 @@ class InputManager : public Singleton<InputManager>, public OIS::KeyListener, pu
     virtual bool mousePressed(const OIS::MouseEvent &arg, OIS::MouseButtonID id);
     virtual bool mouseReleased(const OIS::MouseEvent &arg, OIS::MouseButtonID id);
 
-    // Ogre::WindowEventListener
+    // Ogre::WindowEventListener callbacks
     // Adjust mouse clipping area
     virtual void windowResized(Ogre::RenderWindow* rw);
     // Unattach OIS before window shutdown (very important under Linux)
