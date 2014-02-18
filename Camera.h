@@ -5,17 +5,17 @@
 
 class Camera : Component
 {
-	protected:
-		Transform* _transform;
+protected:
+	Transform* _transform;
 
-	public:
-		Camera(GameObject gameObject, std::string name);
-		~Camera();
+public:
+	virtual Camera(GameObject gameObject, std::string name);
+	virtual ~Camera();
 
-		Ogre::Viewport* view_port;
-		Ogre::Camera* camera;
+	Ogre::Viewport* view_port;
+	Ogre::Camera* camera;
 
-		virtual void update();
+	virtual void update();
 };
 
 #endif // #ifndef __Camera_h_

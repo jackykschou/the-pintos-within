@@ -9,6 +9,7 @@
 #include <cmath>
 #include <climits>
 #include <ctime>
+#include <sstream>
 
 #include <algorithm>
 #include <random>
@@ -21,10 +22,11 @@
 
 #include "ResourcesManager.h"
 #include "GraphicsManager.h"
-#include "AudioManager.h"
+// #include "AudioManager.h"
 #include "SceneManager.h"
 #include "PhysicsManager.h"
-#include "InputManager.h"
+// #include "InputManager.h"
+// #include "GUIManager.h"
 
 #include "Scene.h"
 
@@ -33,6 +35,7 @@
 #include "Component.h"
 #include "Transform.h"
 #include "Camera.h"
+#include "Mesh.h"
 
 
 #endif // #ifndef __common_h_

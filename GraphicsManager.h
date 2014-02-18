@@ -16,12 +16,14 @@ public:
 	Ogre::RenderWindow* getRenderWindow();
 	void startRendering();
 	void stopRendering();
+	Ogre::FrameEvent& getFrameEvent();
 
 protected:
 	Ogre::Root* _root;
 	Ogre::RenderWindow* _window;
 	clock_t last_render_time;
 	bool _shutdown;
+	Ogre::FrameEvent& _frame_event;
 
 	bool frameRenderingQueued(const Ogre::FrameEvent& evt);
 	void windowClosed();

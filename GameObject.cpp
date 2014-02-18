@@ -12,7 +12,7 @@ GameObject::~GameObject()
 {
 	for(auto c in _components)
 	{
-			delete c;
+		delete c;
 	}
 }
 

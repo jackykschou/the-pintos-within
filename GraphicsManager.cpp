@@ -10,6 +10,8 @@ bool GraphicsManager::frameRenderingQueued(const Ogre::FrameEvent& evt)
 
     last_render_time = clock();
 
+    _frame_event = evt;
+
     SceneManager::instance()->currentScene()->update();
 
     SceneManager::instance()->currentScene()->physics_world->stepSimulation(((double)(clock() - last_render_time)) / CLOCKS_PER_SEC);
@@ -64,7 +66,7 @@ GraphicsManager::~GraphicsManager()
 
 void GraphicsManager::windowClosed()
 {
-		//!detech input manager
+	//!detech input manager
 
     // //Only close for window that created OIS (the main window in these demos)
     // if( rw == _window )
@@ -96,7 +98,7 @@ bool GraphicsManager::configureWindow(std::string window_name)
     {
         // If returned true, user clicked OK so initialise
         // Here we choose to let the system create a default rendering window by passing 'true'
-        _window = _root->initialise(true, window_name);
+        _window = _root->initialise(true, window_name.c_str());
 
         _shutdown = false;
     }
@@ -104,6 +106,11 @@ bool GraphicsManager::configureWindow(std::string window_name)
     {
         _shutdown = true;
     }
+}
+
+Ogre::FrameEvent& GraphicsManager::getFrameEvent()
+{
+    return _frame_event;
 }
 
 void GraphicsManager::startRendering()
