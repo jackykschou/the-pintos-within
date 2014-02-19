@@ -3,14 +3,19 @@
 
 #include "common.h"
 
-class Transform : Component
+#include "Component.h"
+
+class Transform : public Component
 {
 protected:
 
 public:
+	Transform(GameObject*);
+	~Transform();
+
 	float posX;
 	float posY;
-	float posZ
+	float posZ;
 
 	float rotX;
 	float rotY;

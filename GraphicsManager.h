@@ -6,7 +6,10 @@
 
 #include "common.h"
 
-class GraphicsManager : Singleton<GraphicsManager>, public Ogre::FrameListener
+#include "SceneManager.h"
+#include "ResourcesManager.h"
+
+class GraphicsManager : public Singleton<GraphicsManager>, public Ogre::FrameListener
 {
 public:
 	~GraphicsManager();
@@ -16,14 +19,14 @@ public:
 	Ogre::RenderWindow* getRenderWindow();
 	void startRendering();
 	void stopRendering();
-	Ogre::FrameEvent& getFrameEvent();
+	Ogre::FrameEvent* getFrameEvent();
 
 protected:
 	Ogre::Root* _root;
 	Ogre::RenderWindow* _window;
 	clock_t last_render_time;
 	bool _shutdown;
-	Ogre::FrameEvent& _frame_event;
+	Ogre::FrameEvent* _frame_event;
 
 	bool frameRenderingQueued(const Ogre::FrameEvent& evt);
 	void windowClosed();

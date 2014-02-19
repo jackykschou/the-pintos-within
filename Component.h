@@ -1,19 +1,23 @@
 #ifndef __Component_h_
 #define __Component_h_
 
+#include "GameObject.h"
+
 #include "common.h"
+
+class GameObject;
 
 class Component
 {
-private:
+protected:
 	GameObject* _gameObject;
 	
 public:
 	int id;
 	bool active;
 
-	virtual Component();
-	virtual ~Component();
+	Component(GameObject*);
+	~Component();
 
 	virtual void update();
 };

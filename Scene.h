@@ -6,11 +6,20 @@
 
 #include "common.h"
 
+#include "GraphicsManager.h"
+#include "PhysicsManager.h"
+
+#include "SceneManager.h"
+#include "Component.h"
+#include "GameObject.h"
+
+class GameObject;
+
 class Scene
 {
 protected:
 		std::vector<GameObject*> _game_objects;
-		int _game_object_id_assigner = 0;
+		int _game_object_id_assigner;
 public:
 		int id;
 		std::string name;
@@ -23,7 +32,7 @@ public:
 		void addGameObject(GameObject*);
 		void removeGameObject(GameObject*);
 		bool containsGameObject(GameObject*);
-		std::vector<GameObject*> Scene::getGameObjectsOfTag(std::string);
+		std::vector<GameObject*> getGameObjectsOfTag(std::string);
 		void update();
 };
 

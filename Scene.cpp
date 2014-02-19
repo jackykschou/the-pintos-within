@@ -3,8 +3,8 @@
 Scene::Scene(std::string n)
 {
 	name = n;
-	manager = GraphicsManager::instance()->getRenderRoot->CreateSceneManager(Ogre::ST_GENERIC);;
-	physics_world = PhysicsManager::instance()->CreatePhysicsWorld();
+	manager = GraphicsManager::instance()->getRenderRoot()->createSceneManager(Ogre::ST_GENERIC);
+	physics_world = PhysicsManager::instance()->createDynamicsWorld();
 	_game_object_id_assigner = 0;
 
 	SceneManager::instance()->addScene(this);
@@ -21,7 +21,7 @@ Scene::~Scene()
 	delete physics_world;
 }
 
-int Scene::addGameObject(GameObject* gameObject)
+void Scene::addGameObject(GameObject* gameObject)
 {
 	gameObject->id = (++_game_object_id_assigner);
 	_game_objects.push_back(gameObject);
@@ -30,7 +30,7 @@ int Scene::addGameObject(GameObject* gameObject)
 void Scene::removeGameObject(GameObject* gameObject)
 {
 	int i = 0;
-	for(auto g in _game_objects)
+	for(auto g : _game_objects)
 	{
 		if(g->id == gameObject->id)
 		{
@@ -43,16 +43,13 @@ void Scene::removeGameObject(GameObject* gameObject)
 
 std::vector<GameObject*> Scene::getGameObjectsOfTag(std::string tag)
 {
-	std::vector<T*> gameObjects;
+	std::vector<GameObject*> gameObjects;
 	for(auto gameObject : _game_objects)
 	{
 		if(gameObject->tag == tag)
 			gameObjects.push_back(gameObject);
 	}
-	if(gameObjects.empty())
-		return NULL;
-	else
-		return gameObjects;
+	return gameObjects;
 }
 
 void Scene::update()

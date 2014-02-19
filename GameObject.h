@@ -1,7 +1,14 @@
 #ifndef __GameObject_h_
 #define __GameObject_h_
 
+
 #include "common.h"
+
+#include "Component.h"
+#include "Scene.h"
+
+class Scene;
+class Component;
 
 class GameObject
 {
@@ -15,11 +22,11 @@ public:
 	bool active;
 	Scene* scene;
 
-	virtual GameObject(std::string, Scene*);
-	virtual ~GameObject();
+	GameObject(std::string, Scene*);
+	~GameObject();
 
 	template<typename T>
-	T* getComponent<T>()
+	T* getComponent()
 	{
 		T* return_component = NULL;
 		for(auto c: _components)
@@ -32,7 +39,7 @@ public:
 	}
 
 	template<typename T>
-	std::vector<T*> getComponents<T>()
+	std::vector<T*> getComponents()
 	{
 		std::vector<T*> components;
 		for(auto c: _components)
@@ -41,14 +48,11 @@ public:
 			if(component != NULL)
 				components.push_back(component);
 		}
-		if(components.empty())
-			return NULL;
-		else
-			return components;
+		return components;
 	}
 
 	template<typename T>
-	bool containsComponent<T>()
+	bool containsComponent()
 	{
 		return getComponent<T>() != NULL;
 	}

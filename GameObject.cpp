@@ -10,7 +10,7 @@ GameObject::GameObject(std::string t, Scene* s)
 
 GameObject::~GameObject()
 {
-	for(auto c in _components)
+	for(auto c : _components)
 	{
 		delete c;
 	}
@@ -25,7 +25,7 @@ Component* GameObject::addComponent(Component* component)
 void GameObject::removeComponent(Component* component)
 {
 	int i = 0;
-	for(auto c in _components)
+	for(auto c : _components)
 	{
 		if(c->id == component->id)
 		{
@@ -38,7 +38,7 @@ void GameObject::removeComponent(Component* component)
 
 void GameObject::update()
 {
-	for(auto c in _components)
+	for(auto c : _components)
 	{
 		if(c->active)
 			c->update();

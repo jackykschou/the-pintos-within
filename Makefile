@@ -42,10 +42,7 @@ DIST_COMMON = $(am__configure_deps) $(noinst_HEADERS) \
 	$(srcdir)/config.h.in $(top_srcdir)/configure config.guess \
 	config.sub depcomp install-sh ltmain.sh missing
 ACLOCAL_M4 = $(top_srcdir)/aclocal.m4
-am__aclocal_m4_deps = $(top_srcdir)/m4/libtool.m4 \
-	$(top_srcdir)/m4/ltoptions.m4 $(top_srcdir)/m4/ltsugar.m4 \
-	$(top_srcdir)/m4/ltversion.m4 $(top_srcdir)/m4/lt~obsolete.m4 \
-	$(top_srcdir)/configure.ac
+am__aclocal_m4_deps = $(top_srcdir)/configure.ac
 am__configure_deps = $(am__aclocal_m4_deps) $(CONFIGURE_DEPENDENCIES) \
 	$(ACLOCAL_M4)
 am__CONFIG_DISTCLEAN_FILES = config.status config.cache config.log \
@@ -56,10 +53,19 @@ CONFIG_CLEAN_FILES =
 CONFIG_CLEAN_VPATH_FILES =
 am__installdirs = "$(DESTDIR)$(bindir)"
 PROGRAMS = $(bin_PROGRAMS)
-am_OgreApp_OBJECTS = OgreApp-BaseApplication.$(OBJEXT)
+am_OgreApp_OBJECTS = OgreApp-Application.$(OBJEXT) \
+	OgreApp-PhysicsManager.$(OBJEXT) \
+	OgreApp-ResourcesManager.$(OBJEXT) \
+	OgreApp-GraphicsManager.$(OBJEXT) \
+	OgreApp-SceneManager.$(OBJEXT) OgreApp-Scene.$(OBJEXT) \
+	OgreApp-GameObject.$(OBJEXT) OgreApp-Component.$(OBJEXT) \
+	OgreApp-Transform.$(OBJEXT) OgreApp-Camera.$(OBJEXT) \
+	OgreApp-Mesh.$(OBJEXT) OgreApp-FPSCamera.$(OBJEXT) \
+	OgreApp-FPSController.$(OBJEXT)
 OgreApp_OBJECTS = $(am_OgreApp_OBJECTS)
 am__DEPENDENCIES_1 =
-OgreApp_DEPENDENCIES = $(am__DEPENDENCIES_1) $(am__DEPENDENCIES_1)
+OgreApp_DEPENDENCIES = $(am__DEPENDENCIES_1) $(am__DEPENDENCIES_1) \
+	$(am__DEPENDENCIES_1) $(am__DEPENDENCIES_1)
 OgreApp_LINK = $(LIBTOOL) --tag=CXX $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) \
 	--mode=link $(CXXLD) $(OgreApp_CXXFLAGS) $(CXXFLAGS) \
 	$(AM_LDFLAGS) $(LDFLAGS) -o $@
@@ -96,13 +102,15 @@ distuninstallcheck_listfiles = find . -type f -print
 am__distuninstallcheck_listfiles = $(distuninstallcheck_listfiles) \
   | sed 's|^\./|$(prefix)/|' | grep -v '$(infodir)/dir$$'
 distcleancheck_listfiles = find . -type f -print
-ACLOCAL = ${SHELL} /u/jackyc/GameTech/assignment2/missing --run aclocal-1.11
+ACLOCAL = ${SHELL} /v/filer4b/v38q001/jackyc/GameTech/assignment2/missing --run aclocal-1.11
 AMTAR = $${TAR-tar}
 AR = ar
-AUTOCONF = ${SHELL} /u/jackyc/GameTech/assignment2/missing --run autoconf
-AUTOHEADER = ${SHELL} /u/jackyc/GameTech/assignment2/missing --run autoheader
-AUTOMAKE = ${SHELL} /u/jackyc/GameTech/assignment2/missing --run automake-1.11
+AUTOCONF = ${SHELL} /v/filer4b/v38q001/jackyc/GameTech/assignment2/missing --run autoconf
+AUTOHEADER = ${SHELL} /v/filer4b/v38q001/jackyc/GameTech/assignment2/missing --run autoheader
+AUTOMAKE = ${SHELL} /v/filer4b/v38q001/jackyc/GameTech/assignment2/missing --run automake-1.11
 AWK = gawk
+BULLET_CFLAGS = 
+BULLET_LIBS = 
 CC = gcc
 CCDEPMODE = depmode=gcc3
 CFLAGS = -g -O2
@@ -138,7 +146,7 @@ LIBTOOL = $(SHELL) $(top_builddir)/libtool
 LIPO = 
 LN_S = ln -s
 LTLIBOBJS = 
-MAKEINFO = ${SHELL} /u/jackyc/GameTech/assignment2/missing --run makeinfo
+MAKEINFO = ${SHELL} /v/filer4b/v38q001/jackyc/GameTech/assignment2/missing --run makeinfo
 MANIFEST_TOOL = :
 MKDIR_P = /bin/mkdir -p
 NM = /usr/bin/nm -B
@@ -163,15 +171,17 @@ PKG_CONFIG = /usr/bin/pkg-config
 PKG_CONFIG_LIBDIR = 
 PKG_CONFIG_PATH = 
 RANLIB = ranlib
+SDL_CFLAGS = 
+SDL_LIBS = 
 SED = /bin/sed
 SET_MAKE = 
 SHELL = /bin/bash
 STRIP = strip
 VERSION = 0.1
-abs_builddir = /u/jackyc/GameTech/assignment2
-abs_srcdir = /u/jackyc/GameTech/assignment2
-abs_top_builddir = /u/jackyc/GameTech/assignment2
-abs_top_srcdir = /u/jackyc/GameTech/assignment2
+abs_builddir = /v/filer4b/v38q001/jackyc/GameTech/assignment2
+abs_srcdir = /v/filer4b/v38q001/jackyc/GameTech/assignment2
+abs_top_builddir = /v/filer4b/v38q001/jackyc/GameTech/assignment2
+abs_top_srcdir = /v/filer4b/v38q001/jackyc/GameTech/assignment2
 ac_ct_AR = ar
 ac_ct_CC = gcc
 ac_ct_CXX = g++
@@ -188,6 +198,8 @@ build_cpu = x86_64
 build_os = linux-gnu
 build_vendor = unknown
 builddir = .
+bullet_CFLAGS = -I/usr/local/include/bullet  
+bullet_LIBS = -L/usr/local/lib -lBulletSoftBody -lBulletDynamics -lBulletCollision -lLinearMath  
 datadir = ${datarootdir}
 datarootdir = ${prefix}/share
 docdir = ${datarootdir}/doc/${PACKAGE}
@@ -201,7 +213,7 @@ host_vendor = unknown
 htmldir = ${docdir}
 includedir = ${prefix}/include
 infodir = ${datarootdir}/info
-install_sh = ${SHELL} /u/jackyc/GameTech/assignment2/install-sh
+install_sh = ${SHELL} /v/filer4b/v38q001/jackyc/GameTech/assignment2/install-sh
 libdir = ${exec_prefix}/lib
 libexecdir = ${exec_prefix}/libexec
 localedir = ${datarootdir}/locale
@@ -214,6 +226,8 @@ prefix = /usr/local
 program_transform_name = s,x,x,
 psdir = ${docdir}
 sbindir = ${exec_prefix}/sbin
+sdl_CFLAGS = -D_GNU_SOURCE=1 -D_REENTRANT -I/usr/include/SDL  
+sdl_LIBS = -lSDL  
 sharedstatedir = ${prefix}/com
 srcdir = .
 sysconfdir = ${prefix}/etc
@@ -222,11 +236,11 @@ top_build_prefix =
 top_builddir = .
 top_srcdir = .
 ACLOCAL_AMFLAGS = -I m4
-noinst_HEADERS = BaseApplication.h
-OgreApp_CPPFLAGS = -I$(top_srcdir)
-OgreApp_SOURCES = BaseApplication.cpp
-OgreApp_CXXFLAGS = $(OGRE_CFLAGS) $(OIS_CFLAGS)
-OgreApp_LDADD = $(OGRE_LIBS) $(OIS_LIBS)
+noinst_HEADERS = common.h Singleton.h PhysicsManager.h ResourcesManager.h GraphicsManager.h SceneManager.h Scene.h GameObject.h Component.h Transform.h Camera.h Mesh.h FPSCamera.h FPSController.h
+OgreApp_CPPFLAGS = -I$(top_srcdir) -std=c++0x
+OgreApp_SOURCES = Application.cpp PhysicsManager.cpp ResourcesManager.cpp GraphicsManager.cpp SceneManager.cpp Scene.cpp GameObject.cpp Component.cpp Transform.cpp Camera.cpp Mesh.cpp FPSCamera.cpp FPSController.cpp
+OgreApp_CXXFLAGS = $(OGRE_CFLAGS) $(OIS_CFLAGS) $(bullet_CFLAGS) $(SDL_CFLAGS)
+OgreApp_LDADD = $(OGRE_LIBS) $(OIS_LIBS) $(bullet_LIBS) $(SDL_LIBS)
 EXTRA_DIST = buildit makeit
 AUTOMAKE_OPTIONS = foreign
 all: config.h
@@ -336,7 +350,19 @@ mostlyclean-compile:
 distclean-compile:
 	-rm -f *.tab.c
 
-include ./$(DEPDIR)/OgreApp-BaseApplication.Po
+include ./$(DEPDIR)/OgreApp-Application.Po
+include ./$(DEPDIR)/OgreApp-Camera.Po
+include ./$(DEPDIR)/OgreApp-Component.Po
+include ./$(DEPDIR)/OgreApp-FPSCamera.Po
+include ./$(DEPDIR)/OgreApp-FPSController.Po
+include ./$(DEPDIR)/OgreApp-GameObject.Po
+include ./$(DEPDIR)/OgreApp-GraphicsManager.Po
+include ./$(DEPDIR)/OgreApp-Mesh.Po
+include ./$(DEPDIR)/OgreApp-PhysicsManager.Po
+include ./$(DEPDIR)/OgreApp-ResourcesManager.Po
+include ./$(DEPDIR)/OgreApp-Scene.Po
+include ./$(DEPDIR)/OgreApp-SceneManager.Po
+include ./$(DEPDIR)/OgreApp-Transform.Po
 
 .cpp.o:
 	$(CXXCOMPILE) -MT $@ -MD -MP -MF $(DEPDIR)/$*.Tpo -c -o $@ $<
@@ -359,19 +385,187 @@ include ./$(DEPDIR)/OgreApp-BaseApplication.Po
 #	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) \
 #	$(LTCXXCOMPILE) -c -o $@ $<
 
-OgreApp-BaseApplication.o: BaseApplication.cpp
-	$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(OgreApp_CPPFLAGS) $(CPPFLAGS) $(OgreApp_CXXFLAGS) $(CXXFLAGS) -MT OgreApp-BaseApplication.o -MD -MP -MF $(DEPDIR)/OgreApp-BaseApplication.Tpo -c -o OgreApp-BaseApplication.o `test -f 'BaseApplication.cpp' || echo '$(srcdir)/'`BaseApplication.cpp
-	$(am__mv) $(DEPDIR)/OgreApp-BaseApplication.Tpo $(DEPDIR)/OgreApp-BaseApplication.Po
-#	source='BaseApplication.cpp' object='OgreApp-BaseApplication.o' libtool=no \
+OgreApp-Application.o: Application.cpp
+	$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(OgreApp_CPPFLAGS) $(CPPFLAGS) $(OgreApp_CXXFLAGS) $(CXXFLAGS) -MT OgreApp-Application.o -MD -MP -MF $(DEPDIR)/OgreApp-Application.Tpo -c -o OgreApp-Application.o `test -f 'Application.cpp' || echo '$(srcdir)/'`Application.cpp
+	$(am__mv) $(DEPDIR)/OgreApp-Application.Tpo $(DEPDIR)/OgreApp-Application.Po
+#	source='Application.cpp' object='OgreApp-Application.o' libtool=no \
 #	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) \
-#	$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(OgreApp_CPPFLAGS) $(CPPFLAGS) $(OgreApp_CXXFLAGS) $(CXXFLAGS) -c -o OgreApp-BaseApplication.o `test -f 'BaseApplication.cpp' || echo '$(srcdir)/'`BaseApplication.cpp
+#	$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(OgreApp_CPPFLAGS) $(CPPFLAGS) $(OgreApp_CXXFLAGS) $(CXXFLAGS) -c -o OgreApp-Application.o `test -f 'Application.cpp' || echo '$(srcdir)/'`Application.cpp
 
-OgreApp-BaseApplication.obj: BaseApplication.cpp
-	$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(OgreApp_CPPFLAGS) $(CPPFLAGS) $(OgreApp_CXXFLAGS) $(CXXFLAGS) -MT OgreApp-BaseApplication.obj -MD -MP -MF $(DEPDIR)/OgreApp-BaseApplication.Tpo -c -o OgreApp-BaseApplication.obj `if test -f 'BaseApplication.cpp'; then $(CYGPATH_W) 'BaseApplication.cpp'; else $(CYGPATH_W) '$(srcdir)/BaseApplication.cpp'; fi`
-	$(am__mv) $(DEPDIR)/OgreApp-BaseApplication.Tpo $(DEPDIR)/OgreApp-BaseApplication.Po
-#	source='BaseApplication.cpp' object='OgreApp-BaseApplication.obj' libtool=no \
+OgreApp-Application.obj: Application.cpp
+	$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(OgreApp_CPPFLAGS) $(CPPFLAGS) $(OgreApp_CXXFLAGS) $(CXXFLAGS) -MT OgreApp-Application.obj -MD -MP -MF $(DEPDIR)/OgreApp-Application.Tpo -c -o OgreApp-Application.obj `if test -f 'Application.cpp'; then $(CYGPATH_W) 'Application.cpp'; else $(CYGPATH_W) '$(srcdir)/Application.cpp'; fi`
+	$(am__mv) $(DEPDIR)/OgreApp-Application.Tpo $(DEPDIR)/OgreApp-Application.Po
+#	source='Application.cpp' object='OgreApp-Application.obj' libtool=no \
 #	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) \
-#	$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(OgreApp_CPPFLAGS) $(CPPFLAGS) $(OgreApp_CXXFLAGS) $(CXXFLAGS) -c -o OgreApp-BaseApplication.obj `if test -f 'BaseApplication.cpp'; then $(CYGPATH_W) 'BaseApplication.cpp'; else $(CYGPATH_W) '$(srcdir)/BaseApplication.cpp'; fi`
+#	$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(OgreApp_CPPFLAGS) $(CPPFLAGS) $(OgreApp_CXXFLAGS) $(CXXFLAGS) -c -o OgreApp-Application.obj `if test -f 'Application.cpp'; then $(CYGPATH_W) 'Application.cpp'; else $(CYGPATH_W) '$(srcdir)/Application.cpp'; fi`
+
+OgreApp-PhysicsManager.o: PhysicsManager.cpp
+	$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(OgreApp_CPPFLAGS) $(CPPFLAGS) $(OgreApp_CXXFLAGS) $(CXXFLAGS) -MT OgreApp-PhysicsManager.o -MD -MP -MF $(DEPDIR)/OgreApp-PhysicsManager.Tpo -c -o OgreApp-PhysicsManager.o `test -f 'PhysicsManager.cpp' || echo '$(srcdir)/'`PhysicsManager.cpp
+	$(am__mv) $(DEPDIR)/OgreApp-PhysicsManager.Tpo $(DEPDIR)/OgreApp-PhysicsManager.Po
+#	source='PhysicsManager.cpp' object='OgreApp-PhysicsManager.o' libtool=no \
+#	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) \
+#	$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(OgreApp_CPPFLAGS) $(CPPFLAGS) $(OgreApp_CXXFLAGS) $(CXXFLAGS) -c -o OgreApp-PhysicsManager.o `test -f 'PhysicsManager.cpp' || echo '$(srcdir)/'`PhysicsManager.cpp
+
+OgreApp-PhysicsManager.obj: PhysicsManager.cpp
+	$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(OgreApp_CPPFLAGS) $(CPPFLAGS) $(OgreApp_CXXFLAGS) $(CXXFLAGS) -MT OgreApp-PhysicsManager.obj -MD -MP -MF $(DEPDIR)/OgreApp-PhysicsManager.Tpo -c -o OgreApp-PhysicsManager.obj `if test -f 'PhysicsManager.cpp'; then $(CYGPATH_W) 'PhysicsManager.cpp'; else $(CYGPATH_W) '$(srcdir)/PhysicsManager.cpp'; fi`
+	$(am__mv) $(DEPDIR)/OgreApp-PhysicsManager.Tpo $(DEPDIR)/OgreApp-PhysicsManager.Po
+#	source='PhysicsManager.cpp' object='OgreApp-PhysicsManager.obj' libtool=no \
+#	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) \
+#	$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(OgreApp_CPPFLAGS) $(CPPFLAGS) $(OgreApp_CXXFLAGS) $(CXXFLAGS) -c -o OgreApp-PhysicsManager.obj `if test -f 'PhysicsManager.cpp'; then $(CYGPATH_W) 'PhysicsManager.cpp'; else $(CYGPATH_W) '$(srcdir)/PhysicsManager.cpp'; fi`
+
+OgreApp-ResourcesManager.o: ResourcesManager.cpp
+	$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(OgreApp_CPPFLAGS) $(CPPFLAGS) $(OgreApp_CXXFLAGS) $(CXXFLAGS) -MT OgreApp-ResourcesManager.o -MD -MP -MF $(DEPDIR)/OgreApp-ResourcesManager.Tpo -c -o OgreApp-ResourcesManager.o `test -f 'ResourcesManager.cpp' || echo '$(srcdir)/'`ResourcesManager.cpp
+	$(am__mv) $(DEPDIR)/OgreApp-ResourcesManager.Tpo $(DEPDIR)/OgreApp-ResourcesManager.Po
+#	source='ResourcesManager.cpp' object='OgreApp-ResourcesManager.o' libtool=no \
+#	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) \
+#	$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(OgreApp_CPPFLAGS) $(CPPFLAGS) $(OgreApp_CXXFLAGS) $(CXXFLAGS) -c -o OgreApp-ResourcesManager.o `test -f 'ResourcesManager.cpp' || echo '$(srcdir)/'`ResourcesManager.cpp
+
+OgreApp-ResourcesManager.obj: ResourcesManager.cpp
+	$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(OgreApp_CPPFLAGS) $(CPPFLAGS) $(OgreApp_CXXFLAGS) $(CXXFLAGS) -MT OgreApp-ResourcesManager.obj -MD -MP -MF $(DEPDIR)/OgreApp-ResourcesManager.Tpo -c -o OgreApp-ResourcesManager.obj `if test -f 'ResourcesManager.cpp'; then $(CYGPATH_W) 'ResourcesManager.cpp'; else $(CYGPATH_W) '$(srcdir)/ResourcesManager.cpp'; fi`
+	$(am__mv) $(DEPDIR)/OgreApp-ResourcesManager.Tpo $(DEPDIR)/OgreApp-ResourcesManager.Po
+#	source='ResourcesManager.cpp' object='OgreApp-ResourcesManager.obj' libtool=no \
+#	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) \
+#	$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(OgreApp_CPPFLAGS) $(CPPFLAGS) $(OgreApp_CXXFLAGS) $(CXXFLAGS) -c -o OgreApp-ResourcesManager.obj `if test -f 'ResourcesManager.cpp'; then $(CYGPATH_W) 'ResourcesManager.cpp'; else $(CYGPATH_W) '$(srcdir)/ResourcesManager.cpp'; fi`
+
+OgreApp-GraphicsManager.o: GraphicsManager.cpp
+	$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(OgreApp_CPPFLAGS) $(CPPFLAGS) $(OgreApp_CXXFLAGS) $(CXXFLAGS) -MT OgreApp-GraphicsManager.o -MD -MP -MF $(DEPDIR)/OgreApp-GraphicsManager.Tpo -c -o OgreApp-GraphicsManager.o `test -f 'GraphicsManager.cpp' || echo '$(srcdir)/'`GraphicsManager.cpp
+	$(am__mv) $(DEPDIR)/OgreApp-GraphicsManager.Tpo $(DEPDIR)/OgreApp-GraphicsManager.Po
+#	source='GraphicsManager.cpp' object='OgreApp-GraphicsManager.o' libtool=no \
+#	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) \
+#	$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(OgreApp_CPPFLAGS) $(CPPFLAGS) $(OgreApp_CXXFLAGS) $(CXXFLAGS) -c -o OgreApp-GraphicsManager.o `test -f 'GraphicsManager.cpp' || echo '$(srcdir)/'`GraphicsManager.cpp
+
+OgreApp-GraphicsManager.obj: GraphicsManager.cpp
+	$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(OgreApp_CPPFLAGS) $(CPPFLAGS) $(OgreApp_CXXFLAGS) $(CXXFLAGS) -MT OgreApp-GraphicsManager.obj -MD -MP -MF $(DEPDIR)/OgreApp-GraphicsManager.Tpo -c -o OgreApp-GraphicsManager.obj `if test -f 'GraphicsManager.cpp'; then $(CYGPATH_W) 'GraphicsManager.cpp'; else $(CYGPATH_W) '$(srcdir)/GraphicsManager.cpp'; fi`
+	$(am__mv) $(DEPDIR)/OgreApp-GraphicsManager.Tpo $(DEPDIR)/OgreApp-GraphicsManager.Po
+#	source='GraphicsManager.cpp' object='OgreApp-GraphicsManager.obj' libtool=no \
+#	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) \
+#	$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(OgreApp_CPPFLAGS) $(CPPFLAGS) $(OgreApp_CXXFLAGS) $(CXXFLAGS) -c -o OgreApp-GraphicsManager.obj `if test -f 'GraphicsManager.cpp'; then $(CYGPATH_W) 'GraphicsManager.cpp'; else $(CYGPATH_W) '$(srcdir)/GraphicsManager.cpp'; fi`
+
+OgreApp-SceneManager.o: SceneManager.cpp
+	$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(OgreApp_CPPFLAGS) $(CPPFLAGS) $(OgreApp_CXXFLAGS) $(CXXFLAGS) -MT OgreApp-SceneManager.o -MD -MP -MF $(DEPDIR)/OgreApp-SceneManager.Tpo -c -o OgreApp-SceneManager.o `test -f 'SceneManager.cpp' || echo '$(srcdir)/'`SceneManager.cpp
+	$(am__mv) $(DEPDIR)/OgreApp-SceneManager.Tpo $(DEPDIR)/OgreApp-SceneManager.Po
+#	source='SceneManager.cpp' object='OgreApp-SceneManager.o' libtool=no \
+#	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) \
+#	$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(OgreApp_CPPFLAGS) $(CPPFLAGS) $(OgreApp_CXXFLAGS) $(CXXFLAGS) -c -o OgreApp-SceneManager.o `test -f 'SceneManager.cpp' || echo '$(srcdir)/'`SceneManager.cpp
+
+OgreApp-SceneManager.obj: SceneManager.cpp
+	$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(OgreApp_CPPFLAGS) $(CPPFLAGS) $(OgreApp_CXXFLAGS) $(CXXFLAGS) -MT OgreApp-SceneManager.obj -MD -MP -MF $(DEPDIR)/OgreApp-SceneManager.Tpo -c -o OgreApp-SceneManager.obj `if test -f 'SceneManager.cpp'; then $(CYGPATH_W) 'SceneManager.cpp'; else $(CYGPATH_W) '$(srcdir)/SceneManager.cpp'; fi`
+	$(am__mv) $(DEPDIR)/OgreApp-SceneManager.Tpo $(DEPDIR)/OgreApp-SceneManager.Po
+#	source='SceneManager.cpp' object='OgreApp-SceneManager.obj' libtool=no \
+#	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) \
+#	$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(OgreApp_CPPFLAGS) $(CPPFLAGS) $(OgreApp_CXXFLAGS) $(CXXFLAGS) -c -o OgreApp-SceneManager.obj `if test -f 'SceneManager.cpp'; then $(CYGPATH_W) 'SceneManager.cpp'; else $(CYGPATH_W) '$(srcdir)/SceneManager.cpp'; fi`
+
+OgreApp-Scene.o: Scene.cpp
+	$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(OgreApp_CPPFLAGS) $(CPPFLAGS) $(OgreApp_CXXFLAGS) $(CXXFLAGS) -MT OgreApp-Scene.o -MD -MP -MF $(DEPDIR)/OgreApp-Scene.Tpo -c -o OgreApp-Scene.o `test -f 'Scene.cpp' || echo '$(srcdir)/'`Scene.cpp
+	$(am__mv) $(DEPDIR)/OgreApp-Scene.Tpo $(DEPDIR)/OgreApp-Scene.Po
+#	source='Scene.cpp' object='OgreApp-Scene.o' libtool=no \
+#	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) \
+#	$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(OgreApp_CPPFLAGS) $(CPPFLAGS) $(OgreApp_CXXFLAGS) $(CXXFLAGS) -c -o OgreApp-Scene.o `test -f 'Scene.cpp' || echo '$(srcdir)/'`Scene.cpp
+
+OgreApp-Scene.obj: Scene.cpp
+	$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(OgreApp_CPPFLAGS) $(CPPFLAGS) $(OgreApp_CXXFLAGS) $(CXXFLAGS) -MT OgreApp-Scene.obj -MD -MP -MF $(DEPDIR)/OgreApp-Scene.Tpo -c -o OgreApp-Scene.obj `if test -f 'Scene.cpp'; then $(CYGPATH_W) 'Scene.cpp'; else $(CYGPATH_W) '$(srcdir)/Scene.cpp'; fi`
+	$(am__mv) $(DEPDIR)/OgreApp-Scene.Tpo $(DEPDIR)/OgreApp-Scene.Po
+#	source='Scene.cpp' object='OgreApp-Scene.obj' libtool=no \
+#	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) \
+#	$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(OgreApp_CPPFLAGS) $(CPPFLAGS) $(OgreApp_CXXFLAGS) $(CXXFLAGS) -c -o OgreApp-Scene.obj `if test -f 'Scene.cpp'; then $(CYGPATH_W) 'Scene.cpp'; else $(CYGPATH_W) '$(srcdir)/Scene.cpp'; fi`
+
+OgreApp-GameObject.o: GameObject.cpp
+	$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(OgreApp_CPPFLAGS) $(CPPFLAGS) $(OgreApp_CXXFLAGS) $(CXXFLAGS) -MT OgreApp-GameObject.o -MD -MP -MF $(DEPDIR)/OgreApp-GameObject.Tpo -c -o OgreApp-GameObject.o `test -f 'GameObject.cpp' || echo '$(srcdir)/'`GameObject.cpp
+	$(am__mv) $(DEPDIR)/OgreApp-GameObject.Tpo $(DEPDIR)/OgreApp-GameObject.Po
+#	source='GameObject.cpp' object='OgreApp-GameObject.o' libtool=no \
+#	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) \
+#	$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(OgreApp_CPPFLAGS) $(CPPFLAGS) $(OgreApp_CXXFLAGS) $(CXXFLAGS) -c -o OgreApp-GameObject.o `test -f 'GameObject.cpp' || echo '$(srcdir)/'`GameObject.cpp
+
+OgreApp-GameObject.obj: GameObject.cpp
+	$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(OgreApp_CPPFLAGS) $(CPPFLAGS) $(OgreApp_CXXFLAGS) $(CXXFLAGS) -MT OgreApp-GameObject.obj -MD -MP -MF $(DEPDIR)/OgreApp-GameObject.Tpo -c -o OgreApp-GameObject.obj `if test -f 'GameObject.cpp'; then $(CYGPATH_W) 'GameObject.cpp'; else $(CYGPATH_W) '$(srcdir)/GameObject.cpp'; fi`
+	$(am__mv) $(DEPDIR)/OgreApp-GameObject.Tpo $(DEPDIR)/OgreApp-GameObject.Po
+#	source='GameObject.cpp' object='OgreApp-GameObject.obj' libtool=no \
+#	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) \
+#	$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(OgreApp_CPPFLAGS) $(CPPFLAGS) $(OgreApp_CXXFLAGS) $(CXXFLAGS) -c -o OgreApp-GameObject.obj `if test -f 'GameObject.cpp'; then $(CYGPATH_W) 'GameObject.cpp'; else $(CYGPATH_W) '$(srcdir)/GameObject.cpp'; fi`
+
+OgreApp-Component.o: Component.cpp
+	$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(OgreApp_CPPFLAGS) $(CPPFLAGS) $(OgreApp_CXXFLAGS) $(CXXFLAGS) -MT OgreApp-Component.o -MD -MP -MF $(DEPDIR)/OgreApp-Component.Tpo -c -o OgreApp-Component.o `test -f 'Component.cpp' || echo '$(srcdir)/'`Component.cpp
+	$(am__mv) $(DEPDIR)/OgreApp-Component.Tpo $(DEPDIR)/OgreApp-Component.Po
+#	source='Component.cpp' object='OgreApp-Component.o' libtool=no \
+#	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) \
+#	$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(OgreApp_CPPFLAGS) $(CPPFLAGS) $(OgreApp_CXXFLAGS) $(CXXFLAGS) -c -o OgreApp-Component.o `test -f 'Component.cpp' || echo '$(srcdir)/'`Component.cpp
+
+OgreApp-Component.obj: Component.cpp
+	$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(OgreApp_CPPFLAGS) $(CPPFLAGS) $(OgreApp_CXXFLAGS) $(CXXFLAGS) -MT OgreApp-Component.obj -MD -MP -MF $(DEPDIR)/OgreApp-Component.Tpo -c -o OgreApp-Component.obj `if test -f 'Component.cpp'; then $(CYGPATH_W) 'Component.cpp'; else $(CYGPATH_W) '$(srcdir)/Component.cpp'; fi`
+	$(am__mv) $(DEPDIR)/OgreApp-Component.Tpo $(DEPDIR)/OgreApp-Component.Po
+#	source='Component.cpp' object='OgreApp-Component.obj' libtool=no \
+#	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) \
+#	$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(OgreApp_CPPFLAGS) $(CPPFLAGS) $(OgreApp_CXXFLAGS) $(CXXFLAGS) -c -o OgreApp-Component.obj `if test -f 'Component.cpp'; then $(CYGPATH_W) 'Component.cpp'; else $(CYGPATH_W) '$(srcdir)/Component.cpp'; fi`
+
+OgreApp-Transform.o: Transform.cpp
+	$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(OgreApp_CPPFLAGS) $(CPPFLAGS) $(OgreApp_CXXFLAGS) $(CXXFLAGS) -MT OgreApp-Transform.o -MD -MP -MF $(DEPDIR)/OgreApp-Transform.Tpo -c -o OgreApp-Transform.o `test -f 'Transform.cpp' || echo '$(srcdir)/'`Transform.cpp
+	$(am__mv) $(DEPDIR)/OgreApp-Transform.Tpo $(DEPDIR)/OgreApp-Transform.Po
+#	source='Transform.cpp' object='OgreApp-Transform.o' libtool=no \
+#	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) \
+#	$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(OgreApp_CPPFLAGS) $(CPPFLAGS) $(OgreApp_CXXFLAGS) $(CXXFLAGS) -c -o OgreApp-Transform.o `test -f 'Transform.cpp' || echo '$(srcdir)/'`Transform.cpp
+
+OgreApp-Transform.obj: Transform.cpp
+	$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(OgreApp_CPPFLAGS) $(CPPFLAGS) $(OgreApp_CXXFLAGS) $(CXXFLAGS) -MT OgreApp-Transform.obj -MD -MP -MF $(DEPDIR)/OgreApp-Transform.Tpo -c -o OgreApp-Transform.obj `if test -f 'Transform.cpp'; then $(CYGPATH_W) 'Transform.cpp'; else $(CYGPATH_W) '$(srcdir)/Transform.cpp'; fi`
+	$(am__mv) $(DEPDIR)/OgreApp-Transform.Tpo $(DEPDIR)/OgreApp-Transform.Po
+#	source='Transform.cpp' object='OgreApp-Transform.obj' libtool=no \
+#	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) \
+#	$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(OgreApp_CPPFLAGS) $(CPPFLAGS) $(OgreApp_CXXFLAGS) $(CXXFLAGS) -c -o OgreApp-Transform.obj `if test -f 'Transform.cpp'; then $(CYGPATH_W) 'Transform.cpp'; else $(CYGPATH_W) '$(srcdir)/Transform.cpp'; fi`
+
+OgreApp-Camera.o: Camera.cpp
+	$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(OgreApp_CPPFLAGS) $(CPPFLAGS) $(OgreApp_CXXFLAGS) $(CXXFLAGS) -MT OgreApp-Camera.o -MD -MP -MF $(DEPDIR)/OgreApp-Camera.Tpo -c -o OgreApp-Camera.o `test -f 'Camera.cpp' || echo '$(srcdir)/'`Camera.cpp
+	$(am__mv) $(DEPDIR)/OgreApp-Camera.Tpo $(DEPDIR)/OgreApp-Camera.Po
+#	source='Camera.cpp' object='OgreApp-Camera.o' libtool=no \
+#	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) \
+#	$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(OgreApp_CPPFLAGS) $(CPPFLAGS) $(OgreApp_CXXFLAGS) $(CXXFLAGS) -c -o OgreApp-Camera.o `test -f 'Camera.cpp' || echo '$(srcdir)/'`Camera.cpp
+
+OgreApp-Camera.obj: Camera.cpp
+	$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(OgreApp_CPPFLAGS) $(CPPFLAGS) $(OgreApp_CXXFLAGS) $(CXXFLAGS) -MT OgreApp-Camera.obj -MD -MP -MF $(DEPDIR)/OgreApp-Camera.Tpo -c -o OgreApp-Camera.obj `if test -f 'Camera.cpp'; then $(CYGPATH_W) 'Camera.cpp'; else $(CYGPATH_W) '$(srcdir)/Camera.cpp'; fi`
+	$(am__mv) $(DEPDIR)/OgreApp-Camera.Tpo $(DEPDIR)/OgreApp-Camera.Po
+#	source='Camera.cpp' object='OgreApp-Camera.obj' libtool=no \
+#	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) \
+#	$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(OgreApp_CPPFLAGS) $(CPPFLAGS) $(OgreApp_CXXFLAGS) $(CXXFLAGS) -c -o OgreApp-Camera.obj `if test -f 'Camera.cpp'; then $(CYGPATH_W) 'Camera.cpp'; else $(CYGPATH_W) '$(srcdir)/Camera.cpp'; fi`
+
+OgreApp-Mesh.o: Mesh.cpp
+	$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(OgreApp_CPPFLAGS) $(CPPFLAGS) $(OgreApp_CXXFLAGS) $(CXXFLAGS) -MT OgreApp-Mesh.o -MD -MP -MF $(DEPDIR)/OgreApp-Mesh.Tpo -c -o OgreApp-Mesh.o `test -f 'Mesh.cpp' || echo '$(srcdir)/'`Mesh.cpp
+	$(am__mv) $(DEPDIR)/OgreApp-Mesh.Tpo $(DEPDIR)/OgreApp-Mesh.Po
+#	source='Mesh.cpp' object='OgreApp-Mesh.o' libtool=no \
+#	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) \
+#	$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(OgreApp_CPPFLAGS) $(CPPFLAGS) $(OgreApp_CXXFLAGS) $(CXXFLAGS) -c -o OgreApp-Mesh.o `test -f 'Mesh.cpp' || echo '$(srcdir)/'`Mesh.cpp
+
+OgreApp-Mesh.obj: Mesh.cpp
+	$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(OgreApp_CPPFLAGS) $(CPPFLAGS) $(OgreApp_CXXFLAGS) $(CXXFLAGS) -MT OgreApp-Mesh.obj -MD -MP -MF $(DEPDIR)/OgreApp-Mesh.Tpo -c -o OgreApp-Mesh.obj `if test -f 'Mesh.cpp'; then $(CYGPATH_W) 'Mesh.cpp'; else $(CYGPATH_W) '$(srcdir)/Mesh.cpp'; fi`
+	$(am__mv) $(DEPDIR)/OgreApp-Mesh.Tpo $(DEPDIR)/OgreApp-Mesh.Po
+#	source='Mesh.cpp' object='OgreApp-Mesh.obj' libtool=no \
+#	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) \
+#	$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(OgreApp_CPPFLAGS) $(CPPFLAGS) $(OgreApp_CXXFLAGS) $(CXXFLAGS) -c -o OgreApp-Mesh.obj `if test -f 'Mesh.cpp'; then $(CYGPATH_W) 'Mesh.cpp'; else $(CYGPATH_W) '$(srcdir)/Mesh.cpp'; fi`
+
+OgreApp-FPSCamera.o: FPSCamera.cpp
+	$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(OgreApp_CPPFLAGS) $(CPPFLAGS) $(OgreApp_CXXFLAGS) $(CXXFLAGS) -MT OgreApp-FPSCamera.o -MD -MP -MF $(DEPDIR)/OgreApp-FPSCamera.Tpo -c -o OgreApp-FPSCamera.o `test -f 'FPSCamera.cpp' || echo '$(srcdir)/'`FPSCamera.cpp
+	$(am__mv) $(DEPDIR)/OgreApp-FPSCamera.Tpo $(DEPDIR)/OgreApp-FPSCamera.Po
+#	source='FPSCamera.cpp' object='OgreApp-FPSCamera.o' libtool=no \
+#	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) \
+#	$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(OgreApp_CPPFLAGS) $(CPPFLAGS) $(OgreApp_CXXFLAGS) $(CXXFLAGS) -c -o OgreApp-FPSCamera.o `test -f 'FPSCamera.cpp' || echo '$(srcdir)/'`FPSCamera.cpp
+
+OgreApp-FPSCamera.obj: FPSCamera.cpp
+	$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(OgreApp_CPPFLAGS) $(CPPFLAGS) $(OgreApp_CXXFLAGS) $(CXXFLAGS) -MT OgreApp-FPSCamera.obj -MD -MP -MF $(DEPDIR)/OgreApp-FPSCamera.Tpo -c -o OgreApp-FPSCamera.obj `if test -f 'FPSCamera.cpp'; then $(CYGPATH_W) 'FPSCamera.cpp'; else $(CYGPATH_W) '$(srcdir)/FPSCamera.cpp'; fi`
+	$(am__mv) $(DEPDIR)/OgreApp-FPSCamera.Tpo $(DEPDIR)/OgreApp-FPSCamera.Po
+#	source='FPSCamera.cpp' object='OgreApp-FPSCamera.obj' libtool=no \
+#	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) \
+#	$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(OgreApp_CPPFLAGS) $(CPPFLAGS) $(OgreApp_CXXFLAGS) $(CXXFLAGS) -c -o OgreApp-FPSCamera.obj `if test -f 'FPSCamera.cpp'; then $(CYGPATH_W) 'FPSCamera.cpp'; else $(CYGPATH_W) '$(srcdir)/FPSCamera.cpp'; fi`
+
+OgreApp-FPSController.o: FPSController.cpp
+	$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(OgreApp_CPPFLAGS) $(CPPFLAGS) $(OgreApp_CXXFLAGS) $(CXXFLAGS) -MT OgreApp-FPSController.o -MD -MP -MF $(DEPDIR)/OgreApp-FPSController.Tpo -c -o OgreApp-FPSController.o `test -f 'FPSController.cpp' || echo '$(srcdir)/'`FPSController.cpp
+	$(am__mv) $(DEPDIR)/OgreApp-FPSController.Tpo $(DEPDIR)/OgreApp-FPSController.Po
+#	source='FPSController.cpp' object='OgreApp-FPSController.o' libtool=no \
+#	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) \
+#	$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(OgreApp_CPPFLAGS) $(CPPFLAGS) $(OgreApp_CXXFLAGS) $(CXXFLAGS) -c -o OgreApp-FPSController.o `test -f 'FPSController.cpp' || echo '$(srcdir)/'`FPSController.cpp
+
+OgreApp-FPSController.obj: FPSController.cpp
+	$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(OgreApp_CPPFLAGS) $(CPPFLAGS) $(OgreApp_CXXFLAGS) $(CXXFLAGS) -MT OgreApp-FPSController.obj -MD -MP -MF $(DEPDIR)/OgreApp-FPSController.Tpo -c -o OgreApp-FPSController.obj `if test -f 'FPSController.cpp'; then $(CYGPATH_W) 'FPSController.cpp'; else $(CYGPATH_W) '$(srcdir)/FPSController.cpp'; fi`
+	$(am__mv) $(DEPDIR)/OgreApp-FPSController.Tpo $(DEPDIR)/OgreApp-FPSController.Po
+#	source='FPSController.cpp' object='OgreApp-FPSController.obj' libtool=no \
+#	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) \
+#	$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(OgreApp_CPPFLAGS) $(CPPFLAGS) $(OgreApp_CXXFLAGS) $(CXXFLAGS) -c -o OgreApp-FPSController.obj `if test -f 'FPSController.cpp'; then $(CYGPATH_W) 'FPSController.cpp'; else $(CYGPATH_W) '$(srcdir)/FPSController.cpp'; fi`
 
 mostlyclean-libtool:
 	-rm -f *.lo

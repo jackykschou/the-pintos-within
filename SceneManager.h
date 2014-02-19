@@ -3,12 +3,16 @@
 
 #include "common.h"
 
-class SceneManager: Singleton<SceneManager>
+#include "Scene.h"
+
+class Scene;
+
+class SceneManager: public Singleton<SceneManager>
 {
 public:
 	Scene* current_scene;
 
-    ~SceneManager();
+   ~SceneManager();
 
 	void initialize();    
     int addScene(Scene*);

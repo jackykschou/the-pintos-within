@@ -4,6 +4,7 @@
 #include <OgreConfigFile.h>
 
 #include "common.h"
+#include "GraphicsManager.h"
 
 #define RESOURCES_PATH "resources.cfg"
 #define RESOURCES_DEBUG_PATH "resources_d.cfg"
@@ -11,7 +12,7 @@
 #define PLUGIN_PATH "plugins.cfg"
 #define PLUGIN_DEBUG_PATH "plugins_d.cfg"
 
-class ResourcesManager : Singleton<ResourcesManager>
+class ResourcesManager : public Singleton<ResourcesManager>
 {
 public:
     virtual void initialize();

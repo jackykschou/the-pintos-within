@@ -20,23 +20,7 @@
 #include <set>
 #include <map>
 
-#include "ResourcesManager.h"
-#include "GraphicsManager.h"
-// #include "AudioManager.h"
-#include "SceneManager.h"
-#include "PhysicsManager.h"
-// #include "InputManager.h"
-// #include "GUIManager.h"
-
-#include "Scene.h"
-
-#include "GameObject.h"
-
-#include "Component.h"
-#include "Transform.h"
-#include "Camera.h"
-#include "Mesh.h"
-
+#include "Singleton.h"
 
 #endif // #ifndef __common_h_
 

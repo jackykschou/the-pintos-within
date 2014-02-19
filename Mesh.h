@@ -2,10 +2,14 @@
 #define __Mesh_h_
 
 #include <OgreSceneNode.h>
+#include <OgreEntity.h>
 
 #include "common.h"
 
-class Mesh : Component
+#include "Component.h"
+#include "Transform.h"
+
+class Mesh : public Component
 {
 protected:
 	Transform* _transform;
@@ -13,8 +17,8 @@ protected:
 	static int entity_id_assigner;
 	static int node_id_assigner;
 public:
-	virtual Mesh::Mesh(GameObject*, std::string);
-	virtual ~Mesh();
+	Mesh(GameObject*, std::string);
+	~Mesh();
 
 	Ogre::Entity* entity;
   	Ogre::SceneNode* node;

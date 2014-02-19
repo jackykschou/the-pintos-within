@@ -1,6 +1,13 @@
 #ifndef __Camera_h_
 #define __Camera_h_
 
+#include <OgreCamera.h>
+#include <OgreViewport.h>
+
+#include "Component.h"
+#include "Transform.h"
+#include "SceneManager.h"
+
 #include "common.h"
 
 class Camera : Component
@@ -9,10 +16,10 @@ protected:
 	Transform* _transform;
 
 public:
-	virtual Camera(GameObject gameObject, std::string name);
-	virtual ~Camera();
+	Camera(GameObject*, std::string);
+	~Camera();
 
-	Ogre::Viewport* view_port;
+	Ogre::Viewport* viewport;
 	Ogre::Camera* camera;
 
 	virtual void update();

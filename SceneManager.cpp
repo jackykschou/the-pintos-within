@@ -15,7 +15,7 @@ void SceneManager::initialize()
 
 int SceneManager::addScene(Scene* scene)
 {
-	scene.id = ++_scene_id_assigner;
+	scene->id = ++_scene_id_assigner;
 	_scenes.push_back(scene);
 }
 
