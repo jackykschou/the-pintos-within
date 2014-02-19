@@ -21,3 +21,5 @@ btDiscreteDynamicsWorld *PhysicsManager::createDynamicsWorld() {
 void PhysicsManager::updatePhysics (btDiscreteDynamicsWorld *dynamicsWorld, const float elapsedTime) {
 	dynamicsWorld->stepSimulation(elapsedTime, 5, 0.017);
 }
+
+int main(){}
