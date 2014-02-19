@@ -13,6 +13,10 @@
 class GUIManager : public Singleton<GUIManager> {
   public:
 	void initialize();
+
+  private:
+  	OgreBites::SdkTrayManager* _mTrayMgr;
+  	OgreBites::ParamsPanel*    _mDetailsPanel;
 };
 
 #endif

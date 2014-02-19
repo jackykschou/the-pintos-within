@@ -46,6 +46,8 @@ class InputManager : public Singleton<InputManager>,
     OIS::MouseEvent* getMouseMovedEvent();
     OIS::MouseEvent* getMousePressedEvent();
     OIS::MouseEvent* getMouseReleasedEvent();
+    OIS::Mouse*      getMouse();
+    OIS::Keyboard*   getKeyboard();
 
     // OIS::KeyListener callbacks
     virtual bool keyPressed(const OIS::KeyEvent &arg);

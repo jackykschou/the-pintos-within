@@ -11,9 +11,7 @@ void InputManager::initialize() {
 	OIS::ParamList pl;
     size_t windowHnd = 0;
     std::ostringstream windowHndStr;
-    Ogre::RenderWindow* mWindow;
-
-	//mWindow = GraphicsManager::instance()->getRenderWindow();
+    Ogre::RenderWindow* mWindow = GraphicsManager::instance()->getRenderWindow();
     mWindow->getCustomAttribute("WINDOW", &windowHnd);
     windowHndStr << windowHnd;
     pl.insert(std::make_pair(std::string("WINDOW"), windowHndStr.str()));
@@ -87,6 +85,14 @@ OIS::MouseEvent* InputManager::getMousePressedEvent() {
 
 OIS::MouseEvent* InputManager::getMouseReleasedEvent() {
 	return _lastMouseReleasedEvt;
+}
+
+OIS::Mouse* InputManager::getMouse() {
+	
+}
+
+OIS::Mouse* InputManager::getKeyboard() {
+	
 }
 
 // Input callbacks
