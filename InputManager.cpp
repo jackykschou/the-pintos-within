@@ -1,4 +1,5 @@
 #include "InputManager.h"
+#include "GraphicsManager.h"
 
 InputManager::InputManager() :
 	_mInputManager(0),
@@ -11,16 +12,21 @@ void InputManager::initialize() {
 	OIS::ParamList pl;
     size_t windowHnd = 0;
     std::ostringstream windowHndStr;
-    Ogre::RenderWindow* mWindow = GraphicsManager::instance()->getRenderWindow();
+    Ogre::RenderWindow* mWindow;
+
+    // set up the render window
+	mWindow = GraphicsManager::instance()->getRenderWindow();
     mWindow->getCustomAttribute("WINDOW", &windowHnd);
     windowHndStr << windowHnd;
     pl.insert(std::make_pair(std::string("WINDOW"), windowHndStr.str()));
 
 	// Set up the input thread
 	_mInputManager = OIS::InputManager::createInputSystem(pl);
+
 	// Set up the input devices
 	_mKeyboard = static_cast<OIS::Keyboard*>(_mInputManager->createInputObject(OIS::OISKeyboard, true));
 	_mMouse = static_cast<OIS::Mouse*>(_mInputManager->createInputObject(OIS::OISMouse, true));
+
 	// Register for events
 	_mMouse->setEventCallback(this);
 	_mKeyboard->setEventCallback(this);
