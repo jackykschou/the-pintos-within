@@ -47,9 +47,9 @@ bool GraphicsManager::frameRenderingQueued(const Ogre::FrameEvent& evt)
     return true;
 }
 
-void GraphicsManager::initialize(std::string window_name)
+void GraphicsManager::initialize(std::string window_name, Ogre::String pluginsCfg)
 {
-	initializeRoot();
+	initializeRoot(pluginsCfg);
 	configureWindow(window_name);
 }
 
@@ -64,9 +64,9 @@ Ogre::RenderWindow* GraphicsManager::getRenderWindow()
     return _window;
 }
 
-void GraphicsManager::initializeRoot()
+void GraphicsManager::initializeRoot(Ogre::String pluginsCfg)
 {
-	_root = new Ogre::Root(ResourcesManager::instance()->getPluginsCfg());
+	_root = new Ogre::Root(pluginsCfg);
 }
 
 void GraphicsManager::configureWindow(std::string window_name)

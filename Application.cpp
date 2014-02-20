@@ -9,10 +9,28 @@
 
 #define APPLICATION_NAME "THE EPIC GAME"
 
+#define RESOURCES_PATH "resources.cfg"
+#define RESOURCES_DEBUG_PATH "resources_d.cfg"
+
+#define PLUGIN_PATH "plugins.cfg"
+#define PLUGIN_DEBUG_PATH "plugins_d.cfg"
+
+
 void initializeGame()
 {
-    ResourcesManager::instance()->initialize();
-    GraphicsManager::instance()->initialize(APPLICATION_NAME);
+	Ogre::String resourcesCfg;
+    Ogre::String pluginsCfg;
+
+    #ifdef _DEBUG
+	    resourcesCfg = "resources_d.cfg";
+	    pluginsCfg = "plugins_d.cfg";
+	#else
+	    resourcesCfg = "resources.cfg";
+	    pluginsCfg = "plugins.cfg";
+	#endif
+
+	GraphicsManager::instance()->initialize(APPLICATION_NAME, pluginsCfg);
+    ResourcesManager::instance()->initialize(resourcesCfg, pluginsCfg);
     InputManager::instance()->initialize();
     GUIManager::instance()->initialize(APPLICATION_NAME);
     PhysicsManager::instance()->initialize();

@@ -1,14 +1,9 @@
 #include "ResourcesManager.h"
 
-void ResourcesManager::initialize()
+void ResourcesManager::initialize(Ogre::String resourcesCfg, Ogre::String pluginsCfg)
 {
-    #ifdef _DEBUG
-        _resourcesCfg = "resources_d.cfg";
-        _pluginsCfg = "plugins_d.cfg";
-    #else
-        _resourcesCfg = "resources.cfg";
-        _pluginsCfg = "plugins.cfg";
-    #endif
+    _resourcesCfg = resourcesCfg;
+    _pluginsCfg = pluginsCfg;
 
     setupResources();
 

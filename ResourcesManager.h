@@ -14,8 +14,9 @@
 
 class ResourcesManager : public Singleton<ResourcesManager>
 {
+
 public:
-    virtual void initialize();
+    virtual void initialize(Ogre::String, Ogre::String);
 
     Ogre::String getResourcesCfg();
     Ogre::String getPluginsCfg();

@@ -15,7 +15,7 @@ class GraphicsManager : public Singleton<GraphicsManager>, public Ogre::FrameLis
 public:
 	~GraphicsManager();
 
-	void initialize(std::string);
+	void initialize(std::string, Ogre::String);
 	Ogre::Root* getRenderRoot();
 	Ogre::RenderWindow* getRenderWindow();
 	void startRendering();
@@ -30,7 +30,7 @@ protected:
 
 	bool frameRenderingQueued(const Ogre::FrameEvent& evt);
 	void configureWindow(std::string);
-	void initializeRoot();
+	void initializeRoot(Ogre::String);
 	void createFrameListener();
 };
 
