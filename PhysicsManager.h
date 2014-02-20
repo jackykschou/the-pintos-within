@@ -1,9 +1,7 @@
 #ifndef __PhysicsManager_h_
 #define __PhysicsManager_h_
 
-
 #include <btBulletDynamicsCommon.h>
-
 #include "common.h"
 
 class PhysicsManager : public Singleton<PhysicsManager> {
@@ -24,3 +22,4 @@ class PhysicsManager : public Singleton<PhysicsManager> {
 };
 
 #endif
+

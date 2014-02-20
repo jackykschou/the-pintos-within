@@ -1,0 +1,32 @@
+# Compiled Object files
+*.slo
+*.lo
+*.o
+*.obj
+*.log
+# Compiled Dynamic libraries
+*.so
+*.dylib
+*.dll
+*.gch
+
+# Compiled Static libraries
+*.lai
+*.la
+*.a
+*.lib
+
+# Executables
+*.exe
+*.out
+*.app
+OgreApp
+
+Makefile
+Makefile.in
+autom4te.cache/
+config.status
+configure
+libtool
+aclocal.m4
+.deps/

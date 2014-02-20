@@ -1,7 +1,6 @@
 #ifndef __GameObject_h_
 #define __GameObject_h_
 
-
 #include "common.h"
 
 #include "Component.h"
@@ -65,3 +64,4 @@ public:
 };
 
 #endif // #ifndef __GameObject_h_
+
