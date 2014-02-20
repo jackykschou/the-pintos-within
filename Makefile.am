@@ -5,7 +5,6 @@ OgreApp_CPPFLAGS= -I$(top_srcdir) -std=c++0x
 OgreApp_SOURCES= Application.cpp PhysicsManager.cpp ResourcesManager.cpp GraphicsManager.cpp SceneManager.cpp Scene.cpp GameObject.cpp Component.cpp Transform.cpp Camera.cpp Mesh.cpp FPSCamera.cpp FPSController.cpp
 OgreApp_CXXFLAGS= $(OGRE_CFLAGS) $(OIS_CFLAGS) $(bullet_CFLAGS) $(SDL_CFLAGS)
 OgreApp_LDADD= $(OGRE_LIBS) $(OIS_LIBS) $(bullet_LIBS) $(SDL_LIBS)
- 
 EXTRA_DIST= buildit makeit
 AUTOMAKE_OPTIONS= foreign
 

@@ -1,15 +1,14 @@
 #include "Singleton.h"
-
 #include "PhysicsManager.h"
 #include <btBulletDynamicsCommon.h>
 
-void PhysicsManager::initialize() 
-{
+void PhysicsManager::initialize() {
 
 	collisionConfiguration = new btDefaultCollisionConfiguration();
 	dispatcher = new btCollisionDispatcher(collisionConfiguration);
 	overlappingPairCache = new btDbvtBroadphase();
 	solver = new btSequentialImpulseConstraintSolver();
+	// btAlignedObjectArray<btCollisionShape*> collisionShapes;
 
 }
 

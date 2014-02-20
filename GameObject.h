@@ -3,8 +3,8 @@
 
 #include "common.h"
 
-#include "Component.h"
 #include "Scene.h"
+#include "Component.h"
 
 class Scene;
 class Component;

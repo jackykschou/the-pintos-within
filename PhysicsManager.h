@@ -2,7 +2,7 @@
 #define __PhysicsManager_h_
 
 #include <btBulletDynamicsCommon.h>
-#include "common.h"
+#include "Singleton.h"
 
 class PhysicsManager : public Singleton<PhysicsManager> {
 
@@ -11,6 +11,7 @@ class PhysicsManager : public Singleton<PhysicsManager> {
 		btCollisionDispatcher* dispatcher;
 		btBroadphaseInterface* overlappingPairCache;
 		btSequentialImpulseConstraintSolver* solver;
+		// btDiscreteDynamicsWorld* dynamicsWorld;
 		btConstraintSolver* mConstraintsolver;
 		btCollisionWorld* mWorld;
 
