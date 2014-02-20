@@ -3,7 +3,6 @@
 #include <btBulletDynamicsCommon.h>
 
 void PhysicsManager::initialize() {
-
 	collisionConfiguration = new btDefaultCollisionConfiguration();
 	dispatcher = new btCollisionDispatcher(collisionConfiguration);
 	overlappingPairCache = new btDbvtBroadphase();
@@ -17,7 +16,7 @@ btDiscreteDynamicsWorld *PhysicsManager::createDynamicsWorld() {
 	return dynamicsWorld;
 }
 
-void PhysicsManager::updatePhysics (btDiscreteDynamicsWorld *dynamicsWorld, const float elapsedTime) {
+void PhysicsManager::updatePhysics(btDiscreteDynamicsWorld *dynamicsWorld, const float elapsedTime) {
 	dynamicsWorld->stepSimulation(elapsedTime, 5, 0.017);
 }
 

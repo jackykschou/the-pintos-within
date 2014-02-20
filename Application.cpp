@@ -37,8 +37,14 @@ void initializeGame()
     SceneManager::instance()->initialize();
     AudioManager::instance()->initialize();
 }
-void createGameContents();
-void startGame();
+
+void createGameContents() {
+
+}
+
+void startGame() {
+
+}
 
 
 /****************************************************************************

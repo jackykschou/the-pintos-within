@@ -33,6 +33,30 @@ void GUIManager::initialize(const Ogre::String& appName) {
     _mDetailsPanel->hide();
 }
 
-bool GUIManager::isVisible() {
+bool GUIManager::isTrayVisible() {
     return _mTrayMgr->isDialogVisible();
+}
+
+// Upadtes the stats in the tray
+void GUIManager::update(const Ogre::FrameEvent& evt) {
+    _mTrayMgr->frameRenderingQueued(evt);
+}
+
+// Turns the display on/off
+void GUIManager::toggleTray() {
+    if (isTrayVisible()) {
+        hideTray();
+    } else {
+        showTray();
+    }
+}
+
+void GUIManager::hideTray() {
+    _mTrayMgr->removeWidgetFromTray(_mDetailsPanel);
+    _mDetailsPanel->hide();
+}
+
+void GUIManager::showTray() {
+    _mTrayMgr->moveWidgetToTray(_mDetailsPanel, OgreBites::TL_TOPRIGHT, 0);
+    _mDetailsPanel->show();
 }

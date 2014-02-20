@@ -6,7 +6,12 @@
 class GUIManager : public Singleton<GUIManager>, public OgreBites::SdkTrayListener {
   public:
 	void initialize(const Ogre::String& appName);
-	bool isVisible();
+	void update(const Ogre::FrameEvent& evt);
+
+	bool isTrayVisible();
+	void hideTray();
+	void showTray();
+	void toggleTray();
 
   private:
   	OgreBites::SdkTrayManager* _mTrayMgr;
