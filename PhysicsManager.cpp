@@ -1,7 +1,7 @@
 #include "Singleton.h"
-
 #include "PhysicsManager.h"
 #include <btBulletDynamicsCommon.h>
+
 void PhysicsManager::initialize() {
 
 	collisionConfiguration = new btDefaultCollisionConfiguration();
@@ -22,4 +22,3 @@ void PhysicsManager::updatePhysics (btDiscreteDynamicsWorld *dynamicsWorld, cons
 	dynamicsWorld->stepSimulation(elapsedTime, 5, 0.017);
 }
 
-int main(){}

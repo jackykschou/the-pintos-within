@@ -1,11 +1,10 @@
 #ifndef __PhysicsManager_h_
 #define __PhysicsManager_h_
 
-
 #include <btBulletDynamicsCommon.h>
 #include "Singleton.h"
 
-class PhysicsManager : Singleton<PhysicsManager> {
+class PhysicsManager : public Singleton<PhysicsManager> {
 
 	protected:
 		btDefaultCollisionConfiguration* collisionConfiguration;
@@ -24,3 +23,4 @@ class PhysicsManager : Singleton<PhysicsManager> {
 };
 
 #endif
+

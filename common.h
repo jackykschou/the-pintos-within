@@ -9,6 +9,7 @@
 #include <cmath>
 #include <climits>
 #include <ctime>
+#include <sstream>
 
 #include <algorithm>
 #include <random>
@@ -32,6 +33,7 @@
 #include "Component.h"
 // #include "Camera.h"
 
+#include "Singleton.h"
 
 #endif // #ifndef __common_h_
 
