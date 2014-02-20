@@ -1,9 +1,9 @@
-#include "SDL.h"
-#include "SDL_mixer.h"
+// #include "SDL.h"
+// #include "SDL_mixer.h"
 
 #include "common.h"
 
-class AudioManager : Singleton<AudioManager>
-{
-
-}
+class AudioManager : public Singleton<AudioManager> {
+  public:
+  	void initialize();
+};
