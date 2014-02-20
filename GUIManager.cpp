@@ -1,10 +1,11 @@
 #include "GUIManager.h"
+#include "InputManager.h"
 
-void GUIManager::initialize(string appName) {
+void GUIManager::initialize(const Ogre::String& appName) {
 	_mTrayMgr = new OgreBites::SdkTrayManager(
 		appName,
 		GraphicsManager::instance()->getRenderWindow(),
-		GraphicsManager::instance()->getMouse(),
+		InputManager::instance()->getMouse(),
 		this
 	);
 
@@ -30,4 +31,8 @@ void GUIManager::initialize(string appName) {
     _mDetailsPanel->setParamValue(9, "Bilinear");
     _mDetailsPanel->setParamValue(10, "Solid");
     _mDetailsPanel->hide();
+}
+
+bool GUIManager::isVisible() {
+    return _mTrayMgr->isDialogVisible();
 }

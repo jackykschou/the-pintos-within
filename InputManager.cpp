@@ -73,7 +73,7 @@ bool InputManager::isMouseUp(OIS::MouseButtonID button) {
 	return !isMouseDown(button);
 }
 
-OIS::KeyEvent* InputManager::getKeyPressedEvent() {
+OIS::KeyEvent* InputManager::InputManager::getKeyPressedEvent() {
 	return _lastKeyPressedEvt;
 }
 
@@ -97,7 +97,7 @@ OIS::Mouse* InputManager::getMouse() {
 	
 }
 
-OIS::Mouse* InputManager::getKeyboard() {
+OIS::Keyboard* InputManager::getKeyboard() {
 	
 }
 

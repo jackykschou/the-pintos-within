@@ -1,15 +1,23 @@
 #include "common.h"
+#include "ResourcesManager.h"
+#include "GraphicsManager.h"
+#include "InputManager.h"
+#include "SceneManager.h"
+#include "GUIManager.h"
+#include "PhysicsManager.h"
+#include "AudioManager.h"
 
 #define APPLICATION_NAME "THE EPIC GAME"
 
 void initializeGame()
 {
-    // ResourcesManager::instance()->initialize();
-    // GraphicsManager::instance()->initialize(APPLICATION_NAME);
-    // InputManager::instance()->initialize();
-    // PhysicsManager::initialize()->initialize();
-    // SceneManager::initialize()->initialize();
-    // AudioManager::initialize()->initialize();
+    ResourcesManager::instance()->initialize();
+    GraphicsManager::instance()->initialize(APPLICATION_NAME);
+    InputManager::instance()->initialize();
+    GUIManager::instance()->initialize(APPLICATION_NAME);
+    PhysicsManager::instance()->initialize();
+    SceneManager::instance()->initialize();
+    AudioManager::instance()->initialize();
 }
 void createGameContents();
 void startGame();
@@ -21,23 +29,10 @@ void startGame();
 *                                                                           *
 *****************************************************************************/
 
-extern "C" 
+int main(int argc, char *argv[])
 {
-    int main(int argc, char *argv[])
-    {
-        // try 
-        // {
-        //     // initializeGame();
-        //     // createGameContents();
-        //     // startGame();
-        // } catch( Ogre::Exception& e ) {
-        //     std::cerr << "An exception has occured: " <<
-        //         e.getFullDescription().c_str() << std::endl;
-        // }
-
-        return 0;
-    }
-
+    initializeGame();
+    return 0;
 }
 
 /****************************************************************************
