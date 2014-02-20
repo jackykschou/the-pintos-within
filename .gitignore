@@ -30,3 +30,4 @@ configure
 libtool
 aclocal.m4
 .deps/
+Ogre.log

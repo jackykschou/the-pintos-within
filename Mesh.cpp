@@ -1,5 +1,8 @@
 #include "Mesh.h"
 
+int Mesh::mesh_entity_id_assigner = 0;
+int Mesh::mesh_node_id_assigner = 0;
+
 Mesh::Mesh(GameObject* gameObject, std::string mesh_name) : Component(gameObject)
 {
   if((_transform = gameObject->getComponent<Transform>()) == NULL)
@@ -9,10 +12,10 @@ Mesh::Mesh(GameObject* gameObject, std::string mesh_name) : Component(gameObject
   }
 
 	std::ostringstream entity_stream;
-  entity_stream << (Mesh::entity_id_assigner++);
+  entity_stream << (Mesh::mesh_entity_id_assigner++);
 
   std::ostringstream node_stream;
-  node_stream << (Mesh::node_id_assigner++);
+  node_stream << (Mesh::mesh_node_id_assigner++);
 
 	entity = SceneManager::instance()->current_scene->manager->createEntity((std::string("Entity") + entity_stream.str()).c_str(), mesh_name.c_str());
 	node = _gameObject->scene->manager->getRootSceneNode()->createChildSceneNode((std::string("Node") + node_stream.str()).c_str(), 

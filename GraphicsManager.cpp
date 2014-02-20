@@ -21,11 +21,15 @@ bool GraphicsManager::frameRenderingQueued(const Ogre::FrameEvent& evt)
 
     _frame_event = new Ogre::FrameEvent(evt);
 
+    InputManager::instance()->capture();
+
     SceneManager::instance()->current_scene->update();
 
     SceneManager::instance()->current_scene->physics_world->stepSimulation(evt.timeSinceLastFrame);
 
-    InputManager::instance()->capture();
+
+    if(InputManager::instance()->isKeyPressed(OIS::KC_ESCAPE))
+        stopRendering();
 
     //!mTrayMgr->frameRenderingQueued(evt);
 
@@ -67,6 +71,7 @@ Ogre::RenderWindow* GraphicsManager::getRenderWindow()
 void GraphicsManager::initializeRoot(Ogre::String pluginsCfg)
 {
 	_root = new Ogre::Root(pluginsCfg);
+    _root->addFrameListener(this);
 }
 
 void GraphicsManager::configureWindow(std::string window_name)

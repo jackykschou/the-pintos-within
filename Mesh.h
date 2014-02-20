@@ -11,11 +11,11 @@
 
 class Mesh : public Component
 {
-protected:
+public:
 	Transform* _transform;
 	
-	static int entity_id_assigner;
-	static int node_id_assigner;
+	static int mesh_entity_id_assigner;
+	static int mesh_node_id_assigner;
 public:
 	Mesh(GameObject*, std::string);
 	~Mesh();
@@ -25,7 +25,5 @@ public:
 
   	virtual void update();
 };
-int Mesh::entity_id_assigner = 0;
-int Mesh::node_id_assigner = 0;
 
 #endif // #ifndef __Mesh_h_
