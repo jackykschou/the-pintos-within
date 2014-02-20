@@ -44,9 +44,11 @@ class InputManager : public Singleton<InputManager>,
     bool isKeyReleased(OIS::KeyCode);
     bool isMouseDown(OIS::MouseButtonID button);
     bool isMouseUp(OIS::MouseButtonID button);
+    bool isMouseLeftClicked();
+    bool isMouseRightClicked();
 
-    OIS::KeyEvent*   getKeyPressedEvent();
-    OIS::KeyEvent*   getKeyReleasedEvent();
+    OIS::KeyEvent* getKeyPressedEvent();
+    OIS::KeyEvent* getKeyReleasedEvent();
     OIS::MouseEvent* getMouseMovedEvent();
     OIS::MouseEvent* getMousePressedEvent();
     OIS::MouseEvent* getMouseReleasedEvent();
