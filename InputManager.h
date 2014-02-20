@@ -10,6 +10,8 @@
 #include <OgreRenderWindow.h>
 #include <OgreWindowEventUtilities.h>
 
+#include "GraphicsManager.h"
+
 
 class InputManager : public Singleton<InputManager>,
                      public Ogre::WindowEventListener,
@@ -38,6 +40,8 @@ class InputManager : public Singleton<InputManager>,
     // Synchronous methods for checking state input
     bool isKeyDown(OIS::KeyCode kc);
     bool isKeyUp(OIS::KeyCode kc);
+    bool isKeyPressed(OIS::KeyCode);
+    bool isKeyReleased(OIS::KeyCode);
     bool isMouseDown(OIS::MouseButtonID button);
     bool isMouseUp(OIS::MouseButtonID button);
 

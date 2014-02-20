@@ -8,6 +8,7 @@
 
 #include "SceneManager.h"
 #include "ResourcesManager.h"
+#include "InputManager.h"
 
 class GraphicsManager : public Singleton<GraphicsManager>, public Ogre::FrameListener
 {
@@ -29,7 +30,6 @@ protected:
 	Ogre::FrameEvent* _frame_event;
 
 	bool frameRenderingQueued(const Ogre::FrameEvent& evt);
-	void windowClosed();
 	void configureWindow(std::string);
 	void initializeRoot();
 	void createFrameListener();

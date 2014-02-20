@@ -2,26 +2,7 @@
 
 GraphicsManager::~GraphicsManager()
 {
-    windowClosed();
     delete _root;
-}
-
-void GraphicsManager::windowClosed()
-{
-    //!detech input manager
-
-    // //Only close for window that created OIS (the main window in these demos)
-    // if( rw == _window )
-    // {
-    //     if( mInputManager )
-    //     {
-    //         mInputManager->destroyInputObject( mMouse );
-    //         mInputManager->destroyInputObject( mKeyboard );
-
-    //         OIS::InputManager::destroyInputSystem(mInputManager);
-    //         mInputManager = 0;
-    //     }
-    // }
 }
 
 bool GraphicsManager::frameRenderingQueued(const Ogre::FrameEvent& evt)
@@ -34,16 +15,16 @@ bool GraphicsManager::frameRenderingQueued(const Ogre::FrameEvent& evt)
 
     last_render_time = clock();
 
+    delete _frame_event;
+    _frame_event = NULL;
+
     _frame_event = new Ogre::FrameEvent(evt);
 
     SceneManager::instance()->current_scene->update();
 
     SceneManager::instance()->current_scene->physics_world->stepSimulation(((double)(clock() - last_render_time)) / CLOCKS_PER_SEC);
 
-
-    //Need to capture/update each device
-    //!mKeyboard->capture();
-    //!mMouse->capture();
+    InputManager::instance()->capture();
 
     //!mTrayMgr->frameRenderingQueued(evt);
 
@@ -120,5 +101,6 @@ void GraphicsManager::stopRendering()
 {
 	_shutdown = true;
 
+    InputManager::instance()->windowClosed(_window);
 	//! need to to clean up of other managers
 }
