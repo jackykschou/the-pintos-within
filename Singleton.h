@@ -19,3 +19,4 @@ template <typename N>
 N* Singleton<N>::_ptr = 0;
 
 #endif
+
