@@ -8,6 +8,7 @@
 *.so
 *.dylib
 *.dll
+*.gch
 
 # Compiled Static libraries
 *.lai
@@ -28,3 +29,4 @@ config.status
 configure
 libtool
 aclocal.m4
+.deps/

@@ -1,11 +1,21 @@
-#ifndef __BaseApplication_h_
-#define __BaseApplication_h_
+#ifndef __Singleton_h_
+#define __Singleton_h_
 
 template <typename N>
-class Singleton
-{
-public:
-	static Singleton& instance();
+class Singleton {
+  public:
+	static N* instance() {
+		if (Singleton<N>::_ptr == 0) {
+			Singleton<N>::_ptr = new N();
+		}
+		return Singleton<N>::_ptr;
+	}
+
+  private:
+	static N* _ptr;
 };
 
-#endif // #ifndef __BaseApplication_h_
+template <typename N>
+N* Singleton<N>::_ptr = 0;
+
+#endif

@@ -1,5 +1,5 @@
 ACLOCAL_AMFLAGS= -I m4
-noinst_HEADERS= Singleton.h PhysicsManager.h
+noinst_HEADERS= Vector3.h Singleton.h PhysicsManager.h InputManager.h 
 
 bin_PROGRAMS= OgreApp
 OgreApp_CPPFLAGS= -I$(top_srcdir) -std=c++0x
@@ -9,3 +9,4 @@ OgreApp_LDADD= $(OGRE_LIBS) $(OIS_LIBS) $(bullet_LIBS) $(SDL_LIBS)
 
 EXTRA_DIST= buildit makeit
 AUTOMAKE_OPTIONS= foreign
+
