@@ -43,16 +43,15 @@ void InputManager::capture() {
 	_mKeyboard->capture();
 	_mMouse->capture();
 	// flush old events
-	delete _lastKeyPressedEvt;
-	_lastKeyPressedEvt    = NULL;
-	delete _lastKeyReleasedEvt;
-	_lastKeyReleasedEvt   = NULL;
-	delete _lastMouseMovedEvt;
-	_lastKeyReleasedEvt   = NULL;
-	delete _lastMousePressedEvt;
-	_lastMousePressedEvt  = NULL;
-	delete _lastMouseReleasedEvt;
-	_lastMouseReleasedEvt = NULL;
+
+	if(_lastKeyPressedEvt != NULL)
+	{
+		delete _lastKeyPressedEvt;
+		delete _lastKeyReleasedEvt;
+		delete _lastMouseMovedEvt;
+		delete _lastMousePressedEvt;
+		delete _lastMouseReleasedEvt;
+	}
 }
 
 // Methods used for polling input
@@ -83,7 +82,17 @@ bool InputManager::isMouseUp(OIS::MouseButtonID button) {
 	return !isMouseDown(button);
 }
 
-OIS::KeyEvent* InputManager::InputManager::getKeyPressedEvent() {
+bool InputManager::isMouseLeftClicked()
+{
+	return isMouseDown(OIS::MouseButtonID::MB_Left);
+}
+
+bool InputManager::isMouseRightClicked()
+{
+	return isMouseDown(OIS::MouseButtonID::MB_Right);
+}
+
+OIS::KeyEvent* InputManager::getKeyPressedEvent() {
 	return _lastKeyPressedEvt;
 }
 
@@ -151,6 +160,7 @@ void InputManager::windowResized(Ogre::RenderWindow* rw)
 
 void InputManager::windowClosed(Ogre::RenderWindow* rw) 
 {
+	Ogre::WindowEventUtilities::removeWindowEventListener(rw, this);
     //Only close for window that created OIS (the main window in these demos)
     if(_mInputManager)
     {

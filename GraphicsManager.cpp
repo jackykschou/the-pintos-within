@@ -12,17 +12,18 @@ bool GraphicsManager::frameRenderingQueued(const Ogre::FrameEvent& evt)
 
     if(_shutdown)
         return false;
-
-    last_render_time = clock();
-
-    delete _frame_event;
-    _frame_event = NULL;
+    
+    if(_frame_event != NULL)
+    {
+        delete _frame_event;
+        _frame_event = NULL;
+    }
 
     _frame_event = new Ogre::FrameEvent(evt);
 
     SceneManager::instance()->current_scene->update();
 
-    SceneManager::instance()->current_scene->physics_world->stepSimulation(((double)(clock() - last_render_time)) / CLOCKS_PER_SEC);
+    SceneManager::instance()->current_scene->physics_world->stepSimulation(evt.timeSinceLastFrame);
 
     InputManager::instance()->capture();
 
