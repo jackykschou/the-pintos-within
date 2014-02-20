@@ -8,7 +8,6 @@ void PhysicsManager::initialize() {
 	dispatcher = new btCollisionDispatcher(collisionConfiguration);
 	overlappingPairCache = new btDbvtBroadphase();
 	solver = new btSequentialImpulseConstraintSolver();
-	// btAlignedObjectArray<btCollisionShape*> collisionShapes;
 
 }
 

@@ -11,7 +11,6 @@ class PhysicsManager : public Singleton<PhysicsManager> {
 		btCollisionDispatcher* dispatcher;
 		btBroadphaseInterface* overlappingPairCache;
 		btSequentialImpulseConstraintSolver* solver;
-		// btDiscreteDynamicsWorld* dynamicsWorld;
 		btConstraintSolver* mConstraintsolver;
 		btCollisionWorld* mWorld;
 

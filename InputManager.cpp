@@ -13,7 +13,7 @@ void InputManager::initialize() {
     std::ostringstream windowHndStr;
     Ogre::RenderWindow* mWindow;
 
-	//mWindow = GraphicsManager::instance()->getRenderWindow();
+	mWindow = GraphicsManager::instance()->getRenderWindow();
     mWindow->getCustomAttribute("WINDOW", &windowHnd);
     windowHndStr << windowHnd;
     pl.insert(std::make_pair(std::string("WINDOW"), windowHndStr.str()));
@@ -53,6 +53,16 @@ bool InputManager::isKeyDown(OIS::KeyCode kc) {
 
 bool InputManager::isKeyUp(OIS::KeyCode kc) {
 	return !isKeyDown(kc);
+}
+
+bool InputManager::isKeyPressed(OIS::KeyCode kc)
+{
+	return _lastKeyPressedEvt->key == kc;
+}
+
+bool InputManager::isKeyReleased(OIS::KeyCode kc)
+{
+	return _lastKeyReleasedEvt->key == kc;
 }
 
 bool InputManager::isMouseDown(OIS::MouseButtonID button) {
@@ -111,7 +121,8 @@ bool InputManager::mouseReleased(const OIS::MouseEvent &arg, OIS::MouseButtonID 
 }
 
 // Event handlers for window events
-void InputManager::windowResized(Ogre::RenderWindow* rw) {
+void InputManager::windowResized(Ogre::RenderWindow* rw) 
+{
 	unsigned int width, height, depth;
 	int left, top;
 	rw->getMetrics(width, height, depth, left, top);
@@ -121,10 +132,18 @@ void InputManager::windowResized(Ogre::RenderWindow* rw) {
 	ms.height = height;
 }
 
-void InputManager::windowClosed(Ogre::RenderWindow* rw) {
+void InputManager::windowClosed(Ogre::RenderWindow* rw) 
+{
+    //Only close for window that created OIS (the main window in these demos)
+    if(_mInputManager)
+    {
+        _mInputManager->destroyInputObject(_mMouse);
+        _mInputManager->destroyInputObject(_mKeyboard);
 
+        OIS::InputManager::destroyInputSystem(_mInputManager);
+        _mInputManager = 0;
+    }
 }
-
 
 // TODO
 
