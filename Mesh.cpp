@@ -1,5 +1,8 @@
 #include "Mesh.h"
 
+int Mesh::mesh_entity_id_assigner = 0;
+int Mesh::mesh_node_id_assigner = 0;
+
 Mesh::Mesh(GameObject* gameObject, std::string mesh_name) : Component(gameObject)
 {
   if((_transform = gameObject->getComponent<Transform>()) == NULL)

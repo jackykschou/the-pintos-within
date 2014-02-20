@@ -25,7 +25,5 @@ public:
 
   	virtual void update();
 };
-int Mesh::mesh_entity_id_assigner = 0;
-int Mesh::mesh_node_id_assigner = 0;
 
 #endif // #ifndef __Mesh_h_

@@ -9,6 +9,13 @@ InputManager::InputManager() :
 
 // Sets up input devices and event callbacks
 void InputManager::initialize() {
+
+	_lastKeyPressedEvt = NULL;
+    _lastKeyReleasedEvt = NULL;
+    _lastMouseMovedEvt = NULL;
+    _lastMousePressedEvt = NULL;
+    _lastMouseReleasedEvt = NULL;
+
 	OIS::ParamList pl;
     size_t windowHnd = 0;
     std::ostringstream windowHndStr;
@@ -39,46 +46,42 @@ void InputManager::initialize() {
 }
 
 // Called every frame to snatch the input buffer from the device thread
-void InputManager::capture() {
+void InputManager::capture() 
+{
 	_mKeyboard->capture();
 	_mMouse->capture();
 	// flush old events
-
-	if(_lastKeyPressedEvt != NULL)
-	{
-		delete _lastKeyPressedEvt;
-		delete _lastKeyReleasedEvt;
-		delete _lastMouseMovedEvt;
-		delete _lastMousePressedEvt;
-		delete _lastMouseReleasedEvt;
-	}
 }
 
 // Methods used for polling input
-bool InputManager::isKeyDown(OIS::KeyCode kc) {
-	return _mKeyboard->isKeyDown(kc);
+bool InputManager::isKeyDown(OIS::KeyCode kc) 
+{
+	return _mKeyboard ? (_mKeyboard->isKeyDown(kc)) : false;
 }
 
-bool InputManager::isKeyUp(OIS::KeyCode kc) {
-	return !isKeyDown(kc);
+bool InputManager::isKeyUp(OIS::KeyCode kc) 
+{
+	return _mKeyboard ? (!isKeyDown(kc)) : false;
 }
 
 bool InputManager::isKeyPressed(OIS::KeyCode kc)
 {
-	return _lastKeyPressedEvt->key == kc;
+	return _lastKeyPressedEvt ? (_lastKeyPressedEvt->key == kc) : false;
 }
 
 bool InputManager::isKeyReleased(OIS::KeyCode kc)
 {
-	return _lastKeyReleasedEvt->key == kc;
+	return _lastKeyReleasedEvt ? (_lastKeyReleasedEvt->key == kc) : false;
 }
 
-bool InputManager::isMouseDown(OIS::MouseButtonID button) {
+bool InputManager::isMouseDown(OIS::MouseButtonID button) 
+{
 	const OIS::MouseState &ms = _mMouse->getMouseState();
 	return ms.buttonDown(button);
 }
 
-bool InputManager::isMouseUp(OIS::MouseButtonID button) {
+bool InputManager::isMouseUp(OIS::MouseButtonID button) 
+{
 	return !isMouseDown(button);
 }
 
@@ -124,26 +127,51 @@ OIS::Keyboard* InputManager::getKeyboard()
 
 // Input callbacks
 bool InputManager::keyPressed(const OIS::KeyEvent &arg) {
+	if(_lastKeyPressedEvt != NULL) 
+	{
+		delete _lastKeyPressedEvt;
+		_lastKeyPressedEvt = NULL;
+	}
 	_lastKeyPressedEvt = new OIS::KeyEvent(arg);
 	return true;
 }
 
 bool InputManager::keyReleased(const OIS::KeyEvent &arg) {
+	if(_lastKeyReleasedEvt != NULL)
+	{
+		delete _lastKeyReleasedEvt;
+		_lastKeyReleasedEvt = NULL;
+	}
 	_lastKeyReleasedEvt = new OIS::KeyEvent(arg);
 	return true;
 }
 
 bool InputManager::mouseMoved(const OIS::MouseEvent &arg) {
+	if(_lastMouseMovedEvt != NULL)
+	{
+		delete _lastMouseMovedEvt;
+		_lastMouseMovedEvt = NULL;
+	}
 	_lastMouseMovedEvt = new OIS::MouseEvent(arg);
 	return true;
 }
 
 bool InputManager::mousePressed(const OIS::MouseEvent &arg, OIS::MouseButtonID id) {
+	if(_lastMousePressedEvt != NULL)
+	{
+		delete _lastMousePressedEvt;
+		_lastMousePressedEvt = NULL;
+	}
 	_lastMousePressedEvt = new OIS::MouseEvent(arg);
 	return true;
 }
 
 bool InputManager::mouseReleased(const OIS::MouseEvent &arg, OIS::MouseButtonID id) {
+	if(_lastMouseReleasedEvt != NULL)
+	{
+		delete _lastMouseReleasedEvt;
+		_lastMouseReleasedEvt = NULL;
+	}
 	_lastMouseReleasedEvt = new OIS::MouseEvent(arg);
 	return true;
 }
