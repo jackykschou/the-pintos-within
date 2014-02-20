@@ -1,5 +1,6 @@
 #include "AudioManager.h"
 
-void AudioManager::initialize() {
+void AudioManager::initialize() 
+{
 
 }

@@ -112,12 +112,14 @@ OIS::MouseEvent* InputManager::getMouseReleasedEvent() {
 	return _lastMouseReleasedEvt;
 }
 
-OIS::Mouse* InputManager::getMouse() {
-	
+OIS::Mouse* InputManager::getMouse() 
+{
+	return _mMouse;
 }
 
-OIS::Keyboard* InputManager::getKeyboard() {
-	
+OIS::Keyboard* InputManager::getKeyboard() 
+{
+	return _mKeyboard;
 }
 
 // Input callbacks

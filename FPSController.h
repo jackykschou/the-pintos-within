@@ -5,7 +5,7 @@
 
 #include "GameObject.h"
 
-class FPSController : gameObject
+class FPSController : GameObject
 {
 protected:
 
