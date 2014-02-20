@@ -14,6 +14,7 @@ void InputManager::initialize() {
     std::ostringstream windowHndStr;
     Ogre::RenderWindow* mWindow;
 
+    // set up the render window
 	mWindow = GraphicsManager::instance()->getRenderWindow();
     mWindow->getCustomAttribute("WINDOW", &windowHnd);
     windowHndStr << windowHnd;
@@ -43,10 +44,15 @@ void InputManager::capture() {
 	_mMouse->capture();
 	// flush old events
 	delete _lastKeyPressedEvt;
+	_lastKeyPressedEvt    = NULL;
 	delete _lastKeyReleasedEvt;
+	_lastKeyReleasedEvt   = NULL;
 	delete _lastMouseMovedEvt;
+	_lastKeyReleasedEvt   = NULL;
 	delete _lastMousePressedEvt;
+	_lastMousePressedEvt  = NULL;
 	delete _lastMouseReleasedEvt;
+	_lastMouseReleasedEvt = NULL;
 }
 
 // Methods used for polling input
@@ -77,7 +83,7 @@ bool InputManager::isMouseUp(OIS::MouseButtonID button) {
 	return !isMouseDown(button);
 }
 
-OIS::KeyEvent* InputManager::getKeyPressedEvent() {
+OIS::KeyEvent* InputManager::InputManager::getKeyPressedEvent() {
 	return _lastKeyPressedEvt;
 }
 
@@ -95,6 +101,14 @@ OIS::MouseEvent* InputManager::getMousePressedEvent() {
 
 OIS::MouseEvent* InputManager::getMouseReleasedEvent() {
 	return _lastMouseReleasedEvt;
+}
+
+OIS::Mouse* InputManager::getMouse() {
+	
+}
+
+OIS::Keyboard* InputManager::getKeyboard() {
+	
 }
 
 // Input callbacks
@@ -147,144 +161,3 @@ void InputManager::windowClosed(Ogre::RenderWindow* rw)
         _mInputManager = 0;
     }
 }
-
-// TODO
-
-//-------------------------------------------------------------------------------------
-// bool BaseApplication::keyPressed( const OIS::KeyEvent &arg )
-// {
-//     if (mTrayMgr->isDialogVisible()) return true;   // don't process any more keys if dialog is up
-
-//     if (arg.key == OIS::KC_F)   // toggle visibility of advanced frame stats
-//     {
-//         mTrayMgr->toggleAdvancedFrameStats();
-//     }
-//     else if (arg.key == OIS::KC_G)   // toggle visibility of even rarer debugging details
-//     {
-//         if (mDetailsPanel->getTrayLocation() == OgreBites::TL_NONE)
-//         {
-//             mTrayMgr->moveWidgetToTray(mDetailsPanel, OgreBites::TL_TOPRIGHT, 0);
-//             mDetailsPanel->show();
-//         }
-//         else
-//         {
-//             mTrayMgr->removeWidgetFromTray(mDetailsPanel);
-//             mDetailsPanel->hide();
-//         }
-//     }
-//     else if (arg.key == OIS::KC_T)   // cycle polygon rendering mode
-//     {
-//         Ogre::String newVal;
-//         Ogre::TextureFilterOptions tfo;
-//         unsigned int aniso;
-
-//         switch (mDetailsPanel->getParamValue(9).asUTF8()[0])
-//         {
-//         case 'B':
-//             newVal = "Trilinear";
-//             tfo = Ogre::TFO_TRILINEAR;
-//             aniso = 1;
-//             break;
-//         case 'T':
-//             newVal = "Anisotropic";
-//             tfo = Ogre::TFO_ANISOTROPIC;
-//             aniso = 8;
-//             break;
-//         case 'A':
-//             newVal = "None";
-//             tfo = Ogre::TFO_NONE;
-//             aniso = 1;
-//             break;
-//         default:
-//             newVal = "Bilinear";
-//             tfo = Ogre::TFO_BILINEAR;
-//             aniso = 1;
-//         }
-
-//         Ogre::MaterialManager::getSingleton().setDefaultTextureFiltering(tfo);
-//         Ogre::MaterialManager::getSingleton().setDefaultAnisotropy(aniso);
-//         mDetailsPanel->setParamValue(9, newVal);
-//     }
-//     else if (arg.key == OIS::KC_R)   // cycle polygon rendering mode
-//     {
-//         Ogre::String newVal;
-//         Ogre::PolygonMode pm;
-
-//         switch (mCamera->getPolygonMode())
-//         {
-//         case Ogre::PM_SOLID:
-//             newVal = "Wireframe";
-//             pm = Ogre::PM_WIREFRAME;
-//             break;
-//         case Ogre::PM_WIREFRAME:
-//             newVal = "Points";
-//             pm = Ogre::PM_POINTS;
-//             break;
-//         default:
-//             newVal = "Solid";
-//             pm = Ogre::PM_SOLID;
-//         }
-
-//         mCamera->setPolygonMode(pm);
-//         mDetailsPanel->setParamValue(10, newVal);
-//     }
-//     else if(arg.key == OIS::KC_F5)   // refresh all textures
-//     {
-//         Ogre::TextureManager::getSingleton().reloadAll();
-//     }
-//     else if (arg.key == OIS::KC_SYSRQ)   // take a screenshot
-//     {
-//         mWindow->writeContentsToTimestampedFile("screenshot", ".jpg");
-//     }
-//     else if (arg.key == OIS::KC_ESCAPE)
-//     {
-//         mShutDown = true;
-//     }
-
-//     mCameraMan->injectKeyDown(arg);
-//     return true;
-// }
-
-// bool BaseApplication::keyReleased( const OIS::KeyEvent &arg )
-// {
-//     mCameraMan->injectKeyUp(arg);
-//     return true;
-// }
-
-// bool BaseApplication::mouseMoved( const OIS::MouseEvent &arg )
-// {
-//     if (mTrayMgr->injectMouseMove(arg)) return true;
-//     mCameraMan->injectMouseMove(arg);
-//     return true;
-// }
-
-// bool BaseApplication::mousePressed( const OIS::MouseEvent &arg, OIS::MouseButtonID id )
-// {
-//     if (mTrayMgr->injectMouseDown(arg, id)) return true;
-//     mCameraMan->injectMouseDown(arg, id);
-//     return true;
-// }
-
-// bool BaseApplication::mouseReleased( const OIS::MouseEvent &arg, OIS::MouseButtonID id )
-// {
-//     if (mTrayMgr->injectMouseUp(arg, id)) return true;
-//     mCameraMan->injectMouseUp(arg, id);
-//     return true;
-// }
-
-// //Unattach OIS before window shutdown (very important under Linux)
-// void BaseApplication::windowClosed(Ogre::RenderWindow* rw)
-// {
-//     //Only close for window that created OIS (the main window in these demos)
-//     if( rw == mWindow )
-//     {
-//         if( mInputManager )
-//         {
-//             mInputManager->destroyInputObject( mMouse );
-//             mInputManager->destroyInputObject( mKeyboard );
-
-//             OIS::InputManager::destroyInputSystem(mInputManager);
-//             mInputManager = 0;
-//         }
-//     }
-// }
