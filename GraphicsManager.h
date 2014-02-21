@@ -9,6 +9,7 @@
 #include "SceneManager.h"
 #include "ResourcesManager.h"
 #include "InputManager.h"
+#include "GUIManager.h"
 
 class GraphicsManager : public Singleton<GraphicsManager>, public Ogre::FrameListener
 {

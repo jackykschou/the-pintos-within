@@ -27,26 +27,10 @@ bool GraphicsManager::frameRenderingQueued(const Ogre::FrameEvent& evt)
 
     SceneManager::instance()->current_scene->physics_world->stepSimulation(evt.timeSinceLastFrame);
 
+    GUIManager::instance()->update(evt);
 
     if(InputManager::instance()->isKeyPressed(OIS::KC_ESCAPE))
         stopRendering();
-
-    //!mTrayMgr->frameRenderingQueued(evt);
-
-    //!!
-    /*if (!mTrayMgr->isDialogVisible())
-    {
-        if (mDetailsPanel->isVisible())   // if details panel is visible, then update its contents
-        {
-            mDetailsPanel->setParamValue(0, Ogre::StringConverter::toString(cameras[cameras_index]->getDerivedPosition().x));
-            mDetailsPanel->setParamValue(1, Ogre::StringConverter::toString(cameras[cameras_index]->getDerivedPosition().y));
-            mDetailsPanel->setParamValue(2, Ogre::StringConverter::toString(cameras[cameras_index]->getDerivedPosition().z));
-            mDetailsPanel->setParamValue(4, Ogre::StringConverter::toString(cameras[cameras_index]->getDerivedOrientation().w));
-            mDetailsPanel->setParamValue(5, Ogre::StringConverter::toString(cameras[cameras_index]->getDerivedOrientation().x));
-            mDetailsPanel->setParamValue(6, Ogre::StringConverter::toString(cameras[cameras_index]->getDerivedOrientation().y));
-            mDetailsPanel->setParamValue(7, Ogre::StringConverter::toString(cameras[cameras_index]->getDerivedOrientation().z));
-        }
-    }*/
 
     return true;
 }
@@ -56,7 +40,6 @@ void GraphicsManager::initialize(std::string window_name, Ogre::String pluginsCf
 	initializeRoot(pluginsCfg);
 	configureWindow(window_name);
 }
-
 
 Ogre::Root* GraphicsManager::getRenderRoot()
 {
@@ -79,7 +62,7 @@ void GraphicsManager::configureWindow(std::string window_name)
     // Show the configuration dialog and initialise the system
     // You can skip this and use root.restoreConfig() to load configuration
     // settings if you were sure there are valid ones saved in ogre.cfg
-    if(_root->showConfigDialog())
+    if(_root->restoreConfig() || _root->showConfigDialog())
     {
         // If returned true, user clicked OK so initialise
         // Here we choose to let the system create a default rendering window by passing 'true'

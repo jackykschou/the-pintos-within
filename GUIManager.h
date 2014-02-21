@@ -2,6 +2,7 @@
 #define __GUIManager_h_
 
 #include "common.h"
+#include "Singleton.h"
 
 class GUIManager : public Singleton<GUIManager>, public OgreBites::SdkTrayListener {
   public:
@@ -14,8 +15,9 @@ class GUIManager : public Singleton<GUIManager>, public OgreBites::SdkTrayListen
 	void toggleTray();
 
   private:
-  	OgreBites::SdkTrayManager* _mTrayMgr;
-  	OgreBites::ParamsPanel*    _mDetailsPanel;
+	void updateTray();
+	OgreBites::SdkTrayManager* _mTrayMgr;
+	OgreBites::ParamsPanel*    _mDetailsPanel;
 };
 
 #endif

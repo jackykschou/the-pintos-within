@@ -1,9 +1,8 @@
 #ifndef __AudioManager_h_
 #define __AudioManager_h_
 
-#include <SDL/SDL.h>
-#include <SDL/SDL_mixer.h>
 #include "common.h"
+#include "Singleton.h"
 
 #define AUDIO_RATE 22050
 #define AUDIO_FORMAT AUDIO_S16
