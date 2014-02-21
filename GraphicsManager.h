@@ -10,6 +10,7 @@
 #include "ResourcesManager.h"
 #include "InputManager.h"
 #include "GUIManager.h"
+#include "AudioManager.h"
 
 class GraphicsManager : public Singleton<GraphicsManager>, public Ogre::FrameListener
 {
@@ -24,6 +25,7 @@ public:
 	Ogre::FrameEvent* getFrameEvent();
 
 protected:
+	AudioFile af; // DELETEME
 	Ogre::Root* _root;
 	Ogre::RenderWindow* _window;
 	bool _shutdown;

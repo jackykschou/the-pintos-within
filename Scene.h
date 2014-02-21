@@ -8,11 +8,12 @@
 
 #include "GraphicsManager.h"
 #include "PhysicsManager.h"
-
 #include "SceneManager.h"
 #include "Component.h"
 #include "GameObject.h"
 
+class Camera;
+class Transform;
 class GameObject;
 
 class Scene
@@ -20,6 +21,7 @@ class Scene
 protected:
 		int _game_object_id_assigner;
 public:
+		Camera* main_camera;
 		int id;
 		std::string name;
 		btDiscreteDynamicsWorld* physics_world;

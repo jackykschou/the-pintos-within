@@ -3,11 +3,8 @@
 
 #include <OgreCamera.h>
 #include <OgreViewport.h>
-
 #include "Component.h"
 #include "Transform.h"
-#include "SceneManager.h"
-
 #include "common.h"
 
 class Camera : Component

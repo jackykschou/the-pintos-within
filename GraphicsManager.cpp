@@ -27,18 +27,33 @@ bool GraphicsManager::frameRenderingQueued(const Ogre::FrameEvent& evt)
 
     SceneManager::instance()->current_scene->update(evt.timeSinceLastFrame);
 
-    if(InputManager::instance()->isKeyPressed(OIS::KC_ESCAPE))
+    if (InputManager::instance()->isKeyPressed(OIS::KC_ESCAPE))
         stopRendering();
+
+    if (InputManager::instance()->isKeyPressed(OIS::KC_Q))
+        GUIManager::instance()->showTray();
+
+    if (InputManager::instance()->isKeyPressed(OIS::KC_W))
+        GUIManager::instance()->hideTray();
+
+    if (InputManager::instance()->isKeyPressed(OIS::KC_A)) {
+        if (af != -1) {
+            AudioManager::instance()->play2DSound(af, 0);
+            af = -1;
+        }
+    }
+
 
     return true;
 }
 
 void GraphicsManager::initialize(std::string window_name, Ogre::String pluginsCfg)
 {
+    af = AudioManager::instance()->loadAudioFile("media/sounds/shotgun.wav");
+    std::cout << af << std::endl;
 	initializeRoot(pluginsCfg);
 	configureWindow(window_name);
 }
-
 
 Ogre::Root* GraphicsManager::getRenderRoot()
 {
@@ -61,7 +76,7 @@ void GraphicsManager::configureWindow(std::string window_name)
     // Show the configuration dialog and initialise the system
     // You can skip this and use root.restoreConfig() to load configuration
     // settings if you were sure there are valid ones saved in ogre.cfg
-    if(_root->showConfigDialog())
+    if(_root->restoreConfig() || _root->showConfigDialog())
     {
         // If returned true, user clicked OK so initialise
         // Here we choose to let the system create a default rendering window by passing 'true'

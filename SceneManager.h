@@ -2,8 +2,8 @@
 #define __SceneManager_h_
 
 #include "common.h"
-
 #include "Scene.h"
+#include "Singleton.h"
 
 class Scene;
 

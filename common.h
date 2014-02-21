@@ -29,29 +29,18 @@
 #include <OgreSceneManager.h>
 #include <OgreRenderWindow.h>
 #include <OgreConfigFile.h>
-
+#include <OgreOverlay.h>
+#include <OgreOverlayManager.h>
 #include <OISEvents.h>
 #include <OISInputManager.h>
 #include <OISKeyboard.h>
 #include <OISMouse.h>
 
+#include <SDL/SDL.h>
+#include <SDL/SDL_mixer.h>
+
 #include <SdkTrays.h>
 #include <SdkCameraMan.h>
-
-// #include "ResourcesManager.h"
-// #include "GraphicsManager.h"
-// #include "AudioManager.h"
-// #include "SceneManager.h"
-#include "PhysicsManager.h"
-
-// #include "Scene.h"
-
-#include "GameObject.h"
-
-#include "Component.h"
-// #include "Camera.h"
-
-#include "Singleton.h"
 
 #endif // #ifndef __common_h_
 
