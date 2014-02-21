@@ -23,30 +23,12 @@ bool GraphicsManager::frameRenderingQueued(const Ogre::FrameEvent& evt)
 
     InputManager::instance()->capture();
 
-    SceneManager::instance()->current_scene->update();
+    GUIManager::instance()->update(evt);
 
-    SceneManager::instance()->current_scene->physics_world->stepSimulation(evt.timeSinceLastFrame);
-
+    SceneManager::instance()->current_scene->update(evt.timeSinceLastFrame);
 
     if(InputManager::instance()->isKeyPressed(OIS::KC_ESCAPE))
         stopRendering();
-
-    //!mTrayMgr->frameRenderingQueued(evt);
-
-    //!!
-    /*if (!mTrayMgr->isDialogVisible())
-    {
-        if (mDetailsPanel->isVisible())   // if details panel is visible, then update its contents
-        {
-            mDetailsPanel->setParamValue(0, Ogre::StringConverter::toString(cameras[cameras_index]->getDerivedPosition().x));
-            mDetailsPanel->setParamValue(1, Ogre::StringConverter::toString(cameras[cameras_index]->getDerivedPosition().y));
-            mDetailsPanel->setParamValue(2, Ogre::StringConverter::toString(cameras[cameras_index]->getDerivedPosition().z));
-            mDetailsPanel->setParamValue(4, Ogre::StringConverter::toString(cameras[cameras_index]->getDerivedOrientation().w));
-            mDetailsPanel->setParamValue(5, Ogre::StringConverter::toString(cameras[cameras_index]->getDerivedOrientation().x));
-            mDetailsPanel->setParamValue(6, Ogre::StringConverter::toString(cameras[cameras_index]->getDerivedOrientation().y));
-            mDetailsPanel->setParamValue(7, Ogre::StringConverter::toString(cameras[cameras_index]->getDerivedOrientation().z));
-        }
-    }*/
 
     return true;
 }

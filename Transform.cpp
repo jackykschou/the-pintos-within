@@ -9,11 +9,11 @@ Transform::Transform(GameObject* gameObject) : Component(gameObject)
 	rotX = 0;
 	rotY = 0;
 	rotZ = 0;
-	rotW = 0;
+	rotW = 1;
 
-	scaleX = 0;
-	scaleY = 0;
-	scaleZ = 0;
+	scaleX = 1;
+	scaleY = 1;
+	scaleZ = 1;
 }
 
 Transform::~Transform()

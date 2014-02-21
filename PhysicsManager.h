@@ -2,6 +2,7 @@
 #define __PhysicsManager_h_
 
 #include <btBulletDynamicsCommon.h>
+#include <btBulletCollisionCommon.h>
 #include "Singleton.h"
 
 class PhysicsManager : public Singleton<PhysicsManager> {

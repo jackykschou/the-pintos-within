@@ -12,7 +12,7 @@ Scene::Scene(std::string n)
 
 Scene::~Scene()
 {
-	for(auto gameObject : _game_objects)
+	for(auto gameObject : game_objects)
 	{
 		delete gameObject;
 	}
@@ -24,17 +24,17 @@ Scene::~Scene()
 void Scene::addGameObject(GameObject* gameObject)
 {
 	gameObject->id = (++_game_object_id_assigner);
-	_game_objects.push_back(gameObject);
+	game_objects.push_back(gameObject);
 }
 
 void Scene::removeGameObject(GameObject* gameObject)
 {
 	int i = 0;
-	for(auto g : _game_objects)
+	for(auto g : game_objects)
 	{
 		if(g->id == gameObject->id)
 		{
-			_game_objects.erase(_game_objects.begin() + i);
+			game_objects.erase(game_objects.begin() + i);
 			delete g;
 		}
 		++i;
@@ -43,20 +43,22 @@ void Scene::removeGameObject(GameObject* gameObject)
 
 std::vector<GameObject*> Scene::getGameObjectsOfTag(std::string tag)
 {
-	std::vector<GameObject*> gameObjects;
-	for(auto gameObject : _game_objects)
+	std::vector<GameObject*> temp_game_objects;
+	for(auto gameObject : game_objects)
 	{
 		if(gameObject->tag == tag)
-			gameObjects.push_back(gameObject);
+			temp_game_objects.push_back(gameObject);
 	}
-	return gameObjects;
+	return temp_game_objects;
 }
 
-void Scene::update()
+void Scene::update(float elapsed_time)
 {
-	for (auto gameObject : _game_objects)
-  { 
+	physics_world->stepSimulation(elapsed_time);
+
+	for (auto gameObject : game_objects)
+  	{ 
   		if(gameObject->active)
      		gameObject->update();
-  }
+  	}
 }

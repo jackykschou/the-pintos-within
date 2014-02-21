@@ -18,13 +18,13 @@ class GameObject;
 class Scene
 {
 protected:
-		std::vector<GameObject*> _game_objects;
 		int _game_object_id_assigner;
 public:
 		int id;
 		std::string name;
 		btDiscreteDynamicsWorld* physics_world;
 		Ogre::SceneManager* manager;
+		std::vector<GameObject*> game_objects;
 
 		Scene(std::string);
 		~Scene();
@@ -33,7 +33,7 @@ public:
 		void removeGameObject(GameObject*);
 		bool containsGameObject(GameObject*);
 		std::vector<GameObject*> getGameObjectsOfTag(std::string);
-		void update();
+		void update(float);
 };
 
 #endif // #ifndef __Scene_h_

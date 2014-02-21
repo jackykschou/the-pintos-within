@@ -17,7 +17,9 @@
 #include "FPSCamera.h"
 #include "FPSController.h"
 #include "InputManager.h"
-// #include "GUIManager.h"
+#include "GUIManager.h"
 #include "AudioManager.h"
+#include "Rigidbody.h"
+#include "SphereRigidbody.h"
 
 #endif // #ifndef __TheEngine_h_

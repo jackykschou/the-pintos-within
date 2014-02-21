@@ -3,27 +3,38 @@
 
 #include "common.h"
 
-class Rigidbody : public Component, public ContactResultCallback {
+#include "Component.h"
+#include "PhysicsManager.h"
+#include "Transform.h"
+
+#include "btCollisionObjectWrapper.h"
+
+class Transform;
+
+class Rigidbody : public Component, public btCollisionWorld::ContactResultCallback 
+{
 	protected:
-		virtual btDiscreteDynamicsWorld* dynamicsWorld;
+		btDiscreteDynamicsWorld* dynamicsWorld;
+
 	public:
-		virtual void Rigidbody(GameObject *gameObject);
+		Rigidbody(GameObject*);
+		~Rigidbody();
+
 		virtual void update();
-		virtual void ~Rigidbody();
-		virtual void UpdateRigidbodyFromTransform ();
-		virtual void UpdateTransformFromRigidbody ();
-		virtual bool needsCollision(btBroadphaseProxy* proxy);
+		virtual void updateRigidbodyFromTransform();
+		virtual void updateTransformFromRigidbody();
+		virtual bool needsCollision(btBroadphaseProxy*) const;
+
 		virtual btScalar addSingleResult(btManifoldPoint& cp,
-		    const btCollisionObjectWrapper* colObj0,int partId0,int index0,
-		    const btCollisionObjectWrapper* colObj1,int partId1,int index1);
-		virtual void OnCollision (btManifoldPoint &cp, const btCollisionObject *colObj0, const btCollisionObject *colObj1); //TODO: FINISH
+		    const btCollisionObjectWrapper*, int, int,
+		    const btCollisionObjectWrapper*, int, int);
+
+		virtual void OnCollision (btManifoldPoint&, const btCollisionObject*, const btCollisionObject*);
 
 		Transform* _transform;
 		btCollisionShape* collisionShape;
 		btDefaultMotionState* motionState;
 		btRigidBody* rigidBody;
-		bool kinematic = false;
-
 };
 
 #endif // #ifndef __Rigidbody_h_
