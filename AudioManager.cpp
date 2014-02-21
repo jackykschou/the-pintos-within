@@ -15,6 +15,7 @@ AudioFile AudioManager::loadAudioFile(const char *file) {
 
 // returns a channel integer that can be used to stop the sound
 AudioChannel AudioManager::play2DSound(AudioFile file, int loops) {
+	std::cout <<_loadedFiles[file]<< std::endl;
 	return Mix_PlayChannel(-1, _loadedFiles[file], loops);
 }
 

@@ -31,9 +31,6 @@ void GUIManager::initialize(const Ogre::String& appName) {
     _mDetailsPanel = _mTrayMgr->createParamsPanel(OgreBites::TL_NONE, "DetailsPanel", 500, items);
     _mDetailsPanel->setParamValue(9, "Bilinear");
     _mDetailsPanel->setParamValue(10, "Solid");
-
-    _mTrayMgr->createButton(OgreBites::TL_TOPLEFT, "MyButton", "Click Me!");
-    _mDetailsPanel->show();
 }
 
 // Upadtes the stats in the tray
@@ -44,8 +41,6 @@ void GUIManager::update(const Ogre::FrameEvent& evt) {
 
 void GUIManager::updateTray() {
     if (!isTrayVisible()) { return; }
-    std::cout << "HELLO" << std::endl;
-
     Ogre::Camera *camera = SceneManager::instance()->current_scene->main_camera->camera;
     _mDetailsPanel->setParamValue(0, Ogre::StringConverter::toString(camera->getDerivedPosition().x));
     _mDetailsPanel->setParamValue(1, Ogre::StringConverter::toString(camera->getDerivedPosition().y));
@@ -71,12 +66,10 @@ void GUIManager::hideTray() {
 }
 
 void GUIManager::showTray() {
-        std::cout << "HELLO2" << std::endl;
-
     _mTrayMgr->moveWidgetToTray(_mDetailsPanel, OgreBites::TL_TOPRIGHT, 0);
     _mDetailsPanel->show();
 }
 
 bool GUIManager::isTrayVisible() {
-    return _mTrayMgr->isDialogVisible();
+    return _mDetailsPanel->getTrayLocation() != OgreBites::TL_NONE;
 }
