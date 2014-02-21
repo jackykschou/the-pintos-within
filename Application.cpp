@@ -19,7 +19,6 @@ void initializeGame()
     PhysicsManager::instance()->initialize();
     SceneManager::instance()->initialize();
     AudioManager::instance()->initialize();
-    GUIManager::instance()->initialize(APPLICATION_NAME);
 }
 
 void createGameContents()
@@ -29,9 +28,21 @@ void createGameContents()
 
 
     GameObject *go = new GameObject("Camra", first_scene);
-    Camera *c = new Camera(go, "camera1");
+    FPSCamera *c = new FPSCamera(go, "camera1", 0);
+    Transform *tran1 = go->getComponent<Transform>();
+    tran1->posX = 30;
+    tran1->posY = 30;
+    tran1->posZ = 30;
 
-    SceneManager::instance()->current_scene->main_camera = c;
+
+    GameObject *ogre = new GameObject("Head", first_scene);
+    Mesh *head = new Mesh(ogre, "ogrehead.mesh");
+    Transform *tran2 = ogre->getComponent<Transform>();
+    tran2->posX = 1;
+    tran2->posY = 1;
+    tran2->posZ = 1;
+
+    SceneManager::instance()->current_scene->main_camera = (Camera*)c;
 }
 
 void startGame()

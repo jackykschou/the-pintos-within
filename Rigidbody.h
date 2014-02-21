@@ -29,7 +29,7 @@ class Rigidbody : public Component, public btCollisionWorld::ContactResultCallba
 		    const btCollisionObjectWrapper*, int, int,
 		    const btCollisionObjectWrapper*, int, int);
 
-		virtual void OnCollision (btManifoldPoint&, const btCollisionObject*, const btCollisionObject*);
+		virtual void OnCollision (btVector3*, btVector3*, GameObject*);
 
 		Transform* _transform;
 		btCollisionShape* collisionShape;

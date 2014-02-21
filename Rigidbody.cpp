@@ -55,11 +55,6 @@ void Rigidbody::updateTransformFromRigidbody ()
 	_transform->rotW = rigQuat.getAngle();
 }
 
-void Rigidbody::OnCollision (btManifoldPoint &cp, const btCollisionObject *colObj0, const btCollisionObject *colObj1) 
-{
-
-}
-
 //! If you don't want to consider collisions where the bodies are joined by a constraint, override needsCollision:
 /*! However, if you use a btCollisionObject for #body instead of a btRigidBody,
  *  then this is unnecessary—checkCollideWithOverride isn't available */
@@ -77,14 +72,19 @@ btScalar Rigidbody::addSingleResult(btManifoldPoint& cp,
 	const btCollisionObjectWrapper* colObj0,int partId0,int index0,
 	const btCollisionObjectWrapper* colObj1,int partId1,int index1)
 {
-	btVector3 pt; // will be set to point of collision relative to body
+	GameObject* gameObject;
 	if(colObj0->m_collisionObject == rigidBody) {
-		pt = cp.m_localPointA;
+		gameObject = (GameObject*)(colObj0->m_collisionObject->getUserPointer());
 	} else {
 		assert(colObj1->m_collisionObject==rigidBody && "body does not match either collision object");
-		pt = cp.m_localPointB;
+		gameObject = (GameObject*)(colObj1->m_collisionObject->getUserPointer());
 	}
-	// OnCollision();
-	// do stuff with the collision point
+
+	OnCollision(&(cp.m_positionWorldOnB), &(cp.m_normalWorldOnB), gameObject);
+	
 	return 0; // not actually sure if return value is used for anything...?
+}
+
+void Rigidbody::OnCollision (btVector3* contact_point, btVector3* contact_normal_point, GameObject* gameObject)
+{
 }

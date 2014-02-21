@@ -15,7 +15,7 @@ FPSCamera::~FPSCamera()
 void FPSCamera::update()
 {
 	camera->setPosition(_transform->posX, _transform->posY + _height_offset, _transform->posZ);
-	// cameraMan->frameRenderingQueued(GraphicsManager::instance()->getFrameEvent());
-	// cameraMan->injectMouseMove(InputManager::instance()->getMouseEvent());
+	cameraMan->frameRenderingQueued(*(GraphicsManager::instance()->getFrameEvent()));
+	cameraMan->injectMouseMove(*(InputManager::instance()->getMouseMovedEvent()));
 }
 
