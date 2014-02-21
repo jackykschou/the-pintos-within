@@ -30,7 +30,6 @@ Camera::~Camera()
 void Camera::update()
 {
 	Component::update();
-
 	camera->setPosition(_transform->posX, _transform->posY, _transform->posZ);
 	camera->setOrientation(Ogre::Quaternion(_transform->rotW, _transform->rotX, _transform->rotY, _transform->rotZ));
 }

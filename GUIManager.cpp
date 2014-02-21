@@ -28,10 +28,6 @@ void GUIManager::initialize(const Ogre::String& appName) {
     items.push_back("Filtering");
     items.push_back("Poly Mode");
 
-    // initialize the overlay system
-    _mOverlaySystem = new Ogre::OverlaySystem();
-    ->addRenderQueueListener(_mOverlaySystem);
-
     _mDetailsPanel = _mTrayMgr->createParamsPanel(OgreBites::TL_NONE, "DetailsPanel", 500, items);
     _mDetailsPanel->setParamValue(9, "Bilinear");
     _mDetailsPanel->setParamValue(10, "Solid");

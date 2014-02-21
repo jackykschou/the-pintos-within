@@ -25,6 +25,12 @@ void createGameContents()
 {
     Scene* first_scene = new Scene("New Scene");
     SceneManager::instance()->changeCurrentScene(first_scene);
+
+
+    GameObject *go = new GameObject("Camra", first_scene);
+    Camera *c = new Camera(go, "camera1");
+
+    SceneManager::instance()->current_scene->main_camera = c;
 }
 
 void startGame()
