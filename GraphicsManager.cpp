@@ -29,8 +29,11 @@ bool GraphicsManager::frameRenderingQueued(const Ogre::FrameEvent& evt)
 
     GUIManager::instance()->update(evt);
 
-    if(InputManager::instance()->isKeyPressed(OIS::KC_ESCAPE))
+    if (InputManager::instance()->isKeyPressed(OIS::KC_ESCAPE))
         stopRendering();
+
+    if (InputManager::instance()->isKeyPressed(OIS::KC_SPACE))
+        GUIManager::instance()->toggleTray();
 
     return true;
 }
