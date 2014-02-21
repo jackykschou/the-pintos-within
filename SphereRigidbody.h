@@ -1,8 +1,16 @@
-class SphereRigidbody
+#ifndef __SphereRigidbody_h_
+#define __SphereRigidbody_h_
+
+#include "Rigidbody.h"
+
+class SphereRigidbody : Rigidbody
 {
 public:
-	SphereRigidbody(GameObject gameObject);
+	SphereRigidbody(GameObject*, float);
 	~SphereRigidbody();
 
-	/* data */
+	virtual void update();
+
 };
+
+#endif // #ifndef __SphereRigidbody_h_

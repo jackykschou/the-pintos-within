@@ -12,7 +12,6 @@ class Component;
 class GameObject
 {
 protected:
-	std::vector<Component*> _components;
 	int component_id_assigner;
 
 public:
@@ -20,6 +19,7 @@ public:
 	int id;
 	bool active;
 	Scene* scene;
+	std::vector<Component*> components;
 
 	GameObject(std::string, Scene*);
 	~GameObject();
@@ -28,7 +28,7 @@ public:
 	T* getComponent()
 	{
 		T* return_component = NULL;
-		for(auto c: _components)
+		for(auto c: components)
 		{
 			return_component = dynamic_cast<T*>(c);
 			if(return_component != NULL)
@@ -40,14 +40,14 @@ public:
 	template<typename T>
 	std::vector<T*> getComponents()
 	{
-		std::vector<T*> components;
-		for(auto c: _components)
+		std::vector<T*> temp_components;
+		for(auto c: components)
 		{
 			T* component = dynamic_cast<T*>(c);
 			if(component != NULL)
-				components.push_back(component);
+				temp_components.push_back(component);
 		}
-		return components;
+		return temp_components;
 	}
 
 	template<typename T>

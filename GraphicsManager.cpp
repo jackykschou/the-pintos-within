@@ -23,11 +23,9 @@ bool GraphicsManager::frameRenderingQueued(const Ogre::FrameEvent& evt)
 
     InputManager::instance()->capture();
 
-    SceneManager::instance()->current_scene->update();
-
-    SceneManager::instance()->current_scene->physics_world->stepSimulation(evt.timeSinceLastFrame);
-
     GUIManager::instance()->update(evt);
+
+    SceneManager::instance()->current_scene->update(evt.timeSinceLastFrame);
 
     if (InputManager::instance()->isKeyPressed(OIS::KC_ESCAPE))
         stopRendering();
