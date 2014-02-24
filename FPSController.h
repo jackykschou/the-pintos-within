@@ -3,7 +3,7 @@
 
 #include "common.h"
 
-#include "GameObject.h"
+#include "Component.h"
 
 class FPSController : GameObject
 {

@@ -21,15 +21,16 @@ class Scene
 protected:
 		int _game_object_id_assigner;
 public:
-		Camera* main_camera;
 		int id;
 		std::string name;
 		btDiscreteDynamicsWorld* physics_world;
 		Ogre::SceneManager* manager;
 		std::vector<GameObject*> game_objects;
+		Camera* main_camera;
+
 
 		Scene(std::string);
-		~Scene();
+		virtual ~Scene();
 
 		void addGameObject(GameObject*);
 		void removeGameObject(GameObject*);

@@ -1,9 +1,8 @@
-#include "SphereRigidbody.h"
+#include "BoxRigidbody.h"
 
-SphereRigidbody::SphereRigidbody (GameObject *gameObject, float radius, float mass) : Rigidbody(gameObject) 
+BoxRigidbody::BoxRigidbody (GameObject *gameObject, const btVector3& boxHalfExtents, float mass) : Rigidbody(gameObject) 
 {
-
-	collisionShape = new btSphereShape(radius);
+	collisionShape = new btBoxShape(boxHalfExtents);
 	motionState = new btDefaultMotionState(btTransform(btQuaternion(0, 0, 0, 1),btVector3(0, 50, 0)));
     btVector3 inertia(0,0,0);
     collisionShape->calculateLocalInertia(mass, inertia);
@@ -14,7 +13,7 @@ SphereRigidbody::SphereRigidbody (GameObject *gameObject, float radius, float ma
 	rigidBody->setUserPointer(gameObject);
 }
 
-SphereRigidbody::~SphereRigidbody()
+BoxRigidbody::~BoxRigidbody()
 {
 	dynamics_world->removeRigidBody(rigidBody);
 	delete collisionShape;
@@ -22,7 +21,7 @@ SphereRigidbody::~SphereRigidbody()
 	delete rigidBody;
 }
 
-void SphereRigidbody::update() 
+void BoxRigidbody::update() 
 {
 	Rigidbody::update();
 }

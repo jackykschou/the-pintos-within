@@ -2,21 +2,19 @@
 
 Rigidbody::Rigidbody(GameObject *gameObject) : Component(gameObject) 
 {
+	OnCollision = NULL;
+
 	if((_transform = gameObject->getComponent<Transform>()) == NULL)
 	{
 		_transform = new Transform(gameObject);
 		gameObject->addComponent(_transform);
 	}
 
-	dynamicsWorld = _gameObject->scene->physics_world;
+	dynamics_world = _gameObject->scene->physics_world;
 }
 
 Rigidbody::~Rigidbody() 
 {
-	dynamicsWorld->removeRigidBody(rigidBody);
-	delete collisionShape;
-	delete motionState;
-	delete rigidBody;
 }
 
 void Rigidbody::update() 
@@ -28,7 +26,8 @@ void Rigidbody::update()
 	else
 		updateRigidbodyFromTransform();
 
-	dynamicsWorld->contactTest(rigidBody, *((btCollisionWorld::ContactResultCallback*)this));
+	if(OnCollision != NULL)
+		dynamics_world->contactTest(rigidBody, *((btCollisionWorld::ContactResultCallback*)this));
 }
 
 void Rigidbody::updateRigidbodyFromTransform () 
@@ -82,9 +81,6 @@ btScalar Rigidbody::addSingleResult(btManifoldPoint& cp,
 
 	OnCollision(&(cp.m_positionWorldOnB), &(cp.m_normalWorldOnB), gameObject);
 	
-	return 0; // not actually sure if return value is used for anything...?
+	return 0; 
 }
 
-void Rigidbody::OnCollision (btVector3* contact_point, btVector3* contact_normal_point, GameObject* gameObject)
-{
-}

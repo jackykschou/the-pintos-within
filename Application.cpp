@@ -47,7 +47,6 @@ void createGameContents()
 
 void startGame()
 {
-    GUIManager::instance()->showTray();
     GraphicsManager::instance()->startRendering();
 }
 

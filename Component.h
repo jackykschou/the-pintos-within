@@ -16,7 +16,7 @@ public:
 	bool active;
 
 	Component(GameObject*);
-	~Component();
+	virtual ~Component();
 
 	virtual void update();
 };

@@ -20,7 +20,6 @@
 #include <set>
 #include <map>
 
-
 #include <OgreCamera.h>
 #include <OgreEntity.h>
 #include <OgreLogManager.h>
@@ -41,6 +40,8 @@
 
 #include <SdkTrays.h>
 #include <SdkCameraMan.h>
+
+#include "Debug.h"
 
 #endif // #ifndef __common_h_
 

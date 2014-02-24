@@ -6,8 +6,8 @@
 class SphereRigidbody : Rigidbody
 {
 public:
-	SphereRigidbody(GameObject*, float);
-	~SphereRigidbody();
+	SphereRigidbody(GameObject*, float, float);
+	virtual ~SphereRigidbody();
 
 	virtual void update();
 

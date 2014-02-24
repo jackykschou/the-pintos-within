@@ -18,7 +18,7 @@ public:
 	static int mesh_node_id_assigner;
 public:
 	Mesh(GameObject*, std::string);
-	~Mesh();
+	virtual ~Mesh();
 
 	Ogre::Entity* entity;
   	Ogre::SceneNode* node;

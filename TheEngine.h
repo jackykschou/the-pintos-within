@@ -3,6 +3,8 @@
 
 #include "common.h"
 
+#include "Debug.h"
+
 #include "Singleton.h"
 #include "PhysicsManager.h"
 #include "ResourcesManager.h"

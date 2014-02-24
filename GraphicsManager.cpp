@@ -49,7 +49,7 @@ bool GraphicsManager::frameRenderingQueued(const Ogre::FrameEvent& evt)
 
 void GraphicsManager::initialize(std::string window_name, Ogre::String pluginsCfg)
 {
-    af = AudioManager::instance()->loadAudioFile("media/sounds/shotgun.wav");
+    af = AudioManager::instance()->loadAudioFile("shotgun.wav");
     std::cout << af << std::endl;
 	initializeRoot(pluginsCfg);
 	configureWindow(window_name);
@@ -97,6 +97,7 @@ Ogre::FrameEvent* GraphicsManager::getFrameEvent()
 
 void GraphicsManager::startRendering()
 {
+    GUIManager::instance()->showTray();
     _root->startRendering();
 }
 

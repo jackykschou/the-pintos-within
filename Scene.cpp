@@ -6,13 +6,7 @@ Scene::Scene(std::string n)
 	manager = GraphicsManager::instance()->getRenderRoot()->createSceneManager(Ogre::ST_GENERIC);
 	physics_world = PhysicsManager::instance()->createDynamicsWorld();
 	_game_object_id_assigner = 0;
-	manager->setAmbientLight(Ogre::ColourValue(1, 0, 0));
-
-	Ogre::Light* pointLight = manager->createLight("pointLight");
-	pointLight->setType(Ogre::Light::LT_POINT);
-	pointLight->setPosition(Ogre::Vector3(0, 0, 0));
-	pointLight->setDiffuseColour(1, 0, 1);
-    pointLight->setSpecularColour(1, 0, 0);
+	manager->setAmbientLight(Ogre::ColourValue(0, 0, 0));
 
 	SceneManager::instance()->addScene(this);
 }

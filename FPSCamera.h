@@ -18,7 +18,7 @@ protected:
 public:
 
 	FPSCamera(GameObject*, std::string, double);
-	~FPSCamera();
+	virtual ~FPSCamera();
 
 	OgreBites::SdkCameraMan* cameraMan;
 

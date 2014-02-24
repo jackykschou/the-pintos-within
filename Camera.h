@@ -14,7 +14,7 @@ protected:
 
 public:
 	Camera(GameObject*, std::string);
-	~Camera();
+	virtual ~Camera();
 
 	Ogre::Viewport* viewport;
 	Ogre::Camera* camera;

@@ -11,7 +11,7 @@ protected:
 
 public:
 	Transform(GameObject*);
-	~Transform();
+	virtual ~Transform();
 
 	float posX;
 	float posY;

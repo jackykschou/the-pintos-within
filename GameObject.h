@@ -22,7 +22,7 @@ public:
 	std::vector<Component*> components;
 
 	GameObject(std::string, Scene*);
-	~GameObject();
+	virtual ~GameObject();
 
 	template<typename T>
 	T* getComponent()
