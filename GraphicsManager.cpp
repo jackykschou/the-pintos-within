@@ -78,7 +78,6 @@ Ogre::FrameEvent* GraphicsManager::getFrameEvent()
 
 void GraphicsManager::startRendering()
 {
-    GUIManager::instance()->showTray();
     _root->startRendering();
 }
 

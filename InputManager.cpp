@@ -59,8 +59,8 @@ void InputManager::capture()
         GraphicsManager::instance()->stopRendering();
     }
 
-    if (InputManager::instance()->isKeyPressed(OIS::KC_Q)) {
-        GUIManager::instance()->toggleTray();
+    if (InputManager::instance()->isKeyPressed(OIS::KC_H)) {
+        GUIManager::instance()->toggleDebugPanel();
     }
 
     if (InputManager::instance()->isKeyPressed(OIS::KC_A)) {

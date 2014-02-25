@@ -9,15 +9,19 @@ class GUIManager : public Singleton<GUIManager>, public OgreBites::SdkTrayListen
 	void initialize(const Ogre::String& appName);
 	void update(const Ogre::FrameEvent& evt);
 
-	bool isTrayVisible();
-	void hideTray();
-	void showTray();
-	void toggleTray();
+	// Debug panel: shows camera information
+	bool isDebugPanelVisible();
+	void hideDebugPanel();
+	void showDebugPanel();
+	void toggleDebugPanel();
+
+
 
   private:
-	void updateTray();
-	OgreBites::SdkTrayManager* _mTrayMgr;
-	OgreBites::ParamsPanel*    _mDetailsPanel;
+	void buildDebugPanel();
+	void updateDebugPanel();
+	OgreBites::SdkTrayManager* _trayMgr;
+	OgreBites::ParamsPanel*    _debugPanel;
 };
 
 #endif
