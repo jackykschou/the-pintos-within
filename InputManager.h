@@ -9,7 +9,7 @@
 #include <OISMouse.h>
 #include <OgreRenderWindow.h>
 #include <OgreWindowEventUtilities.h>
-
+#include "AudioManager.h"
 #include "GraphicsManager.h"
 
 
@@ -30,6 +30,9 @@ class InputManager : public Singleton<InputManager>,
     OIS::MouseEvent*   _lastMouseMovedEvt;
     OIS::MouseEvent*   _lastMousePressedEvt;
     OIS::MouseEvent*   _lastMouseReleasedEvt;
+
+    AudioFile _file;
+    void flushBufferedEvents();
 
   public:
   	InputManager();
