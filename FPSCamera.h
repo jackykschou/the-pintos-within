@@ -4,11 +4,9 @@
 #include <OISEvents.h>
 #include <OISKeyboard.h>
 #include <OISMouse.h>
-
 #include <SdkCameraMan.h>
-
 #include "Camera.h"
-
+#include "Debug.h"
 #include "common.h"
 
 class FPSCamera : Camera
