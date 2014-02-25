@@ -1,3 +1,9 @@
+Things to think about then creating a component:
+1. what to initialzie and what to put in destructor
+2. what other components you need from that gameObject
+
+
+
 ## Assignment 2: Single Player Engine and Game
 
 - Assigned: Tuesday, Feb 4, 2014
