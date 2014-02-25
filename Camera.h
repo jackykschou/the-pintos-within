@@ -18,6 +18,7 @@ public:
 
 	Ogre::Viewport* viewport;
 	Ogre::Camera* camera;
+	Ogre::String name;
 
 	virtual void update();
 };

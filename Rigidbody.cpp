@@ -2,13 +2,10 @@
 
 Rigidbody::Rigidbody(GameObject *gameObject) : Component(gameObject) 
 {
-	OnCollision = NULL;
+	onCollision = NULL;
 
 	if((_transform = gameObject->getComponent<Transform>()) == NULL)
-	{
 		_transform = new Transform(gameObject);
-		gameObject->addComponent(_transform);
-	}
 
 	dynamics_world = _gameObject->scene->physics_world;
 }
@@ -26,7 +23,7 @@ void Rigidbody::update()
 	else
 		updateRigidbodyFromTransform();
 
-	if(OnCollision != NULL)
+	if(onCollision != NULL)
 		dynamics_world->contactTest(rigidBody, *((btCollisionWorld::ContactResultCallback*)this));
 }
 
@@ -73,13 +70,13 @@ btScalar Rigidbody::addSingleResult(btManifoldPoint& cp,
 {
 	GameObject* gameObject;
 	if(colObj0->m_collisionObject == rigidBody) {
-		gameObject = (GameObject*)(colObj0->m_collisionObject->getUserPointer());
+		gameObject = (GameObject*)(colObj1->m_collisionObject->getUserPointer());
 	} else {
 		assert(colObj1->m_collisionObject==rigidBody && "body does not match either collision object");
-		gameObject = (GameObject*)(colObj1->m_collisionObject->getUserPointer());
+		gameObject = (GameObject*)(colObj0->m_collisionObject->getUserPointer());
 	}
 
-	OnCollision(&(cp.m_positionWorldOnB), &(cp.m_normalWorldOnB), gameObject);
+	onCollision((cp.m_positionWorldOnB), (cp.m_normalWorldOnB), gameObject);
 	
 	return 0; 
 }

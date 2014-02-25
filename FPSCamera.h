@@ -6,6 +6,7 @@
 #include <OISMouse.h>
 
 #include <SdkCameraMan.h>
+#include <OgreQuaternion.h>
 
 #include "Camera.h"
 
@@ -15,6 +16,8 @@ class FPSCamera : Camera
 {
 protected:
 	double _height_offset;
+	void clampCameraRotation();
+	void updateTransformRotation();
 public:
 
 	FPSCamera(GameObject*, std::string, double);

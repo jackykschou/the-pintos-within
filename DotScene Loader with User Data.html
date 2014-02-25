@@ -1,0 +1,1058 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<!-- saved from url=(0081)http://www.ogre3d.org/tikiwiki/tiki-index.php?page=DotScene+Loader+with+User+Data -->
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en" id="page_587"><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+
+
+<meta http-equiv="Content-Script-Type" content="text/javascript">
+<meta http-equiv="Content-Style-Type" content="text/css">
+<meta name="generator" content="Tiki Wiki CMS Groupware - http://tiki.org">
+	<meta name="keywords" content="Ogre, Ogre3d, wiki, support dotscene blender userdata tinyxml loader  ">
+
+
+<title>DotScene Loader with User Data</title>
+
+	<link rel="icon" href="http://www.ogre3d.org/tikiwiki/ogrefavicon.ico">
+
+
+	<link rel="StyleSheet" href="./DotScene Loader with User Data_files/layerstreemenu.css" type="text/css">
+<link rel="StyleSheet" href="./DotScene Loader with User Data_files/layerstreemenu-hidden.css" type="text/css">
+<script type="text/javascript">
+<!--//--><![CDATA[//><!--
+var numl;var toBeHidden;// PHP Layers Menu 3.2.0-rc (C) 2001-2004 Marco Pratesi - http://www.marcopratesi.it/
+
+DOM = (document.getElementById) ? 1 : 0;
+NS4 = (document.layers) ? 1 : 0;
+// We need to explicitly detect Konqueror
+// because Konqueror 3 sets IE = 1 ... AAAAAAAAAARGHHH!!!
+Konqueror = (navigator.userAgent.indexOf('Konqueror') > -1) ? 1 : 0;
+// We need to detect Konqueror 2.2 as it does not handle the window.onresize event
+Konqueror22 = (navigator.userAgent.indexOf('Konqueror 2.2') > -1 || navigator.userAgent.indexOf('Konqueror/2.2') > -1) ? 1 : 0;
+Konqueror30 =
+	(
+		navigator.userAgent.indexOf('Konqueror 3.0') > -1
+		|| navigator.userAgent.indexOf('Konqueror/3.0') > -1
+		|| navigator.userAgent.indexOf('Konqueror 3;') > -1
+		|| navigator.userAgent.indexOf('Konqueror/3;') > -1
+		|| navigator.userAgent.indexOf('Konqueror 3)') > -1
+		|| navigator.userAgent.indexOf('Konqueror/3)') > -1
+	)
+	? 1 : 0;
+Konqueror31 = (navigator.userAgent.indexOf('Konqueror 3.1') > -1 || navigator.userAgent.indexOf('Konqueror/3.1') > -1) ? 1 : 0;
+// We need to detect Konqueror 3.2 and 3.3 as they are affected by the see-through effect only for 2 form elements
+Konqueror32 = (navigator.userAgent.indexOf('Konqueror 3.2') > -1 || navigator.userAgent.indexOf('Konqueror/3.2') > -1) ? 1 : 0;
+Konqueror33 = (navigator.userAgent.indexOf('Konqueror 3.3') > -1 || navigator.userAgent.indexOf('Konqueror/3.3') > -1) ? 1 : 0;
+Opera = (navigator.userAgent.indexOf('Opera') > -1) ? 1 : 0;
+Opera5 = (navigator.userAgent.indexOf('Opera 5') > -1 || navigator.userAgent.indexOf('Opera/5') > -1) ? 1 : 0;
+Opera6 = (navigator.userAgent.indexOf('Opera 6') > -1 || navigator.userAgent.indexOf('Opera/6') > -1) ? 1 : 0;
+Opera56 = Opera5 || Opera6;
+IE = (navigator.userAgent.indexOf('MSIE') > -1) ? 1 : 0;
+IE = IE && !Opera;
+IE5 = IE && DOM;
+IE4 = (document.all) ? 1 : 0;
+IE4 = IE4 && IE && !DOM;
+
+//--><!]]>
+</script>
+
+
+
+
+
+
+
+		
+<link rel="stylesheet" href="./DotScene Loader with User Data_files/minified_b332e08069a82e77347b37a40dc356b7.css" type="text/css" media="screen">
+<link rel="stylesheet" href="./DotScene Loader with User Data_files/minified_b332e08069a82e77347b37a40dc356b7.css" type="text/css" media="print">
+<!--[if lt IE 7]>
+<link rel="stylesheet" href="css/ie6.css" type="text/css" />
+<link rel="stylesheet" href="styles/ogre/ie6.css" type="text/css" />
+<![endif]-->
+<!--[if IE 7]>
+<link rel="stylesheet" href="css/ie7.css" type="text/css" />
+<link rel="stylesheet" href="styles/ogre/ie7.css" type="text/css" />
+<![endif]-->
+<!--[if IE 8]>
+<link rel="stylesheet" href="css/ie8.css" type="text/css" />
+<![endif]-->
+
+</head>
+	<body class="tiki tiki_wiki_page"><div id="cboxOverlay" style="display: none;"></div><div id="colorbox" class="" style="padding-bottom: 42px; padding-right: 42px; display: none;"><div id="cboxWrapper"><div><div id="cboxTopLeft" style="float: left;"></div><div id="cboxTopCenter" style="float: left;"></div><div id="cboxTopRight" style="float: left;"></div></div><div style="clear:left"><div id="cboxMiddleLeft" style="float: left;"></div><div id="cboxContent" style="float: left;"><div id="cboxLoadedContent" style="width: 0px; height: 0px; overflow: hidden;" class=""></div><div id="cboxLoadingOverlay" class=""></div><div id="cboxLoadingGraphic" class=""></div><div id="cboxTitle" class=""></div><div id="cboxCurrent" class=""></div><div id="cboxNext" class=""></div><div id="cboxPrevious" class=""></div><div id="cboxSlideshow" class=""></div><div id="cboxClose" class=""></div></div><div id="cboxMiddleRight" style="float: left;"></div></div><div style="clear:left"><div id="cboxBottomLeft" style="float: left;"></div><div id="cboxBottomCenter" style="float: left;"></div><div id="cboxBottomRight" style="float: left;"></div></div></div><div style="position:absolute; width:9999px; visibility:hidden; display:none"></div></div>
+		<ul class="jumplinks" style="position:absolute;top:-9000px;left:-9000px;z-index:9;">
+			<li><a href="http://www.ogre3d.org/tikiwiki/tiki-index.php?page=DotScene+Loader+with+User+Data#tiki-center">Jump to Content</a></li>
+		</ul>
+
+		<div id="overDiv" style="position:absolute; visibility:hidden; z-index:1000;"></div>
+<script type="text/javascript" language="JavaScript" src="./DotScene Loader with User Data_files/overlib.js"></script>
+
+
+
+
+	<div id="fixedwidth"> 
+					<div id="main-shadow">
+			<div id="cluetip-waitimage" style="position: absolute; display: none;"></div><div id="cluetip" style="display: none; position: absolute;"><div style="z-index: 1999; opacity: 0.1; top: 1px; left: 1px; position: absolute; background-color: rgb(0, 0, 0);"></div><div style="z-index: 1999; opacity: 0.1; top: 2px; left: 2px; position: absolute; background-color: rgb(0, 0, 0);"></div><div style="z-index: 1999; opacity: 0.1; top: 3px; left: 3px; position: absolute; background-color: rgb(0, 0, 0);"></div><div style="z-index: 1999; opacity: 0.1; top: 4px; left: 4px; position: absolute; background-color: rgb(0, 0, 0);"></div><div style="z-index: 1999; opacity: 0.1; top: 5px; left: 5px; position: absolute; background-color: rgb(0, 0, 0);"></div><div style="z-index: 1999; opacity: 0.1; top: 6px; left: 6px; position: absolute; background-color: rgb(0, 0, 0);"></div><div id="cluetip-outer" style="position: relative; z-index: 2000;"><h3 id="cluetip-title"></h3><div id="cluetip-inner"></div></div><div id="cluetip-extra"></div><div id="cluetip-arrows" class="cluetip-arrows"></div></div><div id="main">
+									<div id="header-shadow">
+								<div class="clearfix" id="header">
+		
+				<div class="clearfix" id="siteheader">
+		
+
+
+
+
+<div class="clearfix" id="header-top">
+
+
+
+		
+
+
+
+			<div class="clearfix" id="sioptions">
+																<div id="customcode" class="floatright">
+						<div style="float:right;"><a href="http://www.ogre3d.org/forums/" title="Ogre Forums">Ogre Forums</a>&nbsp;&nbsp;<a href="http://www.ogre3d.org/" title="ogre3d.org">ogre3d.org</a></div>
+					</div>
+								<div id="sitelogo" class="floatleft">
+					<a href="http://www.ogre3d.org/tikiwiki/" title="Ogre Wiki"><img src="./DotScene Loader with User Data_files/site_logo.gif" alt="Ogre Wiki"></a>				</div>
+									<div id="sitetitles" class="floatleft">
+							<div id="sitetitle">
+		<a href="http://www.ogre3d.org/tikiwiki/">Ogre Wiki</a>	</div>
+	<div id="sitesubtitle">
+		 Support and community documentation for Ogre3D 	</div>
+
+					</div>
+							
+					</div>
+	
+	
+		
+
+	
+	
+
+
+
+
+
+
+
+
+
+<div id="siteloginbar"><a href="http://www.ogre3d.org/tikiwiki/tiki-login.php" title="Login">Login</a></div>
+<!--[if IE]><br style="clear:both; height: 0" /><![endif]-->
+</div>
+
+<div class="clearfix" id="tiki-top">
+
+	
+
+			<div class="role_navigation">
+			<ul id="cssmenu1" class="cssmenu_horiz menu43 sf-js-enabled sf-shadow"><li class="option182 menuOption menuLevel0"><a href="http://www.ogre3d.org/tikiwiki/tiki-index.php?page=Home"><span class="menuText">Home</span></a></li><li class="option183 menuSection menuSection0 menuLevel0"><a href="http://www.ogre3d.org/tikiwiki/tiki-index.php?page=Tutorials" class="sf-with-ul"><span class="menuText">Tutorials</span><span class="sf-sub-indicator"> »</span></a><ul style="float: none; width: 12.181818181818182em; display: none; visibility: hidden;"><li class="option383 menuOption menuLevel1" style="white-space: normal; float: left; width: 100%;"><a href="http://www.ogre3d.org/tikiwiki/tiki-index.php?page=Tutorials" style="float: none; width: auto;"><span class="menuText">Tutorials Home</span></a></li><li class="option192 menuOption menuLevel1" style="white-space: normal; float: left; width: 100%;"><a href="http://www.ogre3d.org/tikiwiki/tiki-index.php?page=Basic%20Tutorials" style="float: none; width: auto;"><span class="menuText">Basic Tutorials</span></a></li><li class="option194 menuOption menuLevel1" style="white-space: normal; float: left; width: 100%;"><a href="http://www.ogre3d.org/tikiwiki/tiki-index.php?page=Intermediate%20Tutorials" style="float: none; width: auto;"><span class="menuText">Intermediate Tutorials</span></a></li><li class="option402 menuOption menuLevel1" style="white-space: normal; float: left; width: 100%;"><a href="http://www.ogre3d.org/tikiwiki/tiki-index.php?page=Mad%20Marx%20Tutorials" style="float: none; width: auto;"><span class="menuText">Mad Marx Tutorials</span></a></li><li class="option212 menuOption menuLevel1" style="white-space: normal; float: left; width: 100%;"><a href="http://www.ogre3d.org/tikiwiki/tiki-index.php?page=In%20Depth%20Tutorials" style="float: none; width: auto;"><span class="menuText">In Depth Tutorials</span></a></li><li class="option285 menuOption menuLevel1" style="white-space: normal; float: left; width: 100%;"><a href="http://www.ogre3d.org/tikiwiki/tiki-index.php?page=Older%20Tutorials" style="float: none; width: auto;"><span class="menuText">Older Tutorials</span></a></li><li class="option382 menuOption menuLevel1" style="white-space: normal; float: left; width: 100%;"><a href="http://www.ogre3d.org/tikiwiki/tiki-index.php?page=External%20Tutorials" style="float: none; width: auto;"><span class="menuText">External Tutorials</span></a></li></ul></li><li class="option184 menuSection menuSection0 menuLevel0"><a href="http://www.ogre3d.org/tikiwiki/tiki-index.php?page=Cookbook" class="sf-with-ul"><span class="menuText">Cookbook</span><span class="sf-sub-indicator"> »</span></a><ul style="float: none; width: 11em; display: none; visibility: hidden;"><li class="option384 menuOption menuLevel1" style="white-space: normal; float: left; width: 100%;"><a href="http://www.ogre3d.org/tikiwiki/tiki-index.php?page=Cookbook" style="float: none; width: auto;"><span class="menuText">Cookbook Home</span></a></li><li class="option265 menuOption menuLevel1" style="white-space: normal; float: left; width: 100%;"><a href="http://www.ogre3d.org/tikiwiki/tiki-index.php?page=CodeBank" style="float: none; width: auto;"><span class="menuText">CodeBank</span></a></li><li class="option266 menuOption menuLevel1" style="white-space: normal; float: left; width: 100%;"><a href="http://www.ogre3d.org/tikiwiki/tiki-index.php?page=Snippets" style="float: none; width: auto;"><span class="menuText">Snippets</span></a></li><li class="option267 menuOption menuLevel1" style="white-space: normal; float: left; width: 100%;"><a href="http://www.ogre3d.org/tikiwiki/tiki-index.php?page=Experiences" style="float: none; width: auto;"><span class="menuText">Experiences</span></a></li><li class="option268 menuOption menuLevel1" style="white-space: normal; float: left; width: 100%;"><a href="http://www.ogre3d.org/tikiwiki/tiki-index.php?page=OgreArticles" style="float: none; width: auto;"><span class="menuText">Ogre Articles</span></a></li></ul></li><li class="option185 menuSection menuSection0 menuLevel0"><a href="http://www.ogre3d.org/tikiwiki/tiki-index.php?page=Libraries" class="sf-with-ul"><span class="menuText">Libraries</span><span class="sf-sub-indicator"> »</span></a><ul style="float: none; width: 12.636363636363637em; display: none; visibility: hidden;"><li class="option385 menuOption menuLevel1" style="white-space: normal; float: left; width: 100%;"><a href="http://www.ogre3d.org/tikiwiki/tiki-index.php?page=Libraries" style="float: none; width: auto;"><span class="menuText">Libraries Home</span></a></li><li class="option274 menuOption menuLevel1" style="white-space: normal; float: left; width: 100%;"><a href="http://www.ogre3d.org/tikiwiki/tiki-index.php?page=Alternative%20Languages" style="float: none; width: auto;"><span class="menuText">Alternative Languages</span></a></li><li class="option273 menuSection menuSection1 menuLevel1" style="white-space: normal; float: left; width: 100%;"><a href="http://www.ogre3d.org/tikiwiki/tiki-index.php?page=Assembling%20A%20Toolset" style="float: none; width: auto;" class="sf-with-ul"><span class="menuText">Assembling A Toolset</span><span class="sf-sub-indicator"> »</span></a><ul style="left: 12.636363636363637em; float: none; width: 11.181818181818182em; display: none; visibility: hidden;"><li class="option406 menuOption menuLevel2" style="white-space: normal; float: left; width: 100%;"><a href="http://www.ogre3d.org/tikiwiki/tiki-index.php?page=Development+Tools" style="float: none; width: auto;"><span class="menuText">Development Tools</span></a></li><li class="option276 menuOption menuLevel2" style="white-space: normal; float: left; width: 100%;"><a href="http://www.ogre3d.org/tikiwiki/tiki-index.php?page=OGRE+Libraries" style="float: none; width: auto;"><span class="menuText">OGRE Libraries</span></a></li><li class="option407 menuOption menuLevel2" style="white-space: normal; float: left; width: 100%;"><a href="http://www.ogre3d.org/tikiwiki/tiki-index.php?page=List+Of+Libraries" style="float: none; width: auto;"><span class="menuText">List of Libraries</span></a></li></ul></li></ul></li><li class="option190 menuSection menuSection0 menuLevel0"><a href="http://www.ogre3d.org/tikiwiki/tiki-index.php?page=Tools" class="sf-with-ul"><span class="menuText">Tools</span><span class="sf-sub-indicator"> »</span></a><ul style="float: none; width: 17.727272727272727em; display: none; visibility: hidden;"><li class="option386 menuOption menuLevel1" style="white-space: normal; float: left; width: 100%;"><a href="http://www.ogre3d.org/tikiwiki/tiki-index.php?page=Tools" style="float: none; width: auto;"><span class="menuText">Tools Home</span></a></li><li class="option277 menuOption menuLevel1" style="white-space: normal; float: left; width: 100%;"><a href="http://www.ogre3d.org/tikiwiki/tiki-index.php?page=DCC%20Tools" style="float: none; width: auto;"><span class="menuText">DCC Tools</span></a></li><li class="option269 menuOption menuLevel1" style="white-space: normal; float: left; width: 100%;"><a href="http://www.ogre3d.org/tikiwiki/tiki-index.php?page=DCC%20Tutorials" style="float: none; width: auto;"><span class="menuText">DCC Tutorials</span></a></li><li class="option270 menuOption menuLevel1" style="white-space: normal; float: left; width: 100%;"><a href="http://www.ogre3d.org/tikiwiki/tiki-index.php?page=DCC%20Articles" style="float: none; width: auto;"><span class="menuText">DCC Articles</span></a></li><li class="option271 menuOption menuLevel1" style="white-space: normal; float: left; width: 100%;"><a href="http://www.ogre3d.org/tikiwiki/tiki-index.php?page=DCC%20Resources" style="float: none; width: auto;"><span class="menuText">DCC Resources</span></a></li><li class="option272 menuOption menuLevel1" style="white-space: normal; float: left; width: 100%;"><a href="http://www.ogre3d.org/tikiwiki/tiki-index.php?page=Assembling%20a%20production%20pipeline" style="float: none; width: auto;"><span class="menuText">Assembling a production pipeline</span></a></li></ul></li><li class="option189 menuSection menuSection0 menuLevel0"><a href="http://www.ogre3d.org/tikiwiki/tiki-index.php?page=Development" class="sf-with-ul"><span class="menuText">Development</span><span class="sf-sub-indicator"> »</span></a><ul style="float: none; width: 15.818181818181818em; display: none; visibility: hidden;"><li class="option387 menuOption menuLevel1" style="white-space: normal; float: left; width: 100%;"><a href="http://www.ogre3d.org/tikiwiki/tiki-index.php?page=Development" style="float: none; width: auto;"><span class="menuText">Development Home</span></a></li><li class="option201 menuOption menuLevel1" style="white-space: normal; float: left; width: 100%;"><a href="http://www.ogre3d.org/tikiwiki/tiki-index.php?page=Roadmap" style="float: none; width: auto;"><span class="menuText">Roadmap</span></a></li><li class="option202 menuOption menuLevel1" style="white-space: normal; float: left; width: 100%;"><a href="http://www.ogre3d.org/tikiwiki/tiki-index.php?page=Building%20Ogre" style="float: none; width: auto;"><span class="menuText">Building Ogre</span></a></li><li class="option292 menuOption menuLevel1" style="white-space: normal; float: left; width: 100%;"><a href="http://www.ogre3d.org/tikiwiki/tiki-index.php?page=Installing%20the%20Ogre%20SDK" style="float: none; width: auto;"><span class="menuText">Installing the Ogre SDK</span></a></li><li class="option293 menuOption menuLevel1" style="white-space: normal; float: left; width: 100%;"><a href="http://www.ogre3d.org/tikiwiki/tiki-index.php?page=Setting%20Up%20An%20Application" style="float: none; width: auto;"><span class="menuText">Setting Up An Application</span></a></li><li class="option395 menuOption menuLevel1" style="white-space: normal; float: left; width: 100%;"><a href="http://www.ogre3d.org/tikiwiki/tiki-index.php?page=Ogre%20Wiki%20Tutorial%20Framework" style="float: none; width: auto;"><span class="menuText">Ogre Wiki Tutorial Framework</span></a></li><li class="option287 menuOption menuLevel1" style="white-space: normal; float: left; width: 100%;"><a href="http://www.ogre3d.org/tikiwiki/tiki-index.php?page=Frequently%20Asked%20Questions" style="float: none; width: auto;"><span class="menuText">Frequently Asked Questions</span></a></li><li class="option208 menuOption menuLevel1" style="white-space: normal; float: left; width: 100%;"><a href="http://www.ogre3d.org/tikiwiki/tiki-index.php?page=Google%20Summer%20Of%20Code" style="float: none; width: auto;"><span class="menuText">Google Summer Of Code</span></a></li><li class="option210 menuOption menuLevel1" style="white-space: normal; float: left; width: 100%;"><a href="http://www.ogre3d.org/tikiwiki/tiki-index.php?page=Help%20Requested" style="float: none; width: auto;"><span class="menuText">Help Requested</span></a></li><li class="option283 menuOption menuLevel1" style="white-space: normal; float: left; width: 100%;"><a href="http://www.ogre3d.org/tikiwiki/tiki-index.php?page=Ogre%20Core%20Articles" style="float: none; width: auto;"><span class="menuText">Ogre Core Articles</span></a></li></ul></li><li class="option187 menuSection menuSection0 menuLevel0"><a href="http://www.ogre3d.org/tikiwiki/tiki-index.php?page=Community" class="sf-with-ul"><span class="menuText">Community</span><span class="sf-sub-indicator"> »</span></a><ul style="float: none; width: 13.363636363636363em; display: none; visibility: hidden;"><li class="option388 menuOption menuLevel1" style="white-space: normal; float: left; width: 100%;"><a href="http://www.ogre3d.org/tikiwiki/tiki-index.php?page=Community" style="float: none; width: auto;"><span class="menuText">Community Home</span></a></li><li class="option261 menuOption menuLevel1" style="white-space: normal; float: left; width: 100%;"><a href="http://www.ogre3d.org/tikiwiki/tiki-index.php?page=Projects%20Using%20OGRE" style="float: none; width: auto;"><span class="menuText">Projects Using Ogre</span></a></li><li class="option279 menuOption menuLevel1" style="white-space: normal; float: left; width: 100%;"><a href="http://www.ogre3d.org/tikiwiki/tiki-index.php?page=Recommended%20reading" style="float: none; width: auto;"><span class="menuText">Recommended Reading</span></a></li><li class="option286 menuOption menuLevel1" style="white-space: normal; float: left; width: 100%;"><a href="http://www.ogre3d.org/tikiwiki/tiki-index.php?page=Contractors" style="float: none; width: auto;"><span class="menuText">Contractors</span></a></li><li class="option262 menuSection menuSection1 menuLevel1" style="white-space: normal; float: left; width: 100%;"><a href="http://www.ogre3d.org/tikiwiki/tiki-index.php?page=Wiki" style="float: none; width: auto;" class="sf-with-ul"><span class="menuText">Wiki</span><span class="sf-sub-indicator"> »</span></a><ul style="left: 13.363636363636363em; float: none; width: 13.818181818181818em; display: none; visibility: hidden;"><li class="option256 menuOption menuLevel2" style="white-space: normal; float: left; width: 100%;"><a href="http://www.ogre3d.org/tikiwiki/tiki-index.php?page=Immediate%20Wiki%20Tasklist" style="float: none; width: auto;"><span class="menuText">Immediate Wiki Tasklist</span></a></li><li class="option391 menuOption menuLevel2" style="white-space: normal; float: left; width: 100%;"><a href="http://www.ogre3d.org/tikiwiki/tiki-index.php?page=Wiki%20Ideas" style="float: none; width: auto;"><span class="menuText">Wiki Ideas</span></a></li><li class="option254 menuOption menuLevel2" style="white-space: normal; float: left; width: 100%;"><a href="http://www.ogre3d.org/tikiwiki/tiki-index.php?page=Wiki%20Guidelines" style="float: none; width: auto;"><span class="menuText">Wiki Guidelines</span></a></li><li class="option284 menuOption menuLevel2" style="white-space: normal; float: left; width: 100%;"><a href="http://www.ogre3d.org/tikiwiki/tiki-index.php?page=Article%20Writing%20Guidelines" style="float: none; width: auto;"><span class="menuText">Article Writing Guidelines</span></a></li><li class="option263 menuOption menuLevel2" style="white-space: normal; float: left; width: 100%;"><a href="http://www.ogre3d.org/tikiwiki/tiki-index.php?page=Wiki%20Styles" style="float: none; width: auto;"><span class="menuText">Wiki Styles</span></a></li><li class="option282 menuOption menuLevel2" style="white-space: normal; float: left; width: 100%;"><a href="http://www.ogre3d.org/tikiwiki/tiki-index.php?page=Wiki%20Tracker" style="float: none; width: auto;"><span class="menuText">Wiki Page Tracker</span></a></li></ul></li></ul></li></ul>
+</div><div class="role_navigation">
+			<ul id="cssmenu2" class="cssmenu_horiz menu50 sf-js-enabled sf-shadow"><li class="option396 menuSection menuSection0 menuLevel0"><a href="http://www.ogre3d.org/tikiwiki/tiki-index.php?page=Ogre%20Wiki%20Help" class="sf-with-ul"><span class="menuText">Ogre Wiki Help</span><span class="sf-sub-indicator"> »</span></a><ul style="float: none; width: 15.090909090909092em; display: none; visibility: hidden;"><li class="option397 menuOption menuLevel1" style="white-space: normal; float: left; width: 100%;"><a href="http://www.ogre3d.org/tikiwiki/tiki-index.php?page=Ogre%20Wiki%20Help" style="float: none; width: auto;"><span class="menuText">Ogre Wiki Help Overview</span></a></li><li class="option398 menuOption menuLevel1" style="white-space: normal; float: left; width: 100%;"><a href="http://www.ogre3d.org/tikiwiki/tiki-index.php?page=Help%20-%20Basic%20Syntax" style="float: none; width: auto;"><span class="menuText">Help - Basic Syntax</span></a></li><li class="option399 menuOption menuLevel1" style="white-space: normal; float: left; width: 100%;"><a href="http://www.ogre3d.org/tikiwiki/tiki-index.php?page=Help%20-%20Images" style="float: none; width: auto;"><span class="menuText">Help - Images</span></a></li><li class="option400 menuOption menuLevel1" style="white-space: normal; float: left; width: 100%;"><a href="http://www.ogre3d.org/tikiwiki/tiki-index.php?page=Help%20-%20Pages%20and%20Structures" style="float: none; width: auto;"><span class="menuText">Help - Pages and Structures</span></a></li><li class="option401 menuOption menuLevel1" style="white-space: normal; float: left; width: 100%;"><a href="http://www.ogre3d.org/tikiwiki/tiki-index.php?page=Help%20-%20Wiki%20Plugins" style="float: none; width: auto;"><span class="menuText">Help - Wiki Plugins</span></a></li></ul></li></ul>
+</div><div class="role_navigation">
+</div><div class="role_navigation">
+			<ul id="cssmenu4" class="cssmenu_horiz menu45 sf-js-enabled sf-shadow"><li class="option390 menuSection menuSection0 menuLevel0"><a href="" class="sf-with-ul"><span class="menuText">Toolbox</span><span class="sf-sub-indicator"> »</span></a><ul style="float: none; width: 11em; display: none; visibility: hidden;"><li class="option239 menuOption menuLevel1" style="white-space: normal; float: left; width: 100%;"><a href="http://www.ogre3d.org/tikiwiki/tiki-browse_freetags.php" style="float: none; width: auto;"><span class="menuText">Freetags</span></a></li><li class="option240 menuOption menuLevel1" style="white-space: normal; float: left; width: 100%;"><a href="http://www.ogre3d.org/tikiwiki/tiki-index.php?page=categories" style="float: none; width: auto;"><span class="menuText">Categories</span></a></li><li class="option241 menuOption menuLevel1" style="white-space: normal; float: left; width: 100%;"><a href="http://www.ogre3d.org/tikiwiki/tiki-listpages.php" style="float: none; width: auto;"><span class="menuText">List Pages</span></a></li><li class="option243 menuOption menuLevel1" style="white-space: normal; float: left; width: 100%;"><a href="http://www.ogre3d.org/tikiwiki/tiki-admin_structures.php" style="float: none; width: auto;"><span class="menuText">Structures</span></a></li><li class="option244 menuOption menuLevel1" style="white-space: normal; float: left; width: 100%;"><a href="http://www.ogre3d.org/tikiwiki/tiki-list_trackers.php" style="float: none; width: auto;"><span class="menuText">Trackers</span></a></li><li class="option260 menuOption menuLevel1" style="white-space: normal; float: left; width: 100%;"><a href="http://www.ogre3d.org/tikiwiki/tiki-list_file_gallery.php" style="float: none; width: auto;"><span class="menuText">List Galleries</span></a></li><li class="option281 menuOption menuLevel1" style="white-space: normal; float: left; width: 100%;"><a href="http://www.ogre3d.org/tikiwiki/tiki-index.php?page=Ogre%20Lexicon" style="float: none; width: auto;"><span class="menuText">Ogre Lexicon</span></a></li><li class="option392 menuOption menuLevel1" style="white-space: normal; float: left; width: 100%;"><a href="http://www.ogre3d.org/tikiwiki/tiki-index.php?page=Comments" style="float: none; width: auto;"><span class="menuText">Comments</span></a></li><li class="option394 menuOption menuLevel1" style="white-space: normal; float: left; width: 100%;"><a href="http://www.ogre3d.org/tikiwiki/tiki-shoutbox.php" style="float: none; width: auto;"><span class="menuText">Shoutbox</span></a></li></ul></li></ul>
+</div><div class="role_navigation">
+</div>
+	
+
+
+</div>				</div>
+			</div></div>
+			<div id="middle-shadow"><div class="clearfix" id="middle">
+				<div class="clearfix nofullscreen" id="c1c2">
+					<div class="clearfix" id="wrapper">
+						<div id="col1" class=" marginright">
+
+								<div class="clearfix" id="showhide_columns">
+												<div class="clearfix" style="text-align:right;float:right">
+									<a class="flip" href="http://www.ogre3d.org/tikiwiki/tiki-index.php?page=DotScene+Loader+with+User+Data#" onclick="toggleCols(&#39;col3&#39;,&#39;right&#39;); return false"><img src="./DotScene Loader with User Data_files/orightcol.png" alt="[Show/Hide Right Column]" width="16" height="16" class="colflip" style="border: none" title="[Show/Hide Right Column]"></a>
+								</div>
+										<br style="clear:both">
+							</div>
+	
+
+							<div id="tiki-center-shadow"><div class="site_notice"><b><i>Welcome to the new Ogre Wiki!</i></b><br>If you haven't done so already, be sure to visit the <a href="http://www.ogre3d.org/tikiwiki/tiki-index.php?page=Wiki">Wiki Portal</a> to read about how the wiki works. Especially the <a href="http://www.ogre3d.org/tikiwiki/tiki-index.php?page=Ogre+Wiki+Overview">Ogre Wiki Overview</a> page.</div>
+
+
+<div id="tiki-center" class="clearfix content">
+							<div role="main" id="role_main">
+ 
+	
+ 
+
+
+
+ 
+
+	<div class="wikitopline clearfix" style="clear: both;">
+	<div class="content">
+				<div class="wikiinfo" style="float: left">
+
+	<a href="http://www.ogre3d.org/tikiwiki/tiki-index.php?page=DotScene%20Loader%20with%20User%20Data" class="titletop">DotScene Loader with User Data</a>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+
+
+When you export a .scene file from blender, you have the option of exporting logic properties as userData. Then why not use it?
+
+		</div>
+		<div class="wikiactions" style="float: right; padding-left:10px; white-space: nowrap">
+			<div class="icons" style="float: left;">
+									<a title="Print" href="http://www.ogre3d.org/tikiwiki/tiki-print.php?page_ref_id=1189&page=DotScene%20Loader%20with%20User%20Data"><img src="./DotScene Loader with User Data_files/printer.png" alt="Print" width="16" height="16" style="border: none" title="Print" class="icon"></a>
+	
+								</div><!-- END of icons -->
+
+				<form action="http://www.ogre3d.org/tikiwiki/tiki-index.php" method="get" style="display: block; float: left">
+				<select name="page" onchange="this.form.submit()" title="Backlinks">
+					<option>Backlinks...</option>
+							<option value="DotScene" title="DotScene">
+					DotScene					</option>
+							<option value="DotScene Loader with User Data Class" title="DotScene Loader with User Data Class">
+					DotScene Loader with User Data Class					</option>
+							<option value="MOGRE dotSceneLoader" title="MOGRE dotSceneLoader">
+					MOGRE dotSceneLoader					</option>
+							<option value="New DotScene Loader" title="New DotScene Loader">
+					New DotScene Loader					</option>
+							<option value="RapidXML Dotscene Loader" title="RapidXML Dotscene Loader">
+					RapidXML Dotscene Loader					</option>
+						</select>
+			</form>
+	
+	
+			</div>
+ 
+ 
+	</div> 
+</div> 
+	
+
+
+	
+<div id="top" class="wikitext clearfix nopagetitle">
+			
+		
+		
+					<div class="tocnav">
+	<div class="clearfix">
+		<div style="float: left; width: 100px">
+  
+        	<a href="http://www.ogre3d.org/tikiwiki/tiki-index.php?page=Cookbook&structure=Cookbook&page_ref_id=5"><img src="./DotScene Loader with User Data_files/house.png" alt="TOC" width="16" height="16" title="Cookbook" style="border: none" class="icon"></a>    
+        	<a href="http://www.ogre3d.org/tikiwiki/tiki-index.php?page=Printf+with+ogre&structure=Cookbook">
+    		<img src="./DotScene Loader with User Data_files/resultset_previous.png" alt="Previous page" width="16" height="16" title="Printf with ogre" style="border: none" class="icon">
+    	</a>
+    
+        	<a href="http://www.ogre3d.org/tikiwiki/tiki-index.php?page=Miscellaneous&structure=Cookbook">
+    		<img src="./DotScene Loader with User Data_files/resultset_up.png" alt="Parent page" width="16" height="16" title="Miscellaneous" style="border: none" class="icon">
+    	</a>
+    
+    <a href="http://www.ogre3d.org/tikiwiki/tiki-index.php?page=DotScene+Loader+with+User+Data+Class&structure=Cookbook"><img src="./DotScene Loader with User Data_files/resultset_next.png" alt="Next page" width="16" height="16" title="DotScene Loader with User Data Class" style="border: none" class="icon"></a>
+		</div>
+  		<div style="float: left;">
+		</div>
+	</div>
+  	<div>
+  	<a title="Structure (2.16.6)" href="http://www.ogre3d.org/tikiwiki/tiki-edit_structure.php?page=DotScene+Loader+with+User+Data&page_ref_id=5"><img src="./DotScene Loader with User Data_files/chart_organisation.png" alt="Structure" width="16" height="16" title="Structure (2.16.6)" style="border: none" class="icon"></a>&nbsp;&nbsp;
+          	  <a href="http://www.ogre3d.org/tikiwiki/tiki-index.php?page=Cookbook&structure=Cookbook">
+              Cookbook
+	  	  </a>
+	      &nbsp;»&nbsp;	  <a href="http://www.ogre3d.org/tikiwiki/tiki-index.php?page=Snippets&structure=Cookbook">
+              Snippets
+	  	  </a>
+	      &nbsp;»&nbsp;	  <a href="http://www.ogre3d.org/tikiwiki/tiki-index.php?page=Miscellaneous&structure=Cookbook">
+              Miscellaneous
+	  	  </a>
+	      &nbsp;»&nbsp;	  <a href="http://www.ogre3d.org/tikiwiki/tiki-index.php?page=DotScene+Loader+with+User+Data&structure=Cookbook">
+              DotScene Loader with User Data
+	  	  </a>
+		</div>
+</div>		
+		
+			 
+
+	
+			<p></p><div id="toc"><div id="toctitle"><h3>Table of contents</h3></div><ul class="toc"><ul><li><a href="http://www.ogre3d.org/tikiwiki/tiki-index.php?page=DotScene+Loader+with+User+Data#Getting_Started" class="link">Getting Started</a>
+</li><li><a href="http://www.ogre3d.org/tikiwiki/tiki-index.php?page=DotScene+Loader+with+User+Data#The_Source" class="link">The Source</a>
+</li><li><a href="http://www.ogre3d.org/tikiwiki/tiki-index.php?page=DotScene+Loader+with+User+Data#Example_Usage" class="link">Example Usage</a>
+</li></ul></ul><!--toc--></div>
+<p></p>
+
+<h2 class="showhide_heading" id="Getting_Started"> Getting Started</h2>
+<p>When you export a .scene file from blender, you have the option of exporting logic properties as userData. Then why not use it? But then, you may think, "Oh no! the dotSceneInterface doesn't support userData! Now I have to write a loader myself?!". The answer:- Not now, not when nikki has already written one!;). This loader requires TinyXML. All you have to is add all the TinyXML files to your project (2 header files and 4 source files).
+</p>
+
+<p>See <a href="http://www.ogre3d.org/tikiwiki/tiki-index.php?page=DotScene+Loader+with+User+Data+Class" title="Class version of DotScene Loader with User Data" class="wiki">DotScene Loader with User Data Class</a> for an alternative.
+</p>
+
+<p>The modifications include: A fix for child nodes, Putting the code in a class, allowing the scene to be linked to a defined SceneNode and prepending a name to all the SceneNodes defined in the file. I use the SceneNode modifications for using multiple .scene files in a single scene. This allows us to create complex objects with multiple entities (and user properties) and to define SceneNodes for other uses (like attaching a weapon or effect). We can also use the same scene multiple times for multiple instances of the object.
+</p>
+
+<p>JeDi has started from this code to write a new, easily extensible DotScene loader. You can found it at <a href="http://www.ogre3d.org/tikiwiki/tiki-index.php?page=New+DotScene+Loader" title="Based on DotSceneInterface and DotScene Loader with User Data" class="wiki">New DotScene Loader</a>.
+</p>
+
+<h2 class="showhide_heading" id="The_Source"> The Source</h2>
+<p>Here's the source code of the loader. Copy it into a header file called dotScene.h, and include it in your application:-
+</p>
+<div class="plugincode"><pre class="codelisting" dir="ltr" style="white-space:pre-wrap; white-space:-moz-pre-wrap !important; white-space:-pre-wrap; white-space:-o-pre-wrap; word-wrap:break-word;" id="codebox"><span style="color: #808080; font-style: italic;">/*------------------------------------------------------------------------------
+ *  DotScene.h
+ *
+ *  This file provides some methods for the parsing of a .scene file, with
+ *  support for userData.
+ *------------------------------------------------------------------------------*/</span>
+&nbsp;
+<span style="color: #339933;">#ifndef DOT_SCENE_H</span>
+<span style="color: #339933;">#define DOT_SCENE_H</span>
+&nbsp;
+<span style="color: #339933;">#include &lt;Ogre.h&gt;</span>
+<span style="color: #339933;">#include &lt;vector&gt;</span>
+<span style="color: #339933;">#include "tinyxml.h"</span>
+using namespace std<span style="color: #339933;">;</span>
+using namespace Ogre<span style="color: #339933;">;</span>
+&nbsp;
+class nodeProperty
+<span style="color: #009900;">{</span>
+public<span style="color: #339933;">:</span>
+   String nodeName<span style="color: #339933;">;</span>
+   String propertyNm<span style="color: #339933;">;</span>
+   String valueName<span style="color: #339933;">;</span>
+&nbsp;
+   nodeProperty<span style="color: #009900;">(</span>String node<span style="color: #339933;">,</span>String propertyName<span style="color: #339933;">,</span>String value<span style="color: #009900;">)</span>
+   <span style="color: #009900;">{</span>
+      nodeName <span style="color: #339933;">=</span> node<span style="color: #339933;">;</span>
+      propertyNm <span style="color: #339933;">=</span> propertyName<span style="color: #339933;">;</span>
+      valueName <span style="color: #339933;">=</span> value<span style="color: #339933;">;</span>
+   <span style="color: #009900;">}</span>
+<span style="color: #009900;">}</span><span style="color: #339933;">;</span>
+&nbsp;
+Light<span style="color: #339933;">*</span> LoadLight<span style="color: #009900;">(</span> TiXmlElement <span style="color: #339933;">*</span>XMLLight<span style="color: #339933;">,</span> SceneManager <span style="color: #339933;">*</span>mSceneMgr <span style="color: #009900;">)</span>
+<span style="color: #009900;">{</span>
+   TiXmlElement <span style="color: #339933;">*</span>XMLDiffuse<span style="color: #339933;">,</span> <span style="color: #339933;">*</span>XMLSpecular<span style="color: #339933;">,</span> <span style="color: #339933;">*</span>XMLAttentuation<span style="color: #339933;">,</span> <span style="color: #339933;">*</span>XMLPosition<span style="color: #339933;">;</span>
+&nbsp;
+   <span style="color: #666666; font-style: italic;">// Create a light (point | directional | spot | radPoint)</span>
+   Light<span style="color: #339933;">*</span> l <span style="color: #339933;">=</span> mSceneMgr<span style="color: #339933;">-&gt;</span>createLight<span style="color: #009900;">(</span> XMLLight<span style="color: #339933;">-&gt;</span>Attribute<span style="color: #009900;">(</span><span style="color: #ff0000;">"name"</span><span style="color: #009900;">)</span> <span style="color: #009900;">)</span><span style="color: #339933;">;</span>
+   <span style="color: #b1b100;">if</span><span style="color: #009900;">(</span> <span style="color: #339933;">!</span>XMLLight<span style="color: #339933;">-&gt;</span>Attribute<span style="color: #009900;">(</span><span style="color: #ff0000;">"type"</span><span style="color: #009900;">)</span> <span style="color: #339933;">||</span> String<span style="color: #009900;">(</span>XMLLight<span style="color: #339933;">-&gt;</span>Attribute<span style="color: #009900;">(</span><span style="color: #ff0000;">"type"</span><span style="color: #009900;">)</span><span style="color: #009900;">)</span> <span style="color: #339933;">==</span> <span style="color: #ff0000;">"point"</span> <span style="color: #009900;">)</span>
+      l<span style="color: #339933;">-&gt;</span>setType<span style="color: #009900;">(</span> Light<span style="color: #339933;">::</span><span style="color: #202020;">LT_POINT</span> <span style="color: #009900;">)</span><span style="color: #339933;">;</span>
+   <span style="color: #b1b100;">else</span> <span style="color: #b1b100;">if</span><span style="color: #009900;">(</span> String<span style="color: #009900;">(</span>XMLLight<span style="color: #339933;">-&gt;</span>Attribute<span style="color: #009900;">(</span><span style="color: #ff0000;">"type"</span><span style="color: #009900;">)</span><span style="color: #009900;">)</span> <span style="color: #339933;">==</span> <span style="color: #ff0000;">"directional"</span><span style="color: #009900;">)</span>
+      l<span style="color: #339933;">-&gt;</span>setType<span style="color: #009900;">(</span> Light<span style="color: #339933;">::</span><span style="color: #202020;">LT_DIRECTIONAL</span> <span style="color: #009900;">)</span><span style="color: #339933;">;</span>
+   <span style="color: #b1b100;">else</span> <span style="color: #b1b100;">if</span><span style="color: #009900;">(</span> String<span style="color: #009900;">(</span>XMLLight<span style="color: #339933;">-&gt;</span>Attribute<span style="color: #009900;">(</span><span style="color: #ff0000;">"type"</span><span style="color: #009900;">)</span><span style="color: #009900;">)</span> <span style="color: #339933;">==</span> <span style="color: #ff0000;">"spot"</span><span style="color: #009900;">)</span>
+      l<span style="color: #339933;">-&gt;</span>setType<span style="color: #009900;">(</span> Light<span style="color: #339933;">::</span><span style="color: #202020;">LT_SPOTLIGHT</span> <span style="color: #009900;">)</span><span style="color: #339933;">;</span>
+   <span style="color: #b1b100;">else</span> <span style="color: #b1b100;">if</span><span style="color: #009900;">(</span> String<span style="color: #009900;">(</span>XMLLight<span style="color: #339933;">-&gt;</span>Attribute<span style="color: #009900;">(</span><span style="color: #ff0000;">"type"</span><span style="color: #009900;">)</span><span style="color: #009900;">)</span> <span style="color: #339933;">==</span> <span style="color: #ff0000;">"radPoint"</span><span style="color: #009900;">)</span>
+      l<span style="color: #339933;">-&gt;</span>setType<span style="color: #009900;">(</span> Light<span style="color: #339933;">::</span><span style="color: #202020;">LT_POINT</span> <span style="color: #009900;">)</span><span style="color: #339933;">;</span>
+&nbsp;
+   XMLDiffuse <span style="color: #339933;">=</span> XMLLight<span style="color: #339933;">-&gt;</span>FirstChildElement<span style="color: #009900;">(</span><span style="color: #ff0000;">"colourDiffuse"</span><span style="color: #009900;">)</span><span style="color: #339933;">;</span>
+   <span style="color: #b1b100;">if</span><span style="color: #009900;">(</span> XMLDiffuse <span style="color: #009900;">)</span><span style="color: #009900;">{</span>
+      ColourValue Diffuse<span style="color: #339933;">;</span>
+      Diffuse.<span style="color: #202020;">r</span> <span style="color: #339933;">=</span> Ogre<span style="color: #339933;">::</span><span style="color: #202020;">StringConverter</span><span style="color: #339933;">::</span><span style="color: #202020;">parseReal</span><span style="color: #009900;">(</span> XMLDiffuse<span style="color: #339933;">-&gt;</span>Attribute<span style="color: #009900;">(</span><span style="color: #ff0000;">"r"</span><span style="color: #009900;">)</span> <span style="color: #009900;">)</span><span style="color: #339933;">;</span>
+      Diffuse.<span style="color: #202020;">g</span> <span style="color: #339933;">=</span> Ogre<span style="color: #339933;">::</span><span style="color: #202020;">StringConverter</span><span style="color: #339933;">::</span><span style="color: #202020;">parseReal</span><span style="color: #009900;">(</span> XMLDiffuse<span style="color: #339933;">-&gt;</span>Attribute<span style="color: #009900;">(</span><span style="color: #ff0000;">"g"</span><span style="color: #009900;">)</span> <span style="color: #009900;">)</span><span style="color: #339933;">;</span>
+      Diffuse.<span style="color: #202020;">b</span> <span style="color: #339933;">=</span> Ogre<span style="color: #339933;">::</span><span style="color: #202020;">StringConverter</span><span style="color: #339933;">::</span><span style="color: #202020;">parseReal</span><span style="color: #009900;">(</span> XMLDiffuse<span style="color: #339933;">-&gt;</span>Attribute<span style="color: #009900;">(</span><span style="color: #ff0000;">"b"</span><span style="color: #009900;">)</span> <span style="color: #009900;">)</span><span style="color: #339933;">;</span>
+      Diffuse.<span style="color: #202020;">a</span> <span style="color: #339933;">=</span> <span style="color: #0000dd;">1</span><span style="color: #339933;">;</span>
+      l<span style="color: #339933;">-&gt;</span>setDiffuseColour<span style="color: #009900;">(</span>Diffuse<span style="color: #009900;">)</span><span style="color: #339933;">;</span>
+   <span style="color: #009900;">}</span>
+   XMLSpecular <span style="color: #339933;">=</span> XMLLight<span style="color: #339933;">-&gt;</span>FirstChildElement<span style="color: #009900;">(</span><span style="color: #ff0000;">"colourSpecular"</span><span style="color: #009900;">)</span><span style="color: #339933;">;</span>
+   <span style="color: #b1b100;">if</span><span style="color: #009900;">(</span> XMLSpecular <span style="color: #009900;">)</span><span style="color: #009900;">{</span>
+      ColourValue Specular<span style="color: #339933;">;</span>
+      Specular.<span style="color: #202020;">r</span> <span style="color: #339933;">=</span> Ogre<span style="color: #339933;">::</span><span style="color: #202020;">StringConverter</span><span style="color: #339933;">::</span><span style="color: #202020;">parseReal</span><span style="color: #009900;">(</span> XMLSpecular<span style="color: #339933;">-&gt;</span>Attribute<span style="color: #009900;">(</span><span style="color: #ff0000;">"r"</span><span style="color: #009900;">)</span> <span style="color: #009900;">)</span><span style="color: #339933;">;</span>
+      Specular.<span style="color: #202020;">g</span> <span style="color: #339933;">=</span> Ogre<span style="color: #339933;">::</span><span style="color: #202020;">StringConverter</span><span style="color: #339933;">::</span><span style="color: #202020;">parseReal</span><span style="color: #009900;">(</span> XMLSpecular<span style="color: #339933;">-&gt;</span>Attribute<span style="color: #009900;">(</span><span style="color: #ff0000;">"g"</span><span style="color: #009900;">)</span> <span style="color: #009900;">)</span><span style="color: #339933;">;</span>
+      Specular.<span style="color: #202020;">b</span> <span style="color: #339933;">=</span> Ogre<span style="color: #339933;">::</span><span style="color: #202020;">StringConverter</span><span style="color: #339933;">::</span><span style="color: #202020;">parseReal</span><span style="color: #009900;">(</span> XMLSpecular<span style="color: #339933;">-&gt;</span>Attribute<span style="color: #009900;">(</span><span style="color: #ff0000;">"b"</span><span style="color: #009900;">)</span> <span style="color: #009900;">)</span><span style="color: #339933;">;</span>
+      Specular.<span style="color: #202020;">a</span> <span style="color: #339933;">=</span> <span style="color: #0000dd;">1</span><span style="color: #339933;">;</span>
+      l<span style="color: #339933;">-&gt;</span>setSpecularColour<span style="color: #009900;">(</span>Specular<span style="color: #009900;">)</span><span style="color: #339933;">;</span>
+   <span style="color: #009900;">}</span>
+&nbsp;
+   XMLAttentuation <span style="color: #339933;">=</span> XMLLight<span style="color: #339933;">-&gt;</span>FirstChildElement<span style="color: #009900;">(</span><span style="color: #ff0000;">"lightAttenuation"</span><span style="color: #009900;">)</span><span style="color: #339933;">;</span>
+   <span style="color: #b1b100;">if</span><span style="color: #009900;">(</span> XMLAttentuation <span style="color: #009900;">)</span>
+   <span style="color: #009900;">{</span>
+      <span style="color: #666666; font-style: italic;">//get defaults incase not all values specified</span>
+      Real range<span style="color: #339933;">,</span> constant<span style="color: #339933;">,</span> linear<span style="color: #339933;">,</span> quadratic<span style="color: #339933;">;</span>
+      range <span style="color: #339933;">=</span> l<span style="color: #339933;">-&gt;</span>getAttenuationRange<span style="color: #009900;">(</span><span style="color: #009900;">)</span><span style="color: #339933;">;</span>
+      constant <span style="color: #339933;">=</span> l<span style="color: #339933;">-&gt;</span>getAttenuationConstant<span style="color: #009900;">(</span><span style="color: #009900;">)</span><span style="color: #339933;">;</span>
+      linear <span style="color: #339933;">=</span> l<span style="color: #339933;">-&gt;</span>getAttenuationLinear<span style="color: #009900;">(</span><span style="color: #009900;">)</span><span style="color: #339933;">;</span>
+      quadratic <span style="color: #339933;">=</span> l<span style="color: #339933;">-&gt;</span>getAttenuationQuadric<span style="color: #009900;">(</span><span style="color: #009900;">)</span><span style="color: #339933;">;</span>
+&nbsp;
+      <span style="color: #b1b100;">if</span><span style="color: #009900;">(</span> XMLAttentuation<span style="color: #339933;">-&gt;</span>Attribute<span style="color: #009900;">(</span><span style="color: #ff0000;">"range"</span><span style="color: #009900;">)</span> <span style="color: #009900;">)</span>
+         range <span style="color: #339933;">=</span> StringConverter<span style="color: #339933;">::</span><span style="color: #202020;">parseReal</span><span style="color: #009900;">(</span> XMLAttentuation<span style="color: #339933;">-&gt;</span>Attribute<span style="color: #009900;">(</span><span style="color: #ff0000;">"range"</span><span style="color: #009900;">)</span> <span style="color: #009900;">)</span><span style="color: #339933;">;</span>
+      <span style="color: #b1b100;">if</span><span style="color: #009900;">(</span> XMLAttentuation<span style="color: #339933;">-&gt;</span>Attribute<span style="color: #009900;">(</span><span style="color: #ff0000;">"constant"</span><span style="color: #009900;">)</span> <span style="color: #009900;">)</span>
+         constant <span style="color: #339933;">=</span> StringConverter<span style="color: #339933;">::</span><span style="color: #202020;">parseReal</span><span style="color: #009900;">(</span> XMLAttentuation<span style="color: #339933;">-&gt;</span>Attribute<span style="color: #009900;">(</span><span style="color: #ff0000;">"constant"</span><span style="color: #009900;">)</span> <span style="color: #009900;">)</span><span style="color: #339933;">;</span>
+      <span style="color: #b1b100;">if</span><span style="color: #009900;">(</span> XMLAttentuation<span style="color: #339933;">-&gt;</span>Attribute<span style="color: #009900;">(</span><span style="color: #ff0000;">"linear"</span><span style="color: #009900;">)</span> <span style="color: #009900;">)</span>
+         linear <span style="color: #339933;">=</span> StringConverter<span style="color: #339933;">::</span><span style="color: #202020;">parseReal</span><span style="color: #009900;">(</span> XMLAttentuation<span style="color: #339933;">-&gt;</span>Attribute<span style="color: #009900;">(</span><span style="color: #ff0000;">"linear"</span><span style="color: #009900;">)</span> <span style="color: #009900;">)</span><span style="color: #339933;">;</span>
+      <span style="color: #b1b100;">if</span><span style="color: #009900;">(</span> XMLAttentuation<span style="color: #339933;">-&gt;</span>Attribute<span style="color: #009900;">(</span><span style="color: #ff0000;">"quadratic"</span><span style="color: #009900;">)</span> <span style="color: #009900;">)</span>
+         quadratic <span style="color: #339933;">=</span> StringConverter<span style="color: #339933;">::</span><span style="color: #202020;">parseReal</span><span style="color: #009900;">(</span> XMLAttentuation<span style="color: #339933;">-&gt;</span>Attribute<span style="color: #009900;">(</span><span style="color: #ff0000;">"quadratic"</span><span style="color: #009900;">)</span> <span style="color: #009900;">)</span><span style="color: #339933;">;</span>
+&nbsp;
+      l<span style="color: #339933;">-&gt;</span>setAttenuation<span style="color: #009900;">(</span> range<span style="color: #339933;">,</span> constant<span style="color: #339933;">,</span> linear<span style="color: #339933;">,</span> quadratic <span style="color: #009900;">)</span><span style="color: #339933;">;</span>
+   <span style="color: #009900;">}</span>
+&nbsp;
+   XMLPosition <span style="color: #339933;">=</span> XMLLight<span style="color: #339933;">-&gt;</span>FirstChildElement<span style="color: #009900;">(</span><span style="color: #ff0000;">"position"</span><span style="color: #009900;">)</span><span style="color: #339933;">;</span>
+   <span style="color: #b1b100;">if</span><span style="color: #009900;">(</span> XMLPosition <span style="color: #009900;">)</span> <span style="color: #009900;">{</span>
+      Vector3 p <span style="color: #339933;">=</span> Vector3<span style="color: #009900;">(</span><span style="color: #0000dd;">0</span><span style="color: #339933;">,</span><span style="color: #0000dd;">0</span><span style="color: #339933;">,</span><span style="color: #0000dd;">0</span><span style="color: #009900;">)</span><span style="color: #339933;">;</span>
+      <span style="color: #b1b100;">if</span><span style="color: #009900;">(</span> XMLPosition<span style="color: #339933;">-&gt;</span>Attribute<span style="color: #009900;">(</span><span style="color: #ff0000;">"x"</span><span style="color: #009900;">)</span> <span style="color: #009900;">)</span>
+         p.<span style="color: #202020;">x</span> <span style="color: #339933;">=</span> StringConverter<span style="color: #339933;">::</span><span style="color: #202020;">parseReal</span><span style="color: #009900;">(</span> XMLPosition<span style="color: #339933;">-&gt;</span>Attribute<span style="color: #009900;">(</span><span style="color: #ff0000;">"x"</span><span style="color: #009900;">)</span> <span style="color: #009900;">)</span><span style="color: #339933;">;</span>
+      <span style="color: #b1b100;">if</span><span style="color: #009900;">(</span> XMLPosition<span style="color: #339933;">-&gt;</span>Attribute<span style="color: #009900;">(</span><span style="color: #ff0000;">"y"</span><span style="color: #009900;">)</span> <span style="color: #009900;">)</span>
+         p.<span style="color: #202020;">y</span> <span style="color: #339933;">=</span> StringConverter<span style="color: #339933;">::</span><span style="color: #202020;">parseReal</span><span style="color: #009900;">(</span> XMLPosition<span style="color: #339933;">-&gt;</span>Attribute<span style="color: #009900;">(</span><span style="color: #ff0000;">"y"</span><span style="color: #009900;">)</span> <span style="color: #009900;">)</span><span style="color: #339933;">;</span>
+      <span style="color: #b1b100;">if</span><span style="color: #009900;">(</span> XMLPosition<span style="color: #339933;">-&gt;</span>Attribute<span style="color: #009900;">(</span><span style="color: #ff0000;">"z"</span><span style="color: #009900;">)</span> <span style="color: #009900;">)</span>
+         p.<span style="color: #202020;">z</span> <span style="color: #339933;">=</span> StringConverter<span style="color: #339933;">::</span><span style="color: #202020;">parseReal</span><span style="color: #009900;">(</span> XMLPosition<span style="color: #339933;">-&gt;</span>Attribute<span style="color: #009900;">(</span><span style="color: #ff0000;">"z"</span><span style="color: #009900;">)</span> <span style="color: #009900;">)</span><span style="color: #339933;">;</span>
+&nbsp;
+      l<span style="color: #339933;">-&gt;</span>setPosition<span style="color: #009900;">(</span> p <span style="color: #009900;">)</span><span style="color: #339933;">;</span>
+   <span style="color: #009900;">}</span>
+&nbsp;
+   <span style="color: #666666; font-style: italic;">//castShadows      (true | false) "true"</span>
+   l<span style="color: #339933;">-&gt;</span>setCastShadows<span style="color: #009900;">(</span> <span style="color: #000000; font-weight: bold;">true</span> <span style="color: #009900;">)</span><span style="color: #339933;">;</span>
+   <span style="color: #b1b100;">if</span><span style="color: #009900;">(</span> XMLLight<span style="color: #339933;">-&gt;</span>Attribute<span style="color: #009900;">(</span><span style="color: #ff0000;">"castShadows"</span><span style="color: #009900;">)</span> <span style="color: #009900;">)</span>
+      <span style="color: #b1b100;">if</span><span style="color: #009900;">(</span> String<span style="color: #009900;">(</span>XMLLight<span style="color: #339933;">-&gt;</span>Attribute<span style="color: #009900;">(</span><span style="color: #ff0000;">"castShadows"</span><span style="color: #009900;">)</span><span style="color: #009900;">)</span> <span style="color: #339933;">==</span> <span style="color: #ff0000;">"false"</span> <span style="color: #009900;">)</span>
+         l<span style="color: #339933;">-&gt;</span>setCastShadows<span style="color: #009900;">(</span> <span style="color: #000000; font-weight: bold;">false</span> <span style="color: #009900;">)</span><span style="color: #339933;">;</span>
+&nbsp;
+   <span style="color: #666666; font-style: italic;">//visible         (true | false) "true"      </span>
+   l<span style="color: #339933;">-&gt;</span>setVisible<span style="color: #009900;">(</span> <span style="color: #000000; font-weight: bold;">true</span> <span style="color: #009900;">)</span><span style="color: #339933;">;</span>
+   <span style="color: #b1b100;">if</span><span style="color: #009900;">(</span> XMLLight<span style="color: #339933;">-&gt;</span>Attribute<span style="color: #009900;">(</span><span style="color: #ff0000;">"visible"</span><span style="color: #009900;">)</span> <span style="color: #009900;">)</span>
+      <span style="color: #b1b100;">if</span><span style="color: #009900;">(</span> String<span style="color: #009900;">(</span>XMLLight<span style="color: #339933;">-&gt;</span>Attribute<span style="color: #009900;">(</span><span style="color: #ff0000;">"visible"</span><span style="color: #009900;">)</span><span style="color: #009900;">)</span> <span style="color: #339933;">==</span> <span style="color: #ff0000;">"false"</span> <span style="color: #009900;">)</span>
+         l<span style="color: #339933;">-&gt;</span>setVisible<span style="color: #009900;">(</span> <span style="color: #000000; font-weight: bold;">false</span> <span style="color: #009900;">)</span><span style="color: #339933;">;</span>
+&nbsp;
+   <span style="color: #b1b100;">return</span> l<span style="color: #339933;">;</span>
+<span style="color: #009900;">}</span>
+&nbsp;
+vector<span style="color: #339933;">&lt;</span>nodeProperty<span style="color: #339933;">&gt;</span> nodeProperties<span style="color: #339933;">;</span>
+&nbsp;
+<span style="color: #993333;">void</span> parseDotScene<span style="color: #009900;">(</span> <span style="color: #993333;">const</span> String <span style="color: #339933;">&amp;</span>SceneName<span style="color: #339933;">,</span> <span style="color: #993333;">const</span> String<span style="color: #339933;">&amp;</span> groupName<span style="color: #339933;">,</span> SceneManager <span style="color: #339933;">*</span>mSceneMgr <span style="color: #009900;">)</span>
+<span style="color: #009900;">{</span>
+   TiXmlDocument   <span style="color: #339933;">*</span>XMLDoc<span style="color: #339933;">;</span>
+   TiXmlElement   <span style="color: #339933;">*</span>XMLRoot<span style="color: #339933;">,</span> <span style="color: #339933;">*</span>XMLNodes<span style="color: #339933;">;</span>
+&nbsp;
+   try
+   <span style="color: #009900;">{</span>
+      DataStreamPtr pStream <span style="color: #339933;">=</span> ResourceGroupManager<span style="color: #339933;">::</span><span style="color: #202020;">getSingleton</span><span style="color: #009900;">(</span><span style="color: #009900;">)</span>.
+         <span style="color: #202020;">openResource</span><span style="color: #009900;">(</span> SceneName<span style="color: #339933;">,</span> groupName <span style="color: #009900;">)</span><span style="color: #339933;">;</span>
+&nbsp;
+      String data <span style="color: #339933;">=</span> pStream<span style="color: #339933;">-&gt;</span>getAsString<span style="color: #009900;">(</span><span style="color: #009900;">)</span><span style="color: #339933;">;</span>
+      <span style="color: #666666; font-style: italic;">// Open the .scene File</span>
+      XMLDoc <span style="color: #339933;">=</span> new TiXmlDocument<span style="color: #009900;">(</span><span style="color: #009900;">)</span><span style="color: #339933;">;</span>
+      XMLDoc<span style="color: #339933;">-&gt;</span>Parse<span style="color: #009900;">(</span> data.<span style="color: #202020;">c_str</span><span style="color: #009900;">(</span><span style="color: #009900;">)</span> <span style="color: #009900;">)</span><span style="color: #339933;">;</span>
+      pStream<span style="color: #339933;">-&gt;</span>close<span style="color: #009900;">(</span><span style="color: #009900;">)</span><span style="color: #339933;">;</span>
+      pStream.<span style="color: #202020;">setNull</span><span style="color: #009900;">(</span><span style="color: #009900;">)</span><span style="color: #339933;">;</span>
+&nbsp;
+      <span style="color: #b1b100;">if</span><span style="color: #009900;">(</span> XMLDoc<span style="color: #339933;">-&gt;</span>Error<span style="color: #009900;">(</span><span style="color: #009900;">)</span> <span style="color: #009900;">)</span>
+      <span style="color: #009900;">{</span>
+         <span style="color: #666666; font-style: italic;">//We'll just log, and continue on gracefully</span>
+         LogManager<span style="color: #339933;">::</span><span style="color: #202020;">getSingleton</span><span style="color: #009900;">(</span><span style="color: #009900;">)</span>.<span style="color: #202020;">logMessage</span><span style="color: #009900;">(</span><span style="color: #ff0000;">"[dotSceneLoader] The TiXmlDocument reported an error"</span><span style="color: #009900;">)</span><span style="color: #339933;">;</span>
+         delete XMLDoc<span style="color: #339933;">;</span>
+         <span style="color: #b1b100;">return</span><span style="color: #339933;">;</span>
+      <span style="color: #009900;">}</span>
+   <span style="color: #009900;">}</span>
+   catch<span style="color: #009900;">(</span>...<span style="color: #009900;">)</span>
+   <span style="color: #009900;">{</span>
+      <span style="color: #666666; font-style: italic;">//We'll just log, and continue on gracefully</span>
+      LogManager<span style="color: #339933;">::</span><span style="color: #202020;">getSingleton</span><span style="color: #009900;">(</span><span style="color: #009900;">)</span>.<span style="color: #202020;">logMessage</span><span style="color: #009900;">(</span><span style="color: #ff0000;">"[dotSceneLoader] Error creating TiXmlDocument"</span><span style="color: #009900;">)</span><span style="color: #339933;">;</span>
+      delete XMLDoc<span style="color: #339933;">;</span>
+      <span style="color: #b1b100;">return</span><span style="color: #339933;">;</span>
+   <span style="color: #009900;">}</span>
+&nbsp;
+   <span style="color: #666666; font-style: italic;">// Validate the File</span>
+   XMLRoot <span style="color: #339933;">=</span> XMLDoc<span style="color: #339933;">-&gt;</span>RootElement<span style="color: #009900;">(</span><span style="color: #009900;">)</span><span style="color: #339933;">;</span>
+   <span style="color: #b1b100;">if</span><span style="color: #009900;">(</span> String<span style="color: #009900;">(</span> XMLRoot<span style="color: #339933;">-&gt;</span>Value<span style="color: #009900;">(</span><span style="color: #009900;">)</span><span style="color: #009900;">)</span> <span style="color: #339933;">!=</span> <span style="color: #ff0000;">"scene"</span>  <span style="color: #009900;">)</span> <span style="color: #009900;">{</span>
+      LogManager<span style="color: #339933;">::</span><span style="color: #202020;">getSingleton</span><span style="color: #009900;">(</span><span style="color: #009900;">)</span>.<span style="color: #202020;">logMessage</span><span style="color: #009900;">(</span> <span style="color: #ff0000;">"[dotSceneLoader]Error: Invalid .scene File. Missing &lt;scene&gt;"</span> <span style="color: #009900;">)</span><span style="color: #339933;">;</span>
+      delete XMLDoc<span style="color: #339933;">;</span>      
+      <span style="color: #b1b100;">return</span><span style="color: #339933;">;</span>
+   <span style="color: #009900;">}</span>
+&nbsp;
+   XMLNodes <span style="color: #339933;">=</span> XMLRoot<span style="color: #339933;">-&gt;</span>FirstChildElement<span style="color: #009900;">(</span> <span style="color: #ff0000;">"nodes"</span> <span style="color: #009900;">)</span><span style="color: #339933;">;</span>
+&nbsp;
+   <span style="color: #666666; font-style: italic;">// Read in the scene nodes</span>
+   <span style="color: #b1b100;">if</span><span style="color: #009900;">(</span> XMLNodes <span style="color: #009900;">)</span>
+   <span style="color: #009900;">{</span>
+      TiXmlElement <span style="color: #339933;">*</span>XMLNode<span style="color: #339933;">,</span> <span style="color: #339933;">*</span>XMLPosition<span style="color: #339933;">,</span> <span style="color: #339933;">*</span>XMLRotation<span style="color: #339933;">,</span> <span style="color: #339933;">*</span>XMLScale<span style="color: #339933;">,</span>  <span style="color: #339933;">*</span>XMLEntity<span style="color: #339933;">,</span> <span style="color: #339933;">*</span>XMLBillboardSet<span style="color: #339933;">,</span>  <span style="color: #339933;">*</span>XMLLight<span style="color: #339933;">,</span> <span style="color: #339933;">*</span>XMLUserData<span style="color: #339933;">;</span>
+&nbsp;
+      XMLNode <span style="color: #339933;">=</span> XMLNodes<span style="color: #339933;">-&gt;</span>FirstChildElement<span style="color: #009900;">(</span> <span style="color: #ff0000;">"node"</span> <span style="color: #009900;">)</span><span style="color: #339933;">;</span>
+&nbsp;
+      <span style="color: #b1b100;">while</span><span style="color: #009900;">(</span> XMLNode <span style="color: #009900;">)</span>
+      <span style="color: #009900;">{</span>
+         <span style="color: #666666; font-style: italic;">// Process the current node</span>
+         <span style="color: #666666; font-style: italic;">// Grab the name of the node</span>
+         String NodeName <span style="color: #339933;">=</span> XMLNode<span style="color: #339933;">-&gt;</span>Attribute<span style="color: #009900;">(</span><span style="color: #ff0000;">"name"</span><span style="color: #009900;">)</span><span style="color: #339933;">;</span>
+         <span style="color: #666666; font-style: italic;">// First create the new scene node</span>
+         SceneNode<span style="color: #339933;">*</span> NewNode <span style="color: #339933;">=</span> mSceneMgr<span style="color: #339933;">-&gt;</span>getRootSceneNode<span style="color: #009900;">(</span><span style="color: #009900;">)</span><span style="color: #339933;">-&gt;</span>createChildSceneNode<span style="color: #009900;">(</span> NodeName <span style="color: #009900;">)</span><span style="color: #339933;">;</span>
+         Vector3 TempVec<span style="color: #339933;">;</span>
+         String TempValue<span style="color: #339933;">;</span>
+&nbsp;
+         <span style="color: #666666; font-style: italic;">// Now position it...</span>
+         XMLPosition <span style="color: #339933;">=</span> XMLNode<span style="color: #339933;">-&gt;</span>FirstChildElement<span style="color: #009900;">(</span><span style="color: #ff0000;">"position"</span><span style="color: #009900;">)</span><span style="color: #339933;">;</span>
+         <span style="color: #b1b100;">if</span><span style="color: #009900;">(</span> XMLPosition <span style="color: #009900;">)</span><span style="color: #009900;">{</span>
+            TempValue <span style="color: #339933;">=</span> XMLPosition<span style="color: #339933;">-&gt;</span>Attribute<span style="color: #009900;">(</span><span style="color: #ff0000;">"x"</span><span style="color: #009900;">)</span><span style="color: #339933;">;</span>
+            TempVec.<span style="color: #202020;">x</span> <span style="color: #339933;">=</span> StringConverter<span style="color: #339933;">::</span><span style="color: #202020;">parseReal</span><span style="color: #009900;">(</span>TempValue<span style="color: #009900;">)</span><span style="color: #339933;">;</span>
+            TempValue <span style="color: #339933;">=</span> XMLPosition<span style="color: #339933;">-&gt;</span>Attribute<span style="color: #009900;">(</span><span style="color: #ff0000;">"y"</span><span style="color: #009900;">)</span><span style="color: #339933;">;</span>
+            TempVec.<span style="color: #202020;">y</span> <span style="color: #339933;">=</span> StringConverter<span style="color: #339933;">::</span><span style="color: #202020;">parseReal</span><span style="color: #009900;">(</span>TempValue<span style="color: #009900;">)</span><span style="color: #339933;">;</span>
+            TempValue <span style="color: #339933;">=</span> XMLPosition<span style="color: #339933;">-&gt;</span>Attribute<span style="color: #009900;">(</span><span style="color: #ff0000;">"z"</span><span style="color: #009900;">)</span><span style="color: #339933;">;</span>
+            TempVec.<span style="color: #202020;">z</span> <span style="color: #339933;">=</span> StringConverter<span style="color: #339933;">::</span><span style="color: #202020;">parseReal</span><span style="color: #009900;">(</span>TempValue<span style="color: #009900;">)</span><span style="color: #339933;">;</span>
+            NewNode<span style="color: #339933;">-&gt;</span>setPosition<span style="color: #009900;">(</span> TempVec <span style="color: #009900;">)</span><span style="color: #339933;">;</span>
+         <span style="color: #009900;">}</span>
+&nbsp;
+         <span style="color: #666666; font-style: italic;">// Rotate it...</span>
+         XMLRotation <span style="color: #339933;">=</span> XMLNode<span style="color: #339933;">-&gt;</span>FirstChildElement<span style="color: #009900;">(</span><span style="color: #ff0000;">"rotation"</span><span style="color: #009900;">)</span><span style="color: #339933;">;</span>
+         <span style="color: #b1b100;">if</span><span style="color: #009900;">(</span> XMLRotation <span style="color: #009900;">)</span><span style="color: #009900;">{</span>
+            Quaternion TempQuat<span style="color: #339933;">;</span>
+            TempValue <span style="color: #339933;">=</span> XMLRotation<span style="color: #339933;">-&gt;</span>Attribute<span style="color: #009900;">(</span><span style="color: #ff0000;">"qx"</span><span style="color: #009900;">)</span><span style="color: #339933;">;</span>
+            TempQuat.<span style="color: #202020;">x</span> <span style="color: #339933;">=</span> StringConverter<span style="color: #339933;">::</span><span style="color: #202020;">parseReal</span><span style="color: #009900;">(</span>TempValue<span style="color: #009900;">)</span><span style="color: #339933;">;</span>
+            TempValue <span style="color: #339933;">=</span> XMLRotation<span style="color: #339933;">-&gt;</span>Attribute<span style="color: #009900;">(</span><span style="color: #ff0000;">"qy"</span><span style="color: #009900;">)</span><span style="color: #339933;">;</span>
+            TempQuat.<span style="color: #202020;">y</span> <span style="color: #339933;">=</span> StringConverter<span style="color: #339933;">::</span><span style="color: #202020;">parseReal</span><span style="color: #009900;">(</span>TempValue<span style="color: #009900;">)</span><span style="color: #339933;">;</span>
+            TempValue <span style="color: #339933;">=</span> XMLRotation<span style="color: #339933;">-&gt;</span>Attribute<span style="color: #009900;">(</span><span style="color: #ff0000;">"qz"</span><span style="color: #009900;">)</span><span style="color: #339933;">;</span>
+            TempQuat.<span style="color: #202020;">z</span> <span style="color: #339933;">=</span> StringConverter<span style="color: #339933;">::</span><span style="color: #202020;">parseReal</span><span style="color: #009900;">(</span>TempValue<span style="color: #009900;">)</span><span style="color: #339933;">;</span>
+            TempValue <span style="color: #339933;">=</span> XMLRotation<span style="color: #339933;">-&gt;</span>Attribute<span style="color: #009900;">(</span><span style="color: #ff0000;">"qw"</span><span style="color: #009900;">)</span><span style="color: #339933;">;</span>
+            TempQuat.<span style="color: #202020;">w</span> <span style="color: #339933;">=</span> StringConverter<span style="color: #339933;">::</span><span style="color: #202020;">parseReal</span><span style="color: #009900;">(</span>TempValue<span style="color: #009900;">)</span><span style="color: #339933;">;</span>
+            NewNode<span style="color: #339933;">-&gt;</span>setOrientation<span style="color: #009900;">(</span> TempQuat <span style="color: #009900;">)</span><span style="color: #339933;">;</span>
+         <span style="color: #009900;">}</span>
+&nbsp;
+         <span style="color: #666666; font-style: italic;">// Scale it.</span>
+         XMLScale <span style="color: #339933;">=</span> XMLNode<span style="color: #339933;">-&gt;</span>FirstChildElement<span style="color: #009900;">(</span><span style="color: #ff0000;">"scale"</span><span style="color: #009900;">)</span><span style="color: #339933;">;</span>
+         <span style="color: #b1b100;">if</span><span style="color: #009900;">(</span> XMLScale <span style="color: #009900;">)</span><span style="color: #009900;">{</span>
+            TempValue <span style="color: #339933;">=</span> XMLScale<span style="color: #339933;">-&gt;</span>Attribute<span style="color: #009900;">(</span><span style="color: #ff0000;">"x"</span><span style="color: #009900;">)</span><span style="color: #339933;">;</span>
+            TempVec.<span style="color: #202020;">x</span> <span style="color: #339933;">=</span> StringConverter<span style="color: #339933;">::</span><span style="color: #202020;">parseReal</span><span style="color: #009900;">(</span>TempValue<span style="color: #009900;">)</span><span style="color: #339933;">;</span>
+            TempValue <span style="color: #339933;">=</span> XMLScale<span style="color: #339933;">-&gt;</span>Attribute<span style="color: #009900;">(</span><span style="color: #ff0000;">"y"</span><span style="color: #009900;">)</span><span style="color: #339933;">;</span>
+            TempVec.<span style="color: #202020;">y</span> <span style="color: #339933;">=</span> StringConverter<span style="color: #339933;">::</span><span style="color: #202020;">parseReal</span><span style="color: #009900;">(</span>TempValue<span style="color: #009900;">)</span><span style="color: #339933;">;</span>
+            TempValue <span style="color: #339933;">=</span> XMLScale<span style="color: #339933;">-&gt;</span>Attribute<span style="color: #009900;">(</span><span style="color: #ff0000;">"z"</span><span style="color: #009900;">)</span><span style="color: #339933;">;</span>
+            TempVec.<span style="color: #202020;">z</span> <span style="color: #339933;">=</span> StringConverter<span style="color: #339933;">::</span><span style="color: #202020;">parseReal</span><span style="color: #009900;">(</span>TempValue<span style="color: #009900;">)</span><span style="color: #339933;">;</span>
+            NewNode<span style="color: #339933;">-&gt;</span>setScale<span style="color: #009900;">(</span> TempVec <span style="color: #009900;">)</span><span style="color: #339933;">;</span>
+         <span style="color: #009900;">}</span>
+&nbsp;
+         XMLLight <span style="color: #339933;">=</span> XMLNode<span style="color: #339933;">-&gt;</span>FirstChildElement<span style="color: #009900;">(</span> <span style="color: #ff0000;">"light"</span> <span style="color: #009900;">)</span><span style="color: #339933;">;</span>
+         <span style="color: #b1b100;">if</span><span style="color: #009900;">(</span> XMLLight <span style="color: #009900;">)</span>
+            NewNode<span style="color: #339933;">-&gt;</span>attachObject<span style="color: #009900;">(</span> LoadLight<span style="color: #009900;">(</span> XMLLight<span style="color: #339933;">,</span> mSceneMgr <span style="color: #009900;">)</span> <span style="color: #009900;">)</span><span style="color: #339933;">;</span>
+&nbsp;
+         <span style="color: #666666; font-style: italic;">// Check for an Entity</span>
+         XMLEntity <span style="color: #339933;">=</span> XMLNode<span style="color: #339933;">-&gt;</span>FirstChildElement<span style="color: #009900;">(</span><span style="color: #ff0000;">"entity"</span><span style="color: #009900;">)</span><span style="color: #339933;">;</span>
+         <span style="color: #b1b100;">if</span><span style="color: #009900;">(</span> XMLEntity <span style="color: #009900;">)</span>
+         <span style="color: #009900;">{</span>
+            String EntityName<span style="color: #339933;">,</span> EntityMeshFilename<span style="color: #339933;">;</span>
+            EntityName <span style="color: #339933;">=</span> XMLEntity<span style="color: #339933;">-&gt;</span>Attribute<span style="color: #009900;">(</span> <span style="color: #ff0000;">"name"</span> <span style="color: #009900;">)</span><span style="color: #339933;">;</span>
+            EntityMeshFilename <span style="color: #339933;">=</span> XMLEntity<span style="color: #339933;">-&gt;</span>Attribute<span style="color: #009900;">(</span> <span style="color: #ff0000;">"meshFile"</span> <span style="color: #009900;">)</span><span style="color: #339933;">;</span>
+&nbsp;
+            <span style="color: #666666; font-style: italic;">// Create entity</span>
+            Entity<span style="color: #339933;">*</span> NewEntity <span style="color: #339933;">=</span> mSceneMgr<span style="color: #339933;">-&gt;</span>createEntity<span style="color: #009900;">(</span>EntityName<span style="color: #339933;">,</span> EntityMeshFilename<span style="color: #009900;">)</span><span style="color: #339933;">;</span>
+&nbsp;
+            <span style="color: #666666; font-style: italic;">//castShadows      (true | false) "true"</span>
+        NewEntity<span style="color: #339933;">-&gt;</span>setCastShadows<span style="color: #009900;">(</span> <span style="color: #000000; font-weight: bold;">true</span> <span style="color: #009900;">)</span><span style="color: #339933;">;</span>
+        <span style="color: #b1b100;">if</span><span style="color: #009900;">(</span> XMLEntity<span style="color: #339933;">-&gt;</span>Attribute<span style="color: #009900;">(</span><span style="color: #ff0000;">"castShadows"</span><span style="color: #009900;">)</span> <span style="color: #009900;">)</span>
+               <span style="color: #b1b100;">if</span><span style="color: #009900;">(</span> String<span style="color: #009900;">(</span>XMLEntity<span style="color: #339933;">-&gt;</span>Attribute<span style="color: #009900;">(</span><span style="color: #ff0000;">"castShadows"</span><span style="color: #009900;">)</span><span style="color: #009900;">)</span> <span style="color: #339933;">==</span> <span style="color: #ff0000;">"false"</span> <span style="color: #009900;">)</span>
+                  NewEntity<span style="color: #339933;">-&gt;</span>setCastShadows<span style="color: #009900;">(</span> <span style="color: #000000; font-weight: bold;">false</span> <span style="color: #009900;">)</span><span style="color: #339933;">;</span>
+&nbsp;
+            NewNode<span style="color: #339933;">-&gt;</span>attachObject<span style="color: #009900;">(</span> NewEntity <span style="color: #009900;">)</span><span style="color: #339933;">;</span>
+         <span style="color: #009900;">}</span>
+&nbsp;
+         XMLBillboardSet <span style="color: #339933;">=</span> XMLNode<span style="color: #339933;">-&gt;</span>FirstChildElement<span style="color: #009900;">(</span> <span style="color: #ff0000;">"billboardSet"</span> <span style="color: #009900;">)</span><span style="color: #339933;">;</span>
+         <span style="color: #b1b100;">if</span><span style="color: #009900;">(</span> XMLBillboardSet <span style="color: #009900;">)</span>
+         <span style="color: #009900;">{</span>
+            String TempValue<span style="color: #339933;">;</span>
+&nbsp;
+            BillboardSet<span style="color: #339933;">*</span> bSet <span style="color: #339933;">=</span> mSceneMgr<span style="color: #339933;">-&gt;</span>createBillboardSet<span style="color: #009900;">(</span> NewNode<span style="color: #339933;">-&gt;</span>getName<span style="color: #009900;">(</span><span style="color: #009900;">)</span> <span style="color: #009900;">)</span><span style="color: #339933;">;</span>
+&nbsp;
+            BillboardType Type<span style="color: #339933;">;</span>
+            TempValue <span style="color: #339933;">=</span> XMLBillboardSet<span style="color: #339933;">-&gt;</span>Attribute<span style="color: #009900;">(</span> <span style="color: #ff0000;">"type"</span> <span style="color: #009900;">)</span><span style="color: #339933;">;</span>
+            <span style="color: #b1b100;">if</span><span style="color: #009900;">(</span> TempValue <span style="color: #339933;">==</span> <span style="color: #ff0000;">"orientedCommon"</span> <span style="color: #009900;">)</span>
+               Type <span style="color: #339933;">=</span> BBT_ORIENTED_COMMON<span style="color: #339933;">;</span>
+            <span style="color: #b1b100;">else</span> <span style="color: #b1b100;">if</span><span style="color: #009900;">(</span> TempValue <span style="color: #339933;">==</span> <span style="color: #ff0000;">"orientedSelf"</span> <span style="color: #009900;">)</span>
+               Type <span style="color: #339933;">=</span> BBT_ORIENTED_SELF<span style="color: #339933;">;</span>
+            <span style="color: #b1b100;">else</span> Type <span style="color: #339933;">=</span> BBT_POINT<span style="color: #339933;">;</span>
+&nbsp;
+            BillboardOrigin Origin<span style="color: #339933;">;</span>
+            TempValue <span style="color: #339933;">=</span> XMLBillboardSet<span style="color: #339933;">-&gt;</span>Attribute<span style="color: #009900;">(</span> <span style="color: #ff0000;">"type"</span> <span style="color: #009900;">)</span><span style="color: #339933;">;</span>
+            <span style="color: #b1b100;">if</span><span style="color: #009900;">(</span> TempValue <span style="color: #339933;">==</span> <span style="color: #ff0000;">"bottom_left"</span> <span style="color: #009900;">)</span>
+               Origin <span style="color: #339933;">=</span> BBO_BOTTOM_LEFT<span style="color: #339933;">;</span>
+            <span style="color: #b1b100;">else</span> <span style="color: #b1b100;">if</span><span style="color: #009900;">(</span> TempValue <span style="color: #339933;">==</span> <span style="color: #ff0000;">"bottom_center"</span> <span style="color: #009900;">)</span>
+               Origin <span style="color: #339933;">=</span> BBO_BOTTOM_CENTER<span style="color: #339933;">;</span>
+            <span style="color: #b1b100;">else</span> <span style="color: #b1b100;">if</span><span style="color: #009900;">(</span> TempValue <span style="color: #339933;">==</span> <span style="color: #ff0000;">"bottomRight"</span>  <span style="color: #009900;">)</span>
+               Origin <span style="color: #339933;">=</span> BBO_BOTTOM_RIGHT<span style="color: #339933;">;</span>
+            <span style="color: #b1b100;">else</span> <span style="color: #b1b100;">if</span><span style="color: #009900;">(</span> TempValue <span style="color: #339933;">==</span> <span style="color: #ff0000;">"left"</span> <span style="color: #009900;">)</span>
+               Origin <span style="color: #339933;">=</span> BBO_CENTER_LEFT<span style="color: #339933;">;</span>
+            <span style="color: #b1b100;">else</span> <span style="color: #b1b100;">if</span><span style="color: #009900;">(</span> TempValue <span style="color: #339933;">==</span> <span style="color: #ff0000;">"right"</span> <span style="color: #009900;">)</span>
+               Origin <span style="color: #339933;">=</span> BBO_CENTER_RIGHT<span style="color: #339933;">;</span>
+            <span style="color: #b1b100;">else</span> <span style="color: #b1b100;">if</span><span style="color: #009900;">(</span> TempValue <span style="color: #339933;">==</span> <span style="color: #ff0000;">"topLeft"</span> <span style="color: #009900;">)</span>
+               Origin <span style="color: #339933;">=</span> BBO_TOP_LEFT<span style="color: #339933;">;</span>
+            <span style="color: #b1b100;">else</span> <span style="color: #b1b100;">if</span><span style="color: #009900;">(</span> TempValue <span style="color: #339933;">==</span> <span style="color: #ff0000;">"topCenter"</span> <span style="color: #009900;">)</span>
+               Origin <span style="color: #339933;">=</span> BBO_TOP_CENTER<span style="color: #339933;">;</span>
+            <span style="color: #b1b100;">else</span> <span style="color: #b1b100;">if</span><span style="color: #009900;">(</span> TempValue <span style="color: #339933;">==</span> <span style="color: #ff0000;">"topRight"</span> <span style="color: #009900;">)</span>
+               Origin <span style="color: #339933;">=</span> BBO_TOP_RIGHT<span style="color: #339933;">;</span>
+            <span style="color: #b1b100;">else</span>
+               Origin <span style="color: #339933;">=</span> BBO_CENTER<span style="color: #339933;">;</span>
+&nbsp;
+            bSet<span style="color: #339933;">-&gt;</span>setBillboardType<span style="color: #009900;">(</span> Type <span style="color: #009900;">)</span><span style="color: #339933;">;</span>
+            bSet<span style="color: #339933;">-&gt;</span>setBillboardOrigin<span style="color: #009900;">(</span> Origin <span style="color: #009900;">)</span><span style="color: #339933;">;</span>
+&nbsp;
+            TempValue <span style="color: #339933;">=</span> XMLBillboardSet<span style="color: #339933;">-&gt;</span>Attribute<span style="color: #009900;">(</span> <span style="color: #ff0000;">"name"</span> <span style="color: #009900;">)</span><span style="color: #339933;">;</span>
+            bSet<span style="color: #339933;">-&gt;</span>setMaterialName<span style="color: #009900;">(</span> TempValue <span style="color: #009900;">)</span><span style="color: #339933;">;</span>
+&nbsp;
+            <span style="color: #993333;">int</span> width<span style="color: #339933;">,</span> height<span style="color: #339933;">;</span>
+            width <span style="color: #339933;">=</span> <span style="color: #009900;">(</span><span style="color: #993333;">int</span><span style="color: #009900;">)</span> StringConverter<span style="color: #339933;">::</span><span style="color: #202020;">parseReal</span><span style="color: #009900;">(</span> XMLBillboardSet<span style="color: #339933;">-&gt;</span>Attribute<span style="color: #009900;">(</span> <span style="color: #ff0000;">"width"</span> <span style="color: #009900;">)</span> <span style="color: #009900;">)</span><span style="color: #339933;">;</span>
+            height <span style="color: #339933;">=</span> <span style="color: #009900;">(</span><span style="color: #993333;">int</span><span style="color: #009900;">)</span> StringConverter<span style="color: #339933;">::</span><span style="color: #202020;">parseReal</span><span style="color: #009900;">(</span> XMLBillboardSet<span style="color: #339933;">-&gt;</span>Attribute<span style="color: #009900;">(</span> <span style="color: #ff0000;">"height"</span> <span style="color: #009900;">)</span> <span style="color: #009900;">)</span><span style="color: #339933;">;</span>
+            bSet<span style="color: #339933;">-&gt;</span>setDefaultDimensions<span style="color: #009900;">(</span> width<span style="color: #339933;">,</span> height <span style="color: #009900;">)</span><span style="color: #339933;">;</span>
+            bSet<span style="color: #339933;">-&gt;</span>setVisible<span style="color: #009900;">(</span> <span style="color: #000000; font-weight: bold;">true</span> <span style="color: #009900;">)</span><span style="color: #339933;">;</span>
+            NewNode<span style="color: #339933;">-&gt;</span>attachObject<span style="color: #009900;">(</span> bSet <span style="color: #009900;">)</span><span style="color: #339933;">;</span>
+&nbsp;
+            TiXmlElement <span style="color: #339933;">*</span>XMLBillboard<span style="color: #339933;">;</span>
+&nbsp;
+            XMLBillboard <span style="color: #339933;">=</span> XMLBillboardSet<span style="color: #339933;">-&gt;</span>FirstChildElement<span style="color: #009900;">(</span> <span style="color: #ff0000;">"billboard"</span> <span style="color: #009900;">)</span><span style="color: #339933;">;</span>
+&nbsp;
+            <span style="color: #b1b100;">while</span><span style="color: #009900;">(</span> XMLBillboard <span style="color: #009900;">)</span>
+            <span style="color: #009900;">{</span>
+               Billboard <span style="color: #339933;">*</span>b<span style="color: #339933;">;</span>
+               <span style="color: #666666; font-style: italic;">// TempValue;</span>
+               TempVec <span style="color: #339933;">=</span> Vector3<span style="color: #009900;">(</span> <span style="color: #0000dd;">0</span><span style="color: #339933;">,</span> <span style="color: #0000dd;">0</span><span style="color: #339933;">,</span> <span style="color: #0000dd;">0</span> <span style="color: #009900;">)</span><span style="color: #339933;">;</span>
+               ColourValue TempColour<span style="color: #009900;">(</span><span style="color: #0000dd;">1</span><span style="color: #339933;">,</span><span style="color: #0000dd;">1</span><span style="color: #339933;">,</span><span style="color: #0000dd;">1</span><span style="color: #339933;">,</span><span style="color: #0000dd;">1</span><span style="color: #009900;">)</span><span style="color: #339933;">;</span>
+&nbsp;
+               XMLPosition <span style="color: #339933;">=</span> XMLBillboard<span style="color: #339933;">-&gt;</span>FirstChildElement<span style="color: #009900;">(</span> <span style="color: #ff0000;">"position"</span> <span style="color: #009900;">)</span><span style="color: #339933;">;</span>
+               <span style="color: #b1b100;">if</span><span style="color: #009900;">(</span> XMLPosition <span style="color: #009900;">)</span><span style="color: #009900;">{</span>
+                  TempValue <span style="color: #339933;">=</span> XMLPosition<span style="color: #339933;">-&gt;</span>Attribute<span style="color: #009900;">(</span><span style="color: #ff0000;">"x"</span><span style="color: #009900;">)</span><span style="color: #339933;">;</span>
+                  TempVec.<span style="color: #202020;">x</span> <span style="color: #339933;">=</span> StringConverter<span style="color: #339933;">::</span><span style="color: #202020;">parseReal</span><span style="color: #009900;">(</span>TempValue<span style="color: #009900;">)</span><span style="color: #339933;">;</span>
+                  TempValue <span style="color: #339933;">=</span> XMLPosition<span style="color: #339933;">-&gt;</span>Attribute<span style="color: #009900;">(</span><span style="color: #ff0000;">"y"</span><span style="color: #009900;">)</span><span style="color: #339933;">;</span>
+                  TempVec.<span style="color: #202020;">y</span> <span style="color: #339933;">=</span> StringConverter<span style="color: #339933;">::</span><span style="color: #202020;">parseReal</span><span style="color: #009900;">(</span>TempValue<span style="color: #009900;">)</span><span style="color: #339933;">;</span>
+                  TempValue <span style="color: #339933;">=</span> XMLPosition<span style="color: #339933;">-&gt;</span>Attribute<span style="color: #009900;">(</span><span style="color: #ff0000;">"z"</span><span style="color: #009900;">)</span><span style="color: #339933;">;</span>
+                  TempVec.<span style="color: #202020;">z</span> <span style="color: #339933;">=</span> StringConverter<span style="color: #339933;">::</span><span style="color: #202020;">parseReal</span><span style="color: #009900;">(</span>TempValue<span style="color: #009900;">)</span><span style="color: #339933;">;</span>
+               <span style="color: #009900;">}</span>
+&nbsp;
+               TiXmlElement<span style="color: #339933;">*</span> XMLColour <span style="color: #339933;">=</span> XMLBillboard<span style="color: #339933;">-&gt;</span>FirstChildElement<span style="color: #009900;">(</span> <span style="color: #ff0000;">"colourDiffuse"</span> <span style="color: #009900;">)</span><span style="color: #339933;">;</span>
+               <span style="color: #b1b100;">if</span><span style="color: #009900;">(</span> XMLColour <span style="color: #009900;">)</span><span style="color: #009900;">{</span>
+                  TempValue <span style="color: #339933;">=</span> XMLColour<span style="color: #339933;">-&gt;</span>Attribute<span style="color: #009900;">(</span><span style="color: #ff0000;">"r"</span><span style="color: #009900;">)</span><span style="color: #339933;">;</span>
+                  TempColour.<span style="color: #202020;">r</span> <span style="color: #339933;">=</span> StringConverter<span style="color: #339933;">::</span><span style="color: #202020;">parseReal</span><span style="color: #009900;">(</span>TempValue<span style="color: #009900;">)</span><span style="color: #339933;">;</span>
+                  TempValue <span style="color: #339933;">=</span> XMLColour<span style="color: #339933;">-&gt;</span>Attribute<span style="color: #009900;">(</span><span style="color: #ff0000;">"g"</span><span style="color: #009900;">)</span><span style="color: #339933;">;</span>
+                  TempColour.<span style="color: #202020;">g</span> <span style="color: #339933;">=</span> StringConverter<span style="color: #339933;">::</span><span style="color: #202020;">parseReal</span><span style="color: #009900;">(</span>TempValue<span style="color: #009900;">)</span><span style="color: #339933;">;</span>
+                  TempValue <span style="color: #339933;">=</span> XMLColour<span style="color: #339933;">-&gt;</span>Attribute<span style="color: #009900;">(</span><span style="color: #ff0000;">"b"</span><span style="color: #009900;">)</span><span style="color: #339933;">;</span>
+                  TempColour.<span style="color: #202020;">b</span> <span style="color: #339933;">=</span> StringConverter<span style="color: #339933;">::</span><span style="color: #202020;">parseReal</span><span style="color: #009900;">(</span>TempValue<span style="color: #009900;">)</span><span style="color: #339933;">;</span>
+               <span style="color: #009900;">}</span>
+&nbsp;
+               b <span style="color: #339933;">=</span> bSet<span style="color: #339933;">-&gt;</span>createBillboard<span style="color: #009900;">(</span> TempVec<span style="color: #339933;">,</span> TempColour<span style="color: #009900;">)</span><span style="color: #339933;">;</span>
+&nbsp;
+               XMLBillboard <span style="color: #339933;">=</span> XMLBillboard<span style="color: #339933;">-&gt;</span>NextSiblingElement<span style="color: #009900;">(</span> <span style="color: #ff0000;">"billboard"</span> <span style="color: #009900;">)</span><span style="color: #339933;">;</span>
+            <span style="color: #009900;">}</span>
+         <span style="color: #009900;">}</span>
+&nbsp;
+         XMLUserData <span style="color: #339933;">=</span> XMLNode<span style="color: #339933;">-&gt;</span>FirstChildElement<span style="color: #009900;">(</span> <span style="color: #ff0000;">"userData"</span> <span style="color: #009900;">)</span><span style="color: #339933;">;</span>
+         <span style="color: #b1b100;">if</span> <span style="color: #009900;">(</span> XMLUserData <span style="color: #009900;">)</span>
+         <span style="color: #009900;">{</span>
+            TiXmlElement <span style="color: #339933;">*</span>XMLProperty<span style="color: #339933;">;</span>
+            XMLProperty <span style="color: #339933;">=</span> XMLUserData<span style="color: #339933;">-&gt;</span>FirstChildElement<span style="color: #009900;">(</span><span style="color: #ff0000;">"property"</span><span style="color: #009900;">)</span><span style="color: #339933;">;</span>
+            <span style="color: #b1b100;">while</span> <span style="color: #009900;">(</span> XMLProperty <span style="color: #009900;">)</span>
+            <span style="color: #009900;">{</span>
+               String first <span style="color: #339933;">=</span> NewNode<span style="color: #339933;">-&gt;</span>getName<span style="color: #009900;">(</span><span style="color: #009900;">)</span><span style="color: #339933;">;</span>
+               String second <span style="color: #339933;">=</span> XMLProperty<span style="color: #339933;">-&gt;</span>Attribute<span style="color: #009900;">(</span><span style="color: #ff0000;">"name"</span><span style="color: #009900;">)</span><span style="color: #339933;">;</span>
+               String third <span style="color: #339933;">=</span> XMLProperty<span style="color: #339933;">-&gt;</span>Attribute<span style="color: #009900;">(</span><span style="color: #ff0000;">"data"</span><span style="color: #009900;">)</span><span style="color: #339933;">;</span>
+               nodeProperty newProp<span style="color: #009900;">(</span>first<span style="color: #339933;">,</span>second<span style="color: #339933;">,</span>third<span style="color: #009900;">)</span><span style="color: #339933;">;</span>
+               nodeProperties.<span style="color: #202020;">push_back</span><span style="color: #009900;">(</span>newProp<span style="color: #009900;">)</span><span style="color: #339933;">;</span>
+               XMLProperty <span style="color: #339933;">=</span> XMLProperty<span style="color: #339933;">-&gt;</span>NextSiblingElement<span style="color: #009900;">(</span><span style="color: #ff0000;">"property"</span><span style="color: #009900;">)</span><span style="color: #339933;">;</span>
+            <span style="color: #009900;">}</span>   
+         <span style="color: #009900;">}</span>
+&nbsp;
+         <span style="color: #666666; font-style: italic;">// Move to the next node</span>
+         XMLNode <span style="color: #339933;">=</span> XMLNode<span style="color: #339933;">-&gt;</span>NextSiblingElement<span style="color: #009900;">(</span> <span style="color: #ff0000;">"node"</span> <span style="color: #009900;">)</span><span style="color: #339933;">;</span>
+      <span style="color: #009900;">}</span>
+   <span style="color: #009900;">}</span>
+&nbsp;
+   <span style="color: #666666; font-style: italic;">// Close the XML File</span>
+   delete XMLDoc<span style="color: #339933;">;</span>
+<span style="color: #009900;">}</span>
+&nbsp;
+String getProperty<span style="color: #009900;">(</span>String ndNm<span style="color: #339933;">,</span> String prop<span style="color: #009900;">)</span>
+<span style="color: #009900;">{</span>
+   bool could <span style="color: #339933;">=</span> <span style="color: #000000; font-weight: bold;">false</span><span style="color: #339933;">;</span>
+   <span style="color: #b1b100;">for</span> <span style="color: #009900;">(</span> <span style="color: #993333;">unsigned</span> <span style="color: #993333;">int</span> i <span style="color: #339933;">=</span> <span style="color: #0000dd;">0</span> <span style="color: #339933;">;</span> i <span style="color: #339933;">&lt;</span> nodeProperties.<span style="color: #202020;">size</span><span style="color: #009900;">(</span><span style="color: #009900;">)</span><span style="color: #339933;">;</span> i<span style="color: #339933;">++</span> <span style="color: #009900;">)</span>
+   <span style="color: #009900;">{</span>
+      <span style="color: #b1b100;">if</span> <span style="color: #009900;">(</span> nodeProperties<span style="color: #009900;">[</span>i<span style="color: #009900;">]</span>.<span style="color: #202020;">nodeName</span> <span style="color: #339933;">==</span> ndNm <span style="color: #339933;">&amp;&amp;</span> nodeProperties<span style="color: #009900;">[</span>i<span style="color: #009900;">]</span>.<span style="color: #202020;">propertyNm</span> <span style="color: #339933;">==</span> prop <span style="color: #009900;">)</span>
+      <span style="color: #009900;">{</span>
+         <span style="color: #b1b100;">return</span> nodeProperties<span style="color: #009900;">[</span>i<span style="color: #009900;">]</span>.<span style="color: #202020;">valueName</span><span style="color: #339933;">;</span>
+         could <span style="color: #339933;">=</span> <span style="color: #000000; font-weight: bold;">true</span><span style="color: #339933;">;</span>
+      <span style="color: #009900;">}</span>
+   <span style="color: #009900;">}</span>
+   <span style="color: #b1b100;">if</span> <span style="color: #009900;">(</span>could <span style="color: #339933;">==</span> <span style="color: #000000; font-weight: bold;">false</span><span style="color: #009900;">)</span>
+      <span style="color: #b1b100;">return</span> <span style="color: #ff0000;">" "</span><span style="color: #339933;">;</span>
+<span style="color: #009900;">}</span>
+&nbsp;
+<span style="color: #339933;">#endif</span></pre></div>
+<p>&nbsp;
+</p>
+<h2 class="showhide_heading" id="Example_Usage"> Example Usage</h2>
+<p>The usage is very simple. Use parseDotScene(String file,String resourceGroup,SceneManager sceneMgr) to load the .scene file. To get a property, use getProperty(String nodeName,String propertyName), which returns a string containing the value. Example:-
+</p>
+<div class="plugincode"><pre class="codelisting" dir="ltr" style="white-space:pre-wrap; white-space:-moz-pre-wrap !important; white-space:-pre-wrap; white-space:-o-pre-wrap; word-wrap:break-word;" id="codebox1">parseDotScene<span style="color: #009900;">(</span><span style="color: #ff0000;">"scene.xml"</span><span style="color: #339933;">,</span><span style="color: #ff0000;">"General"</span><span style="color: #339933;">,</span>mSceneMgr<span style="color: #009900;">)</span><span style="color: #339933;">;</span>
+mWindow<span style="color: #339933;">-&gt;</span>setDebugText<span style="color: #009900;">(</span>getProperty<span style="color: #009900;">(</span><span style="color: #ff0000;">"Robot"</span><span style="color: #339933;">,</span><span style="color: #ff0000;">"Life"</span><span style="color: #009900;">)</span><span style="color: #009900;">)</span><span style="color: #339933;">;</span></pre></div>
+<p>&nbsp;
+<br>Enjoy! (written by nikki)
+</p>
+<hr>
+<p>Alias: <a href="http://www.ogre3d.org/tikiwiki/tiki-index.php?page=DotScene_Loader_with_User_Data" title="DotScene_Loader_with_User_Data" class="wiki alias">DotScene_Loader_with_User_Data</a>
+</p>
+
+	
+	
+	<hr class="hrwikibottom"> 
+
+	
+	</div> 
+
+
+
+
+	<p class="editdate">
+			Contributors to this page: <a class="link titletips" title="User information - Click for more info|&lt;table&gt;&lt;tr&gt;&lt;td&gt;&lt;img border=&#39;0&#39; src=&#39;tiki-show_user_avatar.php?user=Slappy&#39;  alt=&#39;Slappy&#39; /&gt;&lt;/td&gt;&lt;td&gt;&lt;img src=&#39;img/icons/star_blue.gif&#39; height=&#39;11&#39; width=&#39;11&#39; alt=&#39;251 points&#39; /&gt;&amp;nbsp;251&lt;br /&gt;&lt;img src=&#39;img/flags/Slovakia.gif&#39; /&gt; Slovakia&lt;br /&gt;Last seen on Sat 18 of Dec., 2010 [19:17 UTC]&lt;br /&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;" href="http://www.ogre3d.org/tikiwiki/tiki-user_information.php?userId=107">Slappy</a><img src="./DotScene Loader with User Data_files/star_blue.gif" height="11" width="11" alt="251 points">&nbsp;
+						,
+				<span class="link">OgreWikiBot</span>
+			 
+			and
+				<a class="link titletips" title="User information - Click for more info|&lt;table&gt;&lt;tr&gt;&lt;td&gt;&lt;img border=&#39;0&#39; src=&#39;tiki-show_user_avatar.php?user=jacmoe&#39;  alt=&#39;jacmoe&#39; /&gt;&lt;/td&gt;&lt;td&gt;Jacob Moen&lt;br /&gt;&lt;img src=&#39;img/icons/star_purple.gif&#39; height=&#39;11&#39; width=&#39;11&#39; alt=&#39;171980 points&#39; /&gt;&amp;nbsp;171980&lt;br /&gt;&lt;img src=&#39;img/flags/Denmark.gif&#39; /&gt; Denmark&lt;br /&gt;Last seen on Mon 17 of Sep., 2012 [16:36 UTC]&lt;br /&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;" href="http://www.ogre3d.org/tikiwiki/tiki-user_information.php?userId=2"><i class="highlightgroup"><b>jacmoe</b></i></a><img src="./DotScene Loader with User Data_files/star_purple.gif" height="11" width="11" alt="171980 points">&nbsp;
+	.
+	<br>
+	Page last modified on Thursday 01 of July, 2010 08:42:01 CDT by <a class="link titletips" title="User information - Click for more info|&lt;table&gt;&lt;tr&gt;&lt;td&gt;&lt;img border=&#39;0&#39; src=&#39;tiki-show_user_avatar.php?user=Slappy&#39;  alt=&#39;Slappy&#39; /&gt;&lt;/td&gt;&lt;td&gt;&lt;img src=&#39;img/icons/star_blue.gif&#39; height=&#39;11&#39; width=&#39;11&#39; alt=&#39;251 points&#39; /&gt;&amp;nbsp;251&lt;br /&gt;&lt;img src=&#39;img/flags/Slovakia.gif&#39; /&gt; Slovakia&lt;br /&gt;Last seen on Sat 18 of Dec., 2010 [19:17 UTC]&lt;br /&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;" href="http://www.ogre3d.org/tikiwiki/tiki-user_information.php?userId=107">Slappy</a><img src="./DotScene Loader with User Data_files/star_blue.gif" height="11" width="11" alt="251 points">&nbsp;. 
+	
+			</p><hr>
+		The content on this page is licensed under the terms of the <a href="http://www.ogre3d.org/tikiwiki/tiki-index.php?page=Creative+Commons+Attribution-ShareAlike+License&copyrightpage=DotScene%20Loader%20with%20User%20Data">Creative Commons Attribution-ShareAlike License</a>.
+		<br>As an exception, any source code contributed within the content is released into the <a href="http://www.ogre3d.org/tikiwiki/tiki-index?page=Public%20Domain%20Unlicense">Public Domain</a>.
+	<hr>
+
+	<p></p>
+
+
+
+			
+<div class="clearfix" id="page-bar"><span class="button"><a href="http://www.ogre3d.org/tikiwiki/tiki-pagehistory.php?page=DotScene+Loader+with+User+Data&source=0">Source</a></span><span class="button"><a href="http://www.ogre3d.org/tikiwiki/tiki-pagehistory.php?page=DotScene+Loader+with+User+Data">History</a></span></div><a name="attachments"></a>
+
+<a name="attachments"></a>
+
+	<div id="attzone" style="display:none;">
+
+	
+
+	
+	
+
+	</div>
+<a name="comments"></a>
+
+	<div id="comments">
+				
+	<div id="comzone" style="display: none;">
+
+
+	
+	
+
+	 
+
+
+
+</div>
+
+
+</div><!-- comzone end -->	
+</div>
+
+<div class="help" id="tikihelp">
+	<div class="help_sections ui-tabs ui-widget ui-widget-content ui-corner-all" id="help_sections" style="display:none">
+		<ul class="ui-tabs-nav ui-helper-reset ui-helper-clearfix ui-widget-header ui-corner-all">
+							<li class="ui-state-default ui-corner-top ui-tabs-selected ui-state-active">
+					<a href="http://www.ogre3d.org/tikiwiki/tiki-index.php?page=DotScene+Loader+with+User+Data#advanced_search_help">
+						Search Help
+					</a>
+				</li>
+					</ul>
+					<div id="advanced_search_help" class="ui-tabs-panel ui-widget-content ui-corner-bottom">
+										
+<h3>Non Advanced Search or Natural Search</h3><div class="help_section">The documents are returned sorted on relevance depending on order, proximity, frequency of terms.</div><h3>Advanced Search or Boolean Search</h3><div class="help_section"><h4>Default search behavior</h4><p>By default, all search terms are <em>optional</em>.&nbsp;It behaves like an OR logic.&nbsp;Objects that contain the more terms are rated higher in the results and will appear first in their type. For example, <strong>wiki forum</strong> will find:</p><ul><li>objects that include both terms</li><li>objects that include the term <strong>wiki</strong></li><li>objects that include the term <strong>forum</strong></li></ul><h4>Requiring terms</h4><p>Add a plus sign ( + ) before a term to indicate that the term <em>must</em> appear in results.&nbsp;Example: <strong>+wiki forum</strong> will find objects containing at least <strong>wiki</strong>. Objects with both terms and many occurences of the terms will appear first.</p><h4 id="excluding">Excluding terms</h4><p>Add a minus sign ( - ) before a term to indicate that the term <em>must not</em> appear in the results.&nbsp;To reduce a term's value without completely excluding it, <a href="http://www.ogre3d.org/tikiwiki/tiki-index.php?page=DotScene+Loader+with+User+Data#reducing" title="Reducing a term&#39;s value">use a tilde</a>.&nbsp;Example: <strong>-wiki forum</strong> will find objects that do not contain <strong>wiki</strong> but contain <strong>forum</strong></p><h4>Grouping terms</h4><p>Use parenthesis ( ) to group terms into subexpressions.&nbsp;Example: <strong>+wiki +(forum blog)</strong> will find objects that contain <strong>wiki</strong> and <strong>forum</strong> or that contain <strong>wiki</strong> and <strong>blog</strong> in any order.</p><h4>Finding phrases</h4><p>Use double quotes ( " " ) around a phrase to find terms in the exact order, exactly as typed.&nbsp;Example: <strong>"Alex Bell"</strong> will not find <strong>Bell Alex</strong> or <strong>Alex G. Bell</strong>. </p><h4>Using wildcards</h4><p>Add an asterisk ( * ) after a term to find objects that include the root word. For example, <strong>run*</strong> will find:</p><ul><li>objects that include the term <strong>run</strong></li><li>objects that include the term <strong>runner</strong></li><li>objects that include the term <strong>running</strong></li></ul><h4 id="reducing">Reducing a term's value</h4><p>Add a tilde ( ~ ) before a term to reduce its value indicate to the ranking of the results.&nbsp;Objects that contain the term will appear lower than other objects (unlike the <a href="http://www.ogre3d.org/tikiwiki/tiki-index.php?page=DotScene+Loader+with+User+Data#excluding" title="Excluding terms">minus sign</a>	which will completely exclude a term).&nbsp;Example: <strong>+wiki ~forum</strong> will rate an object with only <strong>wiki</strong> higher that an object with <strong>wiki</strong> and  <strong>forum</strong>.</p><h4>Changing relevance value</h4><p>Add a less than ( &lt; ) or greater than ( &gt; ) sign before a term to change the term's contribution to the overall relevance value assigned to a object.&nbsp;Example: <strong>+wiki +(&gt;forum &lt; blog)</strong> will find objects that contain <strong>wiki</strong> and <strong>forum</strong> or <strong>wiki</strong> and <strong>blog</strong> in any order. <strong>wiki forum</strong> will be rated higher.</p></div>		
+		
+			</div>
+			</div>
+	</div>
+							</div><a href="javascript:toggle('wpfade-1')">Click this link to toggle the Report Page Issue Form</a><div id="wpfade-1" style="display:none"><b>You do not have permission to insert an item</b>
+</div>
+</div>						</div>
+					</div>
+
+					<hr class="hidden">
+					</div>
+					<div class="clearfix" id="col3" style="display: table-cell;">
+					<h2 class="hidden">Sidebar</h2>
+					<div class="content">
+							
+
+
+<div class="box-shadow">	<div class="box box-SearchTags cssmenubox">
+			<h3 class="box-title clearfix">
+						<span class="moduletitle">Search by Tags
+</span>
+						<!--[if IE]><br class="clear" style="height: 1px !important" /><![endif]--></h3>
+			<div id="mod-SearchTagsr0" style="display: block" class="clearfix box-data">
+
+<div id="SearchTags" style="display:block;">
+<div class="role_navigation">
+			<ul id="cssmenu0" class="cssmenu menu51"><li class="option405 menuOption menuLevel0"><a href="http://www.ogre3d.org/tikiwiki/tiki-browse_freetags.php"><span class="menuText">Search Wiki by Freetags</span></a></li></ul>
+</div>
+</div>
+
+
+		</div>
+		<div class="box-footer">
+
+		</div>
+	</div>
+</div>
+					
+
+
+
+<div class="box-shadow">	<div class="box box-last_modif_pages">
+			<h3 class="box-title clearfix">
+						<span class="moduletitle">Last changes</span>
+							<span class="moduleflip" id="moduleflip-last_modif_pagesr6">
+				<a title="Toggle module contents" class="flipmodtitle" href="javascript:icntoggle('mod-last_modif_pagesr6','module.png');">
+										<img src="./DotScene Loader with User Data_files/module.png" alt="[toggle]" width="16" height="16" id="icnmod-last_modif_pagesr6" class="flipmodimage" style="border: none" title="[toggle]">
+				</a>
+			</span>
+							<!--[if IE]><br class="clear" style="height: 1px !important" /><![endif]--></h3>
+			<div id="mod-last_modif_pagesr6" style="display: block" class="clearfix box-data">
+<ol>			<li>
+			<a class="linkmodule" href="http://www.ogre3d.org/tikiwiki/tiki-index.php?page=MyGUI+skin+creating" title="Mon 24 of Feb., 2014 19:04 UTC, by Altren">
+							MyGUI skin creating
+						</a>
+		</li>
+			<li>
+			<a class="linkmodule" href="http://www.ogre3d.org/tikiwiki/tiki-index.php?page=-Singleton" title="Thu 20 of Feb., 2014 15:40 UTC, by scrawl">
+							-Singleton
+						</a>
+		</li>
+			<li>
+			<a class="linkmodule" href="http://www.ogre3d.org/tikiwiki/tiki-index.php?page=Basic+Tutorial+1" title="Tue 18 of Feb., 2014 23:57 UTC, by excaliburHisSheath">
+							Basic Tutorial 1
+						</a>
+		</li>
+			<li>
+			<a class="linkmodule" href="http://www.ogre3d.org/tikiwiki/tiki-index.php?page=How+to+use+the+WorkQueue" title="Tue 18 of Feb., 2014 16:12 UTC, by scrawl">
+							How to use the WorkQueue
+						</a>
+		</li>
+			<li>
+			<a class="linkmodule" href="http://www.ogre3d.org/tikiwiki/tiki-index.php?page=Ogre+Terrain+System" title="Mon 17 of Feb., 2014 11:38 UTC, by scrawl">
+							Ogre Terrain System
+						</a>
+		</li>
+			<li>
+			<a class="linkmodule" href="http://www.ogre3d.org/tikiwiki/tiki-index.php?page=Setting+Up+An+Application+-+Eclipse+-+Linux" title="Sun 16 of Feb., 2014 19:05 UTC, by excaliburHisSheath">
+							Setting Up An Application - Eclipse - Linux
+						</a>
+		</li>
+			<li>
+			<a class="linkmodule" href="http://www.ogre3d.org/tikiwiki/tiki-index.php?page=Euler+Angle+Class" title="Sun 16 of Feb., 2014 18:54 UTC, by Klaim">
+							Euler Angle Class
+						</a>
+		</li>
+			<li>
+			<a class="linkmodule" href="http://www.ogre3d.org/tikiwiki/tiki-index.php?page=Installing+the+Ogre+SDK" title="Sat 15 of Feb., 2014 19:58 UTC, by excaliburHisSheath">
+							Installing the Ogre SDK
+						</a>
+		</li>
+			<li>
+			<a class="linkmodule" href="http://www.ogre3d.org/tikiwiki/tiki-index.php?page=GSoC+Project+Ideas" title="Thu 13 of Feb., 2014 22:39 UTC, by dark_sylinc">
+							GSoC Project Ideas
+						</a>
+		</li>
+			<li>
+			<a class="linkmodule" href="http://www.ogre3d.org/tikiwiki/tiki-index.php?page=RT+Shader+System" title="Thu 13 of Feb., 2014 09:24 UTC, by edoardo">
+							RT Shader System
+						</a>
+		</li>
+	</ol><a class="linkmodule" style="margin-left: 20px" href="http://www.ogre3d.org/tikiwiki/tiki-lastchanges.php">...more</a>
+
+
+
+		</div>
+		<div class="box-footer">
+
+		</div>
+	</div>
+</div>
+					
+
+
+
+<div class="box-shadow">	<div class="box box-search_box">
+			<h3 class="box-title clearfix">
+						<span class="moduletitle">Search box</span>
+							<span class="moduleflip" id="moduleflip-search_boxr6">
+				<a title="Toggle module contents" class="flipmodtitle" href="javascript:icntoggle('mod-search_boxr6','module.png');">
+										<img src="./DotScene Loader with User Data_files/module.png" alt="[toggle]" width="16" height="16" id="icnmod-search_boxr6" class="flipmodimage" style="border: none" title="[toggle]">
+				</a>
+			</span>
+							<!--[if IE]><br class="clear" style="height: 1px !important" /><![endif]--></h3>
+			<div id="mod-search_boxr6" style="display: block" class="clearfix box-data">
+    <form class="forms" id="search-module-form" method="get" action="http://www.ogre3d.org/tikiwiki/tiki-searchresults.php">
+    <input id="fuser" name="highlight" size="14" type="text" accesskey="s"> 
+		
+ 			<input type="hidden" name="where" value="wikis">
+    			<br><label for="boolean">Advanced search:<input type="checkbox" id="boolean" name="boolean" checked="checked"></label>
+
+				<a onclick="openEditHelp();return false;" href="./DotScene Loader with User Data_files/DotScene Loader with User Data.html"><img src="./DotScene Loader with User Data_files/help.png" alt="Click for Help" width="16" height="16" style="border: none" title="Click for Help" class="icon"></a><br>
+	    <input type="submit" class="wikiaction" name="search" value="Go"> 
+    </form>
+
+
+
+		</div>
+		<div class="box-footer">
+
+		</div>
+	</div>
+</div>
+					
+
+
+
+<div class="box-shadow">	<div class="box box-who_is_there">
+			<h3 class="box-title clearfix">
+						<span class="moduletitle">Online users</span>
+							<span class="moduleflip" id="moduleflip-who_is_therer7">
+				<a title="Toggle module contents" class="flipmodtitle" href="javascript:icntoggle('mod-who_is_therer7','module.png');">
+										<img src="./DotScene Loader with User Data_files/module.png" alt="[toggle]" width="16" height="16" id="icnmod-who_is_therer7" class="flipmodimage" style="border: none" title="[toggle]">
+				</a>
+			</span>
+							<!--[if IE]><br class="clear" style="height: 1px !important" /><![endif]--></h3>
+			<div id="mod-who_is_therer7" style="display: block" class="clearfix box-data">
+<div>
+27 
+online users
+</div>
+
+
+
+		</div>
+		<div class="box-footer">
+
+		</div>
+	</div>
+</div>
+							</div>
+				</div>
+				<br style="clear:both">
+			<!--[if IE 7]><br style="clear:both; height: 0" /><![endif]-->
+			</div></div>
+				<div id="footer-shadow"><div id="footer">
+				<div class="footerbgtrap">
+					<div class="content">
+		
+	<div id="power_icons">
+	<br>
+<a href="http://www.ogre3d.org/"><img src="./DotScene Loader with User Data_files/ogre_logo.png" border="0" alt="Ogre3d.org" title="Go to Ogre3d.org"></a>
+<br><br>
+<span id="poweredby">Powered by</span> <a href="http://info.tikiwiki.org/" title="© 2002–2010 The TikiWiki Community">Tiki Wiki CMS Groupware</a>
+</div>
+
+
+ 					</div>
+				</div>
+			</div></div>	
+		</div></div>	</div> 
+
+
+
+	
+	
+	
+		
+<!-- Put JS at the end -->
+	
+<!-- jsfile external -->
+<!-- jsfile dynamic -->
+<script type="text/javascript" src="./DotScene Loader with User Data_files/tiki-jsplugin.php"></script>
+<!-- jsfile 0 -->
+<script type="text/javascript" src="./DotScene Loader with User Data_files/minified_7e70dc0e4dc84c147ac9fc9af11bcea9.js"></script>
+
+
+	
+<script type="text/javascript">
+<!--//--><![CDATA[//><!--
+// js 0 
+var tiki_cookie_jar=new Array();
+
+function inArray(item, array) {
+    for (var i in array) {
+        if (array[i] === item) {
+            return i;
+        }
+    }
+    return false;
+}
+var allTimeZoneCodes = ["ACST","ACT","ADDT","ADMT","ADT","AFT","AHDT","AHST","AKDT","AKST","AKTST","AKTT","ALMST","ALMT","AMST","AMT","ANAST","ANAT","ANT","AOT","APT","AQTST","AQTT","ARST","ART","ASHST","ASHT","AST","AWT","AZOMT","AZOST","AZOT","AZST","AZT","BAKST","BAKT","BDST","BDT","BEAT","BEAUT","BMT","BNT","BORTST","BORT","BOST","BOT","BRST","BRT","BST","BTT","BURT","CANT","CAPT","CAST","CAT","CAWT","CCT","CDDT","CDT","CEMT","CEST","CET","CGST","CGT","CHADT","CHAST","CHAT","CHDT","CHOST","CHOT","CHUT","CIT","CJT","CKHST","CKT","CLST","CLT","CMT","COST","COT","CPT","CST","CUT","CVST","CVT","CWST","CWT","CXT","CHST","DACT","DAVT","DDUT","DMT","DUSST","DUST","EASST","EAST","EAT","ECT","EDDT","EDT","EEST","EET","EGST","EGT","EHDT","EIT","EMT","EPT","EST","EWT","FFMT","FJST","FJT","FKST","FKT","FMT","FNST","FNT","FORT","FRUST","FRUT","GALT","GAMT","GBGT","GEST","GET","GFT","GHST","GILT","GMT","GST","GYT","HADT","HAST","HDT","HKST","HKT","HMT","HOVST","HOVT","HPT","HST","HWT","ICT","IDDT","IDT","IHST","IMT","IOT","IRDT","IRKST","IRKT","IRST","ISST","IST","JAVT","JDT","JMT","JST","KART","KAST","KDT","KGST","KGT","KIZST","KIZT","KMT","KOST","KRAST","KRAT","KST","KUYST","KUYT","KWAT","LHST","LINT","LKT","LMT","LONT","LRT","LST","MADMT","MADST","MADT","MAGST","MAGT","MALST","MALT","MART","MAWT","MDDT","MDST","MDT","MEST","MET","MHT","MIST","MMT","MOST","MOT","MPT","MSD","MSK","MST","MUST","MUT","MVT","MWT","MYT","NCST","NCT","NDDT","NDT","NEGT","NEST","NET","NFT","NMT","NOVST","NOVT","NPT","NRT","NST","NUT","NWT","NZDT","NZMT","NZST","OMSST","OMST","ORAST","ORAT","PDDT","PDT","PEST","PETST","PETT","PET","PGT","PHOT","PHST","PHT","PKST","PKT","PMDT","PMST","PMT","PNT","PONT","PPMT","PPT","PST","PWT","PYST","PYT","QMT","QYZST","QYZT","RET","RMT","ROTT","SAKST","SAKT","SAMST","SAMT","SAST","SBT","SCT","SDMT","SGT","SHEST","SHET","SJMT","SLST","SMT","SRT","SST","STAT","SVEST","SVET","SWAT","SYOT","TAHT","TASST","TAST","TBIST","TBIT","TBMT","TFT","TJT","TKT","TLT","TMT","TOST","TOT","TRST","TRT","TSAT","TVT","UCT","ULAST","ULAT","URAST","URAT","URUT","UTC","UYHST","UYST","UYT","UZST","UZT","VET","VLASST","VLAST","VLAT","VOLST","VOLT","VOST","VUST","VUT","WAKT","WARST","WART","WAST","WAT","WEMT","WEST","WET","WFT","WGST","WGT","WIT","WMT","WSDT","WST","YAKST","YAKT","YDDT","YDT","YEKST","YEKT","YERST","YERT","YPT","YST","YWT","A","B","C","D","E","F","G","H","I","K","L","M","N","O","P","Q","R","S","T","U","V","W","X","Y","ZZZ","Z"];
+var local_tz = "";
+var now = new Date();
+var now_string = now.toString();
+var m = now_string.match(/[ \(]([A-Z]{3,6})[ \)]?[ \d]*$/);	// try three or more char tz first at the end or just before the year
+if (!m) {
+	m = now_string.match(/[ \(]([A-Z]{1,6})[ \)]?[ \d]*$/);	// might be a "military" one if not
+}
+if (m) {
+	m = m[1];
+} else {	// IE (sometimes) gives UTC +offset instead of the abbreviation
+	// sadly this workaround will fail for non-whole hour offsets
+	var hours = - now.getTimezoneOffset() / 60;
+	m = "GMT" + (hours > 0 ? "+" : "") + hours;
+}
+if (inArray(m, allTimeZoneCodes)) {
+	local_tz = m;
+} else {
+	local_tz = "UTC";
+}
+setCookie("local_tz", local_tz);
+
+
+var openEditHelp = function() {
+	var opts, edithelp_pos = getCookie("edithelp_position");
+	opts = { width: 460, height: 500, title: "Help", autoOpen: false, beforeclose: function(event, ui) {
+		var off = $(this).offsetParent().offset();
+   		setCookie("edithelp_position", parseInt(off.left,10) + "," + parseInt(off.top,10) + "," + $(this).offsetParent().width() + "," + $(this).offsetParent().height());
+	}};
+	if (edithelp_pos) {edithelp_pos = edithelp_pos.split(",");}
+	if (edithelp_pos && edithelp_pos.length) {
+		opts["position"] = [parseInt(edithelp_pos[0],10), parseInt(edithelp_pos[1],10)];
+		opts["width"] = parseInt(edithelp_pos[2],10);
+		opts["height"] = parseInt(edithelp_pos[3],10);
+	}
+	try {
+		if ($("#help_sections").dialog) {
+			$("#help_sections").dialog("destroy");
+		}
+	} catch( e ) {
+		// IE throws errors destroying a non-existant dialog
+	}
+	$("#help_sections").dialog(opts).dialog("open");
+	
+};
+// js 100 
+
+// JS Object to hold prefs for jq
+var jqueryTiki = new Object();
+jqueryTiki.ui = true;
+jqueryTiki.ui_theme = "smoothness";
+jqueryTiki.tooltips = true;
+jqueryTiki.autocomplete = true;
+jqueryTiki.superfish = true;
+jqueryTiki.replection = false;
+jqueryTiki.tablesorter = true;
+jqueryTiki.colorbox = true;
+jqueryTiki.cboxCurrent = "{current} / {total}";
+jqueryTiki.sheet = false;
+jqueryTiki.carousel = false;
+jqueryTiki.jqs5 = false;
+jqueryTiki.validate = true;
+
+jqueryTiki.effect = "";				// Default effect
+jqueryTiki.effect_direction = "vertical";	// "horizontal" | "vertical" etc
+jqueryTiki.effect_speed = 400;	// "slow" | "normal" | "fast" | milliseconds (int) ]
+jqueryTiki.effect_tabs = "slide";		// Different effect for tabs
+jqueryTiki.effect_tabs_direction = "vertical";
+jqueryTiki.effect_tabs_speed = "fast";
+
+jqueryTiki.autosave = true;
+jqueryTiki.sefurl = false;
+
+
+//--><!]]>
+</script>
+<script type="text/javascript">
+<!--//--><![CDATA[//><!--
+$(document).ready(function(){
+// jq_onready 0 
+phplayersmenu_loaded = 1;
+ $(function() {$("#help_sections").tabs({});}); 
+});
+//--><!]]>
+</script>
+
+	
+</body></html>

@@ -6,7 +6,8 @@
 class BoxRigidbody : Rigidbody
 {
 public:
-	BoxRigidbody(GameObject*, const btVector3&, float);
+	BoxRigidbody(GameObject*, const btVector3&, float, 
+				int, int);
 	virtual ~BoxRigidbody();
 
 	virtual void update();
