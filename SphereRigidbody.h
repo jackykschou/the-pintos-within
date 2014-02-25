@@ -12,6 +12,12 @@ public:
 
 	virtual void update();
 
+	virtual bool needsCollision(btBroadphaseProxy*) const;
+
+	virtual btScalar addSingleResult(btManifoldPoint& cp,
+		   	const btCollisionObject*, int, int,
+		    const btCollisionObject*, int, int);
+
 };
 
 #endif // #ifndef __SphereRigidbody_h_

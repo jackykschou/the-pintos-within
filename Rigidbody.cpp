@@ -65,15 +65,15 @@ bool Rigidbody::needsCollision(btBroadphaseProxy* proxy) const
 
 //! Called with each contact for your own processing (e.g. test if contacts fall in within sensor parameters)
 btScalar Rigidbody::addSingleResult(btManifoldPoint& cp,
-	const btCollisionObjectWrapper* colObj0,int partId0,int index0,
-	const btCollisionObjectWrapper* colObj1,int partId1,int index1)
+	const btCollisionObject* colObj0,int partId0,int index0,
+	const btCollisionObject* colObj1,int partId1,int index1)
 {
 	GameObject* gameObject;
-	if(colObj0->m_collisionObject == rigidBody) {
-		gameObject = (GameObject*)(colObj1->m_collisionObject->getUserPointer());
+	if(colObj0 == rigidBody) {
+		gameObject = (GameObject*)(colObj1->getUserPointer());
 	} else {
-		assert(colObj1->m_collisionObject==rigidBody && "body does not match either collision object");
-		gameObject = (GameObject*)(colObj0->m_collisionObject->getUserPointer());
+		assert(colObj1==rigidBody && "body does not match either collision object");
+		gameObject = (GameObject*)(colObj0->getUserPointer());
 	}
 
 	onCollision((cp.m_positionWorldOnB), (cp.m_normalWorldOnB), gameObject);

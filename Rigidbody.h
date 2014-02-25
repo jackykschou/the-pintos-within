@@ -19,7 +19,7 @@ class Rigidbody : public Component, public btCollisionWorld::ContactResultCallba
 
 	public:
 		Rigidbody(GameObject*);
-		virtual ~Rigidbody() = 0;
+		virtual ~Rigidbody();
 
 		virtual void update();
 		virtual void updateRigidbodyFromTransform();
@@ -27,8 +27,8 @@ class Rigidbody : public Component, public btCollisionWorld::ContactResultCallba
 		virtual bool needsCollision(btBroadphaseProxy*) const;
 
 		virtual btScalar addSingleResult(btManifoldPoint& cp,
-		    const btCollisionObjectWrapper*, int, int,
-		    const btCollisionObjectWrapper*, int, int);
+		    const btCollisionObject*, int, int,
+		    const btCollisionObject*, int, int);
 
 		void (*onCollision)(btVector3, btVector3, GameObject*);
 

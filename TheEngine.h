@@ -24,5 +24,6 @@
 #include "Rigidbody.h"
 #include "SphereRigidbody.h"
 #include "BoxRigidbody.h"
+#include "Block.h"
 
 #endif // #ifndef __TheEngine_h_
