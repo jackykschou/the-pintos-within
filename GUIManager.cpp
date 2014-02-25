@@ -10,16 +10,16 @@ void GUIManager::initialize(const Ogre::String& appName) {
 		this
 	);
 
-    _trayMgr->hideCursor();
-
     buildDebugPanel();
     hideDebugPanel();
+
+    buildMainMenu();
+    showMainMenu();
 }
 
 // Upadtes the stats in the tray
 void GUIManager::update(const Ogre::FrameEvent& evt) {
     _trayMgr->frameRenderingQueued(evt);
-    updateDebugPanel();
 }
 
 void GUIManager::updateDebugPanel() {
@@ -77,4 +77,36 @@ void GUIManager::buildDebugPanel() {
 
 bool GUIManager::isDebugPanelVisible() {
     return _debugPanel->getTrayLocation() != OgreBites::TL_NONE;
+}
+
+void GUIManager::hideMainMenu() {
+    _mainMenuOverlay->hide();
+}
+
+void GUIManager::showMainMenu() {
+    _mainMenuOverlay->show();
+}
+
+void GUIManager::buildMainMenu() {
+    _mainMenuOverlay = static_cast< Ogre::Overlay* >( Ogre::OverlayManager::getSingleton().getByName("MyOverlays/MainMenuOverlay"));
+    Ogre::RenderWindow* win = GraphicsManager::instance()->getRenderWindow();
+    // _mainMenuOverlay->setPosition(
+    //     (win->getWidth()-MAIN_MENU_WIDTH)/2,
+    //     (win->getHeight()-MAIN_MENU_HEIGHT)/2
+    // );
+    
+}
+
+// Callbacks from InputManager
+
+bool GUIManager::injectMouseUp(const OIS::MouseEvent& evt, OIS::MouseButtonID id) {
+    return _trayMgr->injectMouseUp(evt, id);
+}
+
+bool GUIManager::injectMouseDown(const OIS::MouseEvent& evt, OIS::MouseButtonID id) {
+    return _trayMgr->injectMouseDown(evt, id);
+}
+
+bool GUIManager::injectMouseMove(const OIS::MouseEvent& evt) {
+    return _trayMgr->injectMouseMove(evt);
 }

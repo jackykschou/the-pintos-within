@@ -1,0 +1,58 @@
+template container BorderPanel(MyTemplates/BasicBorderPanel)
+{
+  left 0
+  top 0
+  width 1
+  height 1
+  border_size 0.05 0.05 0.06665 0.06665
+  border_topleft_uv 0.0000 1.0000 0.1914 0.7969
+  border_top_uv 0.1914 1.0000 0.8086 0.7969
+  border_topright_uv 0.8086 1.0000 1.0000 0.7969
+  border_left_uv 0.0000 0.7969 0.1914 0.2148
+  border_right_uv 0.8086 0.7969 1.0000 0.2148
+  border_bottomleft_uv 0.0000 0.2148 0.1914 0.0000
+  border_bottom_uv 0.1914 0.2148 0.8086 0.0000
+  border_bottomright_uv 0.8086 0.2148 1.0000 0.0000
+}
+
+template container Button(MyTemplates/BasicButton) : MyTemplates/BasicBorderPanel
+{
+  left 0.82
+  top 0.45
+  width 0.16
+  height 0.13
+}
+
+template element TextArea(MyTemplates/BasicText)
+{
+  font_name Ogre
+  char_height 0.08
+  colour_top 1 1 0
+  colour_bottom 1 0.2 0.2
+  left 0.03
+  top 0.02
+  width 0.12
+  height 0.09
+}
+
+MyOverlays/MainMenuOverlay
+{
+  zorder 600
+
+  container Panel(MainMenuPanel)
+  {
+    metrics_mode relative
+    left   0.25
+    top    0.25
+    width  0.5
+    height 0.5
+    material MainMenu
+    
+    container Button(MyElements/HostButton) : MyTemplates/BasicButton
+    {
+      left 0.82
+      top 0.45
+      caption MyTemplates/BasicText HELLO
+    }
+  }
+}

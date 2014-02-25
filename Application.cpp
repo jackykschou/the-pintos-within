@@ -2,7 +2,7 @@
 
 #include "TheEngine.h"
 
-#define APPLICATION_NAME "THE EPIC GAME"
+#define APPLICATION_NAME "Ball Blaster 2000"
 
 void initializeGame()
 {

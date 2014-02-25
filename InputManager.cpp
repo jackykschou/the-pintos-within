@@ -174,16 +174,19 @@ bool InputManager::keyReleased(const OIS::KeyEvent &arg) {
 }
 
 bool InputManager::mouseMoved(const OIS::MouseEvent &arg) {
+	if (GUIManager::instance()->injectMouseMove(arg)) return true;
 	_lastMouseMovedEvt = new OIS::MouseEvent(arg);
 	return true;
 }
 
 bool InputManager::mousePressed(const OIS::MouseEvent &arg, OIS::MouseButtonID id) {
+	if (GUIManager::instance()->injectMouseDown(arg, id)) return true;
 	_lastMousePressedEvt = new OIS::MouseEvent(arg);
 	return true;
 }
 
 bool InputManager::mouseReleased(const OIS::MouseEvent &arg, OIS::MouseButtonID id) {
+	if (GUIManager::instance()->injectMouseUp(arg, id)) return true;
 	_lastMouseReleasedEvt = new OIS::MouseEvent(arg);
 	return true;
 }

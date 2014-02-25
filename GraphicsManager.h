@@ -3,9 +3,7 @@
 
 #include <OgreRenderWindow.h>
 #include <OgreRoot.h>
-
 #include "common.h"
-
 #include "SceneManager.h"
 #include "ResourcesManager.h"
 #include "InputManager.h"
