@@ -27,30 +27,11 @@ bool GraphicsManager::frameRenderingQueued(const Ogre::FrameEvent& evt)
 
     SceneManager::instance()->current_scene->update(evt.timeSinceLastFrame);
 
-    if (InputManager::instance()->isKeyPressed(OIS::KC_ESCAPE))
-        stopRendering();
-
-    if (InputManager::instance()->isKeyPressed(OIS::KC_Q))
-        GUIManager::instance()->showTray();
-
-    if (InputManager::instance()->isKeyPressed(OIS::KC_W))
-        GUIManager::instance()->hideTray();
-
-    if (InputManager::instance()->isKeyPressed(OIS::KC_A)) {
-        if (af != -1) {
-            AudioManager::instance()->play2DSound(af, 0);
-            af = -1;
-        }
-    }
-
-
     return true;
 }
 
 void GraphicsManager::initialize(std::string window_name, Ogre::String pluginsCfg)
 {
-    af = AudioManager::instance()->loadAudioFile("shotgun.wav");
-    std::cout << af << std::endl;
 	initializeRoot(pluginsCfg);
 	configureWindow(window_name);
 }
