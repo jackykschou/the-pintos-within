@@ -10,11 +10,11 @@ void initializeGame()
 
 	GraphicsManager::instance()->initialize(APPLICATION_NAME, pluginsCfg);
     ResourcesManager::instance()->initialize(resourcesCfg, pluginsCfg);
+    AudioManager::instance()->initialize();
     InputManager::instance()->initialize();
     GUIManager::instance()->initialize(APPLICATION_NAME);
     PhysicsManager::instance()->initialize();
     SceneManager::instance()->initialize();
-    AudioManager::instance()->initialize();
 }
 
 void createGameContents()
