@@ -28,7 +28,6 @@ public:
 		std::vector<GameObject*> game_objects;
 		Camera* main_camera;
 
-
 		Scene(std::string);
 		virtual ~Scene();
 

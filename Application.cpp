@@ -1,8 +1,4 @@
-// #include "TheEngine.h"
-
-#include "TheEngine.h"
-
-#define APPLICATION_NAME "THE EPIC GAME"
+#include "Application.h"
 
 void initializeGame()
 {
@@ -27,22 +23,32 @@ void createGameContents()
     SceneManager::instance()->changeCurrentScene(first_scene);
 
 
-    GameObject *go = new GameObject("Camra", first_scene);
-    FPSCamera *c = new FPSCamera(go, "camera1", 0);
-    Transform *tran1 = go->getComponent<Transform>();
-    tran1->posX = 30;
-    tran1->posY = 30;
-    tran1->posZ = 30;
+    // GameObject *go = new GameObject("Camra", first_scene);
+    // FPSCamera *c = new FPSCamera(go, "camera1", 0);
+    // Transform *tran1 = go->getComponent<Transform>();
+    // tran1->posX = 30;
+    // tran1->posY = 30;
+    // tran1->posZ = 30;
+
+    DotSceneLoader loader;
+    loader.parseDotScene(first_scene, "scene file name", Ogre::ResourceGroupManager::DEFAULT_RESOURCE_GROUP_NAME, first_scene->manager);
 
 
-    GameObject *ogre = new GameObject("Head", first_scene);
-    Mesh *head = new Mesh(ogre, "ogrehead.mesh");
-    Transform *tran2 = ogre->getComponent<Transform>();
-    tran2->posX = 1;
-    tran2->posY = 1;
-    tran2->posZ = 1;
+    // GameObject *go = new GameObject("Controller", first_scene);
+    // Transform *tran1 = new Transform(go);
+    // tran1->posX = 0;
+    // tran1->posY = 20;
+    // tran1->posZ = 0;
+    // FPSBoxController *c = new FPSBoxController(go, "Cam", 0.5, btVector3(1, 1, 1), 1, COL_CHARACTER, CHARACTER_COLLIDER_WITH);
 
-    SceneManager::instance()->current_scene->main_camera = (Camera*)c;
+    // GameObject *ogre = new GameObject("Head", first_scene);
+    // Mesh *head = new Mesh(ogre, "ogrehead.mesh");
+    // Transform *tran2 = ogre->getComponent<Transform>();
+    // tran2->posX = 1;
+    // tran2->posY = 1;
+    // tran2->posZ = 1;
+
+    // SceneManager::instance()->current_scene->main_camera = (Camera*)c->fps_camera;
 }
 
 void startGame()

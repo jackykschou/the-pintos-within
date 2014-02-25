@@ -1,15 +1,15 @@
 #include "SphereRigidbody.h"
 
-SphereRigidbody::SphereRigidbody (GameObject *gameObject, float radius, float mass) : Rigidbody(gameObject) 
+SphereRigidbody::SphereRigidbody (GameObject *gameObject, float radius, float mass, int col_mask, int col_to_masks) : Rigidbody(gameObject) 
 {
 
 	collisionShape = new btSphereShape(radius);
 	motionState = new btDefaultMotionState(btTransform(btQuaternion(0, 0, 0, 1),btVector3(0, 50, 0)));
-    btVector3 inertia(0,0,0);
-    collisionShape->calculateLocalInertia(mass, inertia);
-    btRigidBody::btRigidBodyConstructionInfo rigidBodyCI(mass, motionState, collisionShape, inertia);
-    rigidBody = new btRigidBody(rigidBodyCI);
-    dynamics_world->addRigidBody(rigidBody);
+  btVector3 inertia(0,0,0);
+  collisionShape->calculateLocalInertia(mass, inertia);
+  btRigidBody::btRigidBodyConstructionInfo rigidBodyCI(mass, motionState, collisionShape, inertia);
+  rigidBody = new btRigidBody(rigidBodyCI);
+  dynamics_world->addRigidBody(rigidBody, col_mask, col_to_masks);
 
 	rigidBody->setUserPointer(gameObject);
 }
@@ -25,4 +25,17 @@ SphereRigidbody::~SphereRigidbody()
 void SphereRigidbody::update() 
 {
 	Rigidbody::update();
+}
+
+bool SphereRigidbody::needsCollision(btBroadphaseProxy* proxy) const 
+{
+	Rigidbody::needsCollision(proxy);
+}
+
+//! Called with each contact for your own processing (e.g. test if contacts fall in within sensor parameters)
+btScalar SphereRigidbody::addSingleResult(btManifoldPoint& cp,
+	const btCollisionObject* colObj0,int partId0,int index0,
+	const btCollisionObject* colObj1,int partId1,int index1)
+{
+	Rigidbody::addSingleResult(cp, colObj0, partId0, index0, colObj1, partId1, index1);
 }

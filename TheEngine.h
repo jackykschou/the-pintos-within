@@ -17,11 +17,13 @@
 #include "Camera.h"
 #include "Mesh.h"
 #include "FPSCamera.h"
-#include "FPSController.h"
+#include "FPSBoxController.h"
 #include "InputManager.h"
 #include "GUIManager.h"
 #include "AudioManager.h"
 #include "Rigidbody.h"
 #include "SphereRigidbody.h"
+#include "BoxRigidbody.h"
+#include "Block.h"
 
 #endif // #ifndef __TheEngine_h_

@@ -34,6 +34,9 @@ public:
 			if(return_component != NULL)
 				return return_component;
 		}
+
+		LOG("Warning, does not contains component");
+		
 		return NULL;
 	}
 

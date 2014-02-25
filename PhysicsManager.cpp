@@ -1,18 +1,19 @@
-#include "Singleton.h"
 #include "PhysicsManager.h"
-#include <btBulletDynamicsCommon.h>
 
-void PhysicsManager::initialize() {
+void PhysicsManager::initialize() 
+{
 	collisionConfiguration = new btDefaultCollisionConfiguration();
 	dispatcher = new btCollisionDispatcher(collisionConfiguration);
 	overlappingPairCache = new btDbvtBroadphase();
-	solver = new btSequentialImpulseConstraintSolver();
-
+	solver = new btSequentialImpulseConstraintSolver;
 }
 
-btDiscreteDynamicsWorld *PhysicsManager::createDynamicsWorld() {
+btDiscreteDynamicsWorld *PhysicsManager::createDynamicsWorld() 
+{
 	btDiscreteDynamicsWorld *dynamicsWorld = new btDiscreteDynamicsWorld(dispatcher, overlappingPairCache, solver, collisionConfiguration);
-	dynamicsWorld->setGravity(btVector3(0, -0.098, 0));
+	dynamicsWorld->setGravity(btVector3(0, -10, 0));
+	btOverlapFilterCallback * filterCallback = new FilterCallback();
+   	dynamicsWorld->getPairCache()->setOverlapFilterCallback(filterCallback);
 	return dynamicsWorld;
 }
 

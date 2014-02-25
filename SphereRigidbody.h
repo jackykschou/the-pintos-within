@@ -6,10 +6,17 @@
 class SphereRigidbody : Rigidbody
 {
 public:
-	SphereRigidbody(GameObject*, float, float);
+	SphereRigidbody(GameObject*, float, float, 
+					int, int);
 	virtual ~SphereRigidbody();
 
 	virtual void update();
+
+	virtual bool needsCollision(btBroadphaseProxy*) const;
+
+	virtual btScalar addSingleResult(btManifoldPoint& cp,
+		   	const btCollisionObject*, int, int,
+		    const btCollisionObject*, int, int);
 
 };
 
