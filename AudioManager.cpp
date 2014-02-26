@@ -9,21 +9,19 @@ void AudioManager::initialize() {
 
 // returns an audioFileKey that references the loaded resource
 AudioFile AudioManager::loadAudioFile(const char *file) {
-	std::cout << file << std::endl;
-	Mix_Chunk* c = Mix_LoadWAV("phaser.wav");
+	Mix_Chunk* c = Mix_LoadWAV(file);
+	if (!c) {
+		std::cout << "Failed to load file " << file << std::endl;
+		printf("Error Mix_LoadWAV: %s\n", Mix_GetError());
+		return NULL;
+	}
 	_loadedFiles.push_back(c);
-	if(c!=NULL) 
-		std::cout << "Loaded phaser.wav" << std::endl;
-	else            
-		std::cout << "Could not load phaser.wav" << std::endl;
-
 	return _loadedFiles.size() - 1;
 }
 
 // returns a channel integer that can be used to stop the sound
 AudioChannel AudioManager::play2DSound(AudioFile file, int loops)
 {
-	std::cout <<_loadedFiles[file]<< std::endl;
 	return Mix_PlayChannel(-1, _loadedFiles[file], loops);
 }
 

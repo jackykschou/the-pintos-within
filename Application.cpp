@@ -1,6 +1,3 @@
-// #include "TheEngine.h"
-
-#include "TheEngine.h"
 #include "Application.h"
 
 void initializeGame()
@@ -13,11 +10,11 @@ void initializeGame()
 
 	GraphicsManager::instance()->initialize(APPLICATION_NAME, pluginsCfg);
     ResourcesManager::instance()->initialize(resourcesCfg, pluginsCfg);
+    AudioManager::instance()->initialize();
     InputManager::instance()->initialize();
     GUIManager::instance()->initialize(APPLICATION_NAME);
     PhysicsManager::instance()->initialize();
     SceneManager::instance()->initialize();
-    AudioManager::instance()->initialize();
 }
 
 void createGameContents()
@@ -33,22 +30,25 @@ void createGameContents()
     // tran1->posY = 30;
     // tran1->posZ = 30;
 
+    DotSceneLoader loader;
+    loader.parseDotScene(first_scene, "scene file name", Ogre::ResourceGroupManager::DEFAULT_RESOURCE_GROUP_NAME, first_scene->manager);
 
-    GameObject *go = new GameObject("Controller", first_scene);
-    Transform *tran1 = new Transform(go);
-    tran1->posX = 0;
-    tran1->posY = 20;
-    tran1->posZ = 0;
-    FPSBoxController *c = new FPSBoxController(go, "Cam", 0.5, btVector3(1, 1, 1), 1, COL_CHARACTER, CHARACTER_COLLIDER_WITH);
 
-    GameObject *ogre = new GameObject("Head", first_scene);
-    Mesh *head = new Mesh(ogre, "ogrehead.mesh");
-    Transform *tran2 = ogre->getComponent<Transform>();
-    tran2->posX = 1;
-    tran2->posY = 1;
-    tran2->posZ = 1;
+    // GameObject *go = new GameObject("Controller", first_scene);
+    // Transform *tran1 = new Transform(go);
+    // tran1->posX = 0;
+    // tran1->posY = 20;
+    // tran1->posZ = 0;
+    // FPSBoxController *c = new FPSBoxController(go, "Cam", 0.5, btVector3(1, 1, 1), 1, COL_CHARACTER, CHARACTER_COLLIDER_WITH);
 
-    SceneManager::instance()->current_scene->main_camera = (Camera*)c->fps_camera;
+    // GameObject *ogre = new GameObject("Head", first_scene);
+    // Mesh *head = new Mesh(ogre, "ogrehead.mesh");
+    // Transform *tran2 = ogre->getComponent<Transform>();
+    // tran2->posX = 1;
+    // tran2->posY = 1;
+    // tran2->posZ = 1;
+
+    // SceneManager::instance()->current_scene->main_camera = (Camera*)c->fps_camera;
 }
 
 void startGame()

@@ -1,6 +1,9 @@
 #ifndef __Application_h_
 #define __Application_h_
 
+#include "TheEngine.h"
+#include "DotSceneLoader.h"
+
 #define APPLICATION_NAME "THE EPIC GAME"
 #define CUBE_SCALE 1
 
@@ -12,6 +15,8 @@ enum collisiontypes {
     COL_CHARACTER = BIT(1)
 };
 
+#define STATIC_COLLIDER_WITH (COL_STATIC | COL_CHARACTER)
 #define CHARACTER_COLLIDER_WITH (COL_STATIC | COL_CHARACTER)
+
 
 #endif // #ifndef __Application_h_

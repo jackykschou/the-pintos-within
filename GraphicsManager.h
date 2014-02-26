@@ -25,7 +25,6 @@ public:
 	Ogre::FrameEvent* getFrameEvent();
 
 protected:
-	AudioFile af; // DELETEME
 	Ogre::Root* _root;
 	Ogre::RenderWindow* _window;
 	bool _shutdown;

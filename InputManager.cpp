@@ -38,6 +38,8 @@ void InputManager::initialize() {
 	_mMouse->setEventCallback(this);
 	_mKeyboard->setEventCallback(this);
 
+	_file = AudioManager::instance()->loadAudioFile("media/sounds/shotgun.wav");
+
 	// Set initial mouse clipping size
     windowResized(mWindow);
 
@@ -48,9 +50,45 @@ void InputManager::initialize() {
 // Called every frame to snatch the input buffer from the device thread
 void InputManager::capture() 
 {
+	flushBufferedEvents();
+
 	_mKeyboard->capture();
 	_mMouse->capture();
-	// flush old events
+
+	if (InputManager::instance()->isKeyPressed(OIS::KC_ESCAPE)) {
+        GraphicsManager::instance()->stopRendering();
+    }
+
+    if (InputManager::instance()->isKeyPressed(OIS::KC_Q)) {
+        GUIManager::instance()->toggleTray();
+    }
+
+    if (InputManager::instance()->isKeyPressed(OIS::KC_A)) {
+        AudioManager::instance()->play2DSound(_file, 0);
+    }
+}
+
+void InputManager::flushBufferedEvents() {
+	if (_lastMouseReleasedEvt != NULL) {
+		delete _lastMouseReleasedEvt;
+		_lastMouseReleasedEvt = NULL;
+	}
+	if (_lastMouseMovedEvt != NULL) {
+		delete _lastMouseMovedEvt;
+		_lastMouseMovedEvt = NULL;
+	}
+	if (_lastMousePressedEvt != NULL) {
+		delete _lastMousePressedEvt;
+		_lastMousePressedEvt = NULL;
+	}
+	if (_lastKeyReleasedEvt != NULL) {
+		delete _lastKeyReleasedEvt;
+		_lastKeyReleasedEvt = NULL;
+	}
+	if (_lastKeyPressedEvt != NULL) {
+		delete _lastKeyPressedEvt;
+		_lastKeyPressedEvt = NULL;
+	}
 }
 
 // Methods used for polling input
@@ -95,6 +133,7 @@ bool InputManager::isMouseRightClicked()
 	return isMouseDown(OIS::MouseButtonID::MB_Right);
 }
 
+
 OIS::KeyEvent* InputManager::getKeyPressedEvent() {
 	return _lastKeyPressedEvt;
 }
@@ -115,63 +154,36 @@ OIS::MouseEvent* InputManager::getMouseReleasedEvent() {
 	return _lastMouseReleasedEvt;
 }
 
-OIS::Mouse* InputManager::getMouse() 
-{
+OIS::Mouse* InputManager::getMouse() {
 	return _mMouse;
 }
 
-OIS::Keyboard* InputManager::getKeyboard() 
-{
+OIS::Keyboard* InputManager::getKeyboard() {
 	return _mKeyboard;
 }
 
 // Input callbacks
 bool InputManager::keyPressed(const OIS::KeyEvent &arg) {
-	if(_lastKeyPressedEvt != NULL) 
-	{
-		delete _lastKeyPressedEvt;
-		_lastKeyPressedEvt = NULL;
-	}
 	_lastKeyPressedEvt = new OIS::KeyEvent(arg);
 	return true;
 }
 
 bool InputManager::keyReleased(const OIS::KeyEvent &arg) {
-	if(_lastKeyReleasedEvt != NULL)
-	{
-		delete _lastKeyReleasedEvt;
-		_lastKeyReleasedEvt = NULL;
-	}
 	_lastKeyReleasedEvt = new OIS::KeyEvent(arg);
 	return true;
 }
 
 bool InputManager::mouseMoved(const OIS::MouseEvent &arg) {
-	if(_lastMouseMovedEvt != NULL)
-	{
-		delete _lastMouseMovedEvt;
-		_lastMouseMovedEvt = NULL;
-	}
 	_lastMouseMovedEvt = new OIS::MouseEvent(arg);
 	return true;
 }
 
 bool InputManager::mousePressed(const OIS::MouseEvent &arg, OIS::MouseButtonID id) {
-	if(_lastMousePressedEvt != NULL)
-	{
-		delete _lastMousePressedEvt;
-		_lastMousePressedEvt = NULL;
-	}
 	_lastMousePressedEvt = new OIS::MouseEvent(arg);
 	return true;
 }
 
 bool InputManager::mouseReleased(const OIS::MouseEvent &arg, OIS::MouseButtonID id) {
-	if(_lastMouseReleasedEvt != NULL)
-	{
-		delete _lastMouseReleasedEvt;
-		_lastMouseReleasedEvt = NULL;
-	}
 	_lastMouseReleasedEvt = new OIS::MouseEvent(arg);
 	return true;
 }
