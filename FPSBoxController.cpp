@@ -2,16 +2,18 @@
 
 FPSBoxController::FPSBoxController(GameObject* gameObject, std::string camera_name, double camera_offset, 
 														const btVector3& boxHalfExtents, btScalar step_height, 
-														int col_mask, int col_to_masks) : Component(gameObject)
+														int col_mask, int col_to_masks) : Component(gameObject), currVel(0, 0, 0)
 {
 	onCollision = NULL;
 	can_move = true;
 
-	base_movement_speed = 20;
-	base_jump_speed = 30;
+	base_movement_speed = .1;
+	base_jump_speed = 1;
 
 	movement_speed_multiplier = 1;
 	jump_speed_multiplier = 1;
+	slowDown = 0.995;
+	speedUp = 0.005;
 
 	if((_transform = gameObject->getComponent<Transform>()) == NULL)
 		_transform = new Transform(gameObject);
@@ -69,55 +71,75 @@ void FPSBoxController::detectInput()
 {
 
 	btQuaternion rot = _ghostObject->getWorldTransform().getRotation();
-	btVector3 v = rot.getAxis();
-	// btVector3 v = getAxis().normalize();
+	Ogre::Vector3 v0 = ((Camera*)fps_camera)->camera->getDirection();
+	btVector3 v = btVector3(v0.x, v0.y, v0.z);
 
+
+	// KC_SPACE
+	// if(can_move)
+	// {
+
+	// 	if(InputManager::instance()->isKeyDown(OIS::KC_A))
+	// 	{
+	// 		controller->setVelocityForTimeInterval(-v.cross(btVector3(0,1,0)) * base_movement_speed * movement_speed_multiplier, 
+	// 			GraphicsManager::instance()->getFrameEvent()->timeSinceLastFrame);
+	// 	}
+	// 	else if(InputManager::instance()->isKeyDown(OIS::KC_D))
+	// 	{
+	// 		controller->setVelocityForTimeInterval(v.cross(btVector3(0,1,0)) * base_movement_speed * movement_speed_multiplier, 
+	// 			GraphicsManager::instance()->getFrameEvent()->timeSinceLastFrame);
+	// 	}
+	// 	else if(InputManager::instance()->isKeyDown(OIS::KC_W))
+	// 	{
+	// 		controller->setVelocityForTimeInterval(v * base_movement_speed * movement_speed_multiplier, 
+	// 			GraphicsManager::instance()->getFrameEvent()->timeSinceLastFrame);
+	// 	}
+	// 	else if(InputManager::instance()->isKeyDown(OIS::KC_S))
+	// 	{
+	// 		controller->setVelocityForTimeInterval(-v * base_movement_speed * movement_speed_multiplier, 
+	// 			GraphicsManager::instance()->getFrameEvent()->timeSinceLastFrame);
+	// 	}
+	// }
 	// KC_SPACE
 	if(can_move)
 	{
-		// if(InputManager::instance()->isKeyDown(OIS::KC_W))
-		// {
-			// controller->setVelocityForTimeInterval(v * base_movement_speed * movement_speed_multiplier, 
-				// GraphicsManager::instance()->getFrameEvent()->timeSinceLastFrame);
-		// }
-		// else if(InputManager::instance()->isKeyDown(OIS::KC_W))
-		// {
-		// 	controller->setVelocityForTimeInterval(btVector3(0, 0, base_movement_speed * movement_speed_multiplier), 
-		// 		GraphicsManager::instance()->getFrameEvent()->timeSinceLastFrame);
-		// }
-		// if(InputManager::instance()->isKeyDown(OIS::KC_W))
-		// {
-		// 	controller->setVelocityForTimeInterval(btVector3(0, 0, base_movement_speed * movement_speed_multiplier), 
-		// 		GraphicsManager::instance()->getFrameEvent()->timeSinceLastFrame);
-		// }
-		// if(InputManager::instance()->isKeyDown(OIS::KC_W))
-		// {
-		// 	controller->setVelocityForTimeInterval(btVector3(0, 0, base_movement_speed * movement_speed_multiplier), 
-		// 		GraphicsManager::instance()->getFrameEvent()->timeSinceLastFrame);
-		// }
-		// Ogre::Vector3 dir = ((Camera*)fps_camera)->camera->getDirection();
-		// controller->setWalkDirection(btVector3(dir.x, 0, dir.z));
+		btVector3 tempDir = btVector3(0,0,0);
+		if(InputManager::instance()->isKeyDown(OIS::KC_A))
+		{
+			tempDir += -v.cross(btVector3(0,1,0));
+		}
 
+		if(InputManager::instance()->isKeyDown(OIS::KC_D))
+		{
+			tempDir += v.cross(btVector3(0,1,0));
+		}
 		if(InputManager::instance()->isKeyDown(OIS::KC_W))
 		{
-			controller->setVelocityForTimeInterval(v * base_movement_speed * movement_speed_multiplier, 
-				GraphicsManager::instance()->getFrameEvent()->timeSinceLastFrame);
+			tempDir += v;
 		}
-		else if(InputManager::instance()->isKeyDown(OIS::KC_S))
+		if(InputManager::instance()->isKeyDown(OIS::KC_S))
 		{
-			controller->setVelocityForTimeInterval(btVector3(0, 0, -base_movement_speed * movement_speed_multiplier), 
-				GraphicsManager::instance()->getFrameEvent()->timeSinceLastFrame);
+			tempDir += -v;
 		}
-		else if(InputManager::instance()->isKeyDown(OIS::KC_A))
-		{
-			controller->setVelocityForTimeInterval(btVector3(-base_movement_speed * movement_speed_multiplier, 0, 0), 
-				GraphicsManager::instance()->getFrameEvent()->timeSinceLastFrame);
+
+		//UPDATE MOVEMENT DIRECTION
+
+		
+		if(!tempDir.isZero()) {
+		    tempDir = tempDir.normalize();
+			currVel += tempDir * speedUp;
+			if (currVel.length() > 1) {
+				currVel = currVel.normalize();
+			}
 		}
-		else if(InputManager::instance()->isKeyDown(OIS::KC_D))
-		{
-			controller->setVelocityForTimeInterval(btVector3(base_movement_speed * movement_speed_multiplier, 0, 0), 
-				GraphicsManager::instance()->getFrameEvent()->timeSinceLastFrame);
+		else {
+			if (currVel.length() < speedUp) {
+				currVel = btVector3(0,0,0);
+			}
+			else
+				currVel *= slowDown;
 		}
+		controller->setWalkDirection(currVel * base_movement_speed * movement_speed_multiplier);
 		
 	}
 }
@@ -136,6 +158,7 @@ void FPSBoxController::updateTransform()
 
 	controller->setTurnAngle(1);
 
+	// _ghostObject->setWorldTransform(btTransform(btQuaternion(_transform->rotX, _transform->rotY, _transform->rotZ, _transform->rotW), pos));
 	_ghostObject->setWorldTransform(btTransform(btQuaternion(_transform->rotX, _transform->rotY, _transform->rotZ, _transform->rotW), pos));
 }
 

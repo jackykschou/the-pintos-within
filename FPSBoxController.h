@@ -34,6 +34,10 @@ public:
 	bool can_move;
 	double movement_speed_multiplier;
 	double jump_speed_multiplier;
+	float slowDown;
+	float speedUp;
+
+	btVector3 currVel;
 
 	void (*onCollision)(btVector3, btVector3, GameObject*);
 
