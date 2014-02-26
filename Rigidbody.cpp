@@ -19,10 +19,10 @@ void Rigidbody::update()
 	Component::update();
 
 	if (rigidBody->isStaticOrKinematicObject())
-		updateTransformFromRigidbody();
-	else
 		updateRigidbodyFromTransform();
-
+	else
+		updateTransformFromRigidbody();
+	
 	if(onCollision != NULL)
 		dynamics_world->contactTest(rigidBody, *((btCollisionWorld::ContactResultCallback*)this));
 }

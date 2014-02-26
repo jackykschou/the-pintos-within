@@ -31,24 +31,24 @@ void createGameContents()
     // tran1->posZ = 30;
 
     DotSceneLoader loader;
-    loader.parseDotScene(first_scene, "scene file name", Ogre::ResourceGroupManager::DEFAULT_RESOURCE_GROUP_NAME, first_scene->manager);
+    loader.parseDotScene(first_scene, "DemoScene.scene", Ogre::ResourceGroupManager::DEFAULT_RESOURCE_GROUP_NAME, first_scene->manager);
 
 
-    // GameObject *go = new GameObject("Controller", first_scene);
-    // Transform *tran1 = new Transform(go);
-    // tran1->posX = 0;
-    // tran1->posY = 20;
-    // tran1->posZ = 0;
-    // FPSBoxController *c = new FPSBoxController(go, "Cam", 0.5, btVector3(1, 1, 1), 1, COL_CHARACTER, CHARACTER_COLLIDER_WITH);
+    GameObject *go = new GameObject("Controller", first_scene);
+    Transform *tran1 = new Transform(go);
+    tran1->posX = 0;
+    tran1->posY = 20;
+    tran1->posZ = 0;
+    FPSBoxController *c = new FPSBoxController(go, "Cam", 0.5, btVector3(1, 1, 1), 1, COL_CHARACTER, CHARACTER_COLLIDER_WITH);
 
     // GameObject *ogre = new GameObject("Head", first_scene);
     // Mesh *head = new Mesh(ogre, "ogrehead.mesh");
     // Transform *tran2 = ogre->getComponent<Transform>();
-    // tran2->posX = 1;
-    // tran2->posY = 1;
-    // tran2->posZ = 1;
+    // tran2->posX = 30;
+    // tran2->posY = 30;
+    // tran2->posZ = 30;
 
-    // SceneManager::instance()->current_scene->main_camera = (Camera*)c->fps_camera;
+    SceneManager::instance()->current_scene->main_camera = (Camera*)c->fps_camera;
 }
 
 void startGame()

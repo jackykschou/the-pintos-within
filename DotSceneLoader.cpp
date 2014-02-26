@@ -485,27 +485,50 @@ void DotSceneLoader::createSceneObject(rapidxml::xml_node<>* XMLNode, std::strin
     while(pElement)
         pElement = pElement->next_sibling("node");
     //-----
- 
+
     pElement = XMLNode->first_node("entity");
     if(node_name.find(WALL) != std::string::npos)
     {
-        pElement = XMLNode->first_node("entity");
         if(pElement)
         {
-            Ogre::String name = getAttrib(XMLNode, "name");
-            Ogre::String id = getAttrib(XMLNode, "id");
+            // Ogre::String name = getAttrib(XMLNode, "name");
+            // Ogre::String id = getAttrib(XMLNode, "id");
             Ogre::String meshFile = getAttrib(XMLNode, "meshFile");
             Ogre::String materialFile = getAttrib(XMLNode, "materialFile");
-            bool isStatic = getAttribBool(XMLNode, "static", false);;
-            bool castShadows = getAttribBool(XMLNode, "castShadows", true);
+            // bool isStatic = getAttribBool(XMLNode, "static", false);;
+            // bool castShadows = getAttribBool(XMLNode, "castShadows", true);
             
             pElement = XMLNode->first_node("vertexBuffer");
             pElement = XMLNode->first_node("indexBuffer");
 
-            Block* block = new Block("Wall", _scene, COL_STATIC, STATIC_COLLIDER_WITH, std::string(meshFile));
+            // LOG("node name " << node_name);
+            // LOG("file name " << meshFile);
 
-            if(!materialFile.empty())
-                ((Mesh*)block)->entity->setMaterialName(materialFile);
+            // LOG("hahahahahahaha");
+            // Block* block = new Block("Wall", _scene, COL_STATIC, STATIC_COLLIDER_WITH, std::string(node_name) + std::string(".mesh"));
+
+            Block* block = new Block("Wall", _scene, COL_STATIC, STATIC_COLLIDER_WITH, "ogrehead.mesh");
+
+            // GameObject *ogre = new GameObject("Head", _scene);
+            // Mesh *head = new Mesh(ogre, "ogrehead.mesh");
+
+            Transform *t = ((GameObject*)block)->getComponent<Transform>();
+
+            // // LOG(position.x << " " << position.y << " " << position.z);
+            // LOG(rotation.x << " " << rotation.y << " " << rotation.z << " " << rotation.w);
+
+            t->posX = position.x;
+            t->posY = position.y;
+            t->posZ = position.z;
+
+            t->rotX = rotation.x;
+            t->rotY = rotation.y;
+            t->rotZ = rotation.z;
+            t->rotW = rotation.w;
+
+            // LOG("hahahahahahahalalalaallalala");
+            // // if(!materialFile.empty())
+                // ((Mesh*)block)->entity->setMaterialName(materialFile);
         }
     }
     while(pElement)

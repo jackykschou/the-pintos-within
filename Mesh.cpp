@@ -36,7 +36,6 @@ Mesh::~Mesh()
 void Mesh::update()
 {
   Component::update();
-
   node->setPosition(_transform->posX, _transform->posY, _transform->posZ);
   node->setOrientation(Ogre::Quaternion(_transform->rotW, _transform->rotX, _transform->rotY, _transform->rotZ));
   node->setScale (_transform->scaleX, _transform->scaleY, _transform->scaleZ);
