@@ -114,6 +114,7 @@ bool InputManager::isKeyReleased(OIS::KeyCode kc)
 
 bool InputManager::isMouseDown(OIS::MouseButtonID button) 
 {
+	if (!_mMouse) return false;
 	const OIS::MouseState &ms = _mMouse->getMouseState();
 	return ms.buttonDown(button);
 }
@@ -207,10 +208,13 @@ void InputManager::windowClosed(Ogre::RenderWindow* rw)
 {
 	Ogre::WindowEventUtilities::removeWindowEventListener(rw, this);
     //Only close for window that created OIS (the main window in these demos)
-    if(_mInputManager)
+    if (_mInputManager)
     {
         _mInputManager->destroyInputObject(_mMouse);
+        _mMouse = NULL;
+
         _mInputManager->destroyInputObject(_mKeyboard);
+        _mKeyboard = NULL;
 
         OIS::InputManager::destroyInputSystem(_mInputManager);
         _mInputManager = 0;
