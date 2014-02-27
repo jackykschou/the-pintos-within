@@ -5,7 +5,8 @@ Block::Block(std::string tag, Scene* scene,
 	float posX, float posY, float posZ, float rotX, float rotY, float rotZ, float rotW,
 	float scaleX, float scaleY, float scaleZ) : GameObject(tag, scene)
 {
-	Transform* tran = new Transform(this);
+	Transform* tran = this->getComponent<Transform>();
+
 	tran->posX = posX;
 	tran->posY = posY;
 	tran->posZ = posZ;
@@ -20,8 +21,10 @@ Block::Block(std::string tag, Scene* scene,
 	tran->scaleZ = scaleZ;
 
 	mesh = new Mesh(this, mesh_name);
-	Ogre::Vector3 box_half_size = mesh->node->_getWorldAABB().getHalfSize();
-	rigidbody = new BoxRigidbody(this, btVector3(box_half_size.x, box_half_size.y, box_half_size.z), 0, mask, col_mask);
+	Ogre::Vector3 box_half_size = mesh->entity->getBoundingBox().getHalfSize();
+
+	rigidbody = new BoxRigidbody(this, btVector3(box_half_size.x * tran->scaleX, box_half_size.y * tran->scaleY, box_half_size.z * tran->scaleZ), 
+		0, mask, col_mask);
 }
 
 Block::~Block()

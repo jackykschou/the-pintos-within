@@ -31,16 +31,16 @@ FPSBoxController::FPSBoxController(GameObject* gameObject, std::string camera_na
 	controller = new OiJE::CharacterController(_ghostObject, _collisionShape, step_height);
 
 	dynamics_world->addCollisionObject(_ghostObject, col_mask, col_to_masks);
-  dynamics_world->addAction(controller);
+  	dynamics_world->addAction(controller);
 
 
 
    //------------------------------ ground - static plane ------------------------------
-   btCollisionShape* groundShape = new btStaticPlaneShape(btVector3(0,1,0), 1);
-   btDefaultMotionState* groundMotionState = new btDefaultMotionState(btTransform(btQuaternion(0,0,0,1), btVector3(0,-1,0)));
-   btRigidBody::btRigidBodyConstructionInfo groundRigidBodyCI(0, groundMotionState, groundShape, btVector3(0,0,0));
-   btRigidBody* groundRigidBody = new btRigidBody(groundRigidBodyCI);
-   dynamics_world->addRigidBody(groundRigidBody, 1 << 0, 1 << 1);
+   // btCollisionShape* groundShape = new btStaticPlaneShape(btVector3(0,1,0), 1);
+   // btDefaultMotionState* groundMotionState = new btDefaultMotionState(btTransform(btQuaternion(0,0,0,1), btVector3(0,-1,0)));
+   // btRigidBody::btRigidBodyConstructionInfo groundRigidBodyCI(0, groundMotionState, groundShape, btVector3(0,0,0));
+   // btRigidBody* groundRigidBody = new btRigidBody(groundRigidBodyCI);
+   // dynamics_world->addRigidBody(groundRigidBody, 1 << 0, 1 << 1);
 }
 
 FPSBoxController::~FPSBoxController()

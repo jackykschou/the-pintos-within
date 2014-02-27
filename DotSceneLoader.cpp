@@ -493,57 +493,52 @@ void DotSceneLoader::createSceneObject(rapidxml::xml_node<>* XMLNode, std::strin
     {
         GameObject *go = new GameObject("Controller", _scene);
         Transform *tran1 = go->getComponent<Transform>();
-        tran1->posX = 0;
-        tran1->posY = 10;
-        tran1->posZ = 0;
+        tran1->posX = position.x;
+        tran1->posY = position.y;
+        tran1->posZ = position.z;
 
-        FPSBoxController *c = new FPSBoxController(go, "Cam", 0.5, btVector3(1, 1, 1), 0.5, COL_CHARACTER, CHARACTER_COLLIDER_WITH);
+        FPSBoxController *c = new FPSBoxController(go, "Cam", 0.5, btVector3(3, 10, 3), 0.5, COL_CHARACTER, CHARACTER_COLLIDER_WITH);
 
         SceneManager::instance()->current_scene->main_camera = (Camera*)c->fps_camera;
-
-        Block* block = new Block("Wall", _scene, 1 << 0, 1 << 1, "PixelMan.mesh",
-            10, 0, 10,
-            rotation.x, rotation.y, rotation.z, rotation.w,
-            10, 10, 10);
     }
-    // if(node_name.find(WALL) != std::string::npos)
-    // {
-    //     Ogre::String meshFile = getAttrib(XMLNode, "meshFile");
-    //     Ogre::String materialFile = getAttrib(XMLNode, "materialFile");
+    if(node_name.find(WALL) != std::string::npos)
+    {
+        Ogre::String meshFile = getAttrib(XMLNode, "meshFile");
+        Ogre::String materialFile = getAttrib(XMLNode, "materialFile");
         
-    //     pElement = XMLNode->first_node("vertexBuffer");
-    //     pElement = XMLNode->first_node("indexBuffer");
+        pElement = XMLNode->first_node("vertexBuffer");
+        pElement = XMLNode->first_node("indexBuffer");
 
-    //     LOG("Creating wall");
+        LOG("Creating wall");
 
-    //     Block* block = new Block("Wall", _scene, COL_STATIC, STATIC_COLLIDER_WITH, "Wall.mesh",
-    //         position.x, position.y, position.z,
-    //         rotation.x, rotation.y, rotation.z, rotation.w,
-    //         scale.x, scale.y, scale.z);
+        Block* block = new Block("Wall", _scene, 1 << 0, 1 << 1, "Wall.mesh",
+            position.x, position.y, position.z,
+            rotation.x, rotation.y, rotation.z, rotation.w,
+            scale.x, scale.y, scale.z);
 
-    //     if(!materialFile.empty())
-    //         ((Mesh*)block)->entity->setMaterialName(materialFile);
-    // }
-    // else if(node_name.find(GROUND) != std::string::npos)
-    // {
-    //     Ogre::String meshFile = getAttrib(XMLNode, "meshFile");
-    //     Ogre::String materialFile = getAttrib(XMLNode, "materialFile");
+        if(!materialFile.empty())
+            ((Mesh*)block)->entity->setMaterialName(materialFile);
+    }
+    else if(node_name.find(GROUND) != std::string::npos)
+    {
+        Ogre::String meshFile = getAttrib(XMLNode, "meshFile");
+        Ogre::String materialFile = getAttrib(XMLNode, "materialFile");
         
-    //     pElement = XMLNode->first_node("vertexBuffer");
-    //     pElement = XMLNode->first_node("indexBuffer");
+        pElement = XMLNode->first_node("vertexBuffer");
+        pElement = XMLNode->first_node("indexBuffer");
 
-    //     LOG("Creating ground");
+        LOG("Creating ground");
 
-    //     LOG(position.x << " " << position.y << " " << position.z);
+        LOG(position.x << " " << position.y << " " << position.z);
 
-    //     Block* block = new Block("Ground", _scene, COL_STATIC, STATIC_COLLIDER_WITH, "Floor.mesh",
-    //         position.x, position.y, position.z,
-    //         rotation.x, rotation.y, rotation.z, rotation.w,
-    //         scale.x, scale.y, scale.z);
+        Block* block = new Block("Ground", _scene,1 << 0, 1 << 1, "Floor.mesh",
+            position.x, position.y, position.z,
+            rotation.x, rotation.y, rotation.z, rotation.w,
+            scale.x, scale.y, scale.z);
 
-    //     if(!materialFile.empty())
-    //         ((Mesh*)block)->entity->setMaterialName(materialFile);
-    // }
+        if(!materialFile.empty())
+            ((Mesh*)block)->entity->setMaterialName(materialFile);
+    }
     
     //-----Parse but not using
     pElement = XMLNode->first_node("light");
