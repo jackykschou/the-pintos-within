@@ -4,8 +4,7 @@ Rigidbody::Rigidbody(GameObject *gameObject) : Component(gameObject)
 {
 	onCollision = NULL;
 
-	if((_transform = gameObject->getComponent<Transform>()) == NULL)
-		_transform = new Transform(gameObject);
+	_transform = gameObject->getComponent<Transform>();
 
 	dynamics_world = _gameObject->scene->physics_world;
 }

@@ -2,8 +2,7 @@
 
 Camera::Camera(GameObject* gameObject, std::string name) : Component(gameObject)
 {
-	if((_transform = gameObject->getComponent<Transform>()) == NULL)
-		_transform = new Transform(gameObject);
+	_transform = gameObject->getComponent<Transform>();
 
 	this->name = name.c_str();
 
@@ -17,7 +16,7 @@ Camera::Camera(GameObject* gameObject, std::string name) : Component(gameObject)
 	camera->setPosition(_transform->posX, _transform->posY, _transform->posZ);
 	camera->setOrientation(Ogre::Quaternion(_transform->rotW, _transform->rotX, _transform->rotY, _transform->rotZ));
 	camera->lookAt(0, 0, 0);
-	camera->setNearClipDistance(5);
+	camera->setNearClipDistance(1);
 }
 
 Camera::~Camera()

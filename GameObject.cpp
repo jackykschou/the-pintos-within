@@ -1,4 +1,5 @@
 #include "GameObject.h"
+#include "Transform.h"
 
 GameObject::GameObject(std::string t, Scene* s)
 {
@@ -6,6 +7,7 @@ GameObject::GameObject(std::string t, Scene* s)
 	scene = s;
 	scene->addGameObject(this);
 	active = true;
+	new Transform(this);
 }
 
 GameObject::~GameObject()

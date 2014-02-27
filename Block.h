@@ -13,12 +13,13 @@ public:
 	Mesh* mesh;
 	BoxRigidbody* rigidbody;
 
-	Block(std::string t, Scene* s, 
-				int, int, std::string);
+	Block(std::string, Scene*,
+		int, int, std::string, float, float, float, 
+		float, float, float, float,
+		float, float, float);
 	virtual ~Block();
 
 	virtual void update();
-
 };
 
 #endif // #ifndef __Block_h_

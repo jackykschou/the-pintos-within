@@ -12,10 +12,10 @@
 
 #include "rapidxml.hpp"
 
-#define WALL "Cube"
-#define GROUND "Cube"
-#define PLAYER "Player"
-#define BALL_SPAWNER "BallSpawner"
+#define WALL "Wall"
+#define GROUND "Floor"
+#define PLAYER "Spawn.Player"
+#define BALL_SPAWNER "Spawn.Ball"
  
     // Forward declarations
     namespace Ogre

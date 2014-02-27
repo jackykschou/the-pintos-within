@@ -5,8 +5,7 @@ int Mesh::mesh_node_id_assigner = 0;
 
 Mesh::Mesh(GameObject* gameObject, std::string mesh_name) : Component(gameObject)
 {
-  if((_transform = gameObject->getComponent<Transform>()) == NULL)
-    _transform = new Transform(gameObject);
+  _transform = gameObject->getComponent<Transform>();
 
 	std::ostringstream entity_stream;
   entity_stream << (Mesh::mesh_entity_id_assigner++);

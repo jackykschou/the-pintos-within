@@ -9,11 +9,9 @@
 #include "GraphicsManager.h"
 #include "PhysicsManager.h"
 #include "SceneManager.h"
-#include "Component.h"
 #include "GameObject.h"
 
 class Camera;
-class Transform;
 class GameObject;
 
 class Scene

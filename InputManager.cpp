@@ -63,7 +63,7 @@ void InputManager::capture()
         GUIManager::instance()->toggleTray();
     }
 
-    if (InputManager::instance()->isKeyPressed(OIS::KC_A)) {
+    if (InputManager::instance()->isMouseLeftClicked()) {
         AudioManager::instance()->play2DSound(_file, 0);
     }
 }

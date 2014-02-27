@@ -36,22 +36,10 @@ void FPSCamera::updateTransformRotation()
 	Ogre::Quaternion* old_q = new Ogre::Quaternion(_transform->rotW, _transform->rotX, _transform->rotY, _transform->rotZ);
 	Ogre::Quaternion* new_q = new Ogre::Quaternion(old_q->xAxis(), camera->getOrientation().yAxis(), old_q->zAxis());
 
-
-
-
-
 	_transform->rotW = new_q->w;
 	_transform->rotX = new_q->x;
 	_transform->rotY = new_q->y;
 	_transform->rotZ = new_q->z;
-	// _transform->rotW = camera->getOrientation().w;
-	// _transform->rotX = camera->getOrientation().x;
-	// _transform->rotY = camera->getOrientation().y;
-	// _transform->rotZ = camera->getOrientation().z;
-
-
-
-
 
 	delete old_q;
 	delete new_q;

@@ -86,19 +86,19 @@ void DotSceneLoader::processScene(rapidxml::xml_node<>* XMLRoot)
     rapidxml::xml_node<>* pElement;
  
     // Process environment (?)
-    // pElement = XMLRoot->first_node("environment");
-    // if(pElement)
-    //     processEnvironment(pElement);
+    pElement = XMLRoot->first_node("environment");
+    if(pElement)
+        processEnvironment(pElement);
  
     // Process nodes (?)
     pElement = XMLRoot->first_node("nodes");
     if(pElement)
         processNodes(pElement);
  
-    // // Process externals (?)
-    // pElement = XMLRoot->first_node("externals");
-    // if(pElement)
-    //     processExternals(pElement);
+    // Process externals (?)
+    pElement = XMLRoot->first_node("externals");
+    if(pElement)
+        processExternals(pElement);
  
     // // Process userDataReference (?)
     // pElement = XMLRoot->first_node("userDataReference");
@@ -110,10 +110,10 @@ void DotSceneLoader::processScene(rapidxml::xml_node<>* XMLRoot)
     // if(pElement)
     //     processOctree(pElement);
  
-    // // Process light (?)
-    // pElement = XMLRoot->first_node("light");
-    // if(pElement)
-    //    processLight(pElement);
+    // Process light (?)
+    pElement = XMLRoot->first_node("light");
+    if(pElement)
+       processLight(pElement);
  
     // // Process camera (?)
     // pElement = XMLRoot->first_node("camera");
@@ -486,54 +486,65 @@ void DotSceneLoader::createSceneObject(rapidxml::xml_node<>* XMLNode, std::strin
         pElement = pElement->next_sibling("node");
     //-----
 
+    LOG("node name: " << node_name);
+
     pElement = XMLNode->first_node("entity");
-    if(node_name.find(WALL) != std::string::npos)
+    if(node_name.find(PLAYER) != std::string::npos)
     {
-        if(pElement)
-        {
-            // Ogre::String name = getAttrib(XMLNode, "name");
-            // Ogre::String id = getAttrib(XMLNode, "id");
-            Ogre::String meshFile = getAttrib(XMLNode, "meshFile");
-            Ogre::String materialFile = getAttrib(XMLNode, "materialFile");
-            // bool isStatic = getAttribBool(XMLNode, "static", false);;
-            // bool castShadows = getAttribBool(XMLNode, "castShadows", true);
-            
-            pElement = XMLNode->first_node("vertexBuffer");
-            pElement = XMLNode->first_node("indexBuffer");
+        GameObject *go = new GameObject("Controller", _scene);
+        Transform *tran1 = go->getComponent<Transform>();
+        tran1->posX = 0;
+        tran1->posY = 10;
+        tran1->posZ = 0;
 
-            // LOG("node name " << node_name);
-            // LOG("file name " << meshFile);
+        FPSBoxController *c = new FPSBoxController(go, "Cam", 0.5, btVector3(1, 1, 1), 0.5, COL_CHARACTER, CHARACTER_COLLIDER_WITH);
 
-            // LOG("hahahahahahaha");
-            // Block* block = new Block("Wall", _scene, COL_STATIC, STATIC_COLLIDER_WITH, std::string(node_name) + std::string(".mesh"));
+        SceneManager::instance()->current_scene->main_camera = (Camera*)c->fps_camera;
 
-            Block* block = new Block("Wall", _scene, COL_STATIC, STATIC_COLLIDER_WITH, "ogrehead.mesh");
-
-            // GameObject *ogre = new GameObject("Head", _scene);
-            // Mesh *head = new Mesh(ogre, "ogrehead.mesh");
-
-            Transform *t = ((GameObject*)block)->getComponent<Transform>();
-
-            // // LOG(position.x << " " << position.y << " " << position.z);
-            // LOG(rotation.x << " " << rotation.y << " " << rotation.z << " " << rotation.w);
-
-            t->posX = position.x;
-            t->posY = position.y;
-            t->posZ = position.z;
-
-            t->rotX = rotation.x;
-            t->rotY = rotation.y;
-            t->rotZ = rotation.z;
-            t->rotW = rotation.w;
-
-            // LOG("hahahahahahahalalalaallalala");
-            // // if(!materialFile.empty())
-                // ((Mesh*)block)->entity->setMaterialName(materialFile);
-        }
+        Block* block = new Block("Wall", _scene, 1 << 0, 1 << 1, "PixelMan.mesh",
+            10, 0, 10,
+            rotation.x, rotation.y, rotation.z, rotation.w,
+            10, 10, 10);
     }
-    while(pElement)
-        pElement = pElement->next_sibling("entity");
+    // if(node_name.find(WALL) != std::string::npos)
+    // {
+    //     Ogre::String meshFile = getAttrib(XMLNode, "meshFile");
+    //     Ogre::String materialFile = getAttrib(XMLNode, "materialFile");
+        
+    //     pElement = XMLNode->first_node("vertexBuffer");
+    //     pElement = XMLNode->first_node("indexBuffer");
 
+    //     LOG("Creating wall");
+
+    //     Block* block = new Block("Wall", _scene, COL_STATIC, STATIC_COLLIDER_WITH, "Wall.mesh",
+    //         position.x, position.y, position.z,
+    //         rotation.x, rotation.y, rotation.z, rotation.w,
+    //         scale.x, scale.y, scale.z);
+
+    //     if(!materialFile.empty())
+    //         ((Mesh*)block)->entity->setMaterialName(materialFile);
+    // }
+    // else if(node_name.find(GROUND) != std::string::npos)
+    // {
+    //     Ogre::String meshFile = getAttrib(XMLNode, "meshFile");
+    //     Ogre::String materialFile = getAttrib(XMLNode, "materialFile");
+        
+    //     pElement = XMLNode->first_node("vertexBuffer");
+    //     pElement = XMLNode->first_node("indexBuffer");
+
+    //     LOG("Creating ground");
+
+    //     LOG(position.x << " " << position.y << " " << position.z);
+
+    //     Block* block = new Block("Ground", _scene, COL_STATIC, STATIC_COLLIDER_WITH, "Floor.mesh",
+    //         position.x, position.y, position.z,
+    //         rotation.x, rotation.y, rotation.z, rotation.w,
+    //         scale.x, scale.y, scale.z);
+
+    //     if(!materialFile.empty())
+    //         ((Mesh*)block)->entity->setMaterialName(materialFile);
+    // }
+    
     //-----Parse but not using
     pElement = XMLNode->first_node("light");
     pElement = XMLNode->first_node("camera");

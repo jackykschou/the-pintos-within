@@ -31,24 +31,36 @@ void createGameContents()
     // tran1->posZ = 30;
 
     DotSceneLoader loader;
-    loader.parseDotScene(first_scene, "DemoScene.scene", Ogre::ResourceGroupManager::DEFAULT_RESOURCE_GROUP_NAME, first_scene->manager);
+    loader.parseDotScene(first_scene, "TheCourt.scene", Ogre::ResourceGroupManager::DEFAULT_RESOURCE_GROUP_NAME, first_scene->manager);
+
+    Ogre::Light* pointLight = SceneManager::instance()->current_scene->manager->createLight("pointLight");
+    pointLight->setType(Ogre::Light::LT_POINT);
+    pointLight->setPosition(Ogre::Vector3(0, 10, 0));
+    pointLight->setDiffuseColour(1, 1, 1);
+    pointLight->setSpecularColour(1, 1, 1);
+
+    Ogre::Light* pointLight1 = SceneManager::instance()->current_scene->manager->createLight("pointLight1");
+    pointLight1->setType(Ogre::Light::LT_POINT);
+    pointLight1->setPosition(Ogre::Vector3(10, 0, 0));
+    pointLight1->setDiffuseColour(1, 1, 1);
+    pointLight1->setSpecularColour(1, 1, 1);
 
 
-    GameObject *go = new GameObject("Controller", first_scene);
-    Transform *tran1 = new Transform(go);
-    tran1->posX = 0;
-    tran1->posY = 20;
-    tran1->posZ = 0;
-    FPSBoxController *c = new FPSBoxController(go, "Cam", 0.5, btVector3(1, 1, 1), 1, COL_CHARACTER, CHARACTER_COLLIDER_WITH);
+    Ogre::Light* pointLight2 = SceneManager::instance()->current_scene->manager->createLight("pointLight2");
+    pointLight2->setType(Ogre::Light::LT_POINT);
+    pointLight2->setPosition(Ogre::Vector3(0, 0, 10));
+    pointLight2->setDiffuseColour(1, 1, 1);
+    pointLight2->setSpecularColour(1, 1, 1);
 
-    // GameObject *ogre = new GameObject("Head", first_scene);
-    // Mesh *head = new Mesh(ogre, "ogrehead.mesh");
-    // Transform *tran2 = ogre->getComponent<Transform>();
-    // tran2->posX = 30;
-    // tran2->posY = 30;
-    // tran2->posZ = 30;
 
-    SceneManager::instance()->current_scene->main_camera = (Camera*)c->fps_camera;
+    // GameObject *go = new GameObject("Controller", first_scene);
+    // Transform *tran1 = go->getComponent<Transform>();
+    // tran1->posX = 0;
+    // tran1->posY = 10;
+    // tran1->posZ = 0;
+    // FPSBoxController *c = new FPSBoxController(go, "Cam", 0.5, btVector3(10, 10, 10), 0.5, COL_CHARACTER, CHARACTER_COLLIDER_WITH);
+
+    // SceneManager::instance()->current_scene->main_camera = (Camera*)c->fps_camera;
 }
 
 void startGame()

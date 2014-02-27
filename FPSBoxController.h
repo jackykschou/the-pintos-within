@@ -16,7 +16,6 @@ class FPSBoxController : Component
 {
 protected:
 	double base_movement_speed;
-	double base_jump_speed;
 
 	Transform* _transform;
 	btPairCachingGhostObject* _ghostObject;
@@ -33,7 +32,6 @@ public:
 
 	bool can_move;
 	double movement_speed_multiplier;
-	double jump_speed_multiplier;
 	float slowDown;
 	float speedUp;
 

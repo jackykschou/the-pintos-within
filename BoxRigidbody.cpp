@@ -3,15 +3,26 @@
 BoxRigidbody::BoxRigidbody (GameObject *gameObject, const btVector3& boxHalfExtents, float mass, 
 														int col_mask, int col_to_masks) : Rigidbody(gameObject) 
 {
-	collisionShape = new btBoxShape(boxHalfExtents);
-	motionState = new btDefaultMotionState(btTransform(btQuaternion(0, 0, 0, 1),btVector3(0, 50, 0)));
-    btVector3 inertia(0,0,0);
-    collisionShape->calculateLocalInertia(mass, inertia);
-    btRigidBody::btRigidBodyConstructionInfo rigidBodyCI(mass, motionState, collisionShape, inertia);
-    rigidBody = new btRigidBody(rigidBodyCI);
-    dynamics_world->addRigidBody(rigidBody, col_mask, col_to_masks);
+	collisionShape = new btBoxShape (boxHalfExtents);
+
+	motionState = new btDefaultMotionState(btTransform(btQuaternion(_transform->rotX, _transform->rotY, _transform->rotZ, _transform->rotW)
+		, btVector3(_transform->posX, _transform->posY, _transform->posZ)));
+	btRigidBody::btRigidBodyConstructionInfo rigidBodyCI(
+		mass,                  // mass
+		motionState,        // initial position
+		collisionShape,              // collision shape of body
+		btVector3(0,0,0)    // local inertia
+	);
+
+	rigidBody = new btRigidBody(rigidBodyCI);
+	dynamics_world->addRigidBody(rigidBody, col_mask, col_to_masks);
 
 	rigidBody->setUserPointer(gameObject);
+
+	if (rigidBody->isStaticOrKinematicObject())
+		Rigidbody::updateRigidbodyFromTransform();
+	else
+		Rigidbody::updateTransformFromRigidbody();
 }
 
 BoxRigidbody::~BoxRigidbody()
