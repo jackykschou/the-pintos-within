@@ -27,6 +27,8 @@ bool GraphicsManager::frameRenderingQueued(const Ogre::FrameEvent& evt)
 
     SceneManager::instance()->current_scene->update(evt.timeSinceLastFrame);
 
+    GameState::instance()->update();
+
     return true;
 }
 
@@ -78,7 +80,6 @@ Ogre::FrameEvent* GraphicsManager::getFrameEvent()
 
 void GraphicsManager::startRendering()
 {
-    GUIManager::instance()->showTray();
     _root->startRendering();
 }
 

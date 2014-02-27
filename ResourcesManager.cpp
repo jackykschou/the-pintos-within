@@ -17,8 +17,6 @@ void ResourcesManager::initialize(Ogre::String resourcesCfg, Ogre::String plugin
     loadResources();
 }
 
-
-
 void ResourcesManager::setupResources()
 {
     // Load resource paths from config file
@@ -51,6 +49,10 @@ void ResourcesManager::createResourceListener()
 void ResourcesManager::loadResources()
 {
     Ogre::ResourceGroupManager::getSingleton().initialiseAllResourceGroups();
+    
+    // Load the system fonts
+    Ogre::ResourceManager::ResourceMapIterator iter = Ogre::FontManager::getSingleton().getResourceIterator();
+    while (iter.hasMoreElements()) { iter.getNext()->load(); }
 }
 
 Ogre::String ResourcesManager::getResourcesCfg()
