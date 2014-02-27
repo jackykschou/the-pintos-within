@@ -20,7 +20,7 @@ void FPSCamera::update()
 	if (evt) cameraMan->injectMouseMove(*evt);
 
 	clampCameraRotation();
-  	updateTransformRotation();
+  	// updateTransformRotation();
 }
 
 void FPSCamera::clampCameraRotation()

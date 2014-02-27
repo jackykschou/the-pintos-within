@@ -203,7 +203,7 @@ bool CharacterController::recoverFromPenetration ( btCollisionWorld* collisionWo
                   m_touchingNormal = pt.m_normalWorldOnB * directionSign;//??
 
                }
-               m_currentPosition += pt.m_normalWorldOnB * directionSign * dist * btScalar(0.2);
+               // m_currentPosition += pt.m_normalWorldOnB * directionSign * dist * btScalar(0.001f);
                penetration = true;
             } else {
                //printf("touching %f\n", dist);

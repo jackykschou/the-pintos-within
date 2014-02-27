@@ -486,7 +486,6 @@ void DotSceneLoader::createSceneObject(rapidxml::xml_node<>* XMLNode, std::strin
         pElement = pElement->next_sibling("node");
     //-----
 
-    LOG("node name: " << node_name);
 
     pElement = XMLNode->first_node("entity");
     if(node_name.find(PLAYER) != std::string::npos)
@@ -497,7 +496,7 @@ void DotSceneLoader::createSceneObject(rapidxml::xml_node<>* XMLNode, std::strin
         tran1->posY = position.y;
         tran1->posZ = position.z;
 
-        FPSBoxController *c = new FPSBoxController(go, "Cam", 0.5, btVector3(3, 10, 3), 0.5, COL_CHARACTER, CHARACTER_COLLIDER_WITH);
+        FPSBoxController *c = new FPSBoxController(go, "Cam", 0.5, btVector3(3, 10, 3), 1, COL_CHARACTER, CHARACTER_COLLIDER_WITH);
 
         SceneManager::instance()->current_scene->main_camera = (Camera*)c->fps_camera;
     }
@@ -508,8 +507,6 @@ void DotSceneLoader::createSceneObject(rapidxml::xml_node<>* XMLNode, std::strin
         
         pElement = XMLNode->first_node("vertexBuffer");
         pElement = XMLNode->first_node("indexBuffer");
-
-        LOG("Creating wall");
 
         Block* block = new Block("Wall", _scene, 1 << 0, 1 << 1, "Wall.mesh",
             position.x, position.y, position.z,
@@ -526,10 +523,6 @@ void DotSceneLoader::createSceneObject(rapidxml::xml_node<>* XMLNode, std::strin
         
         pElement = XMLNode->first_node("vertexBuffer");
         pElement = XMLNode->first_node("indexBuffer");
-
-        LOG("Creating ground");
-
-        LOG(position.x << " " << position.y << " " << position.z);
 
         Block* block = new Block("Ground", _scene,1 << 0, 1 << 1, "Floor.mesh",
             position.x, position.y, position.z,
