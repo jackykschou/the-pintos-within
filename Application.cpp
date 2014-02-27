@@ -11,6 +11,7 @@ void initializeGame()
     resourcesCfg = "resources.cfg";
     pluginsCfg = "plugins.cfg";
 
+    GameState::instance()->reset();
 	GraphicsManager::instance()->initialize(APPLICATION_NAME, pluginsCfg);
     ResourcesManager::instance()->initialize(resourcesCfg, pluginsCfg);
     AudioManager::instance()->initialize();

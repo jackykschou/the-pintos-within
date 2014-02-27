@@ -2,6 +2,7 @@
 #define __GUIManager_h_
 
 #include "common.h"
+#include "GameState.h"
 #include "Singleton.h"
 
 class GUIManager : public Singleton<GUIManager>, public OgreBites::SdkTrayListener {
@@ -23,6 +24,7 @@ class GUIManager : public Singleton<GUIManager>, public OgreBites::SdkTrayListen
 	void hideHUD();
 	void showHUD();
 
+
 	// Called from the InputManager to inject mouse events
 	bool injectMouseUp(const OIS::MouseEvent& evt, OIS::MouseButtonID id);
 	bool injectMouseDown(const OIS::MouseEvent& evt, OIS::MouseButtonID id);
@@ -30,9 +32,13 @@ class GUIManager : public Singleton<GUIManager>, public OgreBites::SdkTrayListen
 
   private:
   	void buildHUD();
+  	void updateHUD();
+
   	void buildMainMenu();
+
 	void buildDebugPanel();
 	void updateDebugPanel();
+	
 	OgreBites::SdkTrayManager* _trayMgr;
 	OgreBites::ParamsPanel*    _debugPanel;
 	Ogre::Overlay*             _mainMenuOverlay;

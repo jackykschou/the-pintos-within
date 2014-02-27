@@ -20,5 +20,61 @@ MyOverlays/HUDOverlay
     border_bottomleft_uv 0.0000 0.2148 0.1914 0.0000
     border_bottom_uv 0.1914 0.2148 0.8086 0.0000
     border_bottomright_uv 0.8086 0.2148 1.0000 0.0000
+
+    element TextArea(ScoreLabel)
+    {
+        metrics_mode pixels
+        left 5
+        top 35
+        width 210
+        height 30
+        font_name BlueHighway
+        char_height 16
+        caption Score:
+        colour_top 1 1 0.7
+        colour_bottom 1 1 0.7
+    }
+
+    element TextArea(Score)
+    {
+        metrics_mode pixels
+        left 75
+        top 35
+        width 210
+        height 30
+        font_name BlueHighway
+        char_height 16
+        caption 0
+        colour_top 1 1 0.7
+        colour_bottom 1 1 0.7
+    }
+
+    element TextArea(ClockLabel)
+    {
+        metrics_mode pixels
+        left 5
+        top 80
+        width 210
+        height 30
+        font_name BlueHighway
+        char_height 16
+        caption Clock:
+        colour_top 1 1 0.7
+        colour_bottom 1 1 0.7
+    }
+
+    element TextArea(Clock)
+    {
+        metrics_mode pixels
+        left 75
+        top 80
+        width 210
+        height 30
+        font_name BlueHighway
+        char_height 16
+        caption 1
+        colour_top 1 1 0.7
+        colour_bottom 1 1 0.7
+    }
   }
 }

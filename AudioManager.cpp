@@ -13,7 +13,7 @@ AudioFile AudioManager::loadAudioFile(const char *file) {
 	if (!c) {
 		std::cout << "Failed to load file " << file << std::endl;
 		printf("Error Mix_LoadWAV: %s\n", Mix_GetError());
-		return NULL;
+		return -1;
 	}
 	_loadedFiles.push_back(c);
 	return _loadedFiles.size() - 1;

@@ -10,6 +10,8 @@ void GUIManager::initialize(const Ogre::String& appName) {
 		this
 	);
 
+    _trayMgr->hideCursor();
+
     buildDebugPanel();
     hideDebugPanel();
 
@@ -21,18 +23,8 @@ void GUIManager::initialize(const Ogre::String& appName) {
 // Upadtes the stats in the tray
 void GUIManager::update(const Ogre::FrameEvent& evt) {
     _trayMgr->frameRenderingQueued(evt);
-}
-
-void GUIManager::updateDebugPanel() {
-    if (!isDebugPanelVisible()) { return; }
-    Ogre::Camera *camera = SceneManager::instance()->current_scene->main_camera->camera;
-    _debugPanel->setParamValue(0, Ogre::StringConverter::toString(camera->getDerivedPosition().x));
-    _debugPanel->setParamValue(1, Ogre::StringConverter::toString(camera->getDerivedPosition().y));
-    _debugPanel->setParamValue(2, Ogre::StringConverter::toString(camera->getDerivedPosition().z));
-    _debugPanel->setParamValue(4, Ogre::StringConverter::toString(camera->getDerivedOrientation().w));
-    _debugPanel->setParamValue(5, Ogre::StringConverter::toString(camera->getDerivedOrientation().x));
-    _debugPanel->setParamValue(6, Ogre::StringConverter::toString(camera->getDerivedOrientation().y));
-    _debugPanel->setParamValue(7, Ogre::StringConverter::toString(camera->getDerivedOrientation().z));
+    updateDebugPanel();
+    updateHUD();
 }
 
 // Turns the display on/off
@@ -54,6 +46,18 @@ void GUIManager::showDebugPanel() {
     _trayMgr->moveWidgetToTray(_debugPanel, OgreBites::TL_TOPRIGHT, 0);
     _trayMgr->showFrameStats(OgreBites::TL_TOPRIGHT);
     _debugPanel->show();
+}
+
+void GUIManager::updateDebugPanel() {
+    if (!isDebugPanelVisible()) { return; }
+    Ogre::Camera *camera = SceneManager::instance()->current_scene->main_camera->camera;
+    _debugPanel->setParamValue(0, Ogre::StringConverter::toString(camera->getDerivedPosition().x));
+    _debugPanel->setParamValue(1, Ogre::StringConverter::toString(camera->getDerivedPosition().y));
+    _debugPanel->setParamValue(2, Ogre::StringConverter::toString(camera->getDerivedPosition().z));
+    _debugPanel->setParamValue(4, Ogre::StringConverter::toString(camera->getDerivedOrientation().w));
+    _debugPanel->setParamValue(5, Ogre::StringConverter::toString(camera->getDerivedOrientation().x));
+    _debugPanel->setParamValue(6, Ogre::StringConverter::toString(camera->getDerivedOrientation().y));
+    _debugPanel->setParamValue(7, Ogre::StringConverter::toString(camera->getDerivedOrientation().z));
 }
 
 // create a params panel for displaying sample details
@@ -107,6 +111,20 @@ void GUIManager::showHUD() {
 void GUIManager::buildHUD() {
     _hudOverlay = static_cast< Ogre::Overlay* >( Ogre::OverlayManager::getSingleton().getByName("MyOverlays/HUDOverlay"));    
 }
+
+void GUIManager::updateHUD() {
+    Ogre::OverlayElement* score = _hudOverlay->getChild("HUDPanel")->getChild("Score");
+    char str[8];
+    snprintf(str, 8, "%d", GameState::instance()->score);
+    score->setCaption(str);
+
+    Ogre::OverlayElement* clock = _hudOverlay->getChild("HUDPanel")->getChild("Clock");
+    int seconds = GameState::instance()->timeLeft % 60;
+    int minutes = GameState::instance()->timeLeft / 60;
+    snprintf(str, 8, "%d:%02d", minutes, seconds);
+    clock->setCaption(str);
+}
+
 
 // Callbacks from InputManager
 
