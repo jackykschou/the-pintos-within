@@ -14,7 +14,8 @@ void GUIManager::initialize(const Ogre::String& appName) {
     hideDebugPanel();
 
     buildMainMenu();
-    showMainMenu();
+    buildHUD();
+    showHUD();
 }
 
 // Upadtes the stats in the tray
@@ -79,6 +80,8 @@ bool GUIManager::isDebugPanelVisible() {
     return _debugPanel->getTrayLocation() != OgreBites::TL_NONE;
 }
 
+// MAIN MENU function
+
 void GUIManager::hideMainMenu() {
     _mainMenuOverlay->hide();
 }
@@ -89,12 +92,20 @@ void GUIManager::showMainMenu() {
 
 void GUIManager::buildMainMenu() {
     _mainMenuOverlay = static_cast< Ogre::Overlay* >( Ogre::OverlayManager::getSingleton().getByName("MyOverlays/MainMenuOverlay"));
-    Ogre::RenderWindow* win = GraphicsManager::instance()->getRenderWindow();
-    // _mainMenuOverlay->setPosition(
-    //     (win->getWidth()-MAIN_MENU_WIDTH)/2,
-    //     (win->getHeight()-MAIN_MENU_HEIGHT)/2
-    // );
-    
+}
+
+// HUD functions
+
+void GUIManager::hideHUD() {
+    _hudOverlay->hide();
+}
+
+void GUIManager::showHUD() {
+    _hudOverlay->show();
+}
+
+void GUIManager::buildHUD() {
+    _hudOverlay = static_cast< Ogre::Overlay* >( Ogre::OverlayManager::getSingleton().getByName("MyOverlays/HUDOverlay"));    
 }
 
 // Callbacks from InputManager

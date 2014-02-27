@@ -1,4 +1,5 @@
 #include "GameObject.h"
+#include "Transform.h"
 
 GameObject::GameObject(std::string t, Scene* s)
 {
@@ -6,6 +7,8 @@ GameObject::GameObject(std::string t, Scene* s)
 	scene = s;
 	scene->addGameObject(this);
 	active = true;
+	component_id_assigner = 0;
+	new Transform(this);
 }
 
 GameObject::~GameObject()
@@ -18,7 +21,7 @@ GameObject::~GameObject()
 
 Component* GameObject::addComponent(Component* component)
 {
-	component->id = component_id_assigner;
+	component->id = component_id_assigner++;
 	components.push_back(component);
 }
 

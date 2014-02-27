@@ -9,11 +9,9 @@
 #include "GraphicsManager.h"
 #include "PhysicsManager.h"
 #include "SceneManager.h"
-#include "Component.h"
 #include "GameObject.h"
 
 class Camera;
-class Transform;
 class GameObject;
 
 class Scene
@@ -27,7 +25,6 @@ public:
 		Ogre::SceneManager* manager;
 		std::vector<GameObject*> game_objects;
 		Camera* main_camera;
-
 
 		Scene(std::string);
 		virtual ~Scene();

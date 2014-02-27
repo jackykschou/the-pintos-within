@@ -4,6 +4,9 @@
 #include "common.h"
 
 #include "Component.h"
+#include "GameObject.h"
+
+class GameObject;
 
 class Transform : public Component
 {

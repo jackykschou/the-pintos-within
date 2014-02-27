@@ -5,11 +5,7 @@ int Mesh::mesh_node_id_assigner = 0;
 
 Mesh::Mesh(GameObject* gameObject, std::string mesh_name) : Component(gameObject)
 {
-  if((_transform = gameObject->getComponent<Transform>()) == NULL)
-  {
-    _transform = new Transform(gameObject);
-    gameObject->addComponent(_transform);
-  }
+  _transform = gameObject->getComponent<Transform>();
 
 	std::ostringstream entity_stream;
   entity_stream << (Mesh::mesh_entity_id_assigner++);
@@ -22,7 +18,16 @@ Mesh::Mesh(GameObject* gameObject, std::string mesh_name) : Component(gameObject
                                                                                 Ogre::Vector3(_transform->posX, _transform->posY, _transform->posZ));
   node->attachObject(entity);
   entity->setCastShadows(true);
-}
+
+  LOG("Before scaling: " << node->_getWorldAABB().getHalfSize().x << " " << node->_getWorldAABB().getHalfSize().y <<
+    " " << node->_getWorldAABB().getHalfSize().z);
+
+  node->setPosition(_transform->posX, _transform->posY, _transform->posZ);
+  node->setOrientation(Ogre::Quaternion(_transform->rotW, _transform->rotX, _transform->rotY, _transform->rotZ));
+  node->setScale (_transform->scaleX, _transform->scaleY, _transform->scaleZ);
+
+  LOG("After scaling: " << node->_getWorldAABB().getHalfSize().x << " " << node->_getWorldAABB().getHalfSize().y <<
+    " " << node->_getWorldAABB().getHalfSize().z);}
 
 Mesh::~Mesh()
 {
@@ -35,7 +40,6 @@ Mesh::~Mesh()
 void Mesh::update()
 {
   Component::update();
-
   node->setPosition(_transform->posX, _transform->posY, _transform->posZ);
   node->setOrientation(Ogre::Quaternion(_transform->rotW, _transform->rotX, _transform->rotY, _transform->rotZ));
   node->setScale (_transform->scaleX, _transform->scaleY, _transform->scaleZ);

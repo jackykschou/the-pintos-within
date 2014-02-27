@@ -14,11 +14,12 @@ class Transform;
 class Rigidbody : public Component, public btCollisionWorld::ContactResultCallback 
 {
 	protected:
+		Transform* _transform;
 		btDiscreteDynamicsWorld* dynamics_world;
 
 	public:
 		Rigidbody(GameObject*);
-		virtual ~Rigidbody() = 0;
+		virtual ~Rigidbody();
 
 		virtual void update();
 		virtual void updateRigidbodyFromTransform();
@@ -26,12 +27,11 @@ class Rigidbody : public Component, public btCollisionWorld::ContactResultCallba
 		virtual bool needsCollision(btBroadphaseProxy*) const;
 
 		virtual btScalar addSingleResult(btManifoldPoint& cp,
-		    const btCollisionObjectWrapper*, int, int,
-		    const btCollisionObjectWrapper*, int, int);
+		    const btCollisionObject*, int, int,
+		    const btCollisionObject*, int, int);
 
-		void (*OnCollision)(btVector3*, btVector3*, GameObject*);
+		void (*onCollision)(btVector3, btVector3, GameObject*);
 
-		Transform* _transform;
 		btCollisionShape* collisionShape;
 		btDefaultMotionState* motionState;
 		btRigidBody* rigidBody;
