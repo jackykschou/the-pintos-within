@@ -9,8 +9,11 @@ void GameState::reset() {
 }
 
 void GameState::update() {
-	pt::ptime now = pt::second_clock::local_time();
-	pt::time_duration diff = now - _start;
-	timeLeft = DEFAULT_CLOCK - diff.total_seconds();
+	if (timeLeft < 1) {
+		GUIManager::instance()->showGameOverMenu();
+	} else {
+		pt::ptime now = pt::second_clock::local_time();
+		pt::time_duration diff = now - _start;
+		timeLeft = DEFAULT_CLOCK - diff.total_seconds();
+	}
 }
-

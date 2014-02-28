@@ -13,11 +13,14 @@ void GUIManager::initialize(const Ogre::String& appName) {
     _trayMgr->hideCursor();
 
     buildDebugPanel();
-    hideDebugPanel();
-
     buildMainMenu();
     buildHUD();
+    buildGameOverMenu();
+
+    
+    hideDebugPanel();
     showHUD();
+    showGameOverMenu();
 }
 
 // Upadtes the stats in the tray
@@ -25,6 +28,7 @@ void GUIManager::update(const Ogre::FrameEvent& evt) {
     _trayMgr->frameRenderingQueued(evt);
     updateDebugPanel();
     updateHUD();
+    handleMouseGameOver();
 }
 
 // Turns the display on/off
@@ -88,10 +92,12 @@ bool GUIManager::isDebugPanelVisible() {
 
 void GUIManager::hideMainMenu() {
     _mainMenuOverlay->hide();
+    _trayMgr->hideCursor();
 }
 
 void GUIManager::showMainMenu() {
     _mainMenuOverlay->show();
+    _trayMgr->showCursor();
 }
 
 void GUIManager::buildMainMenu() {
@@ -109,22 +115,50 @@ void GUIManager::showHUD() {
 }
 
 void GUIManager::buildHUD() {
-    _hudOverlay = static_cast< Ogre::Overlay* >( Ogre::OverlayManager::getSingleton().getByName("MyOverlays/HUDOverlay"));    
+    _hudOverlay = static_cast<Ogre::Overlay*>(Ogre::OverlayManager::getSingleton().getByName("MyOverlays/HUDOverlay"));    
 }
 
 void GUIManager::updateHUD() {
+    char str[24];
     Ogre::OverlayElement* score = _hudOverlay->getChild("HUDPanel")->getChild("Score");
-    char str[8];
-    snprintf(str, 8, "%d", GameState::instance()->score);
+    snprintf(str, 24, "Score: %d", GameState::instance()->score);
     score->setCaption(str);
 
     Ogre::OverlayElement* clock = _hudOverlay->getChild("HUDPanel")->getChild("Clock");
     int seconds = GameState::instance()->timeLeft % 60;
     int minutes = GameState::instance()->timeLeft / 60;
-    snprintf(str, 8, "%d:%02d", minutes, seconds);
+    snprintf(str, 24, "%d:%02d", minutes, seconds);
     clock->setCaption(str);
 }
 
+void GUIManager::showGameOverMenu() {
+    _gameOverOverlay->show();
+    _trayMgr->showCursor();
+}
+
+void GUIManager::hideGameOverMenu() {
+    _gameOverOverlay->hide();
+    _trayMgr->hideCursor();
+
+    Ogre::OverlayElement* label = _gameOverOverlay->getChild("GameOverPanel")->getChild("GameOverLabel");
+    label->setCaption("GAME OVER");
+
+    Ogre::OverlayContainer* btn = (Ogre::OverlayContainer*)_gameOverOverlay->getChild("GameOverPanel")->getChild("GameOverButton");
+    btn->getChild("GameOverButtonLabel")->setCaption("RESTART");
+}
+
+// GAMEOVER menu functions
+void GUIManager::buildGameOverMenu() {
+    _gameOverOverlay = static_cast<Ogre::Overlay*>(Ogre::OverlayManager::getSingleton().getByName("MyOverlays/GameOverOverlay"));    
+}
+
+void GUIManager::handleMouseGameOver() {
+    if (!_gameOverOverlay->isVisible()) return;
+    if (InputManager::instance()->isMouseLeftClicked()) {
+        hideGameOverMenu();
+        GameState::instance()->reset();
+    }
+}
 
 // Callbacks from InputManager
 

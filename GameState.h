@@ -3,8 +3,9 @@
 
 #include "common.h"
 #include "Singleton.h"
+#include "GUIManager.h"
 
-#define DEFAULT_CLOCK 2 * 60 // 2 minutes
+#define DEFAULT_CLOCK 10 // 2 minutes
 
 class GameState : public Singleton<GameState>{
   public:
