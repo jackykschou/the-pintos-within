@@ -31,7 +31,7 @@ class Rigidbody : public Component, public btCollisionWorld::ContactResultCallba
 		    const btCollisionObject*, int, int,
 		    const btCollisionObject*, int, int);
 
-		void (*onCollision)(btVector3, btVector3, GameObject*);
+		void (*onCollision)(btVector3, btVector3, GameObject*, GameObject*);
 
 		btCollisionShape* collisionShape;
 		btDefaultMotionState* motionState;

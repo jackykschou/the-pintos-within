@@ -499,7 +499,7 @@ void DotSceneLoader::createSceneObject(rapidxml::xml_node<>* XMLNode, std::strin
 
     if(node_name.find(PLAYER) != std::string::npos)
     {
-        GameObject *go = new GameObject("Controller", _scene);
+        GameObject *go = new GameObject("Player", _scene);
         Transform *tran1 = go->getComponent<Transform>();
         tran1->posX = position.x;
         tran1->posY = position.y;
@@ -563,7 +563,7 @@ void DotSceneLoader::createSceneObject(rapidxml::xml_node<>* XMLNode, std::strin
     {
         new BallSpawner("spawner", _scene, 
             COL_BALL, BALL_COLLIDER_WITH, "sphere.mesh",
-            position.x, position.y, position.z, 1.0f, 0.5f);
+            position.x, position.y, position.z, 1.0f, 1.0f);
     }
 
     //-----Parse but not using

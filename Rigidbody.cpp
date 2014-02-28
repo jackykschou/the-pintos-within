@@ -75,7 +75,7 @@ btScalar Rigidbody::addSingleResult(btManifoldPoint& cp,
 		gameObject = (GameObject*)(colObj0->getUserPointer());
 	}
 
-	onCollision((cp.m_positionWorldOnB), (cp.m_normalWorldOnB), gameObject);
+	onCollision((cp.m_positionWorldOnB), (cp.m_normalWorldOnB), _gameObject, gameObject);
 	
 	return 0; 
 }

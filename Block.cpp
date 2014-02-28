@@ -31,7 +31,7 @@ Block::Block(std::string tag, Scene* scene,
 		box_half_size.y * tran->scaleY, box_half_size.z * tran->scaleZ));
 
 	btRigidBody::btRigidBodyConstructionInfo* info = new btRigidBody::btRigidBodyConstructionInfo(mass ,NULL,collisionShape,inertia);
-	info->m_restitution = 0.7f;
+	info->m_restitution = 1.0f;
 	info->m_friction = 0.1f;
 
 	rigidbody = new BoxRigidbody(this, btVector3(box_half_size.x * tran->scaleX, box_half_size.y * tran->scaleY, box_half_size.z * tran->scaleZ), 

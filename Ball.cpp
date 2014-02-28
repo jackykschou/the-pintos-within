@@ -28,10 +28,10 @@ Ball::Ball(std::string tag, Scene* scene,
 	float radius_scale = std::max(scaleX, std::max(scaleY,scaleZ));
 
 	btVector3 inertia(0, -100, 0);
-	float mass = 100.0f;
+	float mass = 10.0f;
 	btCollisionShape* collisionShape = new btSphereShape(radius * radius_scale);
 	btRigidBody::btRigidBodyConstructionInfo* info = new btRigidBody::btRigidBodyConstructionInfo(mass ,NULL,collisionShape,inertia);
-	info->m_restitution = 0.7f;
+	info->m_restitution = 0.8f;
 	info->m_friction = 0.1f;
 
 	rigidbody = new SphereRigidbody(this, 10, 10, mask, col_mask, info);
@@ -39,10 +39,16 @@ Ball::Ball(std::string tag, Scene* scene,
 	((Rigidbody*)rigidbody)->rigidbody->setGravity(btVector3(0, -100, 0));
 	((Rigidbody*)rigidbody)->rigidbody->applyForce(init_force, btVector3(0, 0, 0));
 
-	// auto fun = [](btVector3 v1, btVector3 v2, GameObject* g) 
-	// 			{LOG("The Ball is hitted"); };
+	auto fun = [](btVector3 v1, btVector3 v2, GameObject* itself, GameObject* other) 
+				{
+					if((other->tag) == std::string("Player"))
+					{
+						LOG("Collected!");
+						itself->scene->removeGameObject(itself);
+					}
+				};
 
-	// ((Rigidbody*)rigidbody)->onCollision = fun;
+	((Rigidbody*)rigidbody)->onCollision = fun;
 }
 
 Ball::~Ball()
