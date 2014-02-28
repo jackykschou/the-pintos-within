@@ -45,7 +45,7 @@ Ball::Ball(std::string tag, Scene* scene,
 				{
 					Ball *ball = (Ball*)itself;
 					ball->debouncer->run([]() {
-						AudioManager::instance()->playBlast();
+						AudioManager::instance()->playDonk();
 					});
 					if((other->tag) == std::string("Player") && !ball->collided && GameState::instance()->running())
 					{
