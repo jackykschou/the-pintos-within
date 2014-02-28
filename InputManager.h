@@ -31,7 +31,6 @@ class InputManager : public Singleton<InputManager>,
     OIS::MouseEvent*   _lastMousePressedEvt;
     OIS::MouseEvent*   _lastMouseReleasedEvt;
 
-    AudioFile _file;
     void flushBufferedEvents();
 
   public:

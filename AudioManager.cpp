@@ -5,6 +5,10 @@ void AudioManager::initialize() {
 	if (Mix_OpenAudio(AUDIO_RATE, AUDIO_FORMAT, AUDIO_CHANNELS, AUDIO_BUFFERS)) {
 	    throw("Unable to open audio channel.");
 	}
+	_donks[0] = AudioManager::instance()->loadAudioFile("media/sounds/Donk1.wav");
+	_donks[1] = AudioManager::instance()->loadAudioFile("media/sounds/Donk2.wav");
+	_donks[2] = AudioManager::instance()->loadAudioFile("media/sounds/Donk3.wav");
+	_donks[3] = AudioManager::instance()->loadAudioFile("media/sounds/Donk4.wav");
 }
 
 // returns an audioFileKey that references the loaded resource
@@ -27,4 +31,8 @@ AudioChannel AudioManager::play2DSound(AudioFile file, int loops)
 
 void AudioManager::stopChannel(AudioChannel channel) {
 	Mix_HaltChannel(channel);
+}
+
+AudioChannel AudioManager::playDonk() {
+	return play2DSound(_donks[rand() % 4], 0);
 }

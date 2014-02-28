@@ -38,8 +38,6 @@ void InputManager::initialize() {
 	_mMouse->setEventCallback(this);
 	_mKeyboard->setEventCallback(this);
 
-	_file = AudioManager::instance()->loadAudioFile("media/sounds/shotgun.wav");
-
 	// Set initial mouse clipping size
     windowResized(mWindow);
 
@@ -61,10 +59,6 @@ void InputManager::capture()
 
     if (InputManager::instance()->isKeyPressed(OIS::KC_H)) {
         GUIManager::instance()->toggleDebugPanel();
-    }
-
-    if (InputManager::instance()->isMouseLeftClicked()) {
-        AudioManager::instance()->play2DSound(_file, 0);
     }
 }
 
