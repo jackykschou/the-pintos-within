@@ -207,7 +207,10 @@ void InputManager::windowClosed(Ogre::RenderWindow* rw)
     if(_mInputManager)
     {
         _mInputManager->destroyInputObject(_mMouse);
+        _mMouse = NULL;
+
         _mInputManager->destroyInputObject(_mKeyboard);
+        _mKeyboard = NULL;
 
         OIS::InputManager::destroyInputSystem(_mInputManager);
         _mInputManager = 0;

@@ -25,5 +25,7 @@
 #include "SphereRigidbody.h"
 #include "BoxRigidbody.h"
 #include "Block.h"
+#include "Ball.h"
+#include "BallSpawner.h"
 
 #endif // #ifndef __TheEngine_h_

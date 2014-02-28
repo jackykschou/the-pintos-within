@@ -32,11 +32,13 @@ void GameObject::removeComponent(Component* component)
 	{
 		if(c->id == component->id)
 		{
-			components.erase(components.begin() + i);
 			delete c;
+			break;
 		}
 		++i;
 	}
+	components.erase(components.begin() + i);
+
 }
 
 void GameObject::update()

@@ -42,6 +42,7 @@
 #include <SdkCameraMan.h>
 
 #include "Debug.h"
+#include "Utility.h"
 
 #endif // #ifndef __common_h_
 

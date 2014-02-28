@@ -32,6 +32,8 @@ bool GraphicsManager::frameRenderingQueued(const Ogre::FrameEvent& evt)
 
 void GraphicsManager::initialize(std::string window_name, Ogre::String pluginsCfg)
 {
+    // srand (0);
+    srand (time(NULL));
 	initializeRoot(pluginsCfg);
 	configureWindow(window_name);
 }

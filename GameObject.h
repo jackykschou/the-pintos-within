@@ -33,7 +33,6 @@ public:
 			return_component = dynamic_cast<T*>(c);
 			if(return_component != NULL)
 			{
-				LOG("ID of the component: " << return_component->id);
 				return return_component;
 			}
 		}
