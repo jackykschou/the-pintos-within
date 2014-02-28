@@ -37,7 +37,7 @@ void BallSpawner::update()
 		{
 			LOG("SPAWN BALL!");
 			float scale = RAND * MAX_BALL_SCALE;
-		new Ball("Ball", scene, 
+			new Ball("Ball", scene, 
 				_mask, _col_mask, _mesh_name,
 				_transform->posX + (SPAWNOFFSET * RAND) * (CHANCE(0.5) ? 1 : -1), 
 				_transform->posY + (SPAWNOFFSET * RAND) * (CHANCE(0.5) ? 1 : -1), 

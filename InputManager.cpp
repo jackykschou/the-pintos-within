@@ -60,7 +60,8 @@ void InputManager::capture()
     }
 
     if (InputManager::instance()->isKeyPressed(OIS::KC_H)) {
-        GUIManager::instance()->toggleDebugPanel();
+        // GUIManager::instance()->toggleDebugPanel();
+        AudioManager::instance()->playBlast();
     }
 
     if (InputManager::instance()->isMouseLeftClicked()) {

@@ -21,6 +21,8 @@ Ball::Ball(std::string tag, Scene* scene,
 	_transform->scaleY = scaleY;
 	_transform->scaleZ = scaleZ;
 
+	debouncer = new Debouncer(DEBOUNCE_BALL);
+
 	mesh = new Mesh(this, mesh_name);
 
 	float radius = mesh->entity->getBoundingRadius();
@@ -34,6 +36,8 @@ Ball::Ball(std::string tag, Scene* scene,
 	info->m_restitution = 0.8f;
 	info->m_friction = 0.1f;
 
+	collided = 0;
+
 	rigidbody = new SphereRigidbody(this, 10, 10, mask, col_mask, info);
 
 	((Rigidbody*)rigidbody)->rigidbody->setGravity(btVector3(0, -100, 0));
@@ -41,10 +45,16 @@ Ball::Ball(std::string tag, Scene* scene,
 
 	auto fun = [](btVector3 v1, btVector3 v2, GameObject* itself, GameObject* other) 
 				{
-					if((other->tag) == std::string("Player"))
+					Ball *ball = (Ball*)itself;
+					ball->debouncer->run([]() {
+						std::cout << "BLASTING" << std::endl;
+						AudioManager::instance()->playBlast();
+					});
+					if((other->tag) == std::string("Player") && !ball->collided)
 					{
-						LOG("Collected!");
+						GameState::instance()->score++;
 						itself->scene->removeGameObject(itself);
+						ball->collided = true;
 					}
 				};
 
@@ -53,6 +63,8 @@ Ball::Ball(std::string tag, Scene* scene,
 
 Ball::~Ball()
 {
+	delete debouncer;
+	debouncer = NULL;
 }
 
 void Ball::update()
