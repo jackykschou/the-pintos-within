@@ -26,6 +26,7 @@ class AudioManager : public Singleton<AudioManager> {
   	std::vector<Mix_Chunk*> _loadedFiles;
   	AudioFile _donks[4];
   	AudioFile _startSound;
+	AudioFile _ballzSound;
 };
 
 #endif
