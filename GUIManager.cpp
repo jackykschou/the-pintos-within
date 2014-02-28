@@ -162,7 +162,6 @@ void GUIManager::handleMouseGameOver() {
 }
 
 // Callbacks from InputManager
-
 bool GUIManager::injectMouseUp(const OIS::MouseEvent& evt, OIS::MouseButtonID id) {
     return _trayMgr->injectMouseUp(evt, id);
 }

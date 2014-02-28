@@ -4,6 +4,7 @@
 #include "common.h"
 #include "Singleton.h"
 #include "GUIManager.h"
+#include "AudioManager.h"
 
 #define DEFAULT_CLOCK 60 * 2 // 2 minutes
 

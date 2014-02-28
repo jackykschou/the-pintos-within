@@ -19,10 +19,13 @@ class AudioManager : public Singleton<AudioManager> {
   	AudioChannel play2DSound(AudioFile, int loops);
   	void stopChannel(AudioChannel);
   	AudioChannel playDonk();
+  	AudioChannel playStartSound();
+  	AudioChannel playBALLZ();
 
   private:
   	std::vector<Mix_Chunk*> _loadedFiles;
   	AudioFile _donks[4];
+  	AudioFile _startSound;
 };
 
 #endif

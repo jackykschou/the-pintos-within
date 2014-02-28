@@ -9,6 +9,8 @@ void AudioManager::initialize() {
 	_donks[1] = AudioManager::instance()->loadAudioFile("media/sounds/Donk2.wav");
 	_donks[2] = AudioManager::instance()->loadAudioFile("media/sounds/Donk3.wav");
 	_donks[3] = AudioManager::instance()->loadAudioFile("media/sounds/Donk4.wav");
+	_startSound = AudioManager::instance()->loadAudioFile("media/sounds/BallBlasterIntro.wav");
+	_ballzSound = AudioManager::instance()->loadAudioFile("media/sounds/Balls.wav");
 }
 
 // returns an audioFileKey that references the loaded resource
@@ -35,4 +37,12 @@ void AudioManager::stopChannel(AudioChannel channel) {
 
 AudioChannel AudioManager::playDonk() {
 	return play2DSound(_donks[rand() % 4], 0);
+}
+
+AudioChannel AudioManager::playStartSound() {
+	return play2DSound(_startSound, 0);
+}
+
+AudioChannel AudioManager::playBALLZ() {
+	return play2DSound(_ballzSound, 0);
 }

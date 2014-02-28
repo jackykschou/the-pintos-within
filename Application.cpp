@@ -19,6 +19,7 @@ void initializeGame()
     GUIManager::instance()->initialize(APPLICATION_NAME);
     PhysicsManager::instance()->initialize();
     SceneManager::instance()->initialize();
+    AudioManager::instance()->playBALLZ();
 }
 
 void createGameContents()

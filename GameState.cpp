@@ -11,6 +11,7 @@ void GameState::reset() {
 
 void GameState::start() {
 	_running = true;
+	AudioManager::instance()->playStartSound();
 }
 
 bool GameState::running() {
