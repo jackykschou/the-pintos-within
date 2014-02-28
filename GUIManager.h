@@ -20,6 +20,10 @@ class GUIManager : public Singleton<GUIManager>, public OgreBites::SdkTrayListen
 	void hideMainMenu();
 	void showMainMenu();
 
+	// Game over panel: shows game restart button
+	void hideGameOverMenu();
+	void showGameOverMenu();
+
 	// HUD panel: shows time and stats
 	void hideHUD();
 	void showHUD();
@@ -33,16 +37,17 @@ class GUIManager : public Singleton<GUIManager>, public OgreBites::SdkTrayListen
   private:
   	void buildHUD();
   	void updateHUD();
-
   	void buildMainMenu();
-
 	void buildDebugPanel();
 	void updateDebugPanel();
+	void buildGameOverMenu();
+	void handleMouseGameOver();
 	
 	OgreBites::SdkTrayManager* _trayMgr;
 	OgreBites::ParamsPanel*    _debugPanel;
 	Ogre::Overlay*             _mainMenuOverlay;
 	Ogre::Overlay*             _hudOverlay;
+	Ogre::Overlay*             _gameOverOverlay;
 };
 
 #endif

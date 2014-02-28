@@ -1,0 +1,14 @@
+# Ball Blaster 2000
+
+## Authors:
+- Joe Vennix
+- Keegan Standifer
+- Ka Seng Chou (Jacky)
+
+### User Manual
+
+Ball Blaster 2000 is a FPS-style simulation of balls falling from the sky. You play as Max Blaster, the last of a dying race of ball collectors. Your job is to collect as many balls as possible... before the end of the world (in 2 minutes). Collecting a ball gains Max one point, which he can take back to his home planet and brag about.
+
+### Controls
+
+To move around, use WASD and the arrow keys to "look". You can use space to jump up on top of platforms for maximum ball collecting. To "collect" a ball, simply collide with it.
