@@ -30,6 +30,16 @@ void Scene::addGameObject(GameObject* gameObject)
 
 void Scene::removeGameObject(GameObject* gameObject)
 {
+	int i = 0;
+	for(auto g : game_objects)
+	{
+		if(g->id == gameObject->id) {
+			delete g;
+			break;
+		}
+		++i;
+	}
+	game_objects.erase(game_objects.begin() + i);
 }
 
 std::vector<GameObject*> Scene::getGameObjectsOfTag(std::string tag)
