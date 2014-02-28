@@ -4,7 +4,6 @@
 #include "TheEngine.h"
 #include "DotSceneLoader.h"
 
-#define APPLICATION_NAME "THE EPIC GAME"
 #define CUBE_SCALE 1
 
 #define BIT(x) (1<<(x))

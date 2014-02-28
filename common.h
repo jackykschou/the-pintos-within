@@ -44,5 +44,7 @@
 #include "Debug.h"
 #include "Utility.h"
 
+#include "boost/date_time/posix_time/posix_time.hpp"
+
 #endif // #ifndef __common_h_
 

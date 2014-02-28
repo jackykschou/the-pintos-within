@@ -59,8 +59,8 @@ void InputManager::capture()
         GraphicsManager::instance()->stopRendering();
     }
 
-    if (InputManager::instance()->isKeyPressed(OIS::KC_Q)) {
-        GUIManager::instance()->toggleTray();
+    if (InputManager::instance()->isKeyPressed(OIS::KC_H)) {
+        GUIManager::instance()->toggleDebugPanel();
     }
 
     if (InputManager::instance()->isMouseLeftClicked()) {
@@ -114,6 +114,7 @@ bool InputManager::isKeyReleased(OIS::KeyCode kc)
 
 bool InputManager::isMouseDown(OIS::MouseButtonID button) 
 {
+	if (!_mMouse) return false;
 	const OIS::MouseState &ms = _mMouse->getMouseState();
 	return ms.buttonDown(button);
 }
@@ -174,16 +175,19 @@ bool InputManager::keyReleased(const OIS::KeyEvent &arg) {
 }
 
 bool InputManager::mouseMoved(const OIS::MouseEvent &arg) {
+	if (GUIManager::instance()->injectMouseMove(arg)) return true;
 	_lastMouseMovedEvt = new OIS::MouseEvent(arg);
 	return true;
 }
 
 bool InputManager::mousePressed(const OIS::MouseEvent &arg, OIS::MouseButtonID id) {
+	if (GUIManager::instance()->injectMouseDown(arg, id)) return true;
 	_lastMousePressedEvt = new OIS::MouseEvent(arg);
 	return true;
 }
 
 bool InputManager::mouseReleased(const OIS::MouseEvent &arg, OIS::MouseButtonID id) {
+	if (GUIManager::instance()->injectMouseUp(arg, id)) return true;
 	_lastMouseReleasedEvt = new OIS::MouseEvent(arg);
 	return true;
 }
@@ -204,7 +208,7 @@ void InputManager::windowClosed(Ogre::RenderWindow* rw)
 {
 	Ogre::WindowEventUtilities::removeWindowEventListener(rw, this);
     //Only close for window that created OIS (the main window in these demos)
-    if(_mInputManager)
+    if (_mInputManager)
     {
         _mInputManager->destroyInputObject(_mMouse);
         _mMouse = NULL;
