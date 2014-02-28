@@ -1,0 +1,35 @@
+// Pants genrated by blender2ogre 0.6.0
+
+material Pants 
+{
+    receive_shadows on 
+
+    technique
+    {
+        pass Pants
+        {
+            ambient 0.052217841148376465 0.025916125625371933 0.009710563346743584 1.0
+            diffuse 0.041774273541186346 0.02073290080924184 0.007768450793153803 1.0
+            specular 0.5 0.5 0.5 1.0 12.5
+            emissive 0.0 0.0 0.0 1.0
+
+            alpha_to_coverage off
+            colour_write on
+            cull_hardware clockwise
+            depth_check on
+            depth_func less_equal
+            depth_write on
+            illumination_stage 
+            light_clip_planes off
+            light_scissor off
+            lighting on
+            normalise_normals off
+            polygon_mode solid
+            scene_blend one zero
+            scene_blend_op add
+            shading gouraud
+            transparent_sorting on
+
+        }
+    }
+}

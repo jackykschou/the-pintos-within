@@ -7,11 +7,11 @@ FPSBoxController::FPSBoxController(GameObject* gameObject, std::string camera_na
 	onCollision = NULL;
 	can_move = true;
 
-	base_movement_speed = .05;
+	base_movement_speed = 0.16f;
 
 	movement_speed_multiplier = 1;
-	slowDown = 0.995;
-	speedUp = 0.005;
+	slowDown = 0.991;
+	speedUp = 0.01;
 
 	if((_transform = gameObject->getComponent<Transform>()) == NULL)
 		_transform = new Transform(gameObject);
@@ -32,12 +32,6 @@ FPSBoxController::FPSBoxController(GameObject* gameObject, std::string camera_na
 
 	dynamics_world->addCollisionObject(_ghostObject, col_mask, col_to_masks);
   	dynamics_world->addAction(controller);
-
-  	 btCollisionShape* groundShape = new btStaticPlaneShape(btVector3(0,1,0), 1);
-   btDefaultMotionState* groundMotionState = new btDefaultMotionState(btTransform(btQuaternion(0,0,0,1), btVector3(0,-1,0)));
-   btRigidBody::btRigidBodyConstructionInfo groundRigidBodyCI(0, groundMotionState, groundShape, btVector3(0,0,0));
-   btRigidBody* groundRigidBody = new btRigidBody(groundRigidBodyCI);
-   dynamics_world->addRigidBody(groundRigidBody, 1 << 0, 1 << 1);
 }
 
 FPSBoxController::~FPSBoxController()

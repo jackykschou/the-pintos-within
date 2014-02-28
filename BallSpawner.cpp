@@ -1,8 +1,8 @@
 #include "BallSpawner.h"
 
 #define MAX_BALL_SCALE 0.1
-#define MAX_BALL_FORCE 0.0
-#define SPAWNOFFSET 10
+#define MAX_BALL_FORCE 10
+#define SPAWNOFFSET 200
 
 BallSpawner::BallSpawner(std::string tag, Scene* scene, 
 			int mask, int col_mask, std::string mesh_name,
@@ -35,12 +35,11 @@ void BallSpawner::update()
 		_timer = spawn_rate;
 		if(CHANCE(spawn_change))
 		{
-			LOG("SPAWN BALL!");
 			float scale = RAND * MAX_BALL_SCALE;
 		new Ball("Ball", scene, 
 				_mask, _col_mask, _mesh_name,
 				_transform->posX + (SPAWNOFFSET * RAND) * (CHANCE(0.5) ? 1 : -1), 
-				_transform->posY + (SPAWNOFFSET * RAND) * (CHANCE(0.5) ? 1 : -1), 
+				_transform->posY + 80, 
 				_transform->posZ + (SPAWNOFFSET * RAND) * (CHANCE(0.5) ? 1 : -1), 0, 0, 0, 1,
 				scale, scale, scale, 
 				btVector3(RAND * MAX_BALL_FORCE, RAND * MAX_BALL_FORCE, RAND * MAX_BALL_FORCE));

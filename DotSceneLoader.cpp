@@ -502,10 +502,10 @@ void DotSceneLoader::createSceneObject(rapidxml::xml_node<>* XMLNode, std::strin
         GameObject *go = new GameObject("Player", _scene);
         Transform *tran1 = go->getComponent<Transform>();
         tran1->posX = position.x;
-        tran1->posY = position.y;
+        tran1->posY = position.y + 50;
         tran1->posZ = position.z;
 
-        FPSBoxController *c = new FPSBoxController(go, "Cam", 0.5, btVector3(3, 10, 3), 1, COL_CHARACTER, CHARACTER_COLLIDER_WITH);
+        FPSBoxController *c = new FPSBoxController(go, "Cam", 17, btVector3(5, 35, 5), 10, COL_CHARACTER, CHARACTER_COLLIDER_WITH);
 
         SceneManager::instance()->current_scene->main_camera = (Camera*)c->fps_camera;
 

@@ -43,7 +43,6 @@ Ball::Ball(std::string tag, Scene* scene,
 				{
 					if((other->tag) == std::string("Player"))
 					{
-						LOG("Collected!");
 						itself->scene->removeGameObject(itself);
 					}
 				};
