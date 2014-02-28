@@ -13,8 +13,12 @@ class GameState : public Singleton<GameState>{
   	int timeLeft;
   	void reset();
   	void update();
+	void start();
+	bool running();
+
   private:
   	boost::posix_time::ptime _start;
+  	bool _running;
 };
 
 #endif // __GameState_h_

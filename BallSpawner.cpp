@@ -30,6 +30,8 @@ void BallSpawner::update()
 {
 	GameObject::update();
 
+	if (!GameState::instance()->running()) return;
+
 	if(_timer <= 0.0f)
 	{
 		_timer = spawn_rate;
