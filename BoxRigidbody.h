@@ -7,7 +7,7 @@ class BoxRigidbody : Rigidbody
 {
 public:
 	BoxRigidbody(GameObject*, const btVector3&, float, 
-				int, int);
+				int, int, btRigidBody::btRigidBodyConstructionInfo* _rigid_info = NULL);
 	virtual ~BoxRigidbody();
 
 	virtual void update();

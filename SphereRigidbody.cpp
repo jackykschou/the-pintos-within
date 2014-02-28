@@ -1,36 +1,48 @@
 #include "SphereRigidbody.h"
 
-SphereRigidbody::SphereRigidbody (GameObject *gameObject, float radius, float mass, int col_mask, int col_to_masks) : Rigidbody(gameObject) 
+SphereRigidbody::SphereRigidbody (GameObject *gameObject, float radius, float mass, int col_mask, int col_to_masks,
+	 btRigidBody::btRigidBodyConstructionInfo* _rigid_info) : Rigidbody(gameObject) 
 {
-  	collisionShape = new btSphereShape(radius);
-
 	motionState = new btDefaultMotionState(btTransform(btQuaternion(_transform->rotX, _transform->rotY, _transform->rotZ, _transform->rotW)
 		, btVector3(_transform->posX, _transform->posY, _transform->posZ)));
-	btRigidBody::btRigidBodyConstructionInfo rigidBodyCI(
-		mass,                  // mass
-		motionState,        // initial position
-		collisionShape,              // collision shape of body
-		btVector3(0,0,0)    // local inertia
-	);
 
-	rigidBody = new btRigidBody(rigidBodyCI);
-	dynamics_world->addRigidBody(rigidBody, col_mask, col_to_masks);
+	if(_rigid_info == NULL)
+	{
+		collisionShape = new btSphereShape(radius);
+		_rigid_info = new btRigidBody::btRigidBodyConstructionInfo(
+			mass,                  // mass
+			NULL,        // initial position
+			collisionShape,              // collision shape of body
+			btVector3(0,0,0)    // local inertia
+		);
+	}
 
-	rigidBody->setUserPointer(gameObject);
+	rigidbody = new btRigidBody(*_rigid_info);
+	dynamics_world->addRigidBody(rigidbody, col_mask, col_to_masks);
 
-	if (rigidBody->isStaticOrKinematicObject())
+
+	rigidbody->setMotionState(motionState);
+
+	rigidbody->setUserPointer(gameObject);
+
+	collisionShape = rigidbody->getCollisionShape();
+
+	if (rigidbody->isStaticOrKinematicObject())
 		Rigidbody::updateRigidbodyFromTransform();
 	else
 		Rigidbody::updateTransformFromRigidbody();
+
+	delete _rigid_info;
 }
 
 
 SphereRigidbody::~SphereRigidbody()
 {
-	dynamics_world->removeRigidBody(rigidBody);
+	dynamics_world->removeRigidBody(rigidbody);
+
 	delete collisionShape;
 	delete motionState;
-	delete rigidBody;
+	delete rigidbody;
 }
 
 void SphereRigidbody::update() 

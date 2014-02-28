@@ -99,7 +99,7 @@ void DotSceneLoader::processScene(rapidxml::xml_node<>* XMLRoot)
     pElement = XMLRoot->first_node("externals");
     if(pElement)
         processExternals(pElement);
- 
+
     // // Process userDataReference (?)
     // pElement = XMLRoot->first_node("userDataReference");
     // if(pElement)
@@ -111,9 +111,9 @@ void DotSceneLoader::processScene(rapidxml::xml_node<>* XMLRoot)
     //     processOctree(pElement);
  
     // Process light (?)
-    pElement = XMLRoot->first_node("light");
-    if(pElement)
-       processLight(pElement);
+    // pElement = XMLRoot->first_node("light");
+    // if(pElement)
+    //    processLight(pElement);
  
     // // Process camera (?)
     // pElement = XMLRoot->first_node("camera");
@@ -484,10 +484,19 @@ void DotSceneLoader::createSceneObject(rapidxml::xml_node<>* XMLNode, std::strin
     pElement = XMLNode->first_node("node");
     while(pElement)
         pElement = pElement->next_sibling("node");
+
+    LOG("node name: " << node_name);
+
     //-----
 
-
     pElement = XMLNode->first_node("entity");
+
+    if(node_name.find(LIGHT) != std::string::npos)
+    {   
+        pElement = XMLNode->first_node("light");
+        processLight(pElement, mSceneMgr->getRootSceneNode());
+    }
+
     if(node_name.find(PLAYER) != std::string::npos)
     {
         GameObject *go = new GameObject("Controller", _scene);
@@ -499,6 +508,8 @@ void DotSceneLoader::createSceneObject(rapidxml::xml_node<>* XMLNode, std::strin
         FPSBoxController *c = new FPSBoxController(go, "Cam", 0.5, btVector3(3, 10, 3), 1, COL_CHARACTER, CHARACTER_COLLIDER_WITH);
 
         SceneManager::instance()->current_scene->main_camera = (Camera*)c->fps_camera;
+
+        LOG("HAHAHAHAHA");
     }
     if(node_name.find(WALL) != std::string::npos)
     {
@@ -508,15 +519,15 @@ void DotSceneLoader::createSceneObject(rapidxml::xml_node<>* XMLNode, std::strin
         pElement = XMLNode->first_node("vertexBuffer");
         pElement = XMLNode->first_node("indexBuffer");
 
-        Block* block = new Block("Wall", _scene, 1 << 0, 1 << 1, "Wall.mesh",
+        Block* block = new Block("Wall", _scene, COL_STATIC, STATIC_COLLIDER_WITH, "Wall.mesh",
             position.x, position.y, position.z,
             rotation.x, rotation.y, rotation.z, rotation.w,
             scale.x, scale.y, scale.z);
 
-        if(!materialFile.empty())
-            ((Mesh*)block)->entity->setMaterialName(materialFile);
+        // if(!materialFile.empty())
+            // ((Mesh*)block)->entity->setMaterialName("WallMaterial.material");
     }
-    else if(node_name.find(GROUND) != std::string::npos)
+    if(node_name.find(PLATFORM) != std::string::npos)
     {
         Ogre::String meshFile = getAttrib(XMLNode, "meshFile");
         Ogre::String materialFile = getAttrib(XMLNode, "materialFile");
@@ -524,15 +535,37 @@ void DotSceneLoader::createSceneObject(rapidxml::xml_node<>* XMLNode, std::strin
         pElement = XMLNode->first_node("vertexBuffer");
         pElement = XMLNode->first_node("indexBuffer");
 
-        Block* block = new Block("Ground", _scene,1 << 0, 1 << 1, "Floor.mesh",
+        Block* block = new Block("Ground", _scene, COL_STATIC, STATIC_COLLIDER_WITH, "Platform.mesh",
             position.x, position.y, position.z,
             rotation.x, rotation.y, rotation.z, rotation.w,
             scale.x, scale.y, scale.z);
 
-        if(!materialFile.empty())
-            ((Mesh*)block)->entity->setMaterialName(materialFile);
+        // if(!materialFile.empty())
+            // ((Mesh*)block)->entity->setMaterialName(materialFile);
     }
-    
+    if(node_name.find(FLOOR) != std::string::npos)
+    {
+        Ogre::String meshFile = getAttrib(XMLNode, "meshFile");
+        Ogre::String materialFile = getAttrib(XMLNode, "materialFile");
+        
+        pElement = XMLNode->first_node("vertexBuffer");
+        pElement = XMLNode->first_node("indexBuffer");
+
+        Block* block = new Block("Ground", _scene, COL_STATIC, STATIC_COLLIDER_WITH, "Floor.mesh",
+            position.x, position.y, position.z,
+            rotation.x, rotation.y, rotation.z, rotation.w,
+            scale.x, scale.y, scale.z);
+
+        // if(!materialFile.empty())
+            // ((Mesh*)block)->entity->setMaterialName(materialFile);
+    }
+     if(node_name.find(BALL_SPAWNER) != std::string::npos)
+    {
+        new BallSpawner("spawner", _scene, 
+            COL_BALL, BALL_COLLIDER_WITH, "sphere.mesh",
+            position.x, position.y, position.z, 1.0f, 0.5f);
+    }
+
     //-----Parse but not using
     pElement = XMLNode->first_node("light");
     pElement = XMLNode->first_node("camera");
@@ -540,6 +573,7 @@ void DotSceneLoader::createSceneObject(rapidxml::xml_node<>* XMLNode, std::strin
     pElement = XMLNode->first_node("billboardSet");
     pElement = XMLNode->first_node("plane");
     pElement = XMLNode->first_node("userDataReference");
+
     //-----
 }
 

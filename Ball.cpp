@@ -1,39 +1,48 @@
 #include "Ball.h"
 
-Ball(GameObject*);
-virtual ~Ball();
-
-Mesh* mesh;
-SphereRigidbody* rigidbody;
-
-virtual void update();
-
 Ball::Ball(std::string tag, Scene* scene, 
 	int mask, int col_mask, std::string mesh_name,
 	float posX, float posY, float posZ, float rotX, float rotY, float rotZ, float rotW,
-	float scaleX, float scaleY, float scaleZ) : GameObject(tag, scene)
+	float scaleX, float scaleY, float scaleZ, btVector3 init_force) : GameObject(tag, scene)
 {
-	Transform* tran = new Transform(this);
-	tran->posX = posX;
-	tran->posY = posY;
-	tran->posZ = posZ;
+	dead_timer = 5.0f;
 
-	tran->rotX = rotX;
-	tran->rotY = rotY;
-	tran->rotZ = rotZ;
-	tran->rotW = rotW;
+	_transform = this->getComponent<Transform>();
+	_transform->posX = posX;
+	_transform->posY = posY;
+	_transform->posZ = posZ;
 
-	tran->scaleX = scaleX;
-	tran->scaleY = scaleY;
-	tran->scaleZ = scaleZ;
+	_transform->rotX = rotX;
+	_transform->rotY = rotY;
+	_transform->rotZ = rotZ;
+	_transform->rotW = rotW;
+
+	_transform->scaleX = scaleX;
+	_transform->scaleY = scaleY;
+	_transform->scaleZ = scaleZ;
 
 	mesh = new Mesh(this, mesh_name);
+
 	float radius = mesh->entity->getBoundingRadius();
-	rigidbody = new SphereRigidbody(this, radius, 10, mask, col_mask);
 
-	auto fun = [](btVector3 v1, btVector3 v2, GameObject* g) {LOG("There!"); };
+	float radius_scale = std::max(scaleX, std::max(scaleY,scaleZ));
 
-	((Rigidbody*)rigidbody)->onCollision = fun;
+	btVector3 inertia(0, -100, 0);
+	float mass = 100.0f;
+	btCollisionShape* collisionShape = new btSphereShape(radius * radius_scale);
+	btRigidBody::btRigidBodyConstructionInfo* info = new btRigidBody::btRigidBodyConstructionInfo(mass ,NULL,collisionShape,inertia);
+	info->m_restitution = 0.7f;
+	info->m_friction = 0.1f;
+
+	rigidbody = new SphereRigidbody(this, 10, 10, mask, col_mask, info);
+
+	((Rigidbody*)rigidbody)->rigidbody->setGravity(btVector3(0, -100, 0));
+	((Rigidbody*)rigidbody)->rigidbody->applyForce(init_force, btVector3(0, 0, 0));
+
+	// auto fun = [](btVector3 v1, btVector3 v2, GameObject* g) 
+	// 			{LOG("The Ball is hitted"); };
+
+	// ((Rigidbody*)rigidbody)->onCollision = fun;
 }
 
 Ball::~Ball()
@@ -42,5 +51,12 @@ Ball::~Ball()
 
 void Ball::update()
 {
-	GameObject::update();
+	if(dead_timer <= 0.0f)
+		scene->removeGameObject(this);
+	else
+	{
+		GameObject::update();
+		if(GraphicsManager::instance()->getFrameEvent() != NULL)
+			dead_timer -= (GraphicsManager::instance()->getFrameEvent()->timeSinceLastFrame);
+	}
 }

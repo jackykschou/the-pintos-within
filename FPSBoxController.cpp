@@ -28,10 +28,16 @@ FPSBoxController::FPSBoxController(GameObject* gameObject, std::string camera_na
 	btGhostPairCallback* actorGhostPairCallback = new btGhostPairCallback();
    	PhysicsManager::instance()->overlappingPairCache->getOverlappingPairCache()->setInternalGhostPairCallback(actorGhostPairCallback);
 
-	controller = new OiJE::CharacterController(_ghostObject, _collisionShape, 1);
+	controller = new OiJE::CharacterController(_ghostObject, _collisionShape, step_height);
 
 	dynamics_world->addCollisionObject(_ghostObject, col_mask, col_to_masks);
   	dynamics_world->addAction(controller);
+
+  	 btCollisionShape* groundShape = new btStaticPlaneShape(btVector3(0,1,0), 1);
+   btDefaultMotionState* groundMotionState = new btDefaultMotionState(btTransform(btQuaternion(0,0,0,1), btVector3(0,-1,0)));
+   btRigidBody::btRigidBodyConstructionInfo groundRigidBodyCI(0, groundMotionState, groundShape, btVector3(0,0,0));
+   btRigidBody* groundRigidBody = new btRigidBody(groundRigidBodyCI);
+   dynamics_world->addRigidBody(groundRigidBody, 1 << 0, 1 << 1);
 }
 
 FPSBoxController::~FPSBoxController()
@@ -83,12 +89,11 @@ void FPSBoxController::detectInput()
 			tempDir += -v;
 		}
 
-		if(InputManager::instance()->isKeyDown(OIS::KC_SPACE))
+		if(InputManager::instance()->isKeyPressed(OIS::KC_SPACE))
 		{
 			controller->jump();
 		}
 	}
-
 		//UPDATE MOVEMENT DIRECTION
 
 		
@@ -106,6 +111,7 @@ void FPSBoxController::detectInput()
 			else
 				currVel *= slowDown;
 		}
+		currVel.setY(0.0f);
 		controller->setWalkDirection(currVel * base_movement_speed * movement_speed_multiplier);
 }
 

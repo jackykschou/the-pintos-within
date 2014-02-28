@@ -35,11 +35,12 @@ void Scene::removeGameObject(GameObject* gameObject)
 	{
 		if(g->id == gameObject->id)
 		{
-			game_objects.erase(game_objects.begin() + i);
 			delete g;
+			break;
 		}
 		++i;
 	}
+	game_objects.erase(game_objects.begin() + i);
 }
 
 std::vector<GameObject*> Scene::getGameObjectsOfTag(std::string tag)
