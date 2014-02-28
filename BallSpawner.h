@@ -6,6 +6,7 @@
 #include "PhysicsManager.h"
 #include "GameObject.h"
 #include "Ball.h"
+#include "GameState.h"
 
 class BallSpawner : GameObject
 {

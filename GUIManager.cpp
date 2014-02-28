@@ -157,6 +157,7 @@ void GUIManager::handleMouseGameOver() {
     if (InputManager::instance()->isMouseLeftClicked()) {
         hideGameOverMenu();
         GameState::instance()->reset();
+        GameState::instance()->start();
     }
 }
 

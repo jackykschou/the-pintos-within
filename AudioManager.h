@@ -18,9 +18,11 @@ class AudioManager : public Singleton<AudioManager> {
   	AudioFile    loadAudioFile(const char* file);
   	AudioChannel play2DSound(AudioFile, int loops);
   	void stopChannel(AudioChannel);
+  	AudioChannel playBlast();
 
   private:
   	std::vector<Mix_Chunk*> _loadedFiles;
+  	AudioFile _blast;
 };
 
 #endif

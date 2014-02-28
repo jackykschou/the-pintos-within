@@ -30,13 +30,15 @@ void BallSpawner::update()
 {
 	GameObject::update();
 
+	if (!GameState::instance()->running()) return;
+
 	if(_timer <= 0.0f)
 	{
 		_timer = spawn_rate;
 		if(CHANCE(spawn_change))
 		{
 			float scale = RAND * MAX_BALL_SCALE;
-		new Ball("Ball", scene, 
+			new Ball("Ball", scene, 
 				_mask, _col_mask, _mesh_name,
 				_transform->posX + (SPAWNOFFSET * RAND) * (CHANCE(0.5) ? 1 : -1), 
 				_transform->posY + 80, 

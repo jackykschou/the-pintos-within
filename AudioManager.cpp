@@ -5,6 +5,7 @@ void AudioManager::initialize() {
 	if (Mix_OpenAudio(AUDIO_RATE, AUDIO_FORMAT, AUDIO_CHANNELS, AUDIO_BUFFERS)) {
 	    throw("Unable to open audio channel.");
 	}
+	_blast = AudioManager::instance()->loadAudioFile("media/sounds/shotgun.wav");
 }
 
 // returns an audioFileKey that references the loaded resource
@@ -27,4 +28,8 @@ AudioChannel AudioManager::play2DSound(AudioFile file, int loops)
 
 void AudioManager::stopChannel(AudioChannel channel) {
 	Mix_HaltChannel(channel);
+}
+
+AudioChannel AudioManager::playBlast() {
+	return play2DSound(_blast, 0);
 }
