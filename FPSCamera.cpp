@@ -1,9 +1,15 @@
 #include "FPSCamera.h"
+#include <math.h>
+#define PI 3.14159
 
 FPSCamera::FPSCamera(GameObject* gameObject, std::string name, double height_offset) : Camera(gameObject, name), cameraMan(0)
 {
 	_height_offset = height_offset;
 	cameraMan = new OgreBites::SdkCameraMan(camera);   // create a default camera controller
+	timer = 0.0;
+	bobSpeed = 15.0;
+	bobOffsetY = 0.0;
+	bobbingAmount = 2.0;
 }
 
 FPSCamera::~FPSCamera()
@@ -13,7 +19,18 @@ FPSCamera::~FPSCamera()
 
 void FPSCamera::update()
 {
-	camera->setPosition(_transform->posX, _transform->posY + _height_offset, _transform->posZ);
+	float timeSince = GraphicsManager::instance()->getFrameEvent()->timeSinceLastFrame;
+	timer += timeSince*bobSpeed;
+	LOG("Timer: " << timer);
+	float waveslice = sin(timer);
+	if (timer > PI * 2) {
+		timer = fmod(timer, (PI * 2));w
+	}
+	if(waveslice != 0) {
+		bobOffsetY = waveslice * bobbingAmount;
+	}
+
+	camera->setPosition(_transform->posX, _transform->posY + _height_offset + bobOffsetY, _transform->posZ);
 	cameraMan->frameRenderingQueued(*(GraphicsManager::instance()->getFrameEvent()));
 	
 	OIS::MouseEvent* evt = InputManager::instance()->getMouseMovedEvent();
