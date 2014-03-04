@@ -9,7 +9,8 @@ FPSCamera::FPSCamera(GameObject* gameObject, std::string name, double height_off
 	timer = 0.0;
 	bobSpeed = 15.0;
 	bobOffsetY = 0.0;
-	bobbingAmount = 2.0;
+	bobbingAmount = 3.0;
+	is_running = false;
 }
 
 FPSCamera::~FPSCamera()
@@ -18,15 +19,30 @@ FPSCamera::~FPSCamera()
 }
 
 void FPSCamera::update()
-{
+{	
 	float timeSince = GraphicsManager::instance()->getFrameEvent()->timeSinceLastFrame;
-	timer += timeSince*bobSpeed;
-	float waveslice = sin(timer);
-	if (timer > PI * 2) {
-		timer = fmod(timer, (PI * 2));
+	if (is_running) {
+		timer += timeSince*bobSpeed;
+		float waveslice = sin(timer);
+		if (timer > PI * 2) {
+			timer = fmod(timer, (PI * 2));
+		}
+		if(waveslice != 0) {
+			bobOffsetY = waveslice * bobbingAmount;
+		}
 	}
-	if(waveslice != 0) {
-		bobOffsetY = waveslice * bobbingAmount;
+	else if (is_walking) {
+		timer += timeSince*bobSpeed*.5;
+		float waveslice = sin(timer);
+		if (timer > PI * 2) {
+			timer = fmod(timer, (PI * 2));
+		}
+		if(waveslice != 0) {
+			bobOffsetY = waveslice * bobbingAmount *.5;
+		}
+	}
+	else {
+		bobOffsetY *= 0.98*(1-timeSince);
 	}
 
 	camera->setPosition(_transform->posX, _transform->posY + _height_offset + bobOffsetY, _transform->posZ);

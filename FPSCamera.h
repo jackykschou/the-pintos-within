@@ -21,7 +21,8 @@ protected:
 	void clampCameraRotation();
 	void updateTransformRotation();
 public:
-
+	bool is_running;
+	bool is_walking;
 	FPSCamera(GameObject*, std::string, double);
 	virtual ~FPSCamera();
 

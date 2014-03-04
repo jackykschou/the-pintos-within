@@ -97,27 +97,31 @@ void FPSBoxController::detectInput()
 			if(InputManager::instance()->isKeyDown(OIS::KC_A))
 			{
 				tempDir += -v.cross(btVector3(0,1,0));
-				is_walking = true;
+				if (!is_jet_packing)
+					is_walking = true;
 			}
 
 			if(InputManager::instance()->isKeyDown(OIS::KC_D))
 			{
 				tempDir += v.cross(btVector3(0,1,0));
-				is_walking = true;
+				if (!is_jet_packing)
+					is_walking = true;
 			}
 			if(InputManager::instance()->isKeyDown(OIS::KC_W))
 			{
 				tempDir += v;
-				is_walking = true;
+				if (!is_jet_packing)
+					is_walking = true;
 			}
 			if(InputManager::instance()->isKeyDown(OIS::KC_S))
 			{
 				tempDir += -v;
-				is_walking = true;
+				if (!is_jet_packing)
+					is_walking = true;
 			}
 		}
 
-		if(InputManager::instance()->isKeyDown(OIS::KC_LSHIFT) && !is_jet_packing && controller->onGround() && !is_jet_packing)
+		if(InputManager::instance()->isKeyDown(OIS::KC_LSHIFT) && !is_jet_packing && controller->onGround() && !is_jet_packing && is_walking)
 		{
 			is_running = true;
 			movement_speed_multiplier = 1.5f;
@@ -164,6 +168,8 @@ void FPSBoxController::detectInput()
 		}
 
 		controller->setWalkDirection((currVel + jetVel) * base_movement_speed * movement_speed_multiplier);
+		fps_camera->is_running = is_running;
+		fps_camera->is_walking = is_walking;
 }
 
 void FPSBoxController::updateTransform()
