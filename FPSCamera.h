@@ -13,6 +13,10 @@
 class FPSCamera : Camera
 {
 protected:
+	long timer;
+	long bobSpeed;
+	float bobbingAmount;
+	float bobOffsetY;
 	double _height_offset;
 	void clampCameraRotation();
 	void updateTransformRotation();
