@@ -1,0 +1,27 @@
+Overall Team:
+I think we have a really well balanced team. Joe is really good at Version control, debugging and team project management.
+I am good at designing the game architecture. And Keegan is good at math related algorithm and 3D modeling.
+
+We have a really good work split.
+
+I think this is one of the best team I have even worked in.
+
+My strengths:
+1. Design pattern
+2. Overall architecture design
+
+Weaknesses:
+1. Code speed is slow
+2. Careless mistakes
+
+Score:
+Me: 9/10
+Keegan: 9/10
+Joe: 9/10
+
+What I have learned:
+1. Using c++ lambda as function pointer
+2. Pure virtual function and pure virtual destructor
+3. difference between dynamic cast and static cast
+4. more C++ 11 features like auto keywork
+5. string stream

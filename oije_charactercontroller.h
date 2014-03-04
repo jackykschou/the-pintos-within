@@ -102,7 +102,7 @@ public:
    }
    
    ///btActionInterface interface
-   void   debugDraw(btIDebugDraw* debugDrawer);
+   void debugDraw(btIDebugDraw* debugDrawer);
 
    void setUpAxis (int axis)
    {

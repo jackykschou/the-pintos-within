@@ -118,16 +118,25 @@ bool InputManager::isMouseUp(OIS::MouseButtonID button)
 	return !isMouseDown(button);
 }
 
-bool InputManager::isMouseLeftClicked()
+bool InputManager::isMouseLeftDown()
 {
 	return isMouseDown(OIS::MouseButtonID::MB_Left);
 }
 
-bool InputManager::isMouseRightClicked()
+bool InputManager::isMouseRightDown()
 {
 	return isMouseDown(OIS::MouseButtonID::MB_Right);
 }
 
+bool InputManager::isMouseLeftClicked()
+{
+	return _lastMousePressedEvt ? (_lastMousePressedEvt->state.buttonDown(OIS::MouseButtonID::MB_Left)) : false;
+}
+
+bool InputManager::isMouseRightClicked()
+{
+	return _lastMousePressedEvt ? (_lastMousePressedEvt->state.buttonDown(OIS::MouseButtonID::MB_Right)) : false;
+}
 
 OIS::KeyEvent* InputManager::getKeyPressedEvent() {
 	return _lastKeyPressedEvt;

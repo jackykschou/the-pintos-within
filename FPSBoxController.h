@@ -12,6 +12,8 @@
 #include "Transform.h"
 #include "FPSCamera.h"
 
+#define JET_PACK_SPEED 0.5
+
 class FPSBoxController : Component
 {
 protected:
@@ -27,6 +29,13 @@ protected:
 	void detectInput();
 
 public:
+	double jet_pack_max;
+	double jet_pack_current;
+
+	bool is_jet_packing;
+	bool is_walking;
+	bool is_running;
+
 	FPSCamera* fps_camera;
 	OiJE::CharacterController* controller;
 
@@ -36,6 +45,7 @@ public:
 	float speedUp;
 
 	btVector3 currVel;
+	btVector3 jetVel;
 
 	void (*onCollision)(btVector3, btVector3, GameObject*);
 

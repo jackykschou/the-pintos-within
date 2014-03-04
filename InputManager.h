@@ -46,6 +46,8 @@ class InputManager : public Singleton<InputManager>,
     bool isKeyReleased(OIS::KeyCode);
     bool isMouseDown(OIS::MouseButtonID button);
     bool isMouseUp(OIS::MouseButtonID button);
+    bool isMouseLeftDown();
+    bool isMouseRightDown();
     bool isMouseLeftClicked();
     bool isMouseRightClicked();
 
