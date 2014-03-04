@@ -6,10 +6,10 @@ FPSCamera::FPSCamera(GameObject* gameObject, std::string name, double height_off
 {
 	_height_offset = height_offset;
 	cameraMan = new OgreBites::SdkCameraMan(camera);   // create a default camera controller
-	timer = 0;
-	bobSpeed = 1800;
+	timer = 0.0;
+	bobSpeed = 15.0;
 	bobOffsetY = 0.0;
-	bobbingAmount = 1.0;
+	bobbingAmount = 2.0;
 }
 
 FPSCamera::~FPSCamera()
@@ -19,10 +19,12 @@ FPSCamera::~FPSCamera()
 
 void FPSCamera::update()
 {
-	float waveslice = sin(timer/1000.0);
-	timer += bobSpeed;
-	if (timer > PI * 2 * 1000) {
-		timer = timer % (long)(PI * 2 * 2000);
+	float timeSince = GraphicsManager::instance()->getFrameEvent()->timeSinceLastFrame;
+	timer += timeSince*bobSpeed;
+	LOG("Timer: " << timer);
+	float waveslice = sin(timer);
+	if (timer > PI * 2) {
+		timer = fmod(timer, (PI * 2));w
 	}
 	if(waveslice != 0) {
 		bobOffsetY = waveslice * bobbingAmount;
