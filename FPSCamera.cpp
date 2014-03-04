@@ -23,7 +23,7 @@ void FPSCamera::update()
 	timer += timeSince*bobSpeed;
 	float waveslice = sin(timer);
 	if (timer > PI * 2) {
-		timer = fmod(timer, (PI * 2));w
+		timer = fmod(timer, (PI * 2));
 	}
 	if(waveslice != 0) {
 		bobOffsetY = waveslice * bobbingAmount;
