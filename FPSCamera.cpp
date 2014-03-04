@@ -21,7 +21,6 @@ void FPSCamera::update()
 {
 	float timeSince = GraphicsManager::instance()->getFrameEvent()->timeSinceLastFrame;
 	timer += timeSince*bobSpeed;
-	LOG("Timer: " << timer);
 	float waveslice = sin(timer);
 	if (timer > PI * 2) {
 		timer = fmod(timer, (PI * 2));w
