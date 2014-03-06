@@ -53,7 +53,7 @@ void GUIManager::showDebugPanel() {
 }
 
 void GUIManager::updateDebugPanel() {
-    if (!isDebugPanelVisible()) { return; }
+    if (!isDebugPanelVisible() || (SceneManager::instance()->current_scene->main_camera->camera == NULL)) { return; }
     Ogre::Camera *camera = SceneManager::instance()->current_scene->main_camera->camera;
     _debugPanel->setParamValue(0, Ogre::StringConverter::toString(camera->getDerivedPosition().x));
     _debugPanel->setParamValue(1, Ogre::StringConverter::toString(camera->getDerivedPosition().y));

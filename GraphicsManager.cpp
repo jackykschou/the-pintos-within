@@ -1,5 +1,7 @@
 #include "GraphicsManager.h"
 
+#define FRAME_RATE 60
+
 GraphicsManager::~GraphicsManager()
 {
     delete _root;
@@ -7,6 +9,10 @@ GraphicsManager::~GraphicsManager()
 
 bool GraphicsManager::frameRenderingQueued(const Ogre::FrameEvent& evt)
 {
+    Ogre::Real ttW = (1000.0 / FRAME_RATE) - (1000.0 * evt.timeSinceLastFrame); 
+    if (ttW > 0) 
+        usleep(ttW * 1000.0); 
+
     if(_window->isClosed())
         return false;
 

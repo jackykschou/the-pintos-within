@@ -14,14 +14,13 @@ FPSBoxController::FPSBoxController(GameObject* gameObject, std::string camera_na
 	onCollision = NULL;
 	can_move = true;
 
-	base_movement_speed = 0.16f;
+	base_movement_speed = 1.0;
 
 	movement_speed_multiplier = 1;
-	slowDown = 0.991;
-	speedUp = 0.01;
+	slowDown = 0.92f;
+	speedUp = 0.02;
 
-	if((_transform = gameObject->getComponent<Transform>()) == NULL)
-		_transform = new Transform(gameObject);
+	_transform = gameObject->getComponent<Transform>();
 
 	fps_camera = new FPSCamera(gameObject, camera_name, camera_offset);
 	_collisionShape = new btBoxShape(boxHalfExtents);

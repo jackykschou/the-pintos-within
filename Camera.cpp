@@ -6,7 +6,7 @@ Camera::Camera(GameObject* gameObject, std::string name) : Component(gameObject)
 
 	this->name = name.c_str();
 
-	camera = SceneManager::instance()->current_scene->manager->createCamera(name);
+	camera = _gameObject->scene->manager->createCamera(name);
 
 	viewport = GraphicsManager::instance()->getRenderWindow()->addViewport(camera);
 	viewport->setBackgroundColour(Ogre::ColourValue(0,1,0));
@@ -16,11 +16,12 @@ Camera::Camera(GameObject* gameObject, std::string name) : Component(gameObject)
 	camera->setPosition(_transform->posX, _transform->posY, _transform->posZ);
 	camera->setOrientation(Ogre::Quaternion(_transform->rotW, _transform->rotX, _transform->rotY, _transform->rotZ));
 	camera->lookAt(0, 0, 0);
-	camera->setNearClipDistance(1);
+	camera->setNearClipDistance(3.5f);
 }
 
 Camera::~Camera()
 {
+	_gameObject->scene->manager->destroyCamera(name);
 	delete camera;
 	delete viewport;
 }

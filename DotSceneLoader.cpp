@@ -499,17 +499,13 @@ void DotSceneLoader::createSceneObject(rapidxml::xml_node<>* XMLNode, std::strin
 
     if(node_name.find(PLAYER) != std::string::npos)
     {
-        GameObject *go = new GameObject("Player", _scene);
-        Transform *tran1 = go->getComponent<Transform>();
-        tran1->posX = position.x;
-        tran1->posY = position.y + 50;
-        tran1->posZ = position.z;
+        PlayerCharacter *go = new PlayerCharacter("Player", _scene, 
+                        COL_CHARACTER, CHARACTER_COLLIDER_WITH, "Cube.mesh",
+                        position.x, position.y, position.z,
+                        0, 0, 0, 1,
+                        10, 10, 10);
 
-        FPSBoxController *c = new FPSBoxController(go, "Cam", 17, btVector3(5, 35, 5), 3, COL_CHARACTER, CHARACTER_COLLIDER_WITH);
-
-        SceneManager::instance()->current_scene->main_camera = (Camera*)c->fps_camera;
-
-        LOG("HAHAHAHAHA");
+        SceneManager::instance()->current_scene->main_camera = (Camera*)(go->controller->fps_camera);
     }
     if(node_name.find(WALL) != std::string::npos)
     {

@@ -27,5 +27,7 @@
 #include "Block.h"
 #include "Ball.h"
 #include "BallSpawner.h"
+#include "PlayerCharacter.h"
+#include "Weapon.h"
 
 #endif // #ifndef __TheEngine_h_

@@ -21,23 +21,23 @@ void FPSCamera::update()
 {
 	float timeSince = GraphicsManager::instance()->getFrameEvent()->timeSinceLastFrame;
 	timer += timeSince*bobSpeed;
-	LOG("Timer: " << timer);
 	float waveslice = sin(timer);
 	if (timer > PI * 2) {
-		timer = fmod(timer, (PI * 2));w
+		timer = fmod(timer, (PI * 2));
 	}
 	if(waveslice != 0) {
 		bobOffsetY = waveslice * bobbingAmount;
 	}
 
-	camera->setPosition(_transform->posX, _transform->posY + _height_offset + bobOffsetY, _transform->posZ);
+	// camera->setPosition(_transform->posX, _transform->posY + _height_offset + bobOffsetY, _transform->posZ);
+	camera->setPosition(_transform->posX, _transform->posY + _height_offset, _transform->posZ);
 	cameraMan->frameRenderingQueued(*(GraphicsManager::instance()->getFrameEvent()));
 	
 	OIS::MouseEvent* evt = InputManager::instance()->getMouseMovedEvent();
 	if (evt) cameraMan->injectMouseMove(*evt);
 
 	clampCameraRotation();
-  	// updateTransformRotation();
+  	updateTransformRotation();
 }
 
 void FPSCamera::clampCameraRotation()
@@ -52,6 +52,7 @@ void FPSCamera::updateTransformRotation()
 {
 	Ogre::Quaternion* old_q = new Ogre::Quaternion(_transform->rotW, _transform->rotX, _transform->rotY, _transform->rotZ);
 	Ogre::Quaternion* new_q = new Ogre::Quaternion(old_q->xAxis(), camera->getOrientation().yAxis(), old_q->zAxis());
+	// Ogre::Quaternion* new_q = new Ogre::Quaternion(camera->getOrientation().zAxis(), old_q->yAxis(), old_q->zAxis());
 
 	_transform->rotW = new_q->w;
 	_transform->rotX = new_q->x;
