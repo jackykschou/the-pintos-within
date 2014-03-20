@@ -1,0 +1,28 @@
+particle_system BloodSpurt
+{
+    material Blood
+    particle_width 5
+    particle_height 5
+    cull_each false
+    quota 10000
+    billboard_type oriented_self
+
+    // Area emitter
+    emitter Point
+    {
+        angle 45
+        emission_rate 150
+        time_to_live 3
+        direction 0 1 0
+        velocity_min 250
+        velocity_max 300
+        duration .5
+    }
+
+    // Gravity
+    affector LinearForce
+    {
+        force_vector 0 -100 0
+        force_application add
+    }
+}
