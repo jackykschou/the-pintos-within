@@ -2,6 +2,23 @@
 #include "Singleton.h"
 #include "GameServer.h"
 
-class NetworkManager : public Singleton<NetworkManager> {
+enum NetworkManagerState {
+	NetworkReady,
+	NetworkClient,
+	NetworkHost
+};
 
+class NetworkManager : public Singleton<NetworkManager> {
+	NetworkManagerState state;
+
+	void startServer();
+	void startClient(char *host);
+
+	bool isActive();
+	bool isServer();
+	bool isClient();
+
+  private:
+  	GameServer *_server;
+  	GameClient *_client;
 };

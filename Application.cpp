@@ -47,7 +47,15 @@ int main(int argc, char *argv[])
 {
     initializeGame();
     createGameContents();
-    startGame();
+
+    if (argc == 3 && strcmp(argv[0], "-c") == 0) {
+
+    } else if (argc == 2 && strcmp(argv[0], "-c") == 0) {
+        NetworkManager::instance();
+    } else {
+        // no arguments passed, start 1P game
+        startGame();
+    }
     return 0;
 }
 

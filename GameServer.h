@@ -1,5 +1,4 @@
 #include <SDL/SDL_net.h>
-#include <SDL/SDL_thread.h>
 #include "common.h"
 
 enum GameServerStatus {
@@ -26,12 +25,6 @@ public:
   // the UDP port
   int port;
 
-  // the current packets in the buffer
-  std::deque<UDPpacket*> packetBuffer;
-
-  // the packets waiting to be sent
-  std::deque<UDPpacket*> sendBuffer;
-
   // called on every frame to check the buffer!
   void update();
 
@@ -39,9 +32,7 @@ public:
   void sendHeartbeat();
 
 private:
-
-  // the bg thread
-  SDL_Thread *_serverThread;
+  UDPsocket _socket;
 
   // list of connected clients (addresses)
   std::vector<IPaddress> _clients;
