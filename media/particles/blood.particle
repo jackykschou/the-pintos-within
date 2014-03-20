@@ -13,7 +13,7 @@ particle_system BloodSpurt
         angle 45
         emission_rate 150
         time_to_live 3
-        direction 0 1 0
+        direction 0 0 -1
         velocity_min 250
         velocity_max 300
         duration .5

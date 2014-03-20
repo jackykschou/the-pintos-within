@@ -13,7 +13,7 @@ particle_system DustCloud
         angle 60
         emission_rate 200
         time_to_live 1
-        direction 0 1 0
+        direction 0 0 -1
         velocity_min 4
         velocity_max 30
         duration .5
