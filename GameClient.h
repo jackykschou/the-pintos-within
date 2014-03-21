@@ -2,6 +2,7 @@
 #define __GameClient_h_
 
 #include <SDL/SDL_net.h>
+#include "GUIManager.h"
 
 enum GameClientStatus {
   GameClientReady,
@@ -40,6 +41,12 @@ private:
   // the UDP socket we will be recv and sending through
   UDPsocket _socket;
 
+  // a temporarily allocated packet for sending on the wire
+  UDPpacket *_tmpSendPacket;
+
+  // a temporarily allocated packet for consuming the wire
+  UDPpacket *_tmpRecvPacket;
+
   // sends a JOIN request
   int joinGame();
 
@@ -52,11 +59,9 @@ private:
   // called when the server acknowledges that a client has joined
   void handleJoinAckPacket(UDPpacket *packet);
 
-  // a temporarily allocated packet for sending on the wire
-  UDPpacket *_tmpSendPacket;
+  // called when the server decides to start the game
+  void handleGameStartPacket(UDPpacket *packet);
 
-  // a temporarily allocated packet for consuming the wire
-  UDPpacket *_tmpRecvPacket;
 };
 
 #endif

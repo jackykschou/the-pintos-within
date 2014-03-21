@@ -4,33 +4,39 @@
 
 void NetworkManager::startServer() {
 	LOG("Starting server...");
+	
+	state = NetworkStateServer;
 
-	_server = new GameServer(GAME_PORT);
-	if (_server->start() < 0) {
+	server = new GameServer(GAME_PORT);
+	if (server->start() < 0) {
 		return;
 	}
 
-	state = NetworkStateServer;
+	GUIManager::instance()->hideGameOverMenu();
+	GUIManager::instance()->showWaitingMenu();
 }
 
 void NetworkManager::startClient(char* host) {
 	LOG("Starting client...");
- 
-	_client = new GameClient(host, GAME_PORT);
-	if (_client->connect() < 0) {
+
+	state = NetworkStateClient;
+
+	client = new GameClient(host, GAME_PORT);
+	if (client->connect() < 0) {
 		return;
 	}
 
-	state = NetworkStateClient;
+	GUIManager::instance()->hideGameOverMenu();
+	GUIManager::instance()->showWaitingMenu();
 }
 
 void NetworkManager::update() {
 	if (!isActive()) return;
 
 	if (isServer()) {
-		_server->update();
+		server->update();
 	} else if (isClient()) {
-		_client->update();
+		client->update();
 	}
 }
 

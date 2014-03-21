@@ -1,4 +1,5 @@
 #include "GameClient.h"
+#include "GameState.h"
 
 GameClient::GameClient(char* host, int port) {
 	_host = (char*)malloc(strlen(host));
@@ -92,9 +93,19 @@ void GameClient::processPacket(UDPpacket* packet) {
 		case 'k':
 			handleJoinAckPacket(packet);
 			break;
+		case 's':
+			handleGameStartPacket(packet);
+			break;
 	}
 }
 
 void GameClient::handleJoinAckPacket(UDPpacket *packet) {
-	printf("SUCCESSFULLY JOINED SERVER\n");
+	LOG("SUCCESSFULLY JOINED SERVER");
+}
+
+void GameClient::handleGameStartPacket(UDPpacket *packet) {
+	LOG("STARTING GAME.");
+	GUIManager::instance()->hideWaitingMenu();
+	GameState::instance()->reset();
+	GameState::instance()->start();
 }

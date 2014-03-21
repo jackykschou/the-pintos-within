@@ -6,6 +6,7 @@
 #include "GameServer.h"
 #include "GameClient.h"
 #include "GameState.h"
+#include "GUIManager.h"
 
 enum NetworkManagerState {
 	NetworkStateReady,
@@ -25,9 +26,8 @@ class NetworkManager : public Singleton<NetworkManager> {
 	bool isServer();
 	bool isClient();
 
-  private:
-  	GameServer* _server;
-  	GameClient* _client;
+  	GameServer* server;
+  	GameClient* client;
 };
 
 #endif

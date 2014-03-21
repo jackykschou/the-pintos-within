@@ -2,6 +2,7 @@
 #define __GameServer_h_
 
 #include <SDL/SDL_net.h>
+#include "GUIManager.h"
 #include "common.h"
 
 enum GameServerStatus {
@@ -31,6 +32,9 @@ public:
   // sends game state to every client
   void sendHeartbeat();
 
+  // sends GAME START event to every client
+  void broadcastGameStart();
+
 private:
 
   // the socket that is bound
@@ -56,6 +60,14 @@ private:
 
   // broadcasts a single packet to all connected clients
   void broadcastPacket(UDPpacket* packet);
+
+  // broadcasts a single chunk of data to a bunch of clients
+  // this method can be used for binary or cstring (NULL terminated) buffer
+  void broadcastData(void* data, int len);
+
+// broadcasts a single chunk of data to a bunch of clients
+// this method can ONLY be used if data is a cstring (NULL terminated) buffer
+  void broadcastData(const char* data);
 
   // a temporarily allocated packet for sending on the wire
   UDPpacket *_tmpSendPacket;

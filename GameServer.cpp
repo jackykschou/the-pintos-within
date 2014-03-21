@@ -67,6 +67,23 @@ void GameServer::broadcastPacket(UDPpacket *packet) {
 	}
 }
 
+// broadcasts a single chunk of data to a bunch of clients
+// this method can be used for binary or cstring (NULL terminated) buffer
+void GameServer::broadcastData(void* data, int len) {
+	_tmpSendPacket->data = (unsigned char*)data;
+	_tmpSendPacket->len  = len+1;
+	broadcastPacket(_tmpSendPacket);
+}
+
+// broadcasts a single chunk of data to a bunch of clients
+// this method can ONLY be used if data is a cstring (NULL terminated) buffer
+void GameServer::broadcastData(const char* data) {
+	_tmpSendPacket->data = (unsigned char*)data;
+	_tmpSendPacket->len  = strlen(data)+1;
+	broadcastPacket(_tmpSendPacket);
+}
+
+
 // nom noms any available UDP packets from the wire
 void GameServer::consumePackets() {
 	if (state != GameServerRunning) {
@@ -124,4 +141,12 @@ void GameServer::handleJoinPacket(UDPpacket *packet) {
 	printf("Sending response packet..\n");
 
 	sendPacketToClient(_tmpSendPacket, &ip);
+
+	// the user can now start the game
+	GUIManager::instance()->hideWaitingMenu();
+	GUIManager::instance()->showGameOverMenu();
+}
+
+void GameServer::broadcastGameStart() {
+	broadcastData("s");
 }
