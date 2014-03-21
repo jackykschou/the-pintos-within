@@ -60,3 +60,16 @@ void ParticleManager::positionAndDirectSceneNode(Ogre::SceneNode* node,Ogre::Vec
   node->setPosition(origin);
   node->setDirection(direction);
 }
+
+std::tuple<Ogre::ParticleSystem*,Ogre::ParticleSystem*,Ogre::ParticleSystem*> ParticleManager::EmitExplosion(Ogre::Vector3 origin){
+  return std::make_tuple(ParticleManager::instance()->Emit("OrangeExplosion",origin,
+      Ogre::Vector3{0,1,0}),ParticleManager::instance()->Emit("YellowExplosion",
+      origin,Ogre::Vector3{0,1,0}),ParticleManager::instance()->Emit("OrangeExplosionCloud",
+      origin,Ogre::Vector3{0,1,0}));
+}
+std::tuple<Ogre::ParticleSystem*,Ogre::ParticleSystem*,Ogre::ParticleSystem*> ParticleManager::EmitSparks(Ogre::Vector3 origin,Ogre::Vector3 direction){
+  return std::make_tuple(ParticleManager::instance()->Emit("JetPackYellowSparks",origin,
+      direction),ParticleManager::instance()->Emit("JetPackOrangeSparks",
+      origin,direction),ParticleManager::instance()->Emit("JetPackSmoke",
+      origin,-direction));
+}

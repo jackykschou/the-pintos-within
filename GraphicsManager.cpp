@@ -22,7 +22,23 @@ bool GraphicsManager::frameRenderingQueued(const Ogre::FrameEvent& evt)
     _frame_event = new Ogre::FrameEvent(evt);
 
     InputManager::instance()->capture();
+/* Examples/demos for emitting particles.
+    if(InputManager::instance()->isKeyPressed(OIS::KC_B)){
+      Ogre::ParticleSystem* system1=ParticleManager::instance()->Emit("BloodSpurt",Ogre::Vector3{25,25,25},Ogre::Vector3{1,1,1});
 
+      //ParticleManager::instance()->Emit("JetPackYellowSparks",Ogre::Vector3{-10,25,-10},Ogre::Vector3{0,-1,0});
+      //ParticleManager::instance()->Emit("JetPackOrangeSparks",Ogre::Vector3{-10,25,-10},Ogre::Vector3{0,-1,0});
+      //ParticleManager::instance()->Emit("JetPackSmoke",Ogre::Vector3{-10,25,-10},Ogre::Vector3{0,1,0});
+
+      ParticleManager::instance()->EmitSparks(Ogre::Vector3{-10,25,-10},Ogre::Vector3{0,-1,0});
+
+      //ParticleManager::instance()->Emit("OrangeExplosion",Ogre::Vector3{10,25,-10},Ogre::Vector3{0,1,0});
+      //ParticleManager::instance()->Emit("YellowExplosion",Ogre::Vector3{10,25,-10},Ogre::Vector3{0,1,0});
+      //ParticleManager::instance()->Emit("OrangeExplosionCloud",Ogre::Vector3{10,25,-10},Ogre::Vector3{0,1,0});
+
+      ParticleManager::instance()->EmitExplosion(Ogre::Vector3{10,25,-10});
+    }
+*/
     GUIManager::instance()->update(evt);
 
     SceneManager::instance()->current_scene->update(evt.timeSinceLastFrame);

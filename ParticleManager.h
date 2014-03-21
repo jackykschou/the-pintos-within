@@ -3,6 +3,7 @@
 
 #include <memory>
 #include <map>
+#include <tuple>
 #include <OgreParticleSystem.h>
 #include <OgreParticleEmitter.h>
 #include <OgreVector3.h>
@@ -18,6 +19,8 @@ class ParticleManager:public Singleton<ParticleManager>{
     Ogre::ParticleSystem* Emit(std::string particleSystemName,Ogre::Vector3 origin,
         Ogre::Vector3 direction,Ogre::SceneNode* parentNode);
     Ogre::ParticleSystem* Emit(std::string particleSystemName,Ogre::SceneNode* node);
+    std::tuple<Ogre::ParticleSystem*,Ogre::ParticleSystem*,Ogre::ParticleSystem*> EmitExplosion(Ogre::Vector3 origin);
+    std::tuple<Ogre::ParticleSystem*,Ogre::ParticleSystem*,Ogre::ParticleSystem*> EmitSparks(Ogre::Vector3 origin,Ogre::Vector3 direction);
   private:
     std::multimap<std::string,std::unique_ptr<Ogre::ParticleSystem>> _systems;
     Ogre::ParticleSystem* lookUpSystem(std::string particleSystemName);
