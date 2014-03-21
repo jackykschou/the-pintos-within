@@ -5,6 +5,10 @@
 #include "GUIManager.h"
 #include "common.h"
 
+#define HEARTBEATS_PER_SEC 6
+
+#define HEARTBEAT_MAX_DELAY 1000.0f/HEARTBEATS_PER_SEC
+
 enum GameServerStatus {
   GameServerReady,
   GameServerRunning,
@@ -29,13 +33,14 @@ public:
   // called once per game loop
   void update();
 
-  // sends game state to every client
-  void sendHeartbeat();
-
   // sends GAME START event to every client
   void broadcastGameStart();
 
+
 private:
+
+  // the timestamp on the last heartbeat
+  boost::posix_time::ptime* _lastHeartbeat;
 
   // the socket that is bound
   UDPsocket _socket;
@@ -68,6 +73,9 @@ private:
 // broadcasts a single chunk of data to a bunch of clients
 // this method can ONLY be used if data is a cstring (NULL terminated) buffer
   void broadcastData(const char* data);
+
+  // sends game state to every client
+  void broadcastHeartbeat();
 
   // a temporarily allocated packet for sending on the wire
   UDPpacket *_tmpSendPacket;

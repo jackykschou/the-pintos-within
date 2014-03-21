@@ -17,7 +17,7 @@ void GameState::start() {
 	}
 }
 
-bool GameState::running() {
+bool GameState::isRunning() {
 	return _running;
 }
 

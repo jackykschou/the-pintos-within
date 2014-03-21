@@ -96,6 +96,9 @@ void GameClient::processPacket(UDPpacket* packet) {
 		case 's':
 			handleGameStartPacket(packet);
 			break;
+		case 'h':
+			handleHeartbeatPacket(packet);
+			break;
 	}
 }
 
@@ -108,4 +111,8 @@ void GameClient::handleGameStartPacket(UDPpacket *packet) {
 	GUIManager::instance()->hideWaitingMenu();
 	GameState::instance()->reset();
 	GameState::instance()->start();
+}
+
+void GameClient::handleHeartbeatPacket(UDPpacket *packet) {
+	LOG("RECEIVED HEARTBEAT PACKET");
 }

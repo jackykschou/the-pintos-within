@@ -62,6 +62,9 @@ private:
   // called when the server decides to start the game
   void handleGameStartPacket(UDPpacket *packet);
 
+  // called on every heartbeat packet (~6 times per second)
+  void handleHeartbeatPacket(UDPpacket *packet);
+
 };
 
 #endif

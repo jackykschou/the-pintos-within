@@ -3,12 +3,14 @@ Assignment Two
 Keegan Standifer 
 Joe Vennix 
 Ka Seng Chou
+Michael Passaloukos
 
-To build: buildit
-To make: makeit
-To run: OgreApp
+To build: ./buildit
+To make:  ./makeit
+To start a 1P game: ./OgreApp
+To host a 2P game:  ./OgreApp -h
+To join a 2P game:  ./OgreApp -c hostname.utexas.edu
 
 INSTRUCTIONS:
-Move the mouse to change the view. W and E enables and disables the GUI.
 
-
+Move the mouse to change the view. Press H to enable the debug menu.

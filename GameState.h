@@ -16,7 +16,7 @@ class GameState : public Singleton<GameState>{
   	void reset();
   	void update();
 	  void start();
-	  bool running();
+	  bool isRunning();
 
   private:
   	boost::posix_time::ptime _start;

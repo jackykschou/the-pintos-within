@@ -1,10 +1,14 @@
 #include "GameServer.h"
+#include "GameState.h"
+
+namespace pt = boost::posix_time;
 
 GameServer::GameServer(int port) {
 	state  = GameServerReady;
 	_port      = port;
 	_tmpSendPacket = SDLNet_AllocPacket(4096);
 	_tmpRecvPacket = SDLNet_AllocPacket(4096);
+	_lastHeartbeat = NULL;
 }
 
 // starts the web server (opens UDP port 5555)
@@ -35,9 +39,11 @@ void GameServer::stop() {
 // called from the render loop
 void GameServer::update() {
 	consumePackets();
-}
 
-void GameServer::sendHeartbeat() {
+	// send a heartbeat if necessary
+	if (GameState::instance()->isRunning()) {
+		broadcastHeartbeat();
+	}
 }
 
 // sends a single packet to a single client
@@ -147,6 +153,28 @@ void GameServer::handleJoinPacket(UDPpacket *packet) {
 	GUIManager::instance()->showGameOverMenu();
 }
 
+// sends GAME START event to every client
 void GameServer::broadcastGameStart() {
 	broadcastData("s");
+}
+
+// sends game state to every client every HEARTBEAT_MAX_DELAY milliseconds
+void GameServer::broadcastHeartbeat() {
+	pt::ptime now = pt::microsec_clock::local_time();
+	pt::time_duration diff;
+
+	if (_lastHeartbeat) {
+		diff = now - *_lastHeartbeat;
+	}
+
+	if (!_lastHeartbeat || diff.total_milliseconds() > HEARTBEAT_MAX_DELAY) {
+		LOG("SENDING HEARTBEAT PACKET");
+		broadcastData("h");
+
+		if (!_lastHeartbeat) {
+			_lastHeartbeat = (pt::ptime*)malloc(sizeof(pt::ptime));
+		}
+
+		*_lastHeartbeat = now;
+	}
 }
