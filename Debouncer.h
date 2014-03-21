@@ -8,6 +8,7 @@ class Debouncer
   public:
 	Debouncer(int waitMilliseconds);
 	bool run(void (*lambda)());
+	void updateTimer(float);
 
   protected:
   	int _waitMilliseconds;

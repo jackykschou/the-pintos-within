@@ -6,13 +6,25 @@
 #include "Component.h"
 #include "PlayerCharacter.h"
 #include "Debouncer.h"
+#include "PlayerBox.h"
 
 class PlayerCharacter;
+class PlayerBox;
 
-class Weapon : Component
+class Weapon : protected Component
 {
 public:
 	PlayerCharacter* player;
+	PlayerBox* shoot_pos;
+
+	Ogre::AnimationState *running_animation_state;
+	Ogre::AnimationState *idle_animation_state;
+	Ogre::AnimationState *shooting_animation_state;
+	Ogre::AnimationState *reload_animation_state;
+	Ogre::AnimationState *jumping_animation_state;
+	Ogre::AnimationState *die_animation_state;
+
+	float reload_timer;
 
 	int weapon_id;
 
@@ -24,13 +36,18 @@ public:
 	int current_ammo;
 	double cooldown;
 
-	bool reloading;
+	bool is_shooting;
+	bool is_reloading;
 
-	Mesh* mesh;
+	Ogre::Entity* entity;
+  	Ogre::SceneNode* node;
+  
 	Debouncer* shoot_debouncer;
 
-	Weapon(PlayerCharacter* player_p, std::string mesh_name, int id_p, double reload_time_p, 
-			int shoot_cost_p, int max_mag_cap_p, int max_ammo_p, double cooldown_p);
+	Weapon(PlayerCharacter*, std::string, int, double, 
+			int, int, int, double, float, 
+			float, float, float, float, float, float,
+			float, float, float, PlayerBox*);
 	virtual ~Weapon();
 
 	void shoot();
@@ -38,8 +55,7 @@ public:
 	virtual void reload();
 	virtual void update();
 
-protected:
-	boost::posix_time::ptime last_reload_time;
+
 
 };
 

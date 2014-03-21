@@ -21,9 +21,9 @@ public:
 	virtual ~Mesh();
 
 	Ogre::Entity* entity;
-  	Ogre::SceneNode* node;
+  Ogre::SceneNode* node;
 
-  	virtual void update();
+  virtual void update();
 };
 
 #endif // #ifndef __Mesh_h_

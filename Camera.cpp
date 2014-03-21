@@ -16,7 +16,7 @@ Camera::Camera(GameObject* gameObject, std::string name) : Component(gameObject)
 	camera->setPosition(_transform->posX, _transform->posY, _transform->posZ);
 	camera->setOrientation(Ogre::Quaternion(_transform->rotW, _transform->rotX, _transform->rotY, _transform->rotZ));
 	camera->lookAt(0, 0, 0);
-	camera->setNearClipDistance(3.5f);
+	camera->setNearClipDistance(7.0f);
 }
 
 Camera::~Camera()

@@ -1,9 +1,8 @@
 #include "Block.h"
 
-Block::Block(std::string tag, Scene* scene, 
-	int mask, int col_mask, std::string mesh_name,
+Block::Block(Scene* scene, std::string mesh_name,
 	float posX, float posY, float posZ, float rotX, float rotY, float rotZ, float rotW,
-	float scaleX, float scaleY, float scaleZ) : GameObject(tag, scene)
+	float scaleX, float scaleY, float scaleZ) : GameObject("Block", scene)
 {
 	Transform* tran = this->getComponent<Transform>();
 
@@ -35,7 +34,8 @@ Block::Block(std::string tag, Scene* scene,
 	info->m_friction = 0.1f;
 
 	rigidbody = new BoxRigidbody(this, btVector3(box_half_size.x * tran->scaleX, box_half_size.y * tran->scaleY, box_half_size.z * tran->scaleZ), 
-		0, mask, col_mask, info);
+		0, COL_STATIC, STATIC_COLLIDER_WITH, info);
+	((Rigidbody*)rigidbody)->rigidbody->setUserPointer(NULL);
 }
 
 Block::~Block()
