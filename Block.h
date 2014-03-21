@@ -13,8 +13,7 @@ public:
 	Mesh* mesh;
 	BoxRigidbody* rigidbody;
 
-	Block(std::string, Scene*,
-		int, int, std::string, float, float, float, 
+	Block(Scene*, std::string, float, float, float, 
 		float, float, float, float,
 		float, float, float);
 	virtual ~Block();

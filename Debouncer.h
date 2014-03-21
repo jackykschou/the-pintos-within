@@ -3,10 +3,12 @@
 
 #include "common.h"
 
-class Debouncer {
+class Debouncer 
+{
   public:
 	Debouncer(int waitMilliseconds);
-	void run(void (*lambda)());
+	bool run(void (*lambda)());
+	void updateTimer(float);
 
   protected:
   	int _waitMilliseconds;

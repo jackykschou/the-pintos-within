@@ -2,9 +2,9 @@
 
 FPSBoxController::FPSBoxController(GameObject* gameObject, std::string camera_name, double camera_offset, 
 														const btVector3& boxHalfExtents, btScalar step_height, 
-														int col_mask, int col_to_masks) : Component(gameObject), currVel(0, 0, 0), jetVel(0, 0, 0)
+														int col_mask, int col_to_masks, Ogre::SceneNode* node) : Component(gameObject), currVel(0, 0, 0), jetVel(0, 0, 0)
 {
-	jet_pack_max = 100;
+	jet_pack_max = 5000;
 	jet_pack_current = jet_pack_max;
 
 	is_jet_packing = false;
@@ -14,16 +14,20 @@ FPSBoxController::FPSBoxController(GameObject* gameObject, std::string camera_na
 	onCollision = NULL;
 	can_move = true;
 
-	base_movement_speed = 0.16f;
+	base_movement_speed = 1.0f;
+	jet_bonus_speed = 1.3f;
 
 	movement_speed_multiplier = 1;
-	slowDown = 0.991;
-	speedUp = 0.01;
 
-	if((_transform = gameObject->getComponent<Transform>()) == NULL)
-		_transform = new Transform(gameObject);
+	slowDown = 0.92f;
+	speedUp = 0.02f;
 
-	fps_camera = new FPSCamera(gameObject, camera_name, camera_offset);
+	jet_slowDown = 0.92f;
+	jet_speedUp = 0.04f;
+
+	_transform = gameObject->getComponent<Transform>();
+
+	fps_camera = new FPSCamera(gameObject, camera_name, camera_offset, node);
 	_collisionShape = new btBoxShape(boxHalfExtents);
 	dynamics_world = _gameObject->scene->physics_world;
 
@@ -83,42 +87,39 @@ void FPSBoxController::detectInput()
 				is_walking = true;
 		}
 
-		if(InputManager::instance()->isMouseRightDown() && !controller->isJumping())
+		if(InputManager::instance()->isMouseRightDown() && (jet_pack_current > 10))
 		{
+			jet_pack_current -= 10;
 			is_jet_packing = true;
 			jetTempDir += btVector3(0,JET_PACK_SPEED,0);
 			movement_speed_multiplier = 2.0f;
 		}
-		else
-			movement_speed_multiplier = 1.0f;
-
-		if((controller->onGround()) || is_jet_packing)
+		else if(jet_pack_current < jet_pack_max)
 		{
-			if(InputManager::instance()->isKeyDown(OIS::KC_A))
-			{
-				tempDir += -v.cross(btVector3(0,1,0));
-				if (!is_jet_packing)
-					is_walking = true;
-			}
+			jet_pack_current = ((jet_pack_current + 2) >= jet_pack_max) ? (jet_pack_max) : (jet_pack_current + 2);
+			movement_speed_multiplier = 1.0f;
+		}
 
-			if(InputManager::instance()->isKeyDown(OIS::KC_D))
-			{
-				tempDir += v.cross(btVector3(0,1,0));
-				if (!is_jet_packing)
-					is_walking = true;
-			}
-			if(InputManager::instance()->isKeyDown(OIS::KC_W))
-			{
-				tempDir += v;
-				if (!is_jet_packing)
-					is_walking = true;
-			}
-			if(InputManager::instance()->isKeyDown(OIS::KC_S))
-			{
-				tempDir += -v;
-				if (!is_jet_packing)
-					is_walking = true;
-			}
+		if(InputManager::instance()->isKeyDown(OIS::KC_A))
+		{
+			tempDir += -v.cross(btVector3(0,1,0));
+			is_walking = true;
+		}
+
+		if(InputManager::instance()->isKeyDown(OIS::KC_D))
+		{
+			tempDir += v.cross(btVector3(0,1,0));
+			is_walking = true;
+		}
+		if(InputManager::instance()->isKeyDown(OIS::KC_W))
+		{
+			tempDir += v;
+			is_walking = true;
+		}
+		if(InputManager::instance()->isKeyDown(OIS::KC_S))
+		{
+			tempDir += -v;
+			is_walking = true;
 		}
 
 		if(InputManager::instance()->isKeyDown(OIS::KC_LSHIFT) && !is_jet_packing && controller->onGround() && !is_jet_packing && is_walking)
@@ -126,12 +127,16 @@ void FPSBoxController::detectInput()
 			is_running = true;
 			movement_speed_multiplier = 1.5f;
 		}
-		else
+		else if(!controller->onGround() && !is_jet_packing && !controller->isJumping())
+		{
+			movement_speed_multiplier = 0.5f;
+		}
+		else {
 			movement_speed_multiplier = 1.0f;
+		}
 	}
-		//UPDATE MOVEMENT DIRECTION
 
-		if(controller->isJumping())
+		if(controller->isJumping() && !is_jet_packing)
 		{
 		}
 		else if(!tempDir.isZero()) {
@@ -153,23 +158,21 @@ void FPSBoxController::detectInput()
 		if(is_jet_packing)
 		{
 			jetTempDir = jetTempDir.normalize();
-			jetVel += jetTempDir * speedUp;
+			jetVel += jetTempDir * jet_speedUp;
 			if (jetVel.length() > 1) {
 				jetVel = jetVel.normalize();
 			}
 		}
 		else 
 		{
-			if (jetVel.length() < speedUp) {
+			if (jetVel.length() < jet_speedUp) {
 				jetVel = btVector3(0,0,0);
 			}
 			else
-				jetVel *= slowDown;
+				jetVel *= jet_slowDown;
 		}
 
-		controller->setWalkDirection((currVel + jetVel) * base_movement_speed * movement_speed_multiplier);
-		fps_camera->is_running = is_running;
-		fps_camera->is_walking = is_walking;
+		controller->setWalkDirection((currVel + (jetVel * jet_bonus_speed)) * base_movement_speed * movement_speed_multiplier);
 }
 
 void FPSBoxController::updateTransform()
@@ -193,7 +196,6 @@ void FPSBoxController::testCollision()
 {
 	if(onCollision != NULL)
 	{
-
 	  btManifoldArray   manifoldArray;
 	  btBroadphasePairArray& pairArray = _ghostObject->getOverlappingPairCache()->getOverlappingPairArray();
 	  int numPairs = pairArray.size();

@@ -10,6 +10,8 @@
 #include "Debug.h"
 #include "common.h"
 
+#include "GraphicsManager.h"
+
 class FPSCamera : Camera
 {
 protected:
@@ -21,10 +23,12 @@ protected:
 	void clampCameraRotation();
 	void updateTransformRotation();
 public:
+
 	bool is_running;
 	bool is_walking;
 	FPSCamera(GameObject*, std::string, double);
 	virtual ~FPSCamera();
+	Ogre::SceneNode* node;
 
 	OgreBites::SdkCameraMan* cameraMan;
 
