@@ -3,7 +3,7 @@
 Weapon::Weapon(PlayerCharacter* player_p, std::string mesh_name, int id_p, double reload_time_p, 
 	int shoot_cost_p, int max_mag_cap_p, int max_ammo_p, double cooldown_p, float posX, 
 			float posY, float posZ, float rotX, float rotY, float rotZ, float rotW,
-			float scaleX, float scaleY, float scaleZ, PlayerBox* pos) : Component((GameObject*)player)
+			float scaleX, float scaleY, float scaleZ, PlayerBox* pos) : Component((GameObject*)player_p)
 {
 	Transform* tran = ((GameObject*)player_p)->getComponent<Transform>();
 
@@ -46,11 +46,11 @@ Weapon::Weapon(PlayerCharacter* player_p, std::string mesh_name, int id_p, doubl
 	idle_animation_state->setLoop(true);
 	idle_animation_state->setWeight(1);
 
-	// reload_animation_state = entity->getAnimationState("Reload");
-	// reload_animation_state->setLoop(false);
-	// reload_animation_state->setWeight(1);
+	reload_animation_state = entity->getAnimationState("Reloading");
+	reload_animation_state->setLoop(false);
+	reload_animation_state->setWeight(1);
 
-	// reload_time = reload_animation_state->getLength();
+	reload_time = reload_animation_state->getLength();
 
 	jumping_animation_state = entity->getAnimationState("Jump");
 	jumping_animation_state->setLoop(false);

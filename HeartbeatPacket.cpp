@@ -27,11 +27,15 @@ void HeartbeatPacket::renewPacket(PlayerCharacter* player)
 	info.is_idle 		= player->is_idle;
 	info.is_reloading 	= player->is_reloading;
 	info.is_jet_packing = player->is_jet_packing;
+	info.is_jumping 	= player->is_jumping;
 
 	info.run_animation_time 	= player->run_animation_time;
 	info.shoot_animation_time 	= player->shoot_animation_time;
 	info.idle_animation_time 	= player->idle_animation_time;
 	info.reload_animation_time 	= player->reload_animation_time;
+	info.jump_animation_time	= player->jump_animation_time;
+	info.head_animation_time	= player->head_animation_time;
+	info.die_animation_time		= player->die_animation_time;
 }
 
 void HeartbeatPacket::updatePlayer(PlayerCharacter* player)
@@ -51,15 +55,19 @@ void HeartbeatPacket::updatePlayer(PlayerCharacter* player)
 
 	player->is_dead			= info.is_dead; 		
 	player->is_shooting		= info.is_shooting; 	
-	player->is_moving;		= info.is_moving; 		
+	player->is_moving		= info.is_moving; 		
 	player->is_idle			= info.is_idle; 		
 	player->is_reloading	= info.is_reloading; 	
 	player->is_jet_packing	= info.is_jet_packing; 
+	player->is_jumping 		= info.is_jumping;
 
 	player->run_animation_time		= info.run_animation_time;
 	player->shoot_animation_time	= info.shoot_animation_time;
-	player->idle_animation_time		= info.idle_animation_timee;
+	player->idle_animation_time		= info.idle_animation_time;
 	player->reload_animation_time 	= info.reload_animation_time;
+	player->jump_animation_time		= info.jump_animation_time;
+	player->head_animation_time		= info.head_animation_time;
+	player->die_animation_time		= info.die_animation_time;
 }
 
 

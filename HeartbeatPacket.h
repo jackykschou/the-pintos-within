@@ -26,15 +26,20 @@ struct Information
 	bool is_idle;
 	bool is_reloading;
 	bool is_jet_packing;
+	bool is_jumping;
 
 	float run_animation_time;
 	float shoot_animation_time;
 	float idle_animation_time;
 	float reload_animation_time;
+	float jump_animation_time;
+	float head_animation_time;
+	float die_animation_time;
 };
 
 class HeartbeatPacket
 {
+public:
 	struct Information info;
 	HeartbeatPacket();
 

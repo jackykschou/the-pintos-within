@@ -28,7 +28,7 @@ void createGameContents()
     SceneManager::instance()->changeCurrentScene(first_scene);
 
     DotSceneLoader loader;
-    loader.parseDotScene(first_scene, "TheCourt.scene", Ogre::ResourceGroupManager::DEFAULT_RESOURCE_GROUP_NAME, first_scene->manager);
+    loader.parseDotScene(first_scene, "TheGauntlet.scene", Ogre::ResourceGroupManager::DEFAULT_RESOURCE_GROUP_NAME, first_scene->manager);
 }
 
 void startGame()

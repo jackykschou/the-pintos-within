@@ -12470,7 +12470,7 @@
         </vertexbuffer>
     </sharedgeometry>
     <submeshes>
-        <submesh material="Grass" operationtype="triangle_list" use32bitindexes="False" usesharedvertices="true">
+        <submesh material="WallMaterial" operationtype="triangle_list" use32bitindexes="False" usesharedvertices="true">
             <faces count="1356">
                 <face v2="1" v3="2" v1="0"/>
                 <face v2="2" v3="3" v1="0"/>
@@ -13832,7 +13832,7 @@
         </submesh>
     </submeshes>
     <submeshnames>
-        <submesh index="0" name="Grass">
+        <submesh index="0" name="WallMaterial">
         </submesh>
     </submeshnames>
 </mesh>

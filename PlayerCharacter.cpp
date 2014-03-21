@@ -42,9 +42,9 @@ PlayerCharacter::PlayerCharacter(bool is_yourself_p, Scene* scene, std::string m
 	shooting_animation_states[0]->setLoop(false);
 	shooting_animation_states[0]->setWeight(1);
 
-	// reload_animation_states[0] = mesh->entity->getAnimationState("Reload");
-	// reload_animation_states[0]->setLoop(false);
-	// reload_animation_states[0]->setWeight(1);
+	reload_animation_states[0] = mesh->entity->getAnimationState("Reloading");
+	reload_animation_states[0]->setLoop(false);
+	reload_animation_states[0]->setWeight(1);
 
 	//load the other weapon animations
 
@@ -71,7 +71,6 @@ PlayerCharacter::PlayerCharacter(bool is_yourself_p, Scene* scene, std::string m
 
 
     health_regen_debouncer = new Debouncer(health_regen_rate * 1000);
-    reload_debouncer = new Debouncer(1);
 
 	if(is_yourself)
   	{
@@ -81,29 +80,44 @@ PlayerCharacter::PlayerCharacter(bool is_yourself_p, Scene* scene, std::string m
 		scene->main_camera = (Camera*)(controller->fps_camera);
 	}
 
-	// <position y="0.000000" x="0.000000" z="-0.000000" />
- //        <rotation qz="-0.000000" qy="0.000000" qx="0.709822" qw="0.704381" />
- //        <scale y="1.000000" x="1.000000" z="1.000000" />
+   // <node name="Rifle" >
+   //      <position y="0.000000" x="0.000000" z="-0.000000" />
+   //      <rotation qz="-0.000000" qy="0.000000" qx="0.709822" qw="0.704381" />
+   //      <scale y="1.000000" x="1.000000" z="1.000000" />
+   //      <game >
+
+	// </node>
+	//      <node name="Muzzle.Rifle" >
+	//        <position y="0.000000" x="0.000000" z="-0.000000" />
+	//        <rotation qz="-0.000000" qy="0.000000" qx="0.000000" qw="1.000000" />
+	//        <scale y="0.049863" x="0.049863" z="0.049863" />
+	//        <game >
+	//          <sensors />
+	//          <actuators />
+	//        </game>
+	//        <entity velocity_max="0.0" velocity_min="0.0" damping_rot="0.10000000149011612" mass_radius="1.0" ghost="False" lock_rot_z="False" lock_rot_x="False" lock_rot_y="False" damping_trans="0.03999999910593033" friction_z="1.0" friction_y="1.0" friction_x="1.0" physics_type="STATIC" name="Hitbox.002" anisotropic_friction="False" meshFile="Hitbox.002.mesh" lock_trans_y="False" lock_trans_x="False" inertia_tensor="0.4000000059604645" lock_trans_z="False" actor="False" mass="1.0" />
+	//      </node>
 
 	//hard code position
-	// Weapon* pistol = new Pistol(this, "Pistol.mesh", 
-	// 		0, 0, 0, 
-	// 		0.709822, 0, 0, 0.704381,
-	// 		10, 10, 10, 
-	// 		new PlayerBox(this, "sphere.mesh",
-	// 		0, 0, 0, 0, 0, 0, 1,
-	// 		1, 1, 1, COL_NOTHING, COL_NOTHING));
+	Weapon* pistol = new Pistol(this, "Gun.mesh", 
+			0, 0, 0, 
+			0.709822, 0, 0, 0.704381,
+			10, 10, 10, 
+			new PlayerBox(this, "sphere.mesh",
+			0, 0, 0, 
+			0, 0, 0, 1,
+			0.049863, 0.049863, 0.049863, COL_NOTHING, COL_NOTHING));
 
 
-	// weapons[0] = pistol;
-	// current_weapon = pistol;
+	weapons[0] = pistol;
+	current_weapon = pistol;
 
 	weapon_running_animation_state = current_weapon->running_animation_state;
 	weapon_idle_animation_state = current_weapon->idle_animation_state;
 	weapon_shooting_animation_state = current_weapon->shooting_animation_state;
 	weapon_reload_animation_state = current_weapon->reload_animation_state;
 	weapon_jumping_animation_state = current_weapon->jumping_animation_state;
-	weapon_die_animation_state = current_weapon->die_animation_state;
+	// weapon_die_animation_state = current_weapon->die_animation_state;
 
 	current_reload_animation_state = reload_animation_states[current_weapon->weapon_id];
 	current_shooting_animation_state = shooting_animation_states[current_weapon->weapon_id];
@@ -137,7 +151,7 @@ void PlayerCharacter::update()
 		weapon_shooting_animation_state = current_weapon->shooting_animation_state;
 		weapon_reload_animation_state = current_weapon->reload_animation_state;
 		weapon_jumping_animation_state = current_weapon->jumping_animation_state;
-		weapon_die_animation_state = current_weapon->die_animation_state;
+		// weapon_die_animation_state = current_weapon->die_animation_state;
 
 		current_reload_animation_state = reload_animation_states[current_weapon->weapon_id];
 		current_shooting_animation_state = shooting_animation_states[current_weapon->weapon_id];
@@ -186,10 +200,6 @@ void PlayerCharacter::update()
 				jumping_animation_state->setWeight(1);
 				jumping_animation_state->setEnabled(true);
 				jumping_animation_state->addTime(GraphicsManager::instance()->getFrameEvent()->timeSinceLastFrame);
-
-				weapon_jumping_animation_state->setWeight(1);
-				weapon_jumping_animation_state->setEnabled(true);
-				weapon_jumping_animation_state->setTimePosition(jumping_animation_state->getTimePosition());
 			}
 			else
 			{
@@ -198,14 +208,12 @@ void PlayerCharacter::update()
 				jumping_animation_state->setWeight(0);
 				jumping_animation_state->setEnabled(false);
 				jumping_animation_state->setTimePosition(0);
-
-				weapon_jumping_animation_state->setWeight(0);
-				weapon_jumping_animation_state->setEnabled(false);
-				weapon_jumping_animation_state->setTimePosition(0);
 			}
 
 			if(controller->is_walking && !controller->is_jet_packing && controller->controller->onGround())
 			{
+				is_moving = true;
+
 				running_animation_state->setWeight(1);
 				running_animation_state->setEnabled(true);
 
@@ -217,11 +225,11 @@ void PlayerCharacter::update()
 				weapon_running_animation_state->setWeight(1);
 				weapon_running_animation_state->setEnabled(true);
 				weapon_running_animation_state->setTimePosition(running_animation_state->getTimePosition());
-
-				is_moving = true;
 			}
 			else
 			{
+				is_moving = false;
+
 				running_animation_state->setWeight(0);
 				running_animation_state->setEnabled(false);
 				running_animation_state->setTimePosition(0);
@@ -229,8 +237,6 @@ void PlayerCharacter::update()
 				weapon_running_animation_state->setWeight(0);
 				weapon_running_animation_state->setEnabled(false);
 				weapon_running_animation_state->setTimePosition(0);
-
-				is_moving = false;
 			}
 
 			if(current_weapon->is_shooting && !current_shooting_animation_state->hasEnded() && !weapon_shooting_animation_state->hasEnded())
@@ -304,7 +310,8 @@ void PlayerCharacter::update()
 				weapon_idle_animation_state->setTimePosition(0);
 			}
 
-			head_animation_state->setTimePosition();
+			// Ogre::Vector3 dir = (Camera*)(controller->fps_camera)->getDirection();
+			// head_animation_state->setTimePosition(dir.y / head_animation_state->getLength());
 
 		}
 		run_animation_time = running_animation_state->getTimePosition();
@@ -312,8 +319,8 @@ void PlayerCharacter::update()
 		idle_animation_time = idle_animation_state->getTimePosition();
 		reload_animation_time = current_reload_animation_state->getTimePosition();
 		jump_animation_time = jumping_animation_state->getTimePosition();
-		head_animation_time = head_animation_state->getTimePosition();
-		die_animation_time = die_animation_state->getTimePosition();
+		// head_animation_time = head_animation_state->getTimePosition();
+		// die_animation_time = die_animation_state->getTimePosition();
 
 		//sent info to sever
 	}
@@ -321,7 +328,117 @@ void PlayerCharacter::update()
 	{
 		//get info from server
 
-		
+
+		if(is_dead)
+		{
+			die_animation_state->setEnabled(true);
+			die_animation_state->setWeight(1);
+			weapon_die_animation_state->setEnabled(true);
+			weapon_die_animation_state->setWeight(1);
+
+			die_animation_state->setTimePosition(die_animation_time);
+			weapon_die_animation_state->setTimePosition(die_animation_time);
+		}
+		else
+		{
+			die_animation_state->setEnabled(false);
+			die_animation_state->setWeight(0);
+			weapon_die_animation_state->setEnabled(false);
+			weapon_die_animation_state->setWeight(0);
+
+			if(is_moving)
+			{
+				running_animation_state->setEnabled(true);
+				running_animation_state->setWeight(1);
+				weapon_running_animation_state->setEnabled(true);
+				weapon_running_animation_state->setWeight(1);
+
+				running_animation_state->setTimePosition(run_animation_time);
+				weapon_running_animation_state->setTimePosition(run_animation_time);
+			}
+			else
+			{
+				running_animation_state->setEnabled(false);
+				running_animation_state->setWeight(0);
+				weapon_running_animation_state->setEnabled(false);
+				weapon_running_animation_state->setWeight(0);
+			}
+
+			if(is_shooting)
+			{
+				current_shooting_animation_state->setEnabled(true);
+				current_shooting_animation_state->setWeight(1);
+				weapon_shooting_animation_state->setEnabled(true);
+				weapon_shooting_animation_state->setWeight(1);
+
+				current_shooting_animation_state->setTimePosition(shoot_animation_time);
+				weapon_shooting_animation_state->setTimePosition(shoot_animation_time);
+			}
+			else
+			{
+				current_shooting_animation_state->setEnabled(false);
+				current_shooting_animation_state->setWeight(0);
+				weapon_shooting_animation_state->setEnabled(false);
+				weapon_shooting_animation_state->setWeight(0);
+			}
+
+			if(is_idle)
+			{
+				idle_animation_state->setEnabled(true);
+				idle_animation_state->setWeight(1);
+				weapon_idle_animation_state->setEnabled(true);
+				weapon_idle_animation_state->setWeight(1);
+
+				idle_animation_state->setTimePosition(idle_animation_time);
+				weapon_idle_animation_state->setTimePosition(idle_animation_time);
+			}
+			else
+			{
+				idle_animation_state->setEnabled(false);
+				idle_animation_state->setWeight(0);
+				weapon_idle_animation_state->setEnabled(false);
+				weapon_idle_animation_state->setWeight(0);
+			}
+
+			if(is_reloading)
+			{
+				current_reload_animation_state->setEnabled(true);
+				current_reload_animation_state->setWeight(1);
+				weapon_reload_animation_state->setEnabled(true);
+				weapon_reload_animation_state->setWeight(1);
+
+				current_reload_animation_state->setTimePosition(reload_animation_time);
+				weapon_reload_animation_state->setTimePosition(reload_animation_time);
+			}
+			else
+			{
+				current_reload_animation_state->setEnabled(false);
+				current_reload_animation_state->setWeight(0);
+				weapon_reload_animation_state->setEnabled(false);
+				weapon_reload_animation_state->setWeight(0);
+			}
+
+			if(is_jumping)
+			{
+				jumping_animation_state->setEnabled(true);
+				jumping_animation_state->setWeight(1);
+				weapon_jumping_animation_state->setEnabled(true);
+				weapon_jumping_animation_state->setWeight(1);
+
+				jumping_animation_state->setTimePosition(jump_animation_time);
+				weapon_jumping_animation_state->setTimePosition(jump_animation_time);
+			}
+			else
+			{
+				jumping_animation_state->setEnabled(false);
+				jumping_animation_state->setWeight(0);
+				weapon_jumping_animation_state->setEnabled(false);
+				weapon_jumping_animation_state->setWeight(0);
+			}
+
+		}
+
+		// head_animation_state->setTimePosition(head_animation_time);
 	}
 }
 

@@ -70,7 +70,6 @@ public:
 	Weapon* current_weapon;
 
 	Debouncer *health_regen_debouncer;
-	Debouncer *reload_debouncer;
 
 	PlayerCharacter(bool, Scene*, std::string,
 	float, float, float, float, float, float, float,

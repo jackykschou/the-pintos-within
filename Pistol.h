@@ -8,12 +8,11 @@
 #include "Weapon.h"
 #include "HitBox.h"
 
-class Pistol : Weapon
+class Pistol : public Weapon
 {
 public:
 	double damage;
 	double shoot_distance;
-protected:
 	Pistol(PlayerCharacter*, std::string, float, 
 			float, float, float, float, float, float,
 			float, float, float, PlayerBox*);

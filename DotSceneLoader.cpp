@@ -527,7 +527,7 @@ void DotSceneLoader::createSceneObject(rapidxml::xml_node<>* XMLNode, std::strin
         pElement = XMLNode->first_node("vertexBuffer");
         pElement = XMLNode->first_node("indexBuffer");
 
-        Block* block = new Block(_scene, "Platform.mesh",
+        Block* block = new Block(_scene, "PlatformGrey.mesh",
             position.x, position.y, position.z,
             rotation.x, rotation.y, rotation.z, rotation.w,
             scale.x, scale.y, scale.z);
@@ -541,7 +541,7 @@ void DotSceneLoader::createSceneObject(rapidxml::xml_node<>* XMLNode, std::strin
         pElement = XMLNode->first_node("vertexBuffer");
         pElement = XMLNode->first_node("indexBuffer");
 
-        Block* block = new Block(_scene, "Platform.mesh",
+        Block* block = new Block(_scene, "PlatformDirt.mesh",
             position.x, position.y, position.z,
             rotation.x, rotation.y, rotation.z, rotation.w,
             scale.x, scale.y, scale.z);
@@ -555,7 +555,7 @@ void DotSceneLoader::createSceneObject(rapidxml::xml_node<>* XMLNode, std::strin
         pElement = XMLNode->first_node("vertexBuffer");
         pElement = XMLNode->first_node("indexBuffer");
 
-        Block* block = new Block(_scene, "Floor.mesh",
+        Block* block = new Block(_scene, "FloorTiled.mesh",
             position.x, position.y, position.z,
             rotation.x, rotation.y, rotation.z, rotation.w,
             scale.x, scale.y, scale.z);
@@ -569,7 +569,7 @@ void DotSceneLoader::createSceneObject(rapidxml::xml_node<>* XMLNode, std::strin
         pElement = XMLNode->first_node("vertexBuffer");
         pElement = XMLNode->first_node("indexBuffer");
 
-        Block* block = new Block(_scene, "Floor.mesh",
+        Block* block = new Block(_scene, "FloorGrass.mesh",
             position.x, position.y, position.z,
             rotation.x, rotation.y, rotation.z, rotation.w,
             scale.x, scale.y, scale.z);
