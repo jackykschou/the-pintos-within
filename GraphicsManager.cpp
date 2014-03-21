@@ -51,6 +51,8 @@ bool GraphicsManager::frameRenderingQueued(const Ogre::FrameEvent& evt)
 
     GameState::instance()->update();
 
+    NetworkManager::instance()->update();
+
     return true;
 }
 

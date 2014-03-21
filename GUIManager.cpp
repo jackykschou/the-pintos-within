@@ -1,6 +1,7 @@
 #include "GUIManager.h"
 #include "InputManager.h"
 #include "Camera.h"
+#include "GameState.h"
 
 void GUIManager::initialize(const Ogre::String& appName) {
 	_trayMgr = new OgreBites::SdkTrayManager(
@@ -13,12 +14,13 @@ void GUIManager::initialize(const Ogre::String& appName) {
     _trayMgr->hideCursor();
 
     buildDebugPanel();
-    buildMainMenu();
     buildHUD();
     buildGameOverMenu();
-
+    buildWaitingMenu();
     
     hideDebugPanel();
+    hideWaitingMenu();
+
     showHUD();
     showGameOverMenu();
 }
@@ -53,7 +55,9 @@ void GUIManager::showDebugPanel() {
 }
 
 void GUIManager::updateDebugPanel() {
-    if (!isDebugPanelVisible() || (SceneManager::instance()->current_scene->main_camera->camera == NULL)) { return; }
+    if (!isDebugPanelVisible()) { return; }
+    if (!SceneManager::instance()->current_scene->main_camera) { return; }
+    
     Ogre::Camera *camera = SceneManager::instance()->current_scene->main_camera->camera;
     _debugPanel->setParamValue(0, Ogre::StringConverter::toString(camera->getDerivedPosition().x));
     _debugPanel->setParamValue(1, Ogre::StringConverter::toString(camera->getDerivedPosition().y));
@@ -88,22 +92,6 @@ bool GUIManager::isDebugPanelVisible() {
     return _debugPanel->getTrayLocation() != OgreBites::TL_NONE;
 }
 
-// MAIN MENU function
-
-void GUIManager::hideMainMenu() {
-    _mainMenuOverlay->hide();
-    _trayMgr->hideCursor();
-}
-
-void GUIManager::showMainMenu() {
-    _mainMenuOverlay->show();
-    _trayMgr->showCursor();
-}
-
-void GUIManager::buildMainMenu() {
-    _mainMenuOverlay = static_cast< Ogre::Overlay* >( Ogre::OverlayManager::getSingleton().getByName("MyOverlays/MainMenuOverlay"));
-}
-
 // HUD functions
 
 void GUIManager::hideHUD() {
@@ -131,14 +119,27 @@ void GUIManager::updateHUD() {
     clock->setCaption(str);
 }
 
+// Game Over menu functions
+
 void GUIManager::showGameOverMenu() {
+    LOG("SHOWING GAME LABEL...");
     _gameOverOverlay->show();
     _trayMgr->showCursor();
 }
 
 void GUIManager::hideGameOverMenu() {
+    LOG("HIDING GAME LABEL...");
+
     _gameOverOverlay->hide();
     _trayMgr->hideCursor();
+
+    if (!NetworkManager::instance()->isActive()) {
+        flipGameOverLabel();
+    }
+}
+
+void GUIManager::flipGameOverLabel() {
+    LOG("FLIPPING GAME LABEl...");
 
     Ogre::OverlayElement* label = _gameOverOverlay->getChild("GameOverPanel")->getChild("GameOverLabel");
     label->setCaption("GAME OVER");
@@ -147,7 +148,6 @@ void GUIManager::hideGameOverMenu() {
     btn->getChild("GameOverButtonLabel")->setCaption("RESTART");
 }
 
-// GAMEOVER menu functions
 void GUIManager::buildGameOverMenu() {
     _gameOverOverlay = static_cast<Ogre::Overlay*>(Ogre::OverlayManager::getSingleton().getByName("MyOverlays/GameOverOverlay"));    
 }
@@ -155,13 +155,31 @@ void GUIManager::buildGameOverMenu() {
 void GUIManager::handleMouseGameOver() {
     if (!_gameOverOverlay->isVisible()) return;
     if (InputManager::instance()->isMouseLeftClicked()) {
-        hideGameOverMenu();
-        GameState::instance()->reset();
-        GameState::instance()->start();
+        if (!NetworkManager::instance()->isClient()) {
+            hideGameOverMenu();
+            GameState::instance()->reset();
+            GameState::instance()->start();
+        }
     }
 }
 
+// Waiting (network) menu
+
+void GUIManager::buildWaitingMenu() {
+    _waitingOverlay = static_cast<Ogre::Overlay*>(Ogre::OverlayManager::getSingleton().getByName("MyOverlays/WaitingOverlay"));
+}
+
+void GUIManager::showWaitingMenu() {
+    _waitingOverlay->show();
+    _trayMgr->hideCursor();
+}
+
+void GUIManager::hideWaitingMenu() {
+    _waitingOverlay->hide();
+}
+
 // Callbacks from InputManager
+
 bool GUIManager::injectMouseUp(const OIS::MouseEvent& evt, OIS::MouseButtonID id) {
     return _trayMgr->injectMouseUp(evt, id);
 }

@@ -47,7 +47,7 @@ Ball::Ball(std::string tag, Scene* scene,
 					ball->debouncer->run([]() {
 						AudioManager::instance()->playDonk();
 					});
-					if((other->tag) == std::string("Player") && !ball->collided && GameState::instance()->running())
+					if((other->tag) == std::string("Player") && !ball->collided && GameState::instance()->isRunning())
 					{
 						GameState::instance()->score++;
 						itself->scene->removeGameObject(itself);

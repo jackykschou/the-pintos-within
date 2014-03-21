@@ -27,6 +27,7 @@
 #include "Block.h"
 #include "Ball.h"
 #include "BallSpawner.h"
+#include "NetworkManager.h"
 #include "PlayerCharacter.h"
 #include "Weapon.h"
 #include "PlayerBox.h"

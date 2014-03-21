@@ -11,5 +11,6 @@
   		exit(1); \
   	} \
 
+#define DEBUG true
 
 #endif // #ifndef __Debug_h_

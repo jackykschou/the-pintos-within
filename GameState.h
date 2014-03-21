@@ -5,6 +5,7 @@
 #include "Singleton.h"
 #include "GUIManager.h"
 #include "AudioManager.h"
+#include "NetworkManager.h"
 
 #define DEFAULT_CLOCK 60 * 2 // 2 minutes
 
@@ -14,8 +15,8 @@ class GameState : public Singleton<GameState>{
   	int timeLeft;
   	void reset();
   	void update();
-	void start();
-	bool running();
+	  void start();
+	  bool isRunning();
 
   private:
   	boost::posix_time::ptime _start;

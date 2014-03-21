@@ -12,15 +12,20 @@ void GameState::reset() {
 void GameState::start() {
 	_running = true;
 	AudioManager::instance()->playStartSound();
+	if (NetworkManager::instance()->isServer()) {
+		NetworkManager::instance()->server->broadcastGameStart();
+	}
 }
 
-bool GameState::running() {
+bool GameState::isRunning() {
 	return _running;
 }
 
 void GameState::update() {
 	if (timeLeft < 1 || !_running) {
-		GUIManager::instance()->showGameOverMenu();
+		if (!NetworkManager::instance()->isActive()) {
+			GUIManager::instance()->showGameOverMenu();
+		}
 	} else {
 		pt::ptime now = pt::second_clock::local_time();
 		pt::time_duration diff = now - _start;
