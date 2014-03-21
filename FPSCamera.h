@@ -26,7 +26,7 @@ public:
 
 	bool is_running;
 	bool is_walking;
-	FPSCamera(GameObject*, std::string, double);
+	FPSCamera(GameObject*, std::string, double,  Ogre::SceneNode*);
 	virtual ~FPSCamera();
 	Ogre::SceneNode* node;
 
