@@ -66,3 +66,82 @@ particle_system JetPackSmoke
         force_application add
     }
 }
+particle_system YellowExplosion
+{
+    material YellowSpark
+    particle_width 8
+    particle_height 8
+    cull_each false
+    quota 200
+    billboard_type oriented_self
+
+    // Area emitter
+    emitter Point
+    {
+        angle 180
+        emission_rate 2000
+        time_to_live .25
+        direction 0 0 -1
+        velocity_min 75
+        velocity_max 150
+        duration .05
+    }
+}
+particle_system OrangeExplosion
+{
+    material OrangeSpark
+    particle_width 6
+    particle_height 6
+    cull_each false
+    quota 200
+    billboard_type oriented_self
+
+    // Area emitter
+    emitter Point
+    {
+        angle 180
+        emission_rate 2000
+        time_to_live .25
+        direction 0 0 -1
+        velocity_min 50
+        velocity_max 100
+        duration .05
+    }
+}
+particle_system OrangeExplosionCloud
+{
+    material FlameCloud
+    particle_width 15
+    particle_height 15
+    cull_each false
+    quota 10000
+    billboard_type oriented_self
+
+    // Area emitter
+    emitter Point
+    {
+        angle 180
+        emission_rate 2500
+        time_to_live 1
+        direction 0 0 -1
+        velocity_min 10
+        velocity_max 80
+        duration .05
+        //width 20
+        //height 20
+        //depth 20
+        //inner_width .01
+        //inner_height .01
+    }
+    affector ColourFader
+    {
+        red -0.75
+        green -0.75
+        blue -0.75
+        alpha -1.5
+    }
+    affector Scaler
+    {
+        rate 30
+    }
+}
