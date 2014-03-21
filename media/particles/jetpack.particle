@@ -1,0 +1,68 @@
+particle_system JetPackYellowSparks
+{
+    material YellowSpark
+    particle_width 1
+    particle_height 1
+    cull_each false
+    quota 200
+    billboard_type oriented_self
+
+    // Area emitter
+    emitter Point
+    {
+        angle 10
+        emission_rate 2000
+        time_to_live .25
+        direction 0 0 -1
+        velocity_min 75
+        velocity_max 150
+        duration .05
+    }
+}
+particle_system JetPackOrangeSparks
+{
+    material OrangeSpark
+    particle_width 1
+    particle_height 1
+    cull_each false
+    quota 200
+    billboard_type oriented_self
+
+    // Area emitter
+    emitter Point
+    {
+        angle 7.5
+        emission_rate 2000
+        time_to_live .25
+        direction 0 0 -1
+        velocity_min 50
+        velocity_max 100
+        duration .05
+    }
+}
+particle_system JetPackSmoke
+{
+    material Examples/Smoke
+    particle_width 5
+    particle_height 5
+    cull_each false
+    quota 10000
+    billboard_type oriented_self
+
+    // Area emitter
+    emitter Point
+    {
+        angle 60
+        emission_rate 100
+        time_to_live 1
+        direction 0 0 -1
+        velocity_min 1
+        velocity_max 10
+        duration .05
+    }
+    affector LinearForce
+    {
+        force_vector 0 5 0
+        force_application add
+    }
+}

@@ -7,6 +7,7 @@
 #include <OgreParticleEmitter.h>
 #include <OgreVector3.h>
 #include "Singleton.h"
+#include "SceneManager.h"
 
 class ParticleManager:public Singleton<ParticleManager>{
   public:
