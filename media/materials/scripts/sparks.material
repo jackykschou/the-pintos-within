@@ -1,0 +1,57 @@
+material YellowSpark
+{
+	technique
+	{
+		pass
+		{
+			lighting off
+			scene_blend alpha_blend
+			depth_write off
+			diffuse vertexcolour
+
+			texture_unit
+			{
+				texture yellowSpark.png
+				tex_address_mode clamp
+			}
+		}
+	}
+}
+material OrangeSpark
+{
+	technique
+	{
+		pass
+		{
+			lighting off
+			scene_blend alpha_blend
+			depth_write off
+			diffuse vertexcolour
+
+			texture_unit
+			{
+				texture orangeSpark.png
+				tex_address_mode clamp
+			}
+		}
+	}
+}
+material FlameCloud
+{
+	technique
+	{
+		pass
+		{
+			lighting off
+			scene_blend alpha_blend
+			depth_write off
+			diffuse vertexcolour
+
+			texture_unit
+			{
+				texture flameCloud.png
+				tex_address_mode clamp
+			}
+		}
+	}
+}

@@ -9,7 +9,7 @@
 #include "PhysicsManager.h"
 #include "ResourcesManager.h"
 #include "GraphicsManager.h"
-#include "GameObject.h"
+#include "GameObject.h" 
 #include "Component.h"
 #include "Transform.h"
 #include "SceneManager.h"
@@ -28,5 +28,12 @@
 #include "Ball.h"
 #include "BallSpawner.h"
 #include "NetworkManager.h"
+#include "PlayerCharacter.h"
+#include "Weapon.h"
+#include "PlayerBox.h"
+#include "HitBox.h"
+#include "Pistol.h"
+#include "PlayerSpawner.h"
+#include "HeartbeatPacket.h"
 
 #endif // #ifndef __TheEngine_h_

@@ -1,16 +1,20 @@
 #include "FPSCamera.h"
 #include <math.h>
 #define PI 3.14159
+#define PIBYTWO 1.570795
 
-FPSCamera::FPSCamera(GameObject* gameObject, std::string name, double height_offset) : Camera(gameObject, name), cameraMan(0)
+FPSCamera::FPSCamera(GameObject* gameObject, std::string name, double height_offset, Ogre::SceneNode* node_p) : Camera(gameObject, name), cameraMan(0)
 {
+	node = node_p;
 	_height_offset = height_offset;
 	cameraMan = new OgreBites::SdkCameraMan(camera);   // create a default camera controller
 	timer = 0.0;
 	bobSpeed = 15.0;
 	bobOffsetY = 0.0;
-	bobbingAmount = 3.0;
-	is_running = false;
+	bobbingAmount = 2.0;
+
+	camera->setNearClipDistance(35.0f);
+	// camera->yaw(-Ogre::Degree(180));
 }
 
 FPSCamera::~FPSCamera()
@@ -21,58 +25,64 @@ FPSCamera::~FPSCamera()
 void FPSCamera::update()
 {	
 	float timeSince = GraphicsManager::instance()->getFrameEvent()->timeSinceLastFrame;
-	if (is_running) {
-		timer += timeSince*bobSpeed;
-		float waveslice = sin(timer);
-		if (timer > PI * 2) {
-			timer = fmod(timer, (PI * 2));
-		}
-		if(waveslice != 0) {
-			bobOffsetY = waveslice * bobbingAmount;
-		}
-	}
-	else if (is_walking) {
-		timer += timeSince*bobSpeed*.5;
-		float waveslice = sin(timer);
-		if (timer > PI * 2) {
-			timer = fmod(timer, (PI * 2));
-		}
-		if(waveslice != 0) {
-			bobOffsetY = waveslice * bobbingAmount *.5;
-		}
+	timer += timeSince*bobSpeed;
+	float waveslice = sin(timer);
+	if (timer > PI * 2) {
+		timer = fmod(timer, (PI * 2));
 	}
 	else {
 		bobOffsetY *= 0.98*(1-timeSince);
 	}
 
-	camera->setPosition(_transform->posX, _transform->posY + _height_offset + bobOffsetY, _transform->posZ);
+	// camera->setPosition(_transform->posX, _transform->posY + _height_offset + bobOffsetY, _transform->posZ);
+	// camera->setPosition(_transform->posX, _transform->posY + _height_offset, _transform->posZ - 40);
 	cameraMan->frameRenderingQueued(*(GraphicsManager::instance()->getFrameEvent()));
 	
-	OIS::MouseEvent* evt = InputManager::instance()->getMouseMovedEvent();
-	if (evt) cameraMan->injectMouseMove(*evt);
+	// OIS::MouseEvent* evt = InputManager::instance()->getMouseMovedEvent();
+	// if (evt) cameraMan->injectMouseMove(*evt);
 
-	clampCameraRotation();
-  	// updateTransformRotation();
+  	updateTransformRotation();
+  	clampCameraRotation();
 }
 
 void FPSCamera::clampCameraRotation()
 {
 	Ogre::Vector3 dir = camera->getDirection();
-    if (dir.y>.9) dir.y=.9;
-    if (dir.y<-.9) dir.y=-.9;
+    if (dir.y>.6) dir.y=.6;
+    if (dir.y<-.35) dir.y=-.35;
     camera->setDirection(dir);
 }
 
 void FPSCamera::updateTransformRotation()
 {
-	Ogre::Quaternion* old_q = new Ogre::Quaternion(_transform->rotW, _transform->rotX, _transform->rotY, _transform->rotZ);
-	Ogre::Quaternion* new_q = new Ogre::Quaternion(old_q->xAxis(), camera->getOrientation().yAxis(), old_q->zAxis());
+	OIS::MouseEvent* evt = InputManager::instance()->getMouseMovedEvent();
+	Ogre::Quaternion new_q = node->getOrientation();
+	if(evt)
+	{
+		if(node)
+		{
+			node->yaw(-Ogre::Degree(evt->state.X.rel * 0.1f));
+			new_q = node->getOrientation();
+		}
+	}
 
-	_transform->rotW = new_q->w;
-	_transform->rotX = new_q->x;
-	_transform->rotY = new_q->y;
-	_transform->rotZ = new_q->z;
+	// // float angle = atan(camera->getDirection().x/camera->getDirection().z);
+	// // angle *= 2;
+	// // Ogre::Quaternion* new_q = new Ogre::Quaternion((Ogre::Radian)angle, Ogre::Vector3(0,1,0));
 
-	delete old_q;
-	delete new_q;
+	_transform->rotW = new_q.w;
+	_transform->rotX = new_q.x;
+	_transform->rotY = new_q.y;
+	_transform->rotZ = new_q.z;
+
+	Ogre::Vector3 dir = node->_getDerivedOrientation() * Ogre::Vector3::NEGATIVE_UNIT_Z;
+
+	Ogre::Vector3 to = Ogre::Vector3(_transform->posX, _transform->posY, _transform->posZ) + (dir * 55);
+	camera->setPosition(to.x, to.y + 35, to.z);
+
+	if(evt && node)
+	{
+		camera->yaw(-Ogre::Degree(evt->state.X.rel * 0.1f));
+		camera->pitch(-Ogre::Degree(evt->state.Y.rel * 0.1f));
+	}
 }

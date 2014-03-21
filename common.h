@@ -10,6 +10,7 @@
 #include <climits>
 #include <ctime>
 #include <sstream>
+#include <unistd.h>
 
 #include <algorithm>
 #include <random>

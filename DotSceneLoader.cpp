@@ -499,17 +499,10 @@ void DotSceneLoader::createSceneObject(rapidxml::xml_node<>* XMLNode, std::strin
 
     if(node_name.find(PLAYER) != std::string::npos)
     {
-        GameObject *go = new GameObject("Player", _scene);
-        Transform *tran1 = go->getComponent<Transform>();
-        tran1->posX = position.x;
-        tran1->posY = position.y + 50;
-        tran1->posZ = position.z;
-
-        FPSBoxController *c = new FPSBoxController(go, "Cam", 17, btVector3(5, 35, 5), 3, COL_CHARACTER, CHARACTER_COLLIDER_WITH);
-
-        SceneManager::instance()->current_scene->main_camera = (Camera*)c->fps_camera;
-
-        LOG("HAHAHAHAHA");
+        PlayerCharacter *go = new PlayerCharacter(true, _scene, "PixelMan.mesh",
+                        position.x, position.y, position.z,
+                        0, 0, 0, 1,
+                        10, 10, 10);
     }
     if(node_name.find(WALL) != std::string::npos)
     {
@@ -519,15 +512,14 @@ void DotSceneLoader::createSceneObject(rapidxml::xml_node<>* XMLNode, std::strin
         pElement = XMLNode->first_node("vertexBuffer");
         pElement = XMLNode->first_node("indexBuffer");
 
-        Block* block = new Block("Wall", _scene, COL_STATIC, STATIC_COLLIDER_WITH, "Wall.mesh",
+        Block* block = new Block(_scene, "Wall.mesh",
             position.x, position.y, position.z,
             rotation.x, rotation.y, rotation.z, rotation.w,
             scale.x, scale.y, scale.z);
 
-        // if(!materialFile.empty())
-            // ((Mesh*)block)->entity->setMaterialName("WallMaterial.material");
     }
-    if(node_name.find(PLATFORM) != std::string::npos)
+
+    if(node_name.find(PLATFORMGREY) != std::string::npos)
     {
         Ogre::String meshFile = getAttrib(XMLNode, "meshFile");
         Ogre::String materialFile = getAttrib(XMLNode, "materialFile");
@@ -535,15 +527,13 @@ void DotSceneLoader::createSceneObject(rapidxml::xml_node<>* XMLNode, std::strin
         pElement = XMLNode->first_node("vertexBuffer");
         pElement = XMLNode->first_node("indexBuffer");
 
-        Block* block = new Block("Ground", _scene, COL_STATIC, STATIC_COLLIDER_WITH, "Platform.mesh",
+        Block* block = new Block(_scene, "PlatformGrey.mesh",
             position.x, position.y, position.z,
             rotation.x, rotation.y, rotation.z, rotation.w,
             scale.x, scale.y, scale.z);
-
-        // if(!materialFile.empty())
-            // ((Mesh*)block)->entity->setMaterialName(materialFile);
     }
-    if(node_name.find(FLOOR) != std::string::npos)
+
+    if(node_name.find(PLATFORMDIRT) != std::string::npos)
     {
         Ogre::String meshFile = getAttrib(XMLNode, "meshFile");
         Ogre::String materialFile = getAttrib(XMLNode, "materialFile");
@@ -551,19 +541,59 @@ void DotSceneLoader::createSceneObject(rapidxml::xml_node<>* XMLNode, std::strin
         pElement = XMLNode->first_node("vertexBuffer");
         pElement = XMLNode->first_node("indexBuffer");
 
-        Block* block = new Block("Ground", _scene, COL_STATIC, STATIC_COLLIDER_WITH, "Floor.mesh",
+        Block* block = new Block(_scene, "PlatformDirt.mesh",
             position.x, position.y, position.z,
             rotation.x, rotation.y, rotation.z, rotation.w,
             scale.x, scale.y, scale.z);
-
-        // if(!materialFile.empty())
-            // ((Mesh*)block)->entity->setMaterialName(materialFile);
     }
-     if(node_name.find(BALL_SPAWNER) != std::string::npos)
+
+    if(node_name.find(FLOORTILE) != std::string::npos)
     {
-        new BallSpawner("spawner", _scene, 
-            COL_BALL, BALL_COLLIDER_WITH, "sphere.mesh",
-            position.x, position.y, position.z, 1.0f, 1.0f);
+        Ogre::String meshFile = getAttrib(XMLNode, "meshFile");
+        Ogre::String materialFile = getAttrib(XMLNode, "materialFile");
+        
+        pElement = XMLNode->first_node("vertexBuffer");
+        pElement = XMLNode->first_node("indexBuffer");
+
+        Block* block = new Block(_scene, "FloorTiled.mesh",
+            position.x, position.y, position.z,
+            rotation.x, rotation.y, rotation.z, rotation.w,
+            scale.x, scale.y, scale.z);
+    }
+
+    if(node_name.find(FLOORGRASS) != std::string::npos)
+    {
+        Ogre::String meshFile = getAttrib(XMLNode, "meshFile");
+        Ogre::String materialFile = getAttrib(XMLNode, "materialFile");
+        
+        pElement = XMLNode->first_node("vertexBuffer");
+        pElement = XMLNode->first_node("indexBuffer");
+
+        Block* block = new Block(_scene, "FloorGrass.mesh",
+            position.x, position.y, position.z,
+            rotation.x, rotation.y, rotation.z, rotation.w,
+            scale.x, scale.y, scale.z);
+    }
+
+    if(node_name.find(SKY) != std::string::npos)
+    {
+        GameObject* sky = new GameObject("sky", _scene);
+
+        Transform* tran = sky->getComponent<Transform>();
+        tran->posX = position.x;
+        tran->posY = position.y;
+        tran->posZ = position.z;
+
+        tran->rotX = rotation.x;
+        tran->rotY = rotation.y;
+        tran->rotZ = rotation.z;
+        tran->rotW = rotation.w;
+
+        tran->scaleX = scale.x;
+        tran->scaleY = scale.y;
+        tran->scaleZ = scale.z;
+
+        Mesh* mesh = new Mesh(sky, "SkyHemi.mesh");
     }
 
     //-----Parse but not using

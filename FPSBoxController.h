@@ -44,12 +44,16 @@ public:
 	float slowDown;
 	float speedUp;
 
+	float jet_slowDown;
+	float jet_speedUp;
+	float jet_bonus_speed;
+
 	btVector3 currVel;
 	btVector3 jetVel;
 
 	void (*onCollision)(btVector3, btVector3, GameObject*);
 
-	FPSBoxController(GameObject*, std::string, double, const btVector3&, btScalar, int, int);
+	FPSBoxController(GameObject*, std::string, double, const btVector3&, btScalar, int, int, Ogre::SceneNode*);
 	virtual ~FPSBoxController();
 
 	virtual void update();

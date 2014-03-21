@@ -10,6 +10,7 @@
 #include "GUIManager.h"
 #include "AudioManager.h"
 #include "NetworkManager.h"
+#include "ParticleManager.h"
 
 class GraphicsManager : public Singleton<GraphicsManager>, public Ogre::FrameListener
 {
