@@ -27,5 +27,6 @@
 #include "Block.h"
 #include "Ball.h"
 #include "BallSpawner.h"
+#include "NetworkManager.h"
 
 #endif // #ifndef __TheEngine_h_

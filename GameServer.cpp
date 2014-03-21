@@ -1,79 +1,127 @@
 #include "GameServer.h"
 
-int backgroundThread(void *ptr);
-
 GameServer::GameServer(int port) {
-	this->state = GameServerReady;
-	this->port  = port;
+	state  = GameServerReady;
+	_port      = port;
+	_tmpSendPacket = SDLNet_AllocPacket(4096);
+	_tmpRecvPacket = SDLNet_AllocPacket(4096);
 }
 
-void GameServer::start() {
-	if (state != GameServerReady) return;
+// starts the web server (opens UDP port 5555)
+int GameServer::start() {
+	if (state != GameServerReady) return -1;
 
 	state = GameServerRunning;
 
 	if (SDLNet_Init() < 0) {
 		fprintf(stderr, "SDLNet_Init: %s\n", SDLNet_GetError());
-		exit(EXIT_FAILURE);
+		return -1;
 	}
 
-	if (!(_socket = SDLNet_UDP_Open(server->port))) {
+	if (!(_socket = SDLNet_UDP_Open(_port))) {
 		fprintf(stderr, "SDLNet_UDP_Open: %s\n", SDLNet_GetError());
-		exit(EXIT_FAILURE);
+		return -1;
 	}
+
+	return 0;
 }
 
+// stops the web server
 void GameServer::stop() {
 	if (state != GameServerRunning) return;
 	state = GameServerStopped;
 }
 
-// Packet processing is done here
+// called from the render loop
 void GameServer::update() {
 	consumePackets();
 }
 
 void GameServer::sendHeartbeat() {
+}
+
+// sends a single packet to a single client
+void GameServer::sendPacketToClient(UDPpacket* packet, IPaddress* ip) {
+	printf("Sending response packet to %x:%x..\n", ip->host, ip->port);
+
+	// unbind from our previous client
+	SDLNet_UDP_Unbind(_socket, 0);
+
+	// this is kinda dumb. i bind to a new channel on every send
+	// because i am too lazy to do manual packet address fixup :)
+
+	if (SDLNet_UDP_Bind(_socket, 0, ip) < 0) {
+		fprintf(stderr, "SDLNet_UDP_Send: %s\n", SDLNet_GetError());
+	}
+
+	if (SDLNet_UDP_Send(_socket, 0, _tmpSendPacket) < 0) {
+		fprintf(stderr, "SDLNet_UDP_Send: %s\n", SDLNet_GetError());
+	}
+}
+
+// broadcasts a single packet to a bunch of clients
+void GameServer::broadcastPacket(UDPpacket *packet) {
 	for (int i = 0; i < _clients.size(); i++) {
-		IPaddress a = _clients.at(i);
-		// send packet to address a
+		IPaddress ip = _clients.at(i);
+		sendPacketToClient(packet, &ip);
 	}
 }
 
+// nom noms any available UDP packets from the wire
 void GameServer::consumePackets() {
-	if (server->state != GameServerRunning) {
-		return -1;
+	if (state != GameServerRunning) {
+		return;
 	}
 
-	/* Make space for the next packet */
-	if (!(p = SDLNet_AllocPacket(512)))
-	{
-		fprintf(stderr, "SDLNet_AllocPacket: %s\n", SDLNet_GetError());
-		return -1;
-	}
-
-	/* Consume all available packets */
-	while (SDLNet_UDP_Recv(_socket, p)) {
-		printf("UDP Packet incoming\n");
-		printf("\tChan:    %d\n", p->channel);
-		printf("\tData:    %s\n", (char *)p->data);
-		printf("\tLen:     %d\n", p->len);
-		printf("\tMaxlen:  %d\n", p->maxlen);
-		printf("\tStatus:  %d\n", p->status);
-		printf("\tAddress: %x %x\n", p->address.host, p->address.port);
-		processPacket(p);
+	// Consume all available packets in the buffer
+	while (SDLNet_UDP_Recv(_socket, _tmpRecvPacket)) {
+		processPacket(_tmpRecvPacket);
 	}
 }
 
+// This is the "meat" of the packet processing logic in GameServer
+// Requests are dished out based on their first byte
 void GameServer::processPacket(UDPpacket *packet) {
-	switch (((char*)packet->data)[0]) {
+
+#ifdef DEBUG
+	printf("UDP Packet incoming\n");
+	printf("\tChan:    %d\n", packet->channel);
+	printf("\tData:    %s\n", (char *)packet->data);
+	printf("\tLen:     %d\n", packet->len);
+	printf("\tMaxlen:  %d\n", packet->maxlen);
+	printf("\tStatus:  %d\n", packet->status);
+	printf("\tAddress: %x %x\n", packet->address.host, packet->address.port);
+#endif
+
+	char packetType = ((char*)packet->data)[0];
+	printf("PacketType: %c\n", packetType);
+
+	switch (packetType) {
 		case 'j':
 			// JOIN request adds a character to the game
-			_clients.push_back(packet->address);
+			handleJoinPacket(packet);
 			break;
 		case 'e':
 			// EVENT request injects an event on a linked character
 			// XXX
 			break;
 	}
+}
+
+// when a client joins, we need to ACK back that it succeeded
+void GameServer::handleJoinPacket(UDPpacket *packet) {
+	IPaddress ip;
+
+	printf("CLIENT %x %d JOINED\n", packet->address.host, packet->address.port);
+
+	_clients.push_back(packet->address);
+
+	_tmpSendPacket->data = (unsigned char*)"k";
+	_tmpSendPacket->len = strlen((char*)_tmpSendPacket->data) + 1;
+
+	memcpy(&ip, &(packet->address), sizeof(IPaddress));
+
+	printf("Sending response packet..\n");
+
+	sendPacketToClient(_tmpSendPacket, &ip);
 }

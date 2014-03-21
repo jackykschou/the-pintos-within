@@ -14,8 +14,8 @@ class GameState : public Singleton<GameState>{
   	int timeLeft;
   	void reset();
   	void update();
-	void start();
-	bool running();
+	  void start();
+	  bool running();
 
   private:
   	boost::posix_time::ptime _start;
