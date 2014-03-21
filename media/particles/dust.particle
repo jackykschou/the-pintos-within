@@ -1,0 +1,28 @@
+particle_system DustCloud
+{
+    material Dust
+    particle_width 15
+    particle_height 15
+    cull_each false
+    quota 100
+    billboard_type oriented_self
+
+    // Area emitter
+    emitter Point
+    {
+        angle 60
+        emission_rate 200
+        time_to_live 1
+        direction 0 0 -1
+        velocity_min 4
+        velocity_max 30
+        duration .5
+    }
+
+    // Gravity
+    //affector LinearForce
+    //{
+    //    force_vector 0 -100 0
+    //    force_application add
+    //}
+}

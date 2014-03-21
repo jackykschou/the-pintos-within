@@ -122,7 +122,7 @@ void FPSBoxController::detectInput()
 			is_walking = true;
 		}
 
-		if(InputManager::instance()->isKeyDown(OIS::KC_LSHIFT) && !is_jet_packing && controller->onGround() && !is_jet_packing)
+		if(InputManager::instance()->isKeyDown(OIS::KC_LSHIFT) && !is_jet_packing && controller->onGround() && !is_jet_packing && is_walking)
 		{
 			is_running = true;
 			movement_speed_multiplier = 1.5f;
@@ -131,8 +131,9 @@ void FPSBoxController::detectInput()
 		{
 			movement_speed_multiplier = 0.5f;
 		}
-		else
+		else {
 			movement_speed_multiplier = 1.0f;
+		}
 	}
 
 		if(controller->isJumping() && !is_jet_packing)

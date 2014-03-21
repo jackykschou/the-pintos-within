@@ -23,15 +23,15 @@ FPSCamera::~FPSCamera()
 }
 
 void FPSCamera::update()
-{
+{	
 	float timeSince = GraphicsManager::instance()->getFrameEvent()->timeSinceLastFrame;
 	timer += timeSince*bobSpeed;
 	float waveslice = sin(timer);
 	if (timer > PI * 2) {
 		timer = fmod(timer, (PI * 2));
 	}
-	if(waveslice != 0) {
-		bobOffsetY = waveslice * bobbingAmount;
+	else {
+		bobOffsetY *= 0.98*(1-timeSince);
 	}
 
 	// camera->setPosition(_transform->posX, _transform->posY + _height_offset + bobOffsetY, _transform->posZ);

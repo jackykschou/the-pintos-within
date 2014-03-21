@@ -24,7 +24,9 @@ protected:
 	void updateTransformRotation();
 public:
 
-	FPSCamera(GameObject*, std::string, double, Ogre::SceneNode*);
+	bool is_running;
+	bool is_walking;
+	FPSCamera(GameObject*, std::string, double);
 	virtual ~FPSCamera();
 	Ogre::SceneNode* node;
 
