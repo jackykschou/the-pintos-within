@@ -17,6 +17,7 @@ public:
 	virtual btScalar addSingleResult(btManifoldPoint& cp,
 		   	const btCollisionObject*, int, int,
 		    const btCollisionObject*, int, int);
+	btScalar addSingleResult(btManifoldPoint&, const btCollisionObjectWrapper*, int, int, const btCollisionObjectWrapper*, int, int) { return 0; }
 };
 
 #endif // #ifndef __BoxRigidbody_h_

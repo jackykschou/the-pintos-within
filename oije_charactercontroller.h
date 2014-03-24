@@ -160,6 +160,8 @@ public:
    void setUseGhostSweepTest(bool use)               { m_useGhostObjectSweepTest = use; }
 
    bool onGround () const                        { return m_verticalVelocity == 0.0 && m_verticalOffset == 0.0; }
+   void reset(btCollisionWorld*) {}
+   void setUpInterpolate(bool) {}
 };
 //---------------------------------------------------------------------------------------
 

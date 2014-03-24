@@ -34,6 +34,7 @@ using namespace OiJE;
 // static helper method
 static btVector3 getNormalizedVector(const btVector3& v)
 {
+   if (v.length() == 0) return v;
    btVector3 n = v.normalized();
    if (n.length() < SIMD_EPSILON) {
       n.setValue(0, 0, 0);
