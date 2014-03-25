@@ -4,8 +4,9 @@
 #include <SDL/SDL_net.h>
 #include "GUIManager.h"
 #include "common.h"
+#include "AckBuffer.h"
 
-#define HEARTBEATS_PER_SEC 6
+#define HEARTBEATS_PER_SEC 10
 
 #define HEARTBEAT_MAX_DELAY 1000.0f/HEARTBEATS_PER_SEC
 
@@ -20,6 +21,7 @@ class GameServer {
 public:
 
   GameServer(int port);
+  ~GameServer();
 
   // Starts a UDP server in a bg thread
   int start();
@@ -35,6 +37,10 @@ public:
 
   // sends GAME START event to every client
   void broadcastGameStart();
+
+  // broadcasts a single chunk of data to a bunch of clients
+  // this method can be used for binary or cstring (NULL terminated) buffer
+  void broadcastData(void* data, int len, bool ack);
 
 
 private:
@@ -61,27 +67,28 @@ private:
   void handleJoinPacket(UDPpacket* packet);
 
   // sends a single packet back to a single client
-  void sendPacketToClient(UDPpacket* packet, IPaddress* ip);
+  void sendPacketToClient(UDPpacket* packet, IPaddress* ip, bool ack);
+
+  // resend any ACK-requiring packets that we did not hear back about
+  void resendExpiredAcks();
 
   // broadcasts a single packet to all connected clients
-  void broadcastPacket(UDPpacket* packet);
+  void broadcastPacket(UDPpacket* packet, bool ack);
 
-  // broadcasts a single chunk of data to a bunch of clients
-  // this method can be used for binary or cstring (NULL terminated) buffer
-  void broadcastData(void* data, int len);
-
-// broadcasts a single chunk of data to a bunch of clients
-// this method can ONLY be used if data is a cstring (NULL terminated) buffer
-  void broadcastData(const char* data);
+  // broadcasts a single cstring (data->"\x00") to a bunch of clients
+  void broadcastString(const char* data, bool ack);
 
   // sends game state to every client
   void broadcastHeartbeat();
 
   // a temporarily allocated packet for sending on the wire
-  UDPpacket *_tmpSendPacket;
+  UDPpacket* _tmpSendPacket;
 
   // a temporarily allocated packet for consuming the wire
-  UDPpacket *_tmpRecvPacket;
+  UDPpacket* _tmpRecvPacket;
+
+  // a buffer for "remembering" sent packets that are awaiting an ACK response
+  AckBuffer* _ackBuffer;
 };
 
 #endif

@@ -2,15 +2,21 @@
 #include "GameState.h"
 
 GameClient::GameClient(char* host, int port) {
-	_host = (char*)malloc(strlen(host));
+	// copy the string into a new chunk of memory :)
+	_host = (char*)malloc(strlen(host)+1);
 	strcpy(_host, host);
 
-	_port = port;
-
-	state = GameClientReady;
-
+	_port          = port;
+	state          = GameClientReady;
 	_tmpSendPacket = SDLNet_AllocPacket(4096);
 	_tmpRecvPacket = SDLNet_AllocPacket(4096);
+	_ackBuffer     = new AckBuffer();
+}
+
+GameClient::~GameClient() {
+	SDLNet_FreePacket(_tmpSendPacket);
+	SDLNet_FreePacket(_tmpRecvPacket);
+	delete _ackBuffer;
 }
 
 int GameClient::connect() {
@@ -38,27 +44,39 @@ int GameClient::connect() {
 		return 1;
 	}
 
+	// yup.
+	_tmpSendPacket->address.host = _srvadd.host;
+	_tmpSendPacket->address.port = _srvadd.port;
+
 	joinGame();
 
 	return 0; 
+}
+
+// sends a chunk of data in a UDP packet to the host
+void GameClient::sendData(void* data, int len, bool ack) {
+	memcpy(_tmpSendPacket->data, data, len);
+	_tmpSendPacket->len = len;
+	if (SDLNet_UDP_Send(_socket, 0, _tmpSendPacket) < 0) {
+		fprintf(stderr, "SDLNet_UDP_Send: %s\n", SDLNet_GetError());
+	}
+	if (ack) {
+		_ackBuffer->injectAck(_tmpSendPacket, _srvadd);
+	}
 }
 
 int GameClient::joinGame() {
 	printf("Sending join game request...");
 
 	state = GameClientRunning;
-
-	_tmpSendPacket->address.host = _srvadd.host;
-	_tmpSendPacket->address.port = _srvadd.port;
-	_tmpSendPacket->data = (unsigned char*)"j";
-	_tmpSendPacket->len = strlen((char*)_tmpSendPacket->data) + 1;
-	SDLNet_UDP_Send(_socket, 0, _tmpSendPacket);
+	sendData((void*)"j", 2, true);
 
 	return 0;
 }
 
 void GameClient::update() {
 	consumePackets();
+	resendExpiredAcks();
 }
 
 // let's see what packets the server has sent us
@@ -74,12 +92,13 @@ int GameClient::consumePackets() {
 	return 0;
 }
 
+// This is the "meat" of the packet processing logic in GameServer
 void GameClient::processPacket(UDPpacket* packet) {
 
 #ifdef DEBUG
 	printf("UDP Packet incoming\n");
 	printf("\tChan:    %d\n", packet->channel);
-	printf("\tData:    %s\n", (char *)packet->data);
+	printf("\tData:    %s\n", (char*)packet->data);
 	printf("\tLen:     %d\n", packet->len);
 	printf("\tMaxlen:  %d\n", packet->maxlen);
 	printf("\tStatus:  %d\n", packet->status);
@@ -102,17 +121,31 @@ void GameClient::processPacket(UDPpacket* packet) {
 	}
 }
 
-void GameClient::handleJoinAckPacket(UDPpacket *packet) {
+void GameClient::resendExpiredAcks() {
+	std::map<AckId, Ack*>::iterator iter;
+	for (iter = _ackBuffer->buffer.begin(); iter != _ackBuffer->buffer.end(); iter++) {
+		Ack* ack = iter->second;
+		if (ack->isExpired()) {
+			// resend the original request
+			// don't re-inject another ACK
+			LOG("ACK EXPIRED. RESENDING REQUEST.");
+			sendData(ack->packetData, ack->packetLen, false);
+			ack->reset();
+		}
+	}
+}
+
+void GameClient::handleJoinAckPacket(UDPpacket* packet) {
 	LOG("SUCCESSFULLY JOINED SERVER");
 }
 
-void GameClient::handleGameStartPacket(UDPpacket *packet) {
+void GameClient::handleGameStartPacket(UDPpacket* packet) {
 	LOG("STARTING GAME.");
 	GUIManager::instance()->hideWaitingMenu();
 	GameState::instance()->reset();
 	GameState::instance()->start();
 }
 
-void GameClient::handleHeartbeatPacket(UDPpacket *packet) {
+void GameClient::handleHeartbeatPacket(UDPpacket* packet) {
 	LOG("RECEIVED HEARTBEAT PACKET");
 }

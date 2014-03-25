@@ -7,6 +7,8 @@
 // A simple incrementing id for uniquely identifying ACK packets
 typedef uint32_t AckId;
 
+#define ACK_EXPIRATION_MS 40
+
 // A single ACK needs to know the remote address/port and the contents of the packet
 class Ack {
  public:
@@ -15,9 +17,13 @@ class Ack {
   AckId id;
   void *packetData;
   int packetLen;
+  boost::posix_time::ptime *sentAt;
 
   Ack(IPaddress addr, AckId id, void *packetData, int packetLen);
   ~Ack();
+
+  bool isExpired();
+  void reset();
 };
 
 //
@@ -32,14 +38,19 @@ class AckBuffer {
   AckBuffer();
 
   // called by the sender when an ACK is required by a certain packet
-  AckId beginAck(UDPpacket *p);
+  AckId injectAck(UDPpacket* packet, IPaddress addr);
 
   // called when an ACK is received to remove the Ack from the buffer
-  void endAck(AckId id);
+  void forgetAck(AckId id);
+
+  // a mapping from id -> original request
+  std::map<AckId, Ack*> buffer;
+
 
  private:
+
+  // the auto-incrementing id of the ACK
   AckId currentId;
-  std::map<AckId, Ack*> buffer;
 
 };
 

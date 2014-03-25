@@ -4,11 +4,18 @@
 namespace pt = boost::posix_time;
 
 GameServer::GameServer(int port) {
-	state  = GameServerReady;
-	_port      = port;
+	state          = GameServerReady;
+	_port          = port;
 	_tmpSendPacket = SDLNet_AllocPacket(4096);
 	_tmpRecvPacket = SDLNet_AllocPacket(4096);
 	_lastHeartbeat = NULL;
+	_ackBuffer     = new AckBuffer();
+}
+
+GameServer::~GameServer() {
+	SDLNet_FreePacket(_tmpSendPacket);
+	SDLNet_FreePacket(_tmpRecvPacket);
+	delete _ackBuffer;
 }
 
 // starts the web server (opens UDP port 5555)
@@ -40,6 +47,7 @@ void GameServer::stop() {
 void GameServer::update() {
 	consumePackets();
 
+
 	// send a heartbeat if necessary
 	if (GameState::instance()->isRunning()) {
 		broadcastHeartbeat();
@@ -47,11 +55,16 @@ void GameServer::update() {
 }
 
 // sends a single packet to a single client
-void GameServer::sendPacketToClient(UDPpacket* packet, IPaddress* ip) {
+void GameServer::sendPacketToClient(UDPpacket* packet, IPaddress* ip, bool ack) {
 	printf("Sending response packet to %x:%x..\n", ip->host, ip->port);
 
 	// unbind from our previous client
 	SDLNet_UDP_Unbind(_socket, 0);
+
+	// inject the ACK info if necessary
+	if (ack) {
+		_ackBuffer->injectAck(packet, *ip);
+	}
 
 	// this is kinda dumb. i bind to a new channel on every send
 	// because i am too lazy to do manual packet address fixup :)
@@ -66,29 +79,37 @@ void GameServer::sendPacketToClient(UDPpacket* packet, IPaddress* ip) {
 }
 
 // broadcasts a single packet to a bunch of clients
-void GameServer::broadcastPacket(UDPpacket *packet) {
+void GameServer::broadcastPacket(UDPpacket* packet, bool ack) {
 	for (int i = 0; i < _clients.size(); i++) {
 		IPaddress ip = _clients.at(i);
-		sendPacketToClient(packet, &ip);
+		sendPacketToClient(packet, &ip, ack);
 	}
 }
 
 // broadcasts a single chunk of data to a bunch of clients
 // this method can be used for binary or cstring (NULL terminated) buffer
-void GameServer::broadcastData(void* data, int len) {
-	_tmpSendPacket->data = (unsigned char*)data;
-	_tmpSendPacket->len  = len+1;
-	broadcastPacket(_tmpSendPacket);
+void GameServer::broadcastData(void* data, int len, bool ack) {
+	memcpy(_tmpSendPacket->data, data, len);
+	_tmpSendPacket->len  = len;
+	broadcastPacket(_tmpSendPacket, ack);
 }
 
-// broadcasts a single chunk of data to a bunch of clients
-// this method can ONLY be used if data is a cstring (NULL terminated) buffer
-void GameServer::broadcastData(const char* data) {
-	_tmpSendPacket->data = (unsigned char*)data;
-	_tmpSendPacket->len  = strlen(data)+1;
-	broadcastPacket(_tmpSendPacket);
+// broadcasts a single cstring (data->"\x00") to a bunch of clients
+void GameServer::broadcastString(const char* data, bool ack) {
+	broadcastData((void*)data, strlen(data)+1, ack);
 }
 
+void GameServer::resendExpiredAcks() {
+	std::map<AckId, Ack*>::iterator iter;
+	for (iter = _ackBuffer->buffer.begin(); iter != _ackBuffer->buffer.end(); iter++) {
+		Ack* ack = iter->second;
+		if (ack->isExpired()) {
+			LOG("ACK EXPIRED. RESENDING REQUEST.");
+			broadcastData(ack->packetData, ack->packetLen, false);
+			ack->reset();
+		}
+	}
+}
 
 // nom noms any available UDP packets from the wire
 void GameServer::consumePackets() {
@@ -104,12 +125,12 @@ void GameServer::consumePackets() {
 
 // This is the "meat" of the packet processing logic in GameServer
 // Requests are dished out based on their first byte
-void GameServer::processPacket(UDPpacket *packet) {
+void GameServer::processPacket(UDPpacket* packet) {
 
 #ifdef DEBUG
 	printf("UDP Packet incoming\n");
 	printf("\tChan:    %d\n", packet->channel);
-	printf("\tData:    %s\n", (char *)packet->data);
+	printf("\tData:    %s\n", (char*)packet->data);
 	printf("\tLen:     %d\n", packet->len);
 	printf("\tMaxlen:  %d\n", packet->maxlen);
 	printf("\tStatus:  %d\n", packet->status);
@@ -146,7 +167,7 @@ void GameServer::handleJoinPacket(UDPpacket *packet) {
 
 	printf("Sending response packet..\n");
 
-	sendPacketToClient(_tmpSendPacket, &ip);
+	sendPacketToClient(_tmpSendPacket, &ip, true);
 
 	// the user can now start the game
 	GUIManager::instance()->hideWaitingMenu();
@@ -155,7 +176,7 @@ void GameServer::handleJoinPacket(UDPpacket *packet) {
 
 // sends GAME START event to every client
 void GameServer::broadcastGameStart() {
-	broadcastData("s");
+	broadcastString("s", true);
 }
 
 // sends game state to every client every HEARTBEAT_MAX_DELAY milliseconds
@@ -169,7 +190,7 @@ void GameServer::broadcastHeartbeat() {
 
 	if (!_lastHeartbeat || diff.total_milliseconds() > HEARTBEAT_MAX_DELAY) {
 		LOG("SENDING HEARTBEAT PACKET");
-		broadcastData("h");
+		broadcastString("h", false);
 
 		if (!_lastHeartbeat) {
 			_lastHeartbeat = (pt::ptime*)malloc(sizeof(pt::ptime));
