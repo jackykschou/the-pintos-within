@@ -42,6 +42,9 @@ public:
   // this method can be used for binary or cstring (NULL terminated) buffer
   void broadcastData(void* data, int len, bool ack);
 
+  // sends a chunk of data to a single client
+  void sendDataToClient(void* data, int len, IPaddress* ip, bool ack);
+
 
 private:
 

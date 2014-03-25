@@ -78,6 +78,12 @@ void GameServer::sendPacketToClient(UDPpacket* packet, IPaddress* ip, bool ack) 
 	}
 }
 
+void GameServer::sendDataToClient(void* data, int len, IPaddress* ip, bool ack) {
+	memcpy(_tmpSendPacket->data, data, len);
+	_tmpSendPacket->len  = len;
+	sendPacketToClient(_tmpSendPacket, ip, ack);
+}
+
 // broadcasts a single packet to a bunch of clients
 void GameServer::broadcastPacket(UDPpacket* packet, bool ack) {
 	for (int i = 0; i < _clients.size(); i++) {
@@ -105,9 +111,7 @@ void GameServer::resendExpiredAcks() {
 		Ack* ack = iter->second;
 		if (ack->isExpired()) {
 			LOG("ACK EXPIRED. RESENDING REQUEST.");
-			memcpy(_tmpSendPacket->data, ack->packetData, ack->packetLen);
-			_tmpSendPacket->len  = ack->packetLen;
-			sendPacketToClient(_tmpSendPacket, &ack->address, false);
+			sendDataToClient(ack->packetData, ack->packetLen, &ack->address, ack);
 			ack->reset();
 		}
 	}
@@ -151,6 +155,17 @@ void GameServer::processPacket(UDPpacket* packet) {
 			// EVENT request injects an event on a linked character
 			// XXX
 			break;
+	}
+
+	// IF REQUEST HAS ACK, FIRE ACK PACKET!
+	int offset = 2 + sizeof(AckId);
+	if (packet->len > offset) {
+		char c = ((char*)packet->data)[packet->len - offset];
+		char d = ((char*)packet->data)[packet->len - offset + 1];
+		if (c == 'A' && d == 'A') {
+			// well by golly we have ourselves an ACK
+			sendDataToClient((void*)"A", 2, &(packet->address), false);
+		}
 	}
 }
 

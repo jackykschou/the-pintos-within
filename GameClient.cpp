@@ -119,6 +119,18 @@ void GameClient::processPacket(UDPpacket* packet) {
 			handleHeartbeatPacket(packet);
 			break;
 	}
+
+
+	// IF REQUEST HAS ACK, FIRE ACK PACKET!
+	int offset = 2 + sizeof(AckId);
+	if (packet->len > offset) {
+		char c = ((char*)packet->data)[packet->len - offset];
+		char d = ((char*)packet->data)[packet->len - offset + 1];
+		if (c == 'A' && d == 'A') {
+			// well by golly we have ourselves an ACK
+			sendData((void*)"A", 2, false);
+		}
+	}
 }
 
 void GameClient::resendExpiredAcks() {
