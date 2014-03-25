@@ -25,5 +25,5 @@ bool Debouncer::run(void (*lambda)())
 
 void Debouncer::updateTimer(float time)
 {
-	_waitMilliseconds = time * 1000;
+	_waitMilliseconds = time;
 }

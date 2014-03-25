@@ -78,6 +78,7 @@ public:
 	virtual ~PlayerCharacter();
 
 	virtual void update();
+	virtual void changeWeapon(int);
 };
 
 #endif // #ifndef __PlayerCharacter_h_

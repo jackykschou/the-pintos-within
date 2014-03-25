@@ -3,12 +3,11 @@
 HeartbeatPacket::HeartbeatPacket()
 {
 	info.type = HEARTBEATPACK;
-	info.exist = false;
 }
 
 void HeartbeatPacket::renewPacket(PlayerCharacter* player)
 {
-	info.exist = true;
+	info.flags = 0;
 
 	Transform* tran = ((GameObject*)player)->getComponent<Transform>();
 
@@ -21,13 +20,13 @@ void HeartbeatPacket::renewPacket(PlayerCharacter* player)
 	info.playerRotZ = tran->rotZ;
 	info.playerRotW = tran->rotW;
 
-	info.is_dead 		= player->is_dead;
-	info.is_shooting 	= player->is_shooting;
-	info.is_moving 		= player->is_moving;
-	info.is_idle 		= player->is_idle;
-	info.is_reloading 	= player->is_reloading;
-	info.is_jet_packing = player->is_jet_packing;
-	info.is_jumping 	= player->is_jumping;
+	info.flags |= player->is_dead ? DEAD : 0;
+	info.flags |= player->is_shooting ? SHOOTING : 0;
+	info.flags |= player->is_moving ? MOVING : 0;
+	info.flags |= player->is_idle ? IDLE : 0;
+	info.flags |= player->is_reloading ? RELOADING : 0;
+	info.flags |= player->is_jet_packing ? JETPACKING : 0;
+	info.flags |= player->is_jumping ? JUMPING : 0;
 
 	info.run_animation_time 	= player->run_animation_time;
 	info.shoot_animation_time 	= player->shoot_animation_time;
@@ -40,8 +39,6 @@ void HeartbeatPacket::renewPacket(PlayerCharacter* player)
 
 void HeartbeatPacket::updatePlayer(PlayerCharacter* player)
 {
-	info.exist = true;
-
 	Transform* tran = ((GameObject*)player)->getComponent<Transform>();
 
 	tran->posX = info.playerPosX;
@@ -53,13 +50,13 @@ void HeartbeatPacket::updatePlayer(PlayerCharacter* player)
 	tran->rotZ = info.playerRotZ;
 	tran->rotW = info.playerRotW;
 
-	player->is_dead			= info.is_dead; 		
-	player->is_shooting		= info.is_shooting; 	
-	player->is_moving		= info.is_moving; 		
-	player->is_idle			= info.is_idle; 		
-	player->is_reloading	= info.is_reloading; 	
-	player->is_jet_packing	= info.is_jet_packing; 
-	player->is_jumping 		= info.is_jumping;
+	player->is_dead			= ((info.flags & DEAD) == DEAD) ? true : false;
+	player->is_shooting		= ((info.flags & SHOOTING) == SHOOTING) ? true : false;
+	player->is_moving		= ((info.flags & MOVING) == MOVING) ? true : false;
+	player->is_idle			= ((info.flags & IDLE) == IDLE) ? true : false;
+	player->is_reloading	= ((info.flags & RELOADING) == RELOADING) ? true : false;
+	player->is_jet_packing	= ((info.flags & JETPACKING) == JETPACKING) ? true : false;
+	player->is_jumping 		= ((info.flags & JUMPING) == JUMPING) ? true : false;
 
 	player->run_animation_time		= info.run_animation_time;
 	player->shoot_animation_time	= info.shoot_animation_time;

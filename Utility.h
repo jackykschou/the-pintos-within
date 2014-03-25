@@ -31,6 +31,7 @@ enum collisiontypes {
 
 #define HEARTBEATPACK 1
 #define JOINPACK 2
-#define ACTIONPACK 3
+#define VITALPACK 3
+#define PARTICLEPACK 4
 
 #endif // #ifndef __Utility_h_

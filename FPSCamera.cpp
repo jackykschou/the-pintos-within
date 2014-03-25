@@ -13,7 +13,10 @@ FPSCamera::FPSCamera(GameObject* gameObject, std::string name, double height_off
 	bobOffsetY = 0.0;
 	bobbingAmount = 2.0;
 
+	camera->setPosition(_transform->posX, _transform->posY, _transform->posZ);
+	camera->setOrientation(Ogre::Quaternion(_transform->rotW, _transform->rotX, _transform->rotY, _transform->rotZ));
 	camera->setNearClipDistance(35.0f);
+
 	// camera->yaw(-Ogre::Degree(180));
 }
 
@@ -34,9 +37,7 @@ void FPSCamera::update()
 		bobOffsetY *= 0.98*(1-timeSince);
 	}
 
-	// camera->setPosition(_transform->posX, _transform->posY + _height_offset + bobOffsetY, _transform->posZ);
-	// camera->setPosition(_transform->posX, _transform->posY + _height_offset, _transform->posZ - 40);
-	cameraMan->frameRenderingQueued(*(GraphicsManager::instance()->getFrameEvent()));
+	// cameraMan->frameRenderingQueued(*(GraphicsManager::instance()->getFrameEvent()));
 	
 	// OIS::MouseEvent* evt = InputManager::instance()->getMouseMovedEvent();
 	// if (evt) cameraMan->injectMouseMove(*evt);
@@ -66,9 +67,9 @@ void FPSCamera::updateTransformRotation()
 		}
 	}
 
-	// // float angle = atan(camera->getDirection().x/camera->getDirection().z);
-	// // angle *= 2;
-	// // Ogre::Quaternion* new_q = new Ogre::Quaternion((Ogre::Radian)angle, Ogre::Vector3(0,1,0));
+	// float angle = atan(camera->getDirection().x/camera->getDirection().z);
+	// angle *= 2;
+	// Ogre::Quaternion* new_q = new Ogre::Quaternion((Ogre::Radian)angle, Ogre::Vector3(0,1,0));
 
 	_transform->rotW = new_q.w;
 	_transform->rotX = new_q.x;
@@ -77,7 +78,7 @@ void FPSCamera::updateTransformRotation()
 
 	Ogre::Vector3 dir = node->_getDerivedOrientation() * Ogre::Vector3::NEGATIVE_UNIT_Z;
 
-	Ogre::Vector3 to = Ogre::Vector3(_transform->posX, _transform->posY, _transform->posZ) + (dir * 55);
+	Ogre::Vector3 to = Ogre::Vector3(_transform->posX, _transform->posY, _transform->posZ) - (dir * 80);
 	camera->setPosition(to.x, to.y + 35, to.z);
 
 	if(evt && node)

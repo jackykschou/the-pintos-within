@@ -26,8 +26,8 @@ class NetworkManager : public Singleton<NetworkManager> {
 	bool isServer();
 	bool isClient();
 
-  	GameServer* server;
-  	GameClient* client;
+  GameServer* server;
+  GameClient* client;
 };
 
 #endif

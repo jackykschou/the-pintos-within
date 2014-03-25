@@ -25,6 +25,7 @@ public:
 	Ogre::AnimationState *die_animation_state;
 
 	float reload_timer;
+	float shoot_timer;
 
 	int weapon_id;
 
@@ -40,10 +41,8 @@ public:
 	bool is_reloading;
 
 	Ogre::Entity* entity;
-  	Ogre::SceneNode* node;
+  Ogre::SceneNode* node;
   
-	Debouncer* shoot_debouncer;
-
 	Weapon(PlayerCharacter*, std::string, int, double, 
 			int, int, int, double, float, 
 			float, float, float, float, float, float,
@@ -54,8 +53,7 @@ public:
 	virtual void shoot_hook() = 0;
 	virtual void reload();
 	virtual void update();
-
-
+	virtual void switchToThisWeapon();
 
 };
 

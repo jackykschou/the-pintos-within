@@ -3,13 +3,19 @@
 
 #include "common.h"
 
+#define DEAD 1
+#define SHOOTING 2
+#define MOVING 4
+#define IDLE 8
+#define RELOADING 16
+#define JETPACKING 32
+#define JUMPING 64
+
 #include "PlayerCharacter.h"
 
-struct Information
+struct HeartBeatInfo
 {
 	char type;
-
-	bool exist;
 
 	float playerPosX;
 	float playerPosY;
@@ -20,13 +26,7 @@ struct Information
 	float playerRotZ;
 	float playerRotW;
 
-	bool is_dead;
-	bool is_shooting;
-	bool is_moving;
-	bool is_idle;
-	bool is_reloading;
-	bool is_jet_packing;
-	bool is_jumping;
+	int flags;
 
 	float run_animation_time;
 	float shoot_animation_time;
@@ -40,7 +40,7 @@ struct Information
 class HeartbeatPacket
 {
 public:
-	struct Information info;
+	struct HeartBeatInfo info;
 	HeartbeatPacket();
 
 	void renewPacket(PlayerCharacter* player);
