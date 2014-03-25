@@ -73,3 +73,7 @@ std::tuple<Ogre::ParticleSystem*,Ogre::ParticleSystem*,Ogre::ParticleSystem*> Pa
       origin,direction),ParticleManager::instance()->Emit("JetPackSmoke",
       origin,-direction));
 }
+
+Ogre::ParticleSystem* ParticleManager::EmitBloodSpurt(Ogre::Vector3 origin,Ogre::Vector3 direction){
+  return ParticleManager::instance()->Emit("BloodSpurt",origin,direction);
+}
