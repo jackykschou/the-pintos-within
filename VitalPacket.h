@@ -14,10 +14,10 @@ struct VitalInfo
 {
 	char type;
 
-	uint_32 flags;
+	uint32_t flags;
 
-	uint_32 damage;
-	uint_32 weapon_index;
+	uint32_t damage;
+	uint32_t weapon_index;
 
   float pintoPosX;
   float pintoPosY;
@@ -50,10 +50,10 @@ public:
   bool hasEnemyRespawn();
   Ogre::Vector3 getEnemyRespawnPos();
 
-  void setPintoTaken(float, float, float);
+  void setPintoTaken();
   bool hasPintoTaken();
 
-  void setPintoRespawn();
+  void setPintoRespawn(float, float, float);
   bool hasPintoRespawn();
   Ogre::Vector3 getPintoRespawnPos();
 };

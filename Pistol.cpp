@@ -13,7 +13,7 @@ Pistol::Pistol(PlayerCharacter* player_p, std::string mesh_name, float posX,
 
 {
     damage = 10;
-    shoot_distance = 100;
+    shoot_distance = 500;
 }
 
 void Pistol::shoot_hook()
@@ -23,7 +23,7 @@ void Pistol::shoot_hook()
 
     Ogre::Vector3 shoot_vector = shoot_pos->node->convertLocalToWorldPosition(shoot_pos->node->getPosition());
 
-    btVector3 from = btVector3(shoot_vector.x, shoot_vector.y, shoot_vector.z);
+    btVector3 from = btVector3(cam_pos.x, cam_pos.y, cam_pos.z);
     btVector3 to = btVector3(cam_pos.x, cam_pos.y, cam_pos.z) + (btVector3(cam_dir.x, cam_dir.y, cam_dir.z) * shoot_distance);
 
     btCollisionWorld::ClosestRayResultCallback rayCallback(from, to);
@@ -36,15 +36,19 @@ void Pistol::shoot_hook()
     if(rayCallback.hasHit())
     {
         LOG("I hit something......");
-
+        btVector3 point = rayCallback.m_hitPointWorld;
+        
         if(rayCallback.m_collisionObject->getUserPointer() != NULL)
         {
+
             // HitBox* hit_box = (HitBox*)(rayCallback.m_collisionObject->getUserPointer());
             // hit_box->takeDamage(damage);
             //blood particle system
         }
         else
         {
+            btVector3 point = rayCallback.m_hitPointWorld;
+            ParticleManager::instance()->EmitSparks(Ogre::Vector3(point.x(), point.y(), point.z()), -cam_dir);
             //dust particle system
         }
     }

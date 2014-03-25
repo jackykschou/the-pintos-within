@@ -8,7 +8,6 @@
 #define DUST 2
 #define ROCKET_EXPLODE 8
 #define PINTO_EXPLODE 16
-#define JETPACK 32
 
 #include "common.h"
 
@@ -16,27 +15,27 @@ struct ParticleInfo
 {
 	char type;
 
-	int flags;
+	uint32_t flags;
 
-	uint_32 blood_len;
+	uint32_t blood_len;
 
 	float blood_posXs[BLOODARRAYLENGTH];
 	float blood_posYs[BLOODARRAYLENGTH];
 	float blood_posZs[BLOODARRAYLENGTH];
 
-	float blood_normalXs[BLOODARRAYLENGTH];
-	float blood_normalYs[BLOODARRAYLENGTH];
-	float blood_normalZs[BLOODARRAYLENGTH];
+	float blood_dirXs[BLOODARRAYLENGTH];
+	float blood_dirYs[BLOODARRAYLENGTH];
+	float blood_dirZs[BLOODARRAYLENGTH];
 
-	uint_32 dust_len;
+	uint32_t dust_len;
 
 	float dust_posXs[DUSTARRAYLENGTH];
 	float dust_posYs[DUSTARRAYLENGTH];
 	float dust_posZs[DUSTARRAYLENGTH];
 
-	float dust_normalXs[DUSTARRAYLENGTH];
-	float dust_normalYs[DUSTARRAYLENGTH];
-	float dust_normalZs[DUSTARRAYLENGTH];
+	float dust_dirXs[DUSTARRAYLENGTH];
+	float dust_dirYs[DUSTARRAYLENGTH];
+	float dust_dirZs[DUSTARRAYLENGTH];
 
 	float rocketExplode_posXs;
 	float rocketExplode_posYs;
@@ -45,15 +44,6 @@ struct ParticleInfo
 	float pintoExplode_posXs;
 	float pintoExplode_posYs;
 	float pintoExplode_posZs;
-
-	float jet_posXs;
-	float jet_posYs;
-	float jet_posZs;
-
-	float jet_normalXs;
-	float jet_normalYs;
-	float jet_normalZs;	
-
 };
 
 class ParticlePacket
@@ -78,10 +68,6 @@ public:
   void setPintoExplosion(float, float, float);
   bool hasPintoExplosion();
   void initPintoExplosion();
-
-  void setJetPack(float, float, float, float, float, float);
-  bool hasJetPack();
-  void initJetPack();
 };
 
 #endif

@@ -6,6 +6,8 @@ PlayerBox::PlayerBox(PlayerCharacter* player_p, std::string mesh_name,
 {
 	player = player_p;
 
+	Transform* tran = ((GameObject*)player_p)->getComponent<Transform>();
+
 	std::ostringstream id_stream;
   	id_stream << _gameObject->id;
 
@@ -15,13 +17,13 @@ PlayerBox::PlayerBox(PlayerCharacter* player_p, std::string mesh_name,
   node->attachObject(entity);
   entity->setCastShadows(true);
 
-  node->setPosition(player->mesh->node->convertWorldToLocalPosition(Ogre::Vector3(posX, posY, posZ)));
-  node->setInheritOrientation(false);
-  node->setOrientation(Ogre::Quaternion(rotW, rotX, rotY, rotZ));
+  node->setPosition(player->mesh->node->convertWorldToLocalPosition(Ogre::Vector3(tran->posX + posX, tran->posY + posY, tran->posZ + posZ)));
+  // node->setInheritOrientation(false);
+  node->setOrientation(node->convertWorldToLocalOrientation(Ogre::Quaternion(rotW, rotX, rotY, rotZ)));
   node->setInheritScale (false);
   node->setScale (scaleX, scaleY, scaleZ);
 
-  node->setVisible(false);
+  // node->setVisible(true);
 
 	Ogre::Vector3 box_half_size = entity->getBoundingBox().getHalfSize();
 

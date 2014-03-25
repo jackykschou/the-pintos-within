@@ -9,11 +9,13 @@
 #include "Mesh.h"
 #include "Weapon.h"
 #include "Debouncer.h"
+// #include "HitBox.h"
 
 #include <OgreAnimationState.h>
 
 #define WEAPON_NUM 4
 
+class HitBox;
 class Weapon;
 
 class PlayerCharacter : GameObject
@@ -68,6 +70,9 @@ public:
 	Mesh* mesh;
 	Weapon* weapons[WEAPON_NUM];
 	Weapon* current_weapon;
+
+	HitBox* head_box;
+	HitBox* body_box;
 
 	Debouncer *health_regen_debouncer;
 

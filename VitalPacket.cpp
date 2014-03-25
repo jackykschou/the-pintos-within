@@ -4,7 +4,7 @@ VitalPacket::VitalPacket()
 {
 	info.type = VITALPACK;
 
-	infoflags = 0;
+	info.flags = 0;
 
 	info.damage = 0;
 	info.weapon_index = 0;
@@ -13,7 +13,7 @@ VitalPacket::VitalPacket()
 void VitalPacket::setDamage(int damage)
 {
 	info.flags |= TAKEDAMAGE;
-	info.damage = damage;
+	info.damage += damage;
 }
 
 bool VitalPacket::hasDamage()
@@ -23,7 +23,7 @@ bool VitalPacket::hasDamage()
 
 int VitalPacket::getDamage()
 {
-	return damage;
+	return info.damage;
 }
 
 void VitalPacket::setChangeWeapon(int index)
@@ -39,7 +39,7 @@ bool VitalPacket::hasChangeWeapon()
 
 int VitalPacket::getWeaponIndex()
 {
-	return weapon_index;
+	return info.weapon_index;
 }
 
 void VitalPacket::setEnemyDie()
@@ -55,9 +55,9 @@ bool VitalPacket::hasEnemyDie()
 void VitalPacket::setEnemyRespawn(float posX, float posY, float posZ)
 {
 	info.flags |= ENEMY_RESPAWN;
-	playerPosX = posX;
-	playerPosY = posY;
-	playerPosZ = posZ;
+	info.playerPosX = posX;
+	info.playerPosY = posY;
+	info.playerPosZ = posZ;
 
 }
 bool VitalPacket::hasEnemyRespawn()
@@ -67,7 +67,7 @@ bool VitalPacket::hasEnemyRespawn()
 
 Ogre::Vector3 VitalPacket::getEnemyRespawnPos()
 {
-	return Ogre::Vector3(playerPosX, playerPosY, playerPosZ);
+	return Ogre::Vector3(info.playerPosX, info.playerPosY, info.playerPosZ);
 }
 
 void VitalPacket::setPintoTaken()
@@ -82,9 +82,9 @@ bool VitalPacket::hasPintoTaken()
 void VitalPacket::setPintoRespawn(float posX, float posY, float posZ)
 {
 	info.flags |= PINTO_RESPAWN;
-	pintoPosX = posX;
-	pintoPosY = posY;
-	pintoPosZ = posZ;
+	info.pintoPosX = posX;
+	info.pintoPosY = posY;
+	info.pintoPosZ = posZ;
 }
 bool VitalPacket::hasPintoRespawn()
 {
@@ -92,6 +92,6 @@ bool VitalPacket::hasPintoRespawn()
 }
 Ogre::Vector3 VitalPacket::getPintoRespawnPos()
 {
-	return Ogre::Vector3(pintoPosX, pintoPosY, pintoPosZ);
+	return Ogre::Vector3(info.pintoPosX, info.pintoPosY, info.pintoPosZ);
 }
 

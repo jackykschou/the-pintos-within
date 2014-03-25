@@ -13,6 +13,4 @@
 #define LIGHT "Sun"
 #define SKY "SkyHemi"
 
-
-
 #endif // #ifndef __Application_h_

@@ -36,7 +36,8 @@ Weapon::Weapon(PlayerCharacter* player_p, std::string mesh_name, int id_p, doubl
 	node->attachObject(entity);
 	entity->setCastShadows(true);
 
-	node->setPosition(player->mesh->node->convertWorldToLocalPosition(Ogre::Vector3(tran->posX + posX, tran->posY + posY, tran->posZ + posZ - 5)));
+	// node->setPosition(player->mesh->node->convertWorldToLocalPosition(Ogre::Vector3(tran->posX, tran->posY, tran->posZ)));
+	node->setPosition(player->mesh->node->convertWorldToLocalPosition(Ogre::Vector3(tran->posX + posX, tran->posY + posY, tran->posZ + posZ)));
 	node->setOrientation(node->convertWorldToLocalOrientation(Ogre::Quaternion(rotW, rotX, rotY, rotZ)));
 	// node->setInheritOrientation(false);
 	node->setInheritScale (false);

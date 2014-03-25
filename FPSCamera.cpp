@@ -17,7 +17,7 @@ FPSCamera::FPSCamera(GameObject* gameObject, std::string name, double height_off
 	camera->setOrientation(Ogre::Quaternion(_transform->rotW, _transform->rotX, _transform->rotY, _transform->rotZ));
 	camera->setNearClipDistance(35.0f);
 
-	// camera->yaw(-Ogre::Degree(180));
+	camera->yaw(-Ogre::Degree(180));
 }
 
 FPSCamera::~FPSCamera()
@@ -78,7 +78,7 @@ void FPSCamera::updateTransformRotation()
 
 	Ogre::Vector3 dir = node->_getDerivedOrientation() * Ogre::Vector3::NEGATIVE_UNIT_Z;
 
-	Ogre::Vector3 to = Ogre::Vector3(_transform->posX, _transform->posY, _transform->posZ) - (dir * 80);
+	Ogre::Vector3 to = Ogre::Vector3(_transform->posX, _transform->posY, _transform->posZ) + (dir * 80);
 	camera->setPosition(to.x, to.y + 35, to.z);
 
 	if(evt && node)

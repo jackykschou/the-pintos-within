@@ -11,6 +11,7 @@
 #include <ctime>
 #include <sstream>
 #include <unistd.h>
+#include <cstdint>
 
 #include <algorithm>
 #include <random>

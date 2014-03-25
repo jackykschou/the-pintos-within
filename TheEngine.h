@@ -35,5 +35,7 @@
 #include "Pistol.h"
 #include "PlayerSpawner.h"
 #include "HeartbeatPacket.h"
+#include "VitalPacket.h"
+#include "ParticlePacket.h"
 
 #endif // #ifndef __TheEngine_h_

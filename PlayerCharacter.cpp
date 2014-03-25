@@ -108,6 +108,31 @@ PlayerCharacter::PlayerCharacter(bool is_yourself_p, Scene* scene, std::string m
 			0, 0, 0, 1,
 			0.049863, 0.049863, 0.049863, COL_NOTHING, COL_NOTHING));
 
+	// <node name="Hitbox.Head" >
+ //        <position z="-0.000000" x="0.000000" y="0.000000" />
+ //        <rotation qw="1.000000" qx="0.000000" qy="0.000000" qz="-0.000000" />
+ //        <scale z="0.100000" x="0.100000" y="0.100000" />
+ //        <game >
+ //          <sensors />
+ //          <actuators />
+ //        </game>
+
+	head_box = new HitBox(this, "Hitbox.mesh",
+							0, 0, 0, 
+							0, 0, 0, 1,
+							1, 1, 1, 2.0);
+
+	// // <node name="Hitbox.Chest" >
+ // //        <position z="-0.000000" x="0.000000" y="0.000000" />
+ // //        <rotation qw="1.000000" qx="0.000000" qy="0.000000" qz="-0.000000" />
+ // //        <scale z="0.100000" x="0.100000" y="0.116851" />
+ // //        <game >
+ // //          <sensors />
+
+	body_box = new HitBox(this, "Hitbox.001.mesh",
+							0, 0, 0, 
+							0, 0, 0, 1,
+							1, 1.16851, 1, 2.0);
 
 	weapons[0] = pistol;
 	current_weapon = pistol;
@@ -164,6 +189,8 @@ void PlayerCharacter::update()
 
 		if(is_dead)
 		{
+			//LOG("Playing dead");
+
 			die_animation_state->setWeight(1);
 			die_animation_state->setEnabled(true);
 			die_animation_state->addTime(GraphicsManager::instance()->getFrameEvent()->timeSinceLastFrame);
@@ -202,6 +229,8 @@ void PlayerCharacter::update()
 
 			if(!controller->is_jet_packing && !controller->controller->onGround())
 			{
+				//LOG("Playing jump");
+
 				is_jumping = true;
 				jumping_animation_state->setWeight(1);
 				jumping_animation_state->setEnabled(true);
@@ -219,6 +248,7 @@ void PlayerCharacter::update()
 			if(controller->is_walking && !controller->is_jet_packing && controller->controller->onGround())
 			{
 				is_moving = true;
+				//LOG("Playing walk");
 
 				running_animation_state->setWeight(1);
 				running_animation_state->setEnabled(true);
@@ -247,6 +277,8 @@ void PlayerCharacter::update()
 
 			if(current_weapon->is_shooting && !current_shooting_animation_state->hasEnded() && !weapon_shooting_animation_state->hasEnded())
 			{
+				//LOG("Playing shoot");
+
 				running_animation_state->setWeight(0.5);
 				weapon_running_animation_state->setWeight(0.5);
 				idle_animation_state->setWeight(0.5);
@@ -276,6 +308,8 @@ void PlayerCharacter::update()
 
 			if(current_weapon->is_reloading)
 			{
+				//LOG("Playing reload");
+
 				running_animation_state->setWeight(0.5);
 				weapon_running_animation_state->setWeight(0.5);
 				idle_animation_state->setWeight(0.5);
@@ -304,6 +338,8 @@ void PlayerCharacter::update()
 
 			if(controller->is_jet_packing || !controller->controller->onGround() || (!controller->is_walking && controller->controller->onGround()))
 			{
+				//LOG("Playing idle");
+
 				is_idle = true;
 
 				idle_animation_state->setWeight(1);
@@ -341,13 +377,20 @@ void PlayerCharacter::update()
 
 		// sent info to sever
 
-		// LOG("is_dead " << is_dead);
-		// LOG("is_shooting " << is_shooting);
-		// LOG("is_moving " << is_moving);
-		// LOG("is_idle " << is_idle);
-		// LOG("is_reloading " << is_reloading);
-		// LOG("is_jet_packing " << is_jet_packing);
-		// LOG("is_jumping " << is_jumping);
+		// //LOG("is_dead " << is_dead);
+		// //LOG("is_shooting " << is_shooting);
+		// //LOG("is_moving " << is_moving);
+		// //LOG("is_idle " << is_idle);
+		// //LOG("is_reloading " << is_reloading);
+		// //LOG("is_jet_packing " << is_jet_packing);
+		// //LOG("is_jumping " << is_jumping);
+
+		weapon_running_animation_state->setEnabled(false);
+		weapon_idle_animation_state->setEnabled(false);
+		weapon_shooting_animation_state->setEnabled(false);
+		weapon_reload_animation_state->setEnabled(false);
+		weapon_jumping_animation_state->setEnabled(false);
+		weapon_die_animation_state->setEnabled(false);
 	}
 	else
 	{
