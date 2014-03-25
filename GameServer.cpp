@@ -105,7 +105,9 @@ void GameServer::resendExpiredAcks() {
 		Ack* ack = iter->second;
 		if (ack->isExpired()) {
 			LOG("ACK EXPIRED. RESENDING REQUEST.");
-			broadcastData(ack->packetData, ack->packetLen, false);
+			memcpy(_tmpSendPacket->data, ack->packetData, ack->packetLen);
+			_tmpSendPacket->len  = ack->packetLen;
+			sendPacketToClient(_tmpSendPacket, &ack->address, false);
 			ack->reset();
 		}
 	}

@@ -126,8 +126,6 @@ void GameClient::resendExpiredAcks() {
 	for (iter = _ackBuffer->buffer.begin(); iter != _ackBuffer->buffer.end(); iter++) {
 		Ack* ack = iter->second;
 		if (ack->isExpired()) {
-			// resend the original request
-			// don't re-inject another ACK
 			LOG("ACK EXPIRED. RESENDING REQUEST.");
 			sendData(ack->packetData, ack->packetLen, false);
 			ack->reset();
