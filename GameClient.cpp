@@ -54,14 +54,30 @@ int GameClient::connect() {
 }
 
 // sends a chunk of data in a UDP packet to the host
-void GameClient::sendData(void* data, int len, bool ack) {
-	memcpy(_tmpSendPacket->data, data, len);
-	_tmpSendPacket->len = len;
+void GameClient::sendData(void* data, int len, bool ack, AckId id) {
+	// place the rest of the data
+	memcpy(_tmpSendPacket->data+sizeof(AckPacket), data, len);
+	_tmpSendPacket->len = len+sizeof(AckPacket);
+
+	// we will be shoving our ACK on top like a baller
+	AckPacket ackPack;
+	ackPack.ackRequired = ack;
+	ackPack.isResponse  = false;
+
+	// inject the ACK info if necessary
+	if (ack) {
+		if (id < 0) {
+			ackPack.id = _ackBuffer->injectAck(_tmpSendPacket, _srvadd);
+		} else {
+			ackPack.id = id;
+		}
+	}
+
+	// shove the ACK on top!
+	memcpy(_tmpSendPacket->data, &ackPack, sizeof(AckPacket));
+
 	if (SDLNet_UDP_Send(_socket, 0, _tmpSendPacket) < 0) {
 		fprintf(stderr, "SDLNet_UDP_Send: %s\n", SDLNet_GetError());
-	}
-	if (ack) {
-		_ackBuffer->injectAck(_tmpSendPacket, _srvadd);
 	}
 }
 
@@ -92,6 +108,30 @@ int GameClient::consumePackets() {
 	return 0;
 }
 
+void GameClient::resendExpiredAcks() {
+	std::map<AckId, Ack*>::iterator iter;
+	for (iter = _ackBuffer->buffer.begin(); iter != _ackBuffer->buffer.end(); iter++) {
+		Ack* ack = iter->second;
+		if (ack->isExpired()) {
+			LOG("ACK EXPIRED. RESENDING REQUEST.");
+			sendData(ack->packetData, ack->packetLen, true, ack->id);
+			ack->reset();
+		}
+	}
+}
+
+void GameClient::handleGameStartPacket(UDPpacket* packet) {
+	LOG("STARTING GAME.");
+	GUIManager::instance()->hideWaitingMenu();
+	GameState::instance()->reset();
+	GameState::instance()->start();
+}
+
+void GameClient::handleHeartbeatPacket(UDPpacket* packet) {
+	LOG("RECEIVED HEARTBEAT PACKET");
+}
+
+
 // This is the "meat" of the packet processing logic in GameServer
 void GameClient::processPacket(UDPpacket* packet) {
 
@@ -105,13 +145,28 @@ void GameClient::processPacket(UDPpacket* packet) {
 	printf("\tAddress: %x %x\n", packet->address.host, packet->address.port);
 #endif
 
-	char packetType = ((char*)packet->data)[0];
+	AckPacket* ackPacket = (AckPacket*)packet->data;
+	void* packetData = packet->data+sizeof(AckPacket);
+	char packetType = ((char*)packetData)[0];
 	printf("PacketType: %c\n", packetType);
 
+	// deal with ACKs immediately
+	if (ackPacket->isResponse) {
+		// expire the ACK
+		_ackBuffer->forgetAck(ackPacket->id);
+		LOG("ACK RECEIVED BY CLIENT.");
+		return;
+	} else if (ackPacket->ackRequired) {
+		// fire off the ACK!
+		AckPacket response;
+		response.isResponse = true;
+		response.ackRequired = false;
+		response.id = ackPacket->id;
+		sendData(&response, sizeof(AckPacket), &(packet->address), false);
+		LOG("ACK REPLIED BY CLIENT.");
+	}
+
 	switch (packetType) {
-		case 'k':
-			handleJoinAckPacket(packet);
-			break;
 		case 's':
 			handleGameStartPacket(packet);
 			break;
@@ -119,43 +174,4 @@ void GameClient::processPacket(UDPpacket* packet) {
 			handleHeartbeatPacket(packet);
 			break;
 	}
-
-
-	// IF REQUEST HAS ACK, FIRE ACK PACKET!
-	int offset = 2 + sizeof(AckId);
-	if (packet->len > offset) {
-		char c = ((char*)packet->data)[packet->len - offset];
-		char d = ((char*)packet->data)[packet->len - offset + 1];
-		if (c == 'A' && d == 'A') {
-			// well by golly we have ourselves an ACK
-			sendData((void*)"A", 2, false);
-		}
-	}
-}
-
-void GameClient::resendExpiredAcks() {
-	std::map<AckId, Ack*>::iterator iter;
-	for (iter = _ackBuffer->buffer.begin(); iter != _ackBuffer->buffer.end(); iter++) {
-		Ack* ack = iter->second;
-		if (ack->isExpired()) {
-			LOG("ACK EXPIRED. RESENDING REQUEST.");
-			sendData(ack->packetData, ack->packetLen, false);
-			ack->reset();
-		}
-	}
-}
-
-void GameClient::handleJoinAckPacket(UDPpacket* packet) {
-	LOG("SUCCESSFULLY JOINED SERVER");
-}
-
-void GameClient::handleGameStartPacket(UDPpacket* packet) {
-	LOG("STARTING GAME.");
-	GUIManager::instance()->hideWaitingMenu();
-	GameState::instance()->reset();
-	GameState::instance()->start();
-}
-
-void GameClient::handleHeartbeatPacket(UDPpacket* packet) {
-	LOG("RECEIVED HEARTBEAT PACKET");
 }

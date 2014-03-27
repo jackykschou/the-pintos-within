@@ -55,16 +55,11 @@ void GameServer::update() {
 }
 
 // sends a single packet to a single client
-void GameServer::sendPacketToClient(UDPpacket* packet, IPaddress* ip, bool ack) {
+void GameServer::sendPacketToClient(UDPpacket* packet, IPaddress* ip) {
 	printf("Sending response packet to %x:%x..\n", ip->host, ip->port);
 
 	// unbind from our previous client
 	SDLNet_UDP_Unbind(_socket, 0);
-
-	// inject the ACK info if necessary
-	if (ack) {
-		_ackBuffer->injectAck(packet, *ip);
-	}
 
 	// this is kinda dumb. i bind to a new channel on every send
 	// because i am too lazy to do manual packet address fixup :)
@@ -78,26 +73,47 @@ void GameServer::sendPacketToClient(UDPpacket* packet, IPaddress* ip, bool ack) 
 	}
 }
 
-void GameServer::sendDataToClient(void* data, int len, IPaddress* ip, bool ack) {
-	memcpy(_tmpSendPacket->data, data, len);
-	_tmpSendPacket->len  = len;
-	sendPacketToClient(_tmpSendPacket, ip, ack);
+
+  // this puts an AckPacket array above the data in the packet, and adds
+  // the request to the ack buffer if necessary.
+void GameServer::putDataIntoPacket(UDPpacket* p, void* data, int len, IPaddress* ip,
+									bool ack, AckId id) {
+	// copy the data after the ack packet
+	memcpy(p->data+sizeof(AckPacket), data, len);
+	p->len = len+sizeof(AckPacket);
+
+	// we will be shoving our ACK on top like a baller
+	AckPacket ackPack;
+	ackPack.ackRequired = ack;
+	ackPack.isResponse  = false;
+
+	// inject the ACK info if necessary
+	if (ack) {
+		if (id < 0) {
+			ackPack.id = _ackBuffer->injectAck(p, *ip);
+		} else {
+			ackPack.id = id;
+		}
+	}
+
+	// shove the ACK on top!
+	memcpy(p->data, &ackPack, sizeof(AckPacket));
 }
 
-// broadcasts a single packet to a bunch of clients
-void GameServer::broadcastPacket(UDPpacket* packet, bool ack) {
-	for (int i = 0; i < _clients.size(); i++) {
-		IPaddress ip = _clients.at(i);
-		sendPacketToClient(packet, &ip, ack);
-	}
+void GameServer::sendDataToClient(void* data, int len, IPaddress* ip, bool ack,
+								  AckId id) {
+	putDataIntoPacket(_tmpSendPacket, data, len, ip, ack, id);
+	sendPacketToClient(_tmpSendPacket, ip);
 }
 
 // broadcasts a single chunk of data to a bunch of clients
 // this method can be used for binary or cstring (NULL terminated) buffer
 void GameServer::broadcastData(void* data, int len, bool ack) {
-	memcpy(_tmpSendPacket->data, data, len);
-	_tmpSendPacket->len  = len;
-	broadcastPacket(_tmpSendPacket, ack);
+	for (int i = 0; i < _clients.size(); i++) {
+		IPaddress ip = _clients.at(i);
+		putDataIntoPacket(_tmpSendPacket, data, len, &ip, ack);
+		sendPacketToClient(_tmpSendPacket, &ip);
+	}
 }
 
 // broadcasts a single cstring (data->"\x00") to a bunch of clients
@@ -107,12 +123,14 @@ void GameServer::broadcastString(const char* data, bool ack) {
 
 void GameServer::resendExpiredAcks() {
 	std::map<AckId, Ack*>::iterator iter;
-	for (iter = _ackBuffer->buffer.begin(); iter != _ackBuffer->buffer.end(); iter++) {
+	for (iter = _ackBuffer->buffer.begin(); iter != _ackBuffer->buffer.end();) {
 		Ack* ack = iter->second;
 		if (ack->isExpired()) {
 			LOG("ACK EXPIRED. RESENDING REQUEST.");
-			sendDataToClient(ack->packetData, ack->packetLen, &ack->address, ack);
+			sendDataToClient(ack->packetData, ack->packetLen, &ack->address, true, ack->id);
 			ack->reset();
+		} else {
+			iter++;
 		}
 	}
 }
@@ -129,46 +147,6 @@ void GameServer::consumePackets() {
 	}
 }
 
-// This is the "meat" of the packet processing logic in GameServer
-// Requests are dished out based on their first byte
-void GameServer::processPacket(UDPpacket* packet) {
-
-#ifdef DEBUG
-	printf("UDP Packet incoming\n");
-	printf("\tChan:    %d\n", packet->channel);
-	printf("\tData:    %s\n", (char*)packet->data);
-	printf("\tLen:     %d\n", packet->len);
-	printf("\tMaxlen:  %d\n", packet->maxlen);
-	printf("\tStatus:  %d\n", packet->status);
-	printf("\tAddress: %x %x\n", packet->address.host, packet->address.port);
-#endif
-
-	char packetType = ((char*)packet->data)[0];
-	printf("PacketType: %c\n", packetType);
-
-	switch (packetType) {
-		case 'j':
-			// JOIN request adds a character to the game
-			handleJoinPacket(packet);
-			break;
-		case 'e':
-			// EVENT request injects an event on a linked character
-			// XXX
-			break;
-	}
-
-	// IF REQUEST HAS ACK, FIRE ACK PACKET!
-	int offset = 2 + sizeof(AckId);
-	if (packet->len > offset) {
-		char c = ((char*)packet->data)[packet->len - offset];
-		char d = ((char*)packet->data)[packet->len - offset + 1];
-		if (c == 'A' && d == 'A') {
-			// well by golly we have ourselves an ACK
-			sendDataToClient((void*)"A", 2, &(packet->address), false);
-		}
-	}
-}
-
 // when a client joins, we need to ACK back that it succeeded
 void GameServer::handleJoinPacket(UDPpacket *packet) {
 	IPaddress ip;
@@ -182,11 +160,7 @@ void GameServer::handleJoinPacket(UDPpacket *packet) {
 
 	memcpy(&ip, &(packet->address), sizeof(IPaddress));
 
-	printf("Sending response packet..\n");
-
-	sendPacketToClient(_tmpSendPacket, &ip, true);
-
-	// the user can now start the game
+	// the host can now start the game
 	GUIManager::instance()->hideWaitingMenu();
 	GUIManager::instance()->showGameOverMenu();
 }
@@ -214,5 +188,48 @@ void GameServer::broadcastHeartbeat() {
 		}
 
 		*_lastHeartbeat = now;
+	}
+}
+
+
+// This is the "meat" of the packet processing logic in GameServer
+// Requests are dished out based on their first byte
+void GameServer::processPacket(UDPpacket* packet) {
+
+#ifdef DEBUG
+	printf("UDP Packet incoming\n");
+	printf("\tChan:    %d\n", packet->channel);
+	printf("\tData:    %s\n", (char*)packet->data);
+	printf("\tLen:     %d\n", packet->len);
+	printf("\tMaxlen:  %d\n", packet->maxlen);
+	printf("\tStatus:  %d\n", packet->status);
+	printf("\tAddress: %x %x\n", packet->address.host, packet->address.port);
+#endif
+
+	AckPacket* ackPacket = (AckPacket*)packet->data;
+	void* packetData = packet->data+sizeof(AckPacket);
+	char packetType = ((char*)packetData)[0];
+	printf("PacketType: %c\n", packetType);
+
+	if (ackPacket->isResponse) {
+		// woot. expire our ACK.
+		_ackBuffer->forgetAck(ackPacket->id);
+		LOG("ACK RECEIVED BY HOST.");
+		return;
+	} else if (ackPacket->ackRequired) {
+		// fire off the ACK!
+		AckPacket response;
+		response.isResponse = true;
+		response.ackRequired = false;
+		response.id = ackPacket->id;
+		sendDataToClient(&response, sizeof(AckPacket), &(packet->address), false);
+		LOG("ACK REPLIED BY HOST.");
+	}
+
+	switch (packetType) {
+		case 'j':
+			// JOIN request adds a character to the game
+			handleJoinPacket(packet);
+			break;
 	}
 }

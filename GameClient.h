@@ -30,7 +30,7 @@ public:
   void update();
 
   // sends data to the host
-  void sendData(void* data, int len, bool ack);
+  void sendData(void* data, int len, bool ack, AckId id=-1);
 
 private:
 

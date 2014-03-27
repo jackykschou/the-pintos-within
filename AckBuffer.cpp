@@ -5,9 +5,9 @@ namespace pt = boost::posix_time;
 Ack::Ack(IPaddress addr, AckId id, void* packetData, int packetLen) {
   this->address    = addr;
   this->id         = id;
-  this->packetLen  = packetLen;
+  this->packetLen  = packetLen-sizeof(AckPacket);
   this->packetData = malloc(packetLen);
-  memcpy(this->packetData, packetData, packetLen);
+  memcpy(this->packetData, packetData+sizeof(AckPacket), packetLen);
   reset();
 }
 
@@ -31,22 +31,19 @@ AckBuffer::AckBuffer() {
   this->currentId = 0;
 }
 
-AckId AckBuffer::injectAck(UDPpacket* packet, IPaddress addr) {
-  // inject the ACK id at the end of the packet buffer
-  ((char*)packet->data)[packet->len]   = 'A';
-  ((char*)packet->data)[packet->len+1] = 'A';
-  *(packet->data+packet->len+2) = currentId;
-  packet->len += sizeof(currentId);
+bool AckBuffer::hasAckId(AckId id) {
+  std::map<AckId, Ack*>::iterator it = buffer.find(id);
+  return it != buffer.end();
+}
 
+AckId AckBuffer::injectAck(UDPpacket* packet, IPaddress addr) {
   Ack *a = new Ack(addr, currentId++, packet->data, packet->len);
   buffer[a->id] = a;
-
   return a->id;
 }
 
 void AckBuffer::forgetAck(AckId id) {
-  std::map<AckId, Ack*>::iterator it = buffer.find(id);
-  if (it != buffer.end()) {
+  if (hasAckId(id)) {
     delete buffer[id];
     buffer.erase(id);
   }
