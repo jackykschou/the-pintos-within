@@ -77,23 +77,20 @@ void GameServer::sendPacketToClient(UDPpacket* packet, IPaddress* ip) {
   // the request to the ack buffer if necessary.
 void GameServer::putDataIntoPacket(UDPpacket* p, void* data, int len, IPaddress* ip,
 									bool ack, AckId id, bool isResponse) {
-	LOG("PUTTING DATA INTO A PACKET YO");
 	// copy the data after the ack packet
-	memcpy(p->data+sizeof(AckHeader), data, len);
-	p->len = len+sizeof(AckHeader);
+	memcpy(p->data+MEMALIGNED_SIZE(AckHeader), data, len);
+	p->len = len+MEMALIGNED_SIZE(AckHeader);
 
 	// we will be shoving our ACK on top like a baller
 	AckHeader ackPack;
 	ackPack.ackRequired = ack;
 	ackPack.isResponse  = isResponse;
-LOG("PUTTING DATA INTO A PACKET YO2");
 	// inject the ACK info if necessary
 	if (ack && id == 0) {
 		ackPack.id = _ackBuffer->injectAck(p, *ip);
 	} else {
 		ackPack.id = id;
 	}
-LOG("PUTTING DATA INTO A PACKET YO3");
 	// shove the ACK on top!
 	memcpy(p->data, &ackPack, sizeof(AckHeader));
 }

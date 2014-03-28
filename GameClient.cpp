@@ -57,8 +57,8 @@ int GameClient::connect() {
 void GameClient::sendData(void* data, int len, bool ack, AckId id, bool isResponse) {
 	printf("%d\n", id);
 	// place the rest of the data
-	memcpy(_tmpSendPacket->data+sizeof(AckHeader), data, len);
-	_tmpSendPacket->len = len+sizeof(AckHeader);
+	memcpy(_tmpSendPacket->data+MEMALIGNED_SIZE(AckHeader), data, len);
+	_tmpSendPacket->len = len+MEMALIGNED_SIZE(AckHeader);
 
 	// we will be shoving our ACK on top like a baller
 	AckHeader ackPack;
