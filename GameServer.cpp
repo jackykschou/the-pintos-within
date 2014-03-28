@@ -47,7 +47,6 @@ void GameServer::stop() {
 void GameServer::update() {
 	consumePackets();
 
-
 	// send a heartbeat if necessary
 	if (GameState::instance()->isRunning()) {
 		broadcastHeartbeat();
@@ -74,35 +73,34 @@ void GameServer::sendPacketToClient(UDPpacket* packet, IPaddress* ip) {
 }
 
 
-  // this puts an AckPacket array above the data in the packet, and adds
+  // this puts an AckHeader struct above the data in the packet, and adds
   // the request to the ack buffer if necessary.
 void GameServer::putDataIntoPacket(UDPpacket* p, void* data, int len, IPaddress* ip,
-									bool ack, AckId id) {
+									bool ack, AckId id, bool isResponse) {
+	LOG("PUTTING DATA INTO A PACKET YO");
 	// copy the data after the ack packet
-	memcpy(p->data+sizeof(AckPacket), data, len);
-	p->len = len+sizeof(AckPacket);
+	memcpy(p->data+sizeof(AckHeader), data, len);
+	p->len = len+sizeof(AckHeader);
 
 	// we will be shoving our ACK on top like a baller
-	AckPacket ackPack;
+	AckHeader ackPack;
 	ackPack.ackRequired = ack;
-	ackPack.isResponse  = false;
-
+	ackPack.isResponse  = isResponse;
+LOG("PUTTING DATA INTO A PACKET YO2");
 	// inject the ACK info if necessary
-	if (ack) {
-		if (id < 0) {
-			ackPack.id = _ackBuffer->injectAck(p, *ip);
-		} else {
-			ackPack.id = id;
-		}
+	if (ack && id == 0) {
+		ackPack.id = _ackBuffer->injectAck(p, *ip);
+	} else {
+		ackPack.id = id;
 	}
-
+LOG("PUTTING DATA INTO A PACKET YO3");
 	// shove the ACK on top!
-	memcpy(p->data, &ackPack, sizeof(AckPacket));
+	memcpy(p->data, &ackPack, sizeof(AckHeader));
 }
 
 void GameServer::sendDataToClient(void* data, int len, IPaddress* ip, bool ack,
-								  AckId id) {
-	putDataIntoPacket(_tmpSendPacket, data, len, ip, ack, id);
+								  AckId id, bool isResponse) {
+	putDataIntoPacket(_tmpSendPacket, data, len, ip, ack, id, isResponse);
 	sendPacketToClient(_tmpSendPacket, ip);
 }
 
@@ -111,8 +109,7 @@ void GameServer::sendDataToClient(void* data, int len, IPaddress* ip, bool ack,
 void GameServer::broadcastData(void* data, int len, bool ack) {
 	for (int i = 0; i < _clients.size(); i++) {
 		IPaddress ip = _clients.at(i);
-		putDataIntoPacket(_tmpSendPacket, data, len, &ip, ack);
-		sendPacketToClient(_tmpSendPacket, &ip);
+		sendDataToClient(data, len, &ip, ack);
 	}
 }
 
@@ -155,9 +152,6 @@ void GameServer::handleJoinPacket(UDPpacket *packet) {
 
 	_clients.push_back(packet->address);
 
-	_tmpSendPacket->data = (unsigned char*)"k";
-	_tmpSendPacket->len = strlen((char*)_tmpSendPacket->data) + 1;
-
 	memcpy(&ip, &(packet->address), sizeof(IPaddress));
 
 	// the host can now start the game
@@ -167,7 +161,7 @@ void GameServer::handleJoinPacket(UDPpacket *packet) {
 
 // sends GAME START event to every client
 void GameServer::broadcastGameStart() {
-	broadcastString("s", true);
+	broadcastData((void*)"s", 2, true);
 }
 
 // sends game state to every client every HEARTBEAT_MAX_DELAY milliseconds
@@ -181,7 +175,7 @@ void GameServer::broadcastHeartbeat() {
 
 	if (!_lastHeartbeat || diff.total_milliseconds() > HEARTBEAT_MAX_DELAY) {
 		LOG("SENDING HEARTBEAT PACKET");
-		broadcastString("h", false);
+		//broadcastString("h", false);
 
 		if (!_lastHeartbeat) {
 			_lastHeartbeat = (pt::ptime*)malloc(sizeof(pt::ptime));
@@ -206,24 +200,20 @@ void GameServer::processPacket(UDPpacket* packet) {
 	printf("\tAddress: %x %x\n", packet->address.host, packet->address.port);
 #endif
 
-	AckPacket* ackPacket = (AckPacket*)packet->data;
-	void* packetData = packet->data+sizeof(AckPacket);
+	AckHeader* ackHeader = (AckHeader*)packet->data;
+	void* packetData = packet->data+sizeof(AckHeader);
 	char packetType = ((char*)packetData)[0];
 	printf("PacketType: %c\n", packetType);
 
-	if (ackPacket->isResponse) {
+	if (ackHeader->isResponse) {
 		// woot. expire our ACK.
-		_ackBuffer->forgetAck(ackPacket->id);
-		LOG("ACK RECEIVED BY HOST.");
+		_ackBuffer->forgetAck(ackHeader->id);
+		LOG("ACK RECEIVED BY HOST: "<<ackHeader->id);
 		return;
-	} else if (ackPacket->ackRequired) {
+	} else if (ackHeader->ackRequired) {
 		// fire off the ACK!
-		AckPacket response;
-		response.isResponse = true;
-		response.ackRequired = false;
-		response.id = ackPacket->id;
-		sendDataToClient(&response, sizeof(AckPacket), &(packet->address), false);
-		LOG("ACK REPLIED BY HOST.");
+		sendDataToClient((void*)"A", 2, &(packet->address), false, ackHeader->id, true);
+		LOG("ACK REPLIED BY HOST: "<<ackHeader->id);
 	}
 
 	switch (packetType) {

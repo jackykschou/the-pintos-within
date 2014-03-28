@@ -5,14 +5,16 @@ namespace pt = boost::posix_time;
 Ack::Ack(IPaddress addr, AckId id, void* packetData, int packetLen) {
   this->address    = addr;
   this->id         = id;
-  this->packetLen  = packetLen-sizeof(AckPacket);
+  this->packetLen  = packetLen-sizeof(AckHeader);
   this->packetData = malloc(packetLen);
-  memcpy(this->packetData, packetData+sizeof(AckPacket), packetLen);
+  this->sentAt     = NULL;
+  memcpy(this->packetData, packetData+sizeof(AckHeader), packetLen);
   reset();
 }
 
 Ack::~Ack() {
   free(this->packetData);
+  delete this->sentAt;
 }
 
 bool Ack::isExpired() {
@@ -23,12 +25,16 @@ bool Ack::isExpired() {
 
 void Ack::reset() {
   pt::ptime now = pt::microsec_clock::local_time();
-  this->sentAt     =  (pt::ptime*)malloc(sizeof(pt::ptime));
-  memcpy(sentAt, &now, sizeof(now));
+  if (!this->sentAt) {
+    delete this->sentAt;
+    this->sentAt = NULL;
+  }
+  this->sentAt = (pt::ptime*)malloc(sizeof(pt::ptime));
+  memcpy(sentAt, &now, sizeof(pt::ptime));
 }
 
 AckBuffer::AckBuffer() {
-  this->currentId = 0;
+  this->currentId = 1;
 }
 
 bool AckBuffer::hasAckId(AckId id) {
@@ -37,13 +43,15 @@ bool AckBuffer::hasAckId(AckId id) {
 }
 
 AckId AckBuffer::injectAck(UDPpacket* packet, IPaddress addr) {
-  Ack *a = new Ack(addr, currentId++, packet->data, packet->len);
+  Ack *a = new Ack(addr, ++currentId, packet->data, packet->len);
   buffer[a->id] = a;
   return a->id;
 }
 
 void AckBuffer::forgetAck(AckId id) {
+  LOG("CHECKING FOR ACK "<<id);
   if (hasAckId(id)) {
+    LOG("FORGETTING ACK.");
     delete buffer[id];
     buffer.erase(id);
   }

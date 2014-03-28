@@ -43,7 +43,7 @@ public:
   void broadcastData(void* data, int len, bool ack);
 
   // sends a chunk of data to a single client
-  void sendDataToClient(void* data, int len, IPaddress* ip, bool ack, AckId id=-1);
+  void sendDataToClient(void* data, int len, IPaddress* ip, bool ack, AckId id=0, bool isResponse=false);
 
 
 private:
@@ -75,10 +75,10 @@ private:
   // resend any ACK-requiring packets that we did not hear back about
   void resendExpiredAcks();
 
-  // this puts an AckPacket array above the data in the packet, and adds
+  // this puts an AckHeader array above the data in the packet, and adds
   // the request to the ack buffer if necessary.
   void putDataIntoPacket(UDPpacket *p, void *data, int len,
-                         IPaddress* a, bool ack, AckId id=-1);
+                         IPaddress* a, bool ack, AckId id=-1, bool isResponse=false);
 
   // broadcasts a single packet to all connected clients
   void broadcastPacket(UDPpacket* packet, bool ack);

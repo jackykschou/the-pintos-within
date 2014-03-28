@@ -9,11 +9,11 @@ typedef uint32_t AckId;
 
 #define ACK_EXPIRATION_MS 40
 
-// The AckPacket struct is useful for serializing the ACK
+// The AckHeader struct is useful for serializing the ACK
 // for pushing over the wire.
 // We shove this on top of every request that goes out,
 // whether or not an ACK is required by the request.
-struct AckPacket {
+struct AckHeader {
   // alignment will no doubt screw us here and add
   // 3-4 extra bytes. I could pack this into the lower
   // bit of AckId to save some bytes, but for semantics
@@ -31,10 +31,10 @@ class Ack {
   IPaddress address;
   AckId id;
 
-  // this is a pointer to packet contents without the AckPacket
+  // this is a pointer to packet contents without the AckHeader
   void *packetData;
 
-  // this is the length of packet data without the AckPacket
+  // this is the length of packet data without the AckHeader
   int packetLen;
   boost::posix_time::ptime *sentAt;
 

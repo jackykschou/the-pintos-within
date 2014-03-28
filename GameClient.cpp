@@ -54,27 +54,27 @@ int GameClient::connect() {
 }
 
 // sends a chunk of data in a UDP packet to the host
-void GameClient::sendData(void* data, int len, bool ack, AckId id) {
+void GameClient::sendData(void* data, int len, bool ack, AckId id, bool isResponse) {
+	printf("%d\n", id);
 	// place the rest of the data
-	memcpy(_tmpSendPacket->data+sizeof(AckPacket), data, len);
-	_tmpSendPacket->len = len+sizeof(AckPacket);
+	memcpy(_tmpSendPacket->data+sizeof(AckHeader), data, len);
+	_tmpSendPacket->len = len+sizeof(AckHeader);
 
 	// we will be shoving our ACK on top like a baller
-	AckPacket ackPack;
+	AckHeader ackPack;
 	ackPack.ackRequired = ack;
-	ackPack.isResponse  = false;
+	ackPack.isResponse  = isResponse;
 
 	// inject the ACK info if necessary
-	if (ack) {
-		if (id < 0) {
-			ackPack.id = _ackBuffer->injectAck(_tmpSendPacket, _srvadd);
-		} else {
-			ackPack.id = id;
-		}
+	if (ack && id == 0) {
+		ackPack.id = _ackBuffer->injectAck(_tmpSendPacket, _srvadd);
+		LOG("INJECTING ACK HEADER INTO PACKET " << ackPack.id);
+	} else {
+		ackPack.id = id;
 	}
 
 	// shove the ACK on top!
-	memcpy(_tmpSendPacket->data, &ackPack, sizeof(AckPacket));
+	memcpy(_tmpSendPacket->data, &ackPack, sizeof(AckHeader));
 
 	if (SDLNet_UDP_Send(_socket, 0, _tmpSendPacket) < 0) {
 		fprintf(stderr, "SDLNet_UDP_Send: %s\n", SDLNet_GetError());
@@ -111,6 +111,7 @@ int GameClient::consumePackets() {
 void GameClient::resendExpiredAcks() {
 	std::map<AckId, Ack*>::iterator iter;
 	for (iter = _ackBuffer->buffer.begin(); iter != _ackBuffer->buffer.end(); iter++) {
+		LOG("ITERATING ACKS");
 		Ack* ack = iter->second;
 		if (ack->isExpired()) {
 			LOG("ACK EXPIRED. RESENDING REQUEST.");
@@ -145,24 +146,20 @@ void GameClient::processPacket(UDPpacket* packet) {
 	printf("\tAddress: %x %x\n", packet->address.host, packet->address.port);
 #endif
 
-	AckPacket* ackPacket = (AckPacket*)packet->data;
-	void* packetData = packet->data+sizeof(AckPacket);
+	AckHeader* ackHeader = (AckHeader*)packet->data;
+	void* packetData = packet->data+sizeof(AckHeader);
 	char packetType = ((char*)packetData)[0];
 	printf("PacketType: %c\n", packetType);
 
 	// deal with ACKs immediately
-	if (ackPacket->isResponse) {
+	if (ackHeader->isResponse) {
 		// expire the ACK
-		_ackBuffer->forgetAck(ackPacket->id);
+		_ackBuffer->forgetAck(ackHeader->id);
 		LOG("ACK RECEIVED BY CLIENT.");
 		return;
-	} else if (ackPacket->ackRequired) {
+	} else if (ackHeader->ackRequired) {
 		// fire off the ACK!
-		AckPacket response;
-		response.isResponse = true;
-		response.ackRequired = false;
-		response.id = ackPacket->id;
-		sendData(&response, sizeof(AckPacket), &(packet->address), false);
+		sendData((void*)"A", 2, false, ackHeader->id, true);
 		LOG("ACK REPLIED BY CLIENT.");
 	}
 
