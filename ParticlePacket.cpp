@@ -4,17 +4,15 @@
 
 ParticlePacket::ParticlePacket()
 {
+	memset(&info, 0, sizeof(ParticleInfo));
 	info.type = PARTICLEPACK;
-	info.flags = 0;
-
-	info.blood_len = 0;
-	info.dust_len = 0;
 }
 
 void ParticlePacket::clear()
 {
 	memset(&info, 0, sizeof(ParticleInfo));
 	info.type = PARTICLEPACK;
+	info.player_id = NetworkManager::instance()->player_id;
 }
 
 void ParticlePacket::setBlood(float posX, float posY, float posZ, float dirX, float dirY, float dirZ)
@@ -32,17 +30,17 @@ void ParticlePacket::setBlood(float posX, float posY, float posZ, float dirX, fl
 		++info.blood_len;
 	}
 }
-bool ParticlePacket::hasBlood()
+bool ParticlePacket::hasBlood(ParticleInfo* info_p)
 {
-	return ((info.flags & BLOOD) == BLOOD);
+	return ((info_p->flags & BLOOD) == BLOOD);
 }
 
-void ParticlePacket::initBlood()
+void ParticlePacket::initBlood(ParticleInfo* info_p)
 {
-	for(int i = 0; i < info.blood_len;++i)
+	for(int i = 0; i < info_p->blood_len;++i)
 	{
-		ParticleManager::instance()->EmitSparks(Ogre::Vector3(info.blood_posXs[i], info.blood_posYs[i], info.blood_posZs[i]), 
-												Ogre::Vector3(info.blood_dirXs[i], info.blood_dirYs[i], info.blood_dirZs[i]));
+		ParticleManager::instance()->EmitSparks(Ogre::Vector3(info_p->blood_posXs[i], info_p->blood_posYs[i], info_p->blood_posZs[i]), 
+												Ogre::Vector3(info_p->blood_dirXs[i], info_p->blood_dirYs[i], info_p->blood_dirZs[i]));
 	}
 }
 
@@ -62,17 +60,17 @@ void ParticlePacket::setDust(float posX, float posY, float posZ, float dirX, flo
 	}
 }
 
-bool ParticlePacket::hasDust()
+bool ParticlePacket::hasDust(ParticleInfo* info_p)
 {
-	return ((info.flags & DUST) == DUST);
+	return ((info_p->flags & DUST) == DUST);
 }
 
-void ParticlePacket::initDust()
+void ParticlePacket::initDust(ParticleInfo* info_p)
 {
-	for(int i = 0; i < info.dust_len;++i)
+	for(int i = 0; i < info_p->dust_len;++i)
 	{
-		ParticleManager::instance()->EmitSparks(Ogre::Vector3(info.dust_posXs[i], info.dust_posYs[i], info.dust_posZs[i]), 
-												Ogre::Vector3(info.dust_dirXs[i], info.dust_dirYs[i], info.dust_dirZs[i]));
+		ParticleManager::instance()->EmitSparks(Ogre::Vector3(info_p->dust_posXs[i], info_p->dust_posYs[i], info_p->dust_posZs[i]), 
+												Ogre::Vector3(info_p->dust_dirXs[i], info_p->dust_dirYs[i], info_p->dust_dirZs[i]));
 	}
 }
 
@@ -85,14 +83,14 @@ void ParticlePacket::setRocketExplosion(float posX, float posY, float posZ)
 	info.rocketExplode_posZ = posZ;
 }
 
-bool ParticlePacket::hasRocketExplosion()
+bool ParticlePacket::hasRocketExplosion(ParticleInfo* info_p)
 {
-	return ((info.flags & ROCKET_EXPLODE) == ROCKET_EXPLODE);
+	return ((info_p->flags & ROCKET_EXPLODE) == ROCKET_EXPLODE);
 }
 
-void ParticlePacket::initRocketExplosion()
+void ParticlePacket::initRocketExplosion(ParticleInfo* info_p)
 {
-	// ParticleManager::instance()->EmitRocketExplosion(Ogre::Vector3(info.rocketExplode_posX, info.rocketExplode_posY, info.rocketExplode_posZ));
+	// ParticleManager::instance()->EmitRocketExplosion(Ogre::Vector3(info_p->rocketExplode_posX, info_p->rocketExplode_posY, info_p->rocketExplode_posZ));
 }
 
 void ParticlePacket::setPintoExplosion(float posX, float posY, float posZ)
@@ -104,20 +102,27 @@ void ParticlePacket::setPintoExplosion(float posX, float posY, float posZ)
 	info.pintoExplode_posZ = posZ;
 }
 
-bool ParticlePacket::hasPintoExplosion()
+bool ParticlePacket::hasPintoExplosion(ParticleInfo* info_p)
 {
-	return ((info.flags & PINTO_EXPLODE) == PINTO_EXPLODE);
+	return ((info_p->flags & PINTO_EXPLODE) == PINTO_EXPLODE);
 }
 
-void ParticlePacket::initPintoExplosion()
+void ParticlePacket::initPintoExplosion(ParticleInfo* info_p)
 {
-	// ParticleManager::instance()->EmitPintoExplosion(Ogre::Vector3(info.pintoExplode_posX, info.pintoExplode_posY, info.pintoExplode_posZ));
+	// ParticleManager::instance()->EmitPintoExplosion(Ogre::Vector3(info_p->pintoExplode_posX, info_p->pintoExplode_posY, info_p->pintoExplode_posZ));
 }
 
-void ParticlePacket::updateParticles()
+void ParticlePacket::updateParticles(ParticleInfo* info)
 {
-	initDust();
-	initBlood();
-	initRocketExplosion();
-	initPintoExplosion();
+	if(hasDust(info))
+		initDust(info);
+
+	if(hasBlood(info))
+		initBlood(info);
+
+	if(hasRocketExplosion(info))
+		initRocketExplosion(info);
+
+	if(hasPintoExplosion(info))
+		initPintoExplosion(info);
 }

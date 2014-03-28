@@ -72,26 +72,26 @@ void AudioManager::stopChannel(AudioChannel channel) {
 	Mix_HaltChannel(channel);
 }
 
-AudioChannel AudioManager::playDonk() {
-	return play2DSound(_donks[rand() % 4], 0);
+void AudioManager::playDonk() {
+	play2DSound(_donks[rand() % 4], 0);
 }
 
-AudioChannel AudioManager::playStartSound() {
-	return play2DSound(_startSound, 0);
+void AudioManager::playStartSound() {
+	play2DSound(_startSound, 0);
 }
 
-AudioChannel AudioManager::playBALLZ() {
-	return play2DSound(_ballzSound, 0);
+void AudioManager::playBALLZ() {
+	play2DSound(_ballzSound, 0);
 }
 
-AudioChannel AudioManager::playRifleFire(Ogre::Vector3 v) {
-	return play3DSound(_rifleFire[rand() % 7], 0, v);
+void AudioManager::playRifleFire(Ogre::Vector3 v) {
+	play3DSound(_rifleFire[rand() % 7], 0, v);
 }
 
-AudioChannel AudioManager::playBulletDirtCollision(Ogre::Vector3 v) {
-	return play3DSound(_bulletDirtCollision[rand() % 7], 0, v);
+void AudioManager::playBulletDirtCollision(Ogre::Vector3 v) {
+	play3DSound(_bulletDirtCollision[rand() % 7], 0, v);
 }
 
-AudioChannel AudioManager::playDeath(Ogre::Vector3 v) {
-	return play3DSound(_death, 0, v);
+void AudioManager::playDeath(Ogre::Vector3 v) {
+	play3DSound(_death, 0, v);
 }

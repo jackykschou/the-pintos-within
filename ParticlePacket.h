@@ -15,6 +15,8 @@ struct ParticleInfo
 {
 	char type;
 
+	uint32_t player_id;
+
 	uint32_t flags;
 
 	uint32_t blood_len;
@@ -56,22 +58,22 @@ public:
   void clear();
 
   void setBlood(float, float, float, float, float, float);
-  bool hasBlood();
-  void initBlood();
+  bool hasBlood(ParticleInfo*);
+  void initBlood(ParticleInfo*);
 
   void setDust(float, float, float, float, float, float);
-  bool hasDust();
-  void initDust();
+  bool hasDust(ParticleInfo*);
+  void initDust(ParticleInfo*);
 
   void setRocketExplosion(float, float, float);
-  bool hasRocketExplosion();
-  void initRocketExplosion();
+  bool hasRocketExplosion(ParticleInfo*);
+  void initRocketExplosion(ParticleInfo*);
 
   void setPintoExplosion(float, float, float);
-  bool hasPintoExplosion();
-  void initPintoExplosion();
+  bool hasPintoExplosion(ParticleInfo*);
+  void initPintoExplosion(ParticleInfo*);
 
-  void updateParticles();
+  void updateParticles(ParticleInfo*);
 };
 
 #endif

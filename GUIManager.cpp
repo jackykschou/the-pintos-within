@@ -2,6 +2,7 @@
 #include "InputManager.h"
 #include "Camera.h"
 #include "GameState.h"
+#include "PlayerSpawner.h"
 
 void GUIManager::initialize(const Ogre::String& appName) {
 	_trayMgr = new OgreBites::SdkTrayManager(
@@ -156,6 +157,7 @@ void GUIManager::handleMouseGameOver() {
     if (!_gameOverOverlay->isVisible()) return;
     if (InputManager::instance()->isMouseLeftClicked()) {
         if (!NetworkManager::instance()->isClient()) {
+            GameState::instance()->spawner->startGame();
             hideGameOverMenu();
             GameState::instance()->reset();
             GameState::instance()->start();

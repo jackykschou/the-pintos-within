@@ -47,6 +47,11 @@ void Pistol::shoot_hook()
         {
             HitBox* hit_box = (HitBox*)(rayCallback.m_collisionObject->getUserPointer());
             int damage_sent = hit_box->getDamage(damage);
+            uint32_t enemy_id = hit_box->player->player_id;
+
+            NetworkManager::instance()->vital->setDamage(damage_sent, enemy_id);
+            NetworkManager::instance()->sendVital();
+            
             //blood particle system
         }
         else
@@ -54,6 +59,7 @@ void Pistol::shoot_hook()
             btVector3 point = rayCallback.m_hitPointWorld;
             AudioManager::instance()->playBulletDirtCollision(Ogre::Vector3(point.x(), point.y(), point.z()));
             ParticleManager::instance()->EmitSparks(Ogre::Vector3(point.x(), point.y(), point.z()), -cam_dir);
+
             //dust particle system
         }
     }

@@ -12,7 +12,6 @@ FPSBoxController::FPSBoxController(bool is_yourself_p, GameObject* gameObject, s
 	is_jet_packing = false;
 	is_walking = false;
 
-
 	onCollision = NULL;
 	can_move = true;
 
@@ -22,7 +21,7 @@ FPSBoxController::FPSBoxController(bool is_yourself_p, GameObject* gameObject, s
 	movement_speed_multiplier = 1;
 
 	slowDown = 0.92f;
-	speedUp = 0.02f;
+	speedUp = 0.04f;
 
 	jet_slowDown = 0.92f;
 	jet_speedUp = 0.04f;
@@ -57,7 +56,9 @@ FPSBoxController::~FPSBoxController()
 	dynamics_world->removeCollisionObject((btCollisionObject*)_ghostObject);
 	dynamics_world->removeAction(controller);
 
-	delete fps_camera;
+	if(is_yourself)
+		delete fps_camera;
+
 	delete _collisionShape;
 	delete _ghostObject;
 	delete controller;

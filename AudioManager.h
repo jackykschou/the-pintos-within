@@ -19,12 +19,12 @@ class AudioManager : public Singleton<AudioManager> {
     AudioChannel play2DSound(AudioFile, int loops);
     void play3DSound(AudioFile, int loops, Ogre::Vector3 v);
   	void stopChannel(AudioChannel);
-  	AudioChannel playDonk();
-  	AudioChannel playStartSound();
-    AudioChannel playBALLZ();
-    AudioChannel playRifleFire(Ogre::Vector3 v);
-    AudioChannel playBulletDirtCollision(Ogre::Vector3 v);
-    AudioChannel playDeath(Ogre::Vector3 v);
+  	void playDonk();
+  	void playStartSound();
+    void playBALLZ();
+    void playRifleFire(Ogre::Vector3 v);
+    void playBulletDirtCollision(Ogre::Vector3 v);
+    void playDeath(Ogre::Vector3 v);
 
   private:
   	std::vector<Mix_Chunk*> _loadedFiles;

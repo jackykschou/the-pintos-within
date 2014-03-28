@@ -22,13 +22,11 @@ enum NetworkManagerState
 class NetworkManager : public Singleton<NetworkManager> 
 {
   public:
-  	HeartbeatPacket* heartbeatSend;
-	VitalPacket* vitalSend;
-	ParticlePacket* particleSend;
+  	HeartbeatPacket* heartbeat;
+	VitalPacket* vital;
+	ParticlePacket* particle;
 
-	HeartbeatPacket* heartbeatReceive;
-	VitalPacket* vitalReceive;
-	ParticlePacket* particleReceive;
+	uint32_t player_id;
 
   	NetworkManager();
   	~NetworkManager();
@@ -47,8 +45,14 @@ class NetworkManager : public Singleton<NetworkManager>
 	void sendVital();
 	void sendParticle();
 
-  GameServer* server;
-  GameClient* client;
+	void receiveHeartbeat(HeartBeatInfo* info);
+	void receiveVital(VitalInfo* info);
+	void receiveParticle(ParticleInfo* info);
+
+	void changeId(uint32_t);
+
+	GameServer* server;
+	GameClient* client;
 };
 
 #endif

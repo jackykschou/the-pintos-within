@@ -171,13 +171,13 @@ void GameClient::processPacket(UDPpacket* packet) {
 
 	switch (packetType) {
 		case 'k':
-			memcpy(&(NetworkManager::instance()->vitalReceive->info), packet->data, sizeof(VitalInfo));
+			// memcpy(&(NetworkManager::instance()->vitalReceive->info), packet->data, sizeof(VitalInfo));
 			break;
 		case 's':
 			handleGameStartPacket(packet);
 			break;
 		case 'h':
-			NetworkManager::instance()->heartbeatReceive->clear();
+			// NetworkManager::instance()->heartbeatReceive->clear();
 			handleHeartbeatPacket(packet);
 			break;
 	}

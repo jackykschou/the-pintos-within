@@ -8,13 +8,17 @@
 #include "NetworkManager.h"
 
 class PlayerSpawner;
+class PlayerCharacter;
 
 #define DEFAULT_CLOCK 60 * 2 // 2 minutes
 
 class PlayerCharacter;
 
-class GameState : public Singleton<GameState>{
+class GameState : public Singleton<GameState>
+{
   public:
+    GameState();
+
   	int score;
   	int timeLeft;
   	void reset();
@@ -23,7 +27,11 @@ class GameState : public Singleton<GameState>{
 	  bool isRunning();
 
     PlayerCharacter* player;
-    PlayerSpawner *spawner;
+    PlayerSpawner* spawner;
+
+    uint32_t num_player;
+
+    PlayerCharacter* players[MAX_PLAYER];
 
   private:
   	boost::posix_time::ptime _start;

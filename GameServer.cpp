@@ -145,6 +145,7 @@ void GameServer::consumePackets() {
 	}
 }
 
+
 // when a client joins, we need to ACK back that it succeeded
 void GameServer::handleJoinPacket(UDPpacket *packet) {
 	IPaddress ip;
