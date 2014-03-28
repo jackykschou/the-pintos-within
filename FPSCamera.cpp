@@ -17,8 +17,8 @@ FPSCamera::FPSCamera(GameObject* gameObject, std::string name, double height_off
 	bobOffsetX = 0.0;
 	bobOffsetZ = 0.0;
 	bobbingAmountX = 0.8;
-	bobbingAmountY = 1.2;
-	bobbingAmountZ = 1.2;
+	bobbingAmountY = 0.8;
+	bobbingAmountZ = 0.8;
 
 	camera->setPosition(_transform->posX, _transform->posY, _transform->posZ);
 	camera->setOrientation(Ogre::Quaternion(_transform->rotW, _transform->rotX, _transform->rotY, _transform->rotZ));

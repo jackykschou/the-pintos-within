@@ -6,6 +6,7 @@ HitBox::HitBox(PlayerCharacter* player_p, std::string mesh_name,
 	PlayerBox(player_p, mesh_name, posX, posY, posZ, rotX, rotY, rotZ, rotW, scaleY, scaleY, scaleZ,
 	 COL_HIT_BOX, COL_HIT_BOX_COLLIDER_WITH)
 {
+	player = player_p;
 	damage_multiplier = damage_multiplier_p;
 	((Rigidbody*)rigidbody)->rigidbody->setUserPointer(this);
 }

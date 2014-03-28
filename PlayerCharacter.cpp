@@ -5,8 +5,10 @@
 
 PlayerCharacter::PlayerCharacter(bool is_yourself_p, Scene* scene, std::string mesh_name,
 	float posX, float posY, float posZ, float rotX, float rotY, float rotZ, float rotW,
-	float scaleX, float scaleY, float scaleZ) : GameObject("Player", scene)
+	float scaleX, float scaleY, float scaleZ, uint32_t player_id_p) : GameObject("Player", scene)
 {
+	player_id = player_id_p;
+
 	is_yourself = is_yourself_p;
 	is_shooting = false;
 	is_idle = false;
@@ -64,8 +66,8 @@ PlayerCharacter::PlayerCharacter(bool is_yourself_p, Scene* scene, std::string m
 
 	head_animation_state = mesh->entity->getAnimationState("Head Pitch");
 	head_animation_state->setLoop(true);
-	head_animation_state->setWeight(1);
-	head_animation_state->setEnabled(true);
+	head_animation_state->setWeight(0);
+	head_animation_state->setEnabled(false);
 
 	die_animation_state = mesh->entity->getAnimationState("Death");
 	die_animation_state->setLoop(false);
@@ -140,6 +142,14 @@ PlayerCharacter::PlayerCharacter(bool is_yourself_p, Scene* scene, std::string m
 	weapons[0] = pistol;
 	current_weapon = pistol;
 
+	is_shooting = false;
+	is_moving = false;
+	is_idle = false;
+	is_reloading = false;
+	is_jet_packing = false;
+	is_jumping = false;
+	is_running = false;
+
 	weapon_running_animation_state = current_weapon->running_animation_state;
 	weapon_idle_animation_state = current_weapon->idle_animation_state;
 	weapon_shooting_animation_state = current_weapon->shooting_animation_state;
@@ -153,7 +163,9 @@ PlayerCharacter::PlayerCharacter(bool is_yourself_p, Scene* scene, std::string m
 
 PlayerCharacter:: ~PlayerCharacter()
 {
-	scene->main_camera = NULL;
+	if(is_yourself)
+		scene->main_camera = NULL;
+
 	delete health_regen_debouncer;
 }
 
@@ -181,7 +193,7 @@ void PlayerCharacter::update()
 		current_reload_animation_state = reload_animation_states[current_weapon->weapon_id];
 		current_shooting_animation_state = shooting_animation_states[current_weapon->weapon_id];
 
-		if((health <= 0 || transform->posY <= -100) && !is_dead)
+		if((health <= 0 || transform->posY <= -130) && !is_dead)
 		{
 			is_dead = true;
 			controller->can_move = false;
@@ -192,6 +204,14 @@ void PlayerCharacter::update()
 		{
 			// LOG("Playing dead");
 
+			idle_animation_state->setWeight(0);
+			idle_animation_state->setEnabled(false);
+			idle_animation_state->setTimePosition(0);
+
+			weapon_idle_animation_state->setWeight(0);
+			weapon_idle_animation_state->setEnabled(false);
+			weapon_idle_animation_state->setTimePosition(0);
+
 			die_animation_state->setWeight(1);
 			die_animation_state->setEnabled(true);
 			die_animation_state->addTime(GraphicsManager::instance()->getFrameEvent()->timeSinceLastFrame);
@@ -200,20 +220,25 @@ void PlayerCharacter::update()
 			weapon_die_animation_state->setEnabled(true);
 			weapon_die_animation_state->setTimePosition(die_animation_state->getTimePosition());
 
+
+			running_animation_state->setWeight(0);
+			running_animation_state->setEnabled(false);
+			running_animation_state->setTimePosition(0);
+
+			weapon_running_animation_state->setWeight(0);
+			weapon_running_animation_state->setEnabled(false);
+			weapon_running_animation_state->setTimePosition(0);
+
 			if(die_animation_state->getTimePosition() >= (die_animation_state->getLength() + 3.0f))
 			{
-				
-				NetworkManager::instance()->vitalSend->setRemotePlayerDie();
+				NetworkManager::instance()->vital->setPlayerDie();
 				NetworkManager::instance()->sendVital();
+				scene->removeGameObject((GameObject*)this);
+				GameState::instance()->players[NetworkManager::instance()->player_id] = NULL;
 			}
 		}
 		else
 		{
-			if(NetworkManager::instance()->vitalReceive->hasDamage())
-			{
-				health = (health - NetworkManager::instance()->vitalReceive->getDamage());
-			}
-
 			die_animation_state->setWeight(0);
 			die_animation_state->setEnabled(false);
 			weapon_die_animation_state->setWeight(0);
@@ -243,6 +268,7 @@ void PlayerCharacter::update()
 			if(controller->is_jet_packing && !controller->controller->isJumping())
 			{
 				is_jet_packing = true;
+				//Particle
 			}
 			else
 			{
@@ -252,6 +278,11 @@ void PlayerCharacter::update()
 			if(!controller->is_jet_packing && !controller->controller->onGround() && controller->controller->isJumping())
 			{
 				// LOG("Playing jump");
+
+				running_animation_state->setWeight(0);
+				weapon_running_animation_state->setWeight(0);
+				idle_animation_state->setWeight(0);
+				weapon_idle_animation_state->setWeight(0);
 
 				is_jumping = true;
 				jumping_animation_state->setWeight(1);
@@ -397,10 +428,8 @@ void PlayerCharacter::update()
 			}
 
 			Ogre::Vector3 dir = ((Camera*)(controller->fps_camera))->camera->getDirection();
-			head_animation_state->setTimePosition((dir.y + 0.5) * head_animation_state->getLength());
 		}
 
-		// running_animation_state->addTime(GraphicsManager::instance()->getFrameEvent()->timeSinceLastFrame);
 
 		run_animation_time = running_animation_state->getTimePosition();
 		shoot_animation_time = current_shooting_animation_state->getTimePosition();
@@ -410,7 +439,7 @@ void PlayerCharacter::update()
 		head_animation_time = head_animation_state->getTimePosition();
 		die_animation_time = die_animation_state->getTimePosition();
 
-		NetworkManager::instance()->heartbeatSend->renewPlayerInfo(this);
+		NetworkManager::instance()->heartbeat->renewPlayerInfo(this);
 
 		// sent info to sever
 
@@ -497,13 +526,11 @@ void PlayerCharacter::update()
 	}
 	else
 	{
-		NetworkManager::instance()->heartbeatReceive->updatePlayer(this);
+		// if(NetworkManager::instance()->vitalReceive->)
+		// {
 
-		if(NetworkManager::instance()->vitalReceive->)
-		{
-
-		}
-		else if(is_dead)
+		// }
+		if(is_dead)
 		{
 			die_animation_state->setEnabled(true);
 			die_animation_state->setWeight(1);
@@ -540,6 +567,11 @@ void PlayerCharacter::update()
 
 			if(is_shooting)
 			{
+				running_animation_state->setWeight(0.5);
+				weapon_running_animation_state->setWeight(0.5);
+				idle_animation_state->setWeight(0.5);
+				weapon_idle_animation_state->setWeight(0.5);
+
 				current_shooting_animation_state->setEnabled(true);
 				current_shooting_animation_state->setWeight(1);
 				weapon_shooting_animation_state->setEnabled(true);
@@ -576,6 +608,11 @@ void PlayerCharacter::update()
 
 			if(is_reloading)
 			{
+				running_animation_state->setWeight(0.5);
+				weapon_running_animation_state->setWeight(0.5);
+				idle_animation_state->setWeight(0.5);
+				weapon_idle_animation_state->setWeight(0.5);
+
 				current_reload_animation_state->setEnabled(true);
 				current_reload_animation_state->setWeight(1);
 				weapon_reload_animation_state->setEnabled(true);
@@ -594,6 +631,11 @@ void PlayerCharacter::update()
 
 			if(is_jumping)
 			{
+				running_animation_state->setWeight(0);
+				weapon_running_animation_state->setWeight(0);
+				idle_animation_state->setWeight(0);
+				weapon_idle_animation_state->setWeight(0);
+
 				jumping_animation_state->setEnabled(true);
 				jumping_animation_state->setWeight(1);
 				jumping_animation_state->setTimePosition(jump_animation_time);
@@ -609,10 +651,8 @@ void PlayerCharacter::update()
 
 				weapon_jumping_animation_state->setEnabled(false);
 				weapon_jumping_animation_state->setWeight(0);
-
 			}
 		}
-		head_animation_state->setTimePosition(head_animation_time);
 	}
 }
 
@@ -627,7 +667,15 @@ void PlayerCharacter::regen_health()
 void PlayerCharacter::changeWeapon(int index)
 {
 	ASSERT((index < WEAPON_NUM) && (index >= 0), "Invalid weapon index")
-	current_weapon = weapons[index];
 
-	//update pack
+	current_weapon->node->setVisible(false);
+	current_weapon = weapons[index];
+	current_weapon->switchToThisWeapon();
+	current_weapon->node->setVisible(true);
+
+	if(is_yourself)
+	{
+		NetworkManager::instance()->vital->setChangeWeapon(index);
+		NetworkManager::instance()->sendVital();
+	}
 }

@@ -17,6 +17,10 @@ struct HeartBeatInfo
 {
 	char type;
 
+	uint32_t player_id;
+
+	int flags;
+
 	float playerPosX;
 	float playerPosY;
 	float playerPosZ;
@@ -29,8 +33,6 @@ struct HeartBeatInfo
 	float velocityX;
 	float velocityY;
 	float velocityZ;
-
-	int flags;
 
 	float run_animation_time;
 	float shoot_animation_time;
@@ -48,7 +50,7 @@ public:
 	HeartbeatPacket();
 
 	void renewPlayerInfo(PlayerCharacter*);
-	void updatePlayer(PlayerCharacter*);
+	void updatePlayer(HeartBeatInfo*, PlayerCharacter*);
 	void clear();
 };
 

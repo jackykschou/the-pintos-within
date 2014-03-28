@@ -131,10 +131,6 @@ void GameServer::processPacket(UDPpacket *packet) {
 		case 'e':
 			// EVENT request injects an event on a linked character
 			// XXX
-			HeartbeatInfo *h = (HeartbeatPacket*)packet->data;
-			HeartbeatPacket h2(h);
-			h2->updatePlayer(GameState::instance()->players[h.id]->updateFromPacket(packet);
-			broadcastPacket(packet);
 			break;
 	}
 }

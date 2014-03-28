@@ -6,24 +6,18 @@ NetworkManager::NetworkManager()
 {
 	state = NetworkStateReady;
 
-	heartbeatSend = new HeartbeatPacket();
-	vitalSend = new VitalPacket();
-	particleSend = new ParticlePacket();
+	heartbeat = new HeartbeatPacket();
+	vital = new VitalPacket();
+	particle = new ParticlePacket();
 
-	heartbeatReceive = new HeartbeatPacket();
-	vitalReceive = new VitalPacket();
-	particleReceive = new ParticlePacket();
+	player_id = -1;
 }
 
  NetworkManager::~NetworkManager()
  {
- 	delete heartbeatSend;
-	delete vitalSend;
-	delete particleSend;
-
-	delete heartbeatReceive;
-	delete vitalReceive;
-	delete particleReceive;
+ 	delete heartbeat;
+	delete vital;
+	delete particle;
  }
 
 void NetworkManager::sendVital()
@@ -36,7 +30,7 @@ void NetworkManager::sendVital()
 	// {
 	// 	client->sendData();
 	// }
-	vitalSend->clear();
+	vital->clear();
 }
 
 void NetworkManager::sendParticle()
@@ -49,6 +43,32 @@ void NetworkManager::sendParticle()
 	// {
 	// 	client->sendData();
 	// }
+	particle->clear();
+}
+
+void NetworkManager::receiveHeartbeat(HeartBeatInfo* info)
+{
+	if(info->player_id == NetworkManager::instance()->player_id) 
+		return;
+
+	if(GameState::instance()->players[info->player_id])
+		heartbeat->updatePlayer(info, GameState::instance()->players[info->player_id]);
+}
+
+void NetworkManager::receiveVital(VitalInfo* info)
+{
+	if(info->player_id == NetworkManager::instance()->player_id)
+		return;
+
+	vital->updatePacket(info);
+}
+
+void NetworkManager::receiveParticle(ParticleInfo* info)
+{
+	if(info->player_id == NetworkManager::instance()->player_id)
+		return;
+
+	particle->updateParticles(info);
 }
 
 void NetworkManager::startServer() {
@@ -83,16 +103,13 @@ void NetworkManager::update()
 {
 	if (!isActive()) return;
 
-	vitalReceive->clear();
-	particleReceive->clear();
-
 	if (isServer()) {
 		server->update();
 	} else if (isClient()) {
 		client->update();
 	}
 
-	heartbeatSend->clear();
+	heartbeat->clear();
 }
 
 bool NetworkManager::isActive() {
@@ -106,4 +123,14 @@ bool NetworkManager::isServer() {
 bool NetworkManager::isClient() {
 	return state == NetworkStateClient;
 }
+
+void NetworkManager::changeId(uint32_t id)
+{
+	player_id = id;
+
+	heartbeat->info.player_id = id;
+	vital->info.player_id = id;
+	particle->info.player_id = id;
+}
+
 

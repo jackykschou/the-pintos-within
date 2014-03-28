@@ -43,6 +43,8 @@ enum collisiontypes {
 #define LIGHT "Sun"
 #define SKY "SkyHemi"
 
+#define MAX_PLAYER 10
+
 #define MAIN_MENU 1
 #define GAME_MODE 2
 

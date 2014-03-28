@@ -24,6 +24,8 @@ protected:
 	void regen_health();
 
 public:
+	uint32_t player_id;
+
 	bool is_yourself;
 	
 	bool is_dead;
@@ -54,7 +56,6 @@ public:
 	Ogre::AnimationState *current_reload_animation_state;
 	Ogre::AnimationState *current_shooting_animation_state;
 
-
 	Ogre::AnimationState *weapon_running_animation_state;
 	Ogre::AnimationState *weapon_idle_animation_state;
 	Ogre::AnimationState *weapon_shooting_animation_state;
@@ -79,7 +80,7 @@ public:
 
 	PlayerCharacter(bool, Scene*, std::string,
 	float, float, float, float, float, float, float,
-	float, float, float);
+	float, float, float, uint32_t);
 
 	virtual ~PlayerCharacter();
 

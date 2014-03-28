@@ -39,23 +39,38 @@ void PlayerSpawner::addSpawnPoint(Ogre::Vector3 point)
 	positions.push_back(point);
 }
 
-void PlayerSpawner::spawnPlayer(bool self)
+void PlayerSpawner::spawnPlayer(float x, float y, float z, uint32_t player_id)
+{
+	bool self = false;
+
+	if(player_id == NetworkManager::instance()->player_id)
+		self = true;
+
+	new PlayerCharacter(self, scene, "PixelMan.mesh",
+            x, y, z,
+            0, 0, 0, 1,
+            10, 10, 10,
+            player_id);
+}
+
+Ogre::Vector3 PlayerSpawner::spawnPlayer(uint32_t player_id)
 {
 	Ogre::Vector3 position = positions[RAND_RANGE(0, positions.size())];
 	
+	bool self = false;
+
+	if(player_id == NetworkManager::instance()->player_id)
+		self = true;
+
 	new PlayerCharacter(self, scene, "PixelMan.mesh",
             position.x, position.y, position.z,
             0, 0, 0, 1,
-            10, 10, 10);
+            10, 10, 10,
+            player_id);
+	
+	return position;
+	
 }
 
-void PlayerSpawner::update()
-{
-	GameObject::update();
 
-	//check if player is dead
-	// if()
-	// {
 
-	// }
-}
