@@ -35,7 +35,7 @@ namespace OiJE{
 ///Interaction between btKinematicCharacterController and dynamic rigid bodies needs to be explicity implemented by the user.
 class CharacterController: public btCharacterControllerInterface
 {
-protected:
+public:
 
    btScalar m_halfHeight;
    
@@ -90,8 +90,8 @@ protected:
    void updateTargetPositionBasedOnCollision (const btVector3& hit_normal, btScalar tangentMag = btScalar(0.0), btScalar normalMag = btScalar(1.0));
    void stepForwardAndStrafe (btCollisionWorld* collisionWorld, const btVector3& walkMove);
    void stepDown (btCollisionWorld* collisionWorld, btScalar dt);
-public:
    CharacterController(btPairCachingGhostObject* ghostObject,btConvexShape* convexShape,btScalar stepHeight, int upAxis = 1);
+   
    ~CharacterController();
 
    ///btActionInterface interface

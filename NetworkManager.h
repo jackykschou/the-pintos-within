@@ -8,14 +8,31 @@
 #include "GameState.h"
 #include "GUIManager.h"
 
-enum NetworkManagerState {
+#include "HeartbeatPacket.h"
+#include "VitalPacket.h"
+#include "ParticlePacket.h"
+
+enum NetworkManagerState 
+{
 	NetworkStateReady,
 	NetworkStateClient,
 	NetworkStateServer
 };
 
-class NetworkManager : public Singleton<NetworkManager> {
+class NetworkManager : public Singleton<NetworkManager> 
+{
   public:
+  	HeartbeatPacket* heartbeatSend;
+	VitalPacket* vitalSend;
+	ParticlePacket* particleSend;
+
+	HeartbeatPacket* heartbeatReceive;
+	VitalPacket* vitalReceive;
+	ParticlePacket* particleReceive;
+
+  	NetworkManager();
+  	~NetworkManager();
+
 	NetworkManagerState state;
 
 	void startServer();
@@ -25,6 +42,10 @@ class NetworkManager : public Singleton<NetworkManager> {
 	bool isActive();
 	bool isServer();
 	bool isClient();
+
+	void sendHeartbeat();
+	void sendVital();
+	void sendParticle();
 
   GameServer* server;
   GameClient* client;

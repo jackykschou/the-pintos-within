@@ -7,10 +7,10 @@
 #include <OgreQuaternion.h>
 #include <OgreResourceGroupManager.h>
 #include <vector>
- 
-#include "Application.h"
 
 #include "rapidxml.hpp"
+
+class Scene;
 
     // Forward declarations
     namespace Ogre
@@ -41,7 +41,7 @@
         DotSceneLoader();
         virtual ~DotSceneLoader();
  
-        void parseDotScene(Scene* s, const Ogre::String &SceneName, const Ogre::String &groupName, Ogre::SceneManager *yourSceneMgr, Ogre::SceneNode *pAttachNode = NULL, const Ogre::String &sPrependNode = "");
+        void parseDotScene(uint32_t, Scene* s, const Ogre::String &SceneName, const Ogre::String &groupName, Ogre::SceneManager *yourSceneMgr, Ogre::SceneNode *pAttachNode = NULL, const Ogre::String &sPrependNode = "");
         Ogre::String getProperty(const Ogre::String &ndNm, const Ogre::String &prop);
  
         Ogre::TerrainGroup* getTerrainGroup() { return mTerrainGroup; }
@@ -51,9 +51,9 @@
         std::vector<Ogre::String> dynamicObjects;
  
     protected:
-        void processScene(rapidxml::xml_node<>* XMLRoot);
+        void processScene(uint32_t, rapidxml::xml_node<>* XMLRoot);
  
-        void processNodes(rapidxml::xml_node<>* XMLNode);
+        void processNodes(uint32_t, rapidxml::xml_node<>* XMLNode);
         void processExternals(rapidxml::xml_node<>* XMLNode);
         void processEnvironment(rapidxml::xml_node<>* XMLNode);
         void processTerrain(rapidxml::xml_node<>* XMLNode);
@@ -65,7 +65,7 @@
         void processLight(rapidxml::xml_node<>* XMLNode, Ogre::SceneNode *pParent = 0);
         void processCamera(rapidxml::xml_node<>* XMLNode, Ogre::SceneNode *pParent = 0);
  
-        void processNode(rapidxml::xml_node<>* XMLNode, Ogre::SceneNode *pParent = 0);
+        void processNode(uint32_t, rapidxml::xml_node<>* XMLNode, Ogre::SceneNode *pParent = 0);
         void processLookTarget(rapidxml::xml_node<>* XMLNode, Ogre::SceneNode *pParent);
         void processTrackTarget(rapidxml::xml_node<>* XMLNode, Ogre::SceneNode *pParent);
         void processEntity(rapidxml::xml_node<>* XMLNode, Ogre::SceneNode *pParent);
@@ -90,7 +90,7 @@
         Ogre::Quaternion parseQuaternion(rapidxml::xml_node<>* XMLNode);
         Ogre::ColourValue parseColour(rapidxml::xml_node<>* XMLNode);
 
-        void createSceneObject(rapidxml::xml_node<>* XMLNode, std::string);
+        void createSceneObject(uint32_t, rapidxml::xml_node<>* XMLNode, std::string);
  
         Ogre::SceneManager *mSceneMgr;
         Ogre::SceneNode *mAttachNode;

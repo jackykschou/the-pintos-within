@@ -20,7 +20,7 @@ public:
 		float, float, float, float,
 		float, float, float, float);
 
-	void takeDamage(int);
+	int getDamage(int);
 };
 
 #endif

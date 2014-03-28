@@ -150,7 +150,7 @@ CharacterController::CharacterController (btPairCachingGhostObject* ghostObject,
    m_verticalVelocity = 0.0;
    m_verticalOffset = 0.0;
    m_gravity = 9.8f * 12.0f; // 3G acceleration.
-   m_fallSpeed = 40.0f; // Terminal velocity of a sky diver in m/s.
+   m_fallSpeed = 80.0f; // Terminal velocity of a sky diver in m/s.
    m_jumpSpeed = 65.0f; // ?
    m_wasOnGround = false;
    m_wasJumping = false;

@@ -1,5 +1,7 @@
 #include "ParticlePacket.h"
 
+#include "ParticleManager.h"
+
 ParticlePacket::ParticlePacket()
 {
 	info.type = PARTICLEPACK;
@@ -7,6 +9,12 @@ ParticlePacket::ParticlePacket()
 
 	info.blood_len = 0;
 	info.dust_len = 0;
+}
+
+void ParticlePacket::clear()
+{
+	memset(&info, 0, sizeof(ParticleInfo));
+	info.type = PARTICLEPACK;
 }
 
 void ParticlePacket::setBlood(float posX, float posY, float posZ, float dirX, float dirY, float dirZ)
@@ -28,9 +36,14 @@ bool ParticlePacket::hasBlood()
 {
 	return ((info.flags & BLOOD) == BLOOD);
 }
+
 void ParticlePacket::initBlood()
 {
-
+	for(int i = 0; i < info.blood_len;++i)
+	{
+		ParticleManager::instance()->EmitSparks(Ogre::Vector3(info.blood_posXs[i], info.blood_posYs[i], info.blood_posZs[i]), 
+												Ogre::Vector3(info.blood_dirXs[i], info.blood_dirYs[i], info.blood_dirZs[i]));
+	}
 }
 
 void ParticlePacket::setDust(float posX, float posY, float posZ, float dirX, float dirY, float dirZ)
@@ -56,16 +69,20 @@ bool ParticlePacket::hasDust()
 
 void ParticlePacket::initDust()
 {
-
+	for(int i = 0; i < info.dust_len;++i)
+	{
+		ParticleManager::instance()->EmitSparks(Ogre::Vector3(info.dust_posXs[i], info.dust_posYs[i], info.dust_posZs[i]), 
+												Ogre::Vector3(info.dust_dirXs[i], info.dust_dirYs[i], info.dust_dirZs[i]));
+	}
 }
 
 void ParticlePacket::setRocketExplosion(float posX, float posY, float posZ)
 {
 	info.flags |= ROCKET_EXPLODE;
 
-	info.rocketExplode_posXs = posX;
-	info.rocketExplode_posYs = posY;
-	info.rocketExplode_posZs = posZ;
+	info.rocketExplode_posX = posX;
+	info.rocketExplode_posY = posY;
+	info.rocketExplode_posZ = posZ;
 }
 
 bool ParticlePacket::hasRocketExplosion()
@@ -75,16 +92,16 @@ bool ParticlePacket::hasRocketExplosion()
 
 void ParticlePacket::initRocketExplosion()
 {
-
+	// ParticleManager::instance()->EmitRocketExplosion(Ogre::Vector3(info.rocketExplode_posX, info.rocketExplode_posY, info.rocketExplode_posZ));
 }
 
 void ParticlePacket::setPintoExplosion(float posX, float posY, float posZ)
 {
 	info.flags |= PINTO_EXPLODE;
 
-	info.pintoExplode_posXs = posX;
-	info.pintoExplode_posYs = posY;
-	info.pintoExplode_posZs = posZ;
+	info.pintoExplode_posX = posX;
+	info.pintoExplode_posY = posY;
+	info.pintoExplode_posZ = posZ;
 }
 
 bool ParticlePacket::hasPintoExplosion()
@@ -94,5 +111,13 @@ bool ParticlePacket::hasPintoExplosion()
 
 void ParticlePacket::initPintoExplosion()
 {
+	// ParticleManager::instance()->EmitPintoExplosion(Ogre::Vector3(info.pintoExplode_posX, info.pintoExplode_posY, info.pintoExplode_posZ));
+}
 
+void ParticlePacket::updateParticles()
+{
+	initDust();
+	initBlood();
+	initRocketExplosion();
+	initPintoExplosion();
 }

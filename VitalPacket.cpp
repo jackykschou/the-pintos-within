@@ -10,6 +10,12 @@ VitalPacket::VitalPacket()
 	info.weapon_index = 0;
 }
 
+void VitalPacket::clear()
+{
+	memset(&info, 0, sizeof(VitalInfo));
+	info.type = VITALPACK;
+}
+
 void VitalPacket::setDamage(int damage)
 {
 	info.flags |= TAKEDAMAGE;
@@ -42,32 +48,60 @@ int VitalPacket::getWeaponIndex()
 	return info.weapon_index;
 }
 
-void VitalPacket::setEnemyDie()
+void VitalPacket::setClientPlayerDie()
 {
-	info.flags |= ENEMY_DIE;
+	info.flags |= CLIENTPLAYER_DIE;
 }
 
-bool VitalPacket::hasEnemyDie()
+bool VitalPacket::hasClientPlayerDie()
 {
-	return ((info.flags & ENEMY_DIE) == ENEMY_DIE);
+	return ((info.flags & CLIENTPLAYER_DIE) == CLIENTPLAYER_DIE);
 }
 
-void VitalPacket::setEnemyRespawn(float posX, float posY, float posZ)
+void VitalPacket::setClientPlayerRespawn(float posX, float posY, float posZ)
 {
-	info.flags |= ENEMY_RESPAWN;
-	info.playerPosX = posX;
-	info.playerPosY = posY;
-	info.playerPosZ = posZ;
+	info.flags |= CLIENTPLAYER_RESPAWN;
+	info.clientPlayerX = posX;
+	info.clientPlayerY = posY;
+	info.clientPlayerZ = posZ;
 
 }
-bool VitalPacket::hasEnemyRespawn()
+bool VitalPacket::hasClientPlayerRespawn()
 {
-	return ((info.flags & ENEMY_RESPAWN) == ENEMY_RESPAWN);
+	return ((info.flags & CLIENTPLAYER_RESPAWN) == CLIENTPLAYER_RESPAWN);
 }
 
-Ogre::Vector3 VitalPacket::getEnemyRespawnPos()
+Ogre::Vector3 VitalPacket::getClientPlayerRespawnPos()
 {
-	return Ogre::Vector3(info.playerPosX, info.playerPosY, info.playerPosZ);
+	return Ogre::Vector3(info.clientPlayerX, info.clientPlayerY, info.clientPlayerZ);
+}
+
+void VitalPacket::setHostPlayerDie()
+{
+	info.flags |= HOSTPLAYER_DIE;
+}
+
+bool VitalPacket::hasHostPlayerDie()
+{
+	return ((info.flags & HOSTPLAYER_DIE) == HOSTPLAYER_DIE);
+}
+
+void VitalPacket::setHostPlayerRespawn(float posX, float posY, float posZ)
+{
+	info.flags |= HOSTPLAYER_REPAWN;
+	info.hostPlayerX = posX;
+	info.hostPlayerY = posY;
+	info.hostPlayerZ = posZ;
+
+}
+bool VitalPacket::hashostPlayerRespawn()
+{
+	return ((info.flags & HOSTPLAYER_REPAWN) == HOSTPLAYER_REPAWN);
+}
+
+Ogre::Vector3 VitalPacket::getHostPlayerRespawnPos()
+{
+	return Ogre::Vector3(info.hostPlayerX, info.hostPlayerY, info.hostPlayerZ);
 }
 
 void VitalPacket::setPintoTaken()

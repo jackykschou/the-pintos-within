@@ -29,6 +29,7 @@ public:
 	bool is_dead;
 	bool is_shooting;
 	bool is_moving;
+	bool is_running;
 	bool is_idle;
 	bool is_reloading;
 	bool is_jet_packing;
@@ -84,6 +85,8 @@ public:
 
 	virtual void update();
 	virtual void changeWeapon(int);
+
+	Transform* transform;
 };
 
 #endif // #ifndef __PlayerCharacter_h_

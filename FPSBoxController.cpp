@@ -1,9 +1,11 @@
 #include "FPSBoxController.h"
 
-FPSBoxController::FPSBoxController(GameObject* gameObject, std::string camera_name, double camera_offset, 
+FPSBoxController::FPSBoxController(bool is_yourself_p, GameObject* gameObject, std::string camera_name, double camera_offset, 
 														const btVector3& boxHalfExtents, btScalar step_height, 
 														int col_mask, int col_to_masks, Ogre::SceneNode* node) : Component(gameObject), currVel(0, 0, 0), jetVel(0, 0, 0)
 {
+	is_yourself = is_yourself_p;
+
 	jet_pack_max = 5000;
 	jet_pack_current = jet_pack_max;
 
@@ -15,7 +17,7 @@ FPSBoxController::FPSBoxController(GameObject* gameObject, std::string camera_na
 	can_move = true;
 
 	base_movement_speed = 1.0f;
-	jet_bonus_speed = 1.3f;
+	jet_bonus_speed = 2.0f;
 
 	movement_speed_multiplier = 1;
 
@@ -27,7 +29,11 @@ FPSBoxController::FPSBoxController(GameObject* gameObject, std::string camera_na
 
 	_transform = gameObject->getComponent<Transform>();
 
-	fps_camera = new FPSCamera(gameObject, camera_name, camera_offset, node);
+	if(is_yourself)
+	{
+		fps_camera = new FPSCamera(gameObject, camera_name, camera_offset, node);
+	}
+
 	_collisionShape = new btBoxShape(boxHalfExtents);
 	dynamics_world = _gameObject->scene->physics_world;
 
@@ -36,6 +42,7 @@ FPSBoxController::FPSBoxController(GameObject* gameObject, std::string camera_na
 	_ghostObject->setCollisionShape(_collisionShape);
 	_ghostObject->setWorldTransform(btTransform(btQuaternion(_transform->rotX, _transform->rotY, _transform->rotZ, _transform->rotW), 
 					btVector3(_transform->posX,_transform->posY,_transform->posZ)));
+	_ghostObject->setUserPointer(gameObject);
 	btGhostPairCallback* actorGhostPairCallback = new btGhostPairCallback();
    	PhysicsManager::instance()->overlappingPairCache->getOverlappingPairCache()->setInternalGhostPairCallback(actorGhostPairCallback);
 
@@ -59,8 +66,11 @@ FPSBoxController::~FPSBoxController()
 void FPSBoxController::update()
 {
 	updateTransform();
-	testCollision();
-	detectInput();
+	if(is_yourself)
+	{
+		testCollision();
+		detectInput();
+	}
 	controller->updateAction(dynamics_world, GraphicsManager::instance()->getFrameEvent()->timeSinceLastFrame);
 }
 

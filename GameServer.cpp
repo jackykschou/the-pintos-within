@@ -1,6 +1,10 @@
 #include "GameServer.h"
 #include "GameState.h"
 
+#include "HeartbeatPacket.h"
+#include "VitalPacket.h"
+#include "ParticlePacket.h"
+
 namespace pt = boost::posix_time;
 
 GameServer::GameServer(int port) {
@@ -127,6 +131,10 @@ void GameServer::processPacket(UDPpacket *packet) {
 		case 'e':
 			// EVENT request injects an event on a linked character
 			// XXX
+			HeartbeatInfo *h = (HeartbeatPacket*)packet->data;
+			HeartbeatPacket h2(h);
+			h2->updatePlayer(GameState::instance()->players[h.id]->updateFromPacket(packet);
+			broadcastPacket(packet);
 			break;
 	}
 }

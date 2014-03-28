@@ -10,7 +10,7 @@ HitBox::HitBox(PlayerCharacter* player_p, std::string mesh_name,
 	((Rigidbody*)rigidbody)->rigidbody->setUserPointer(this);
 }
 
-void HitBox::takeDamage(int amount)
+int HitBox::getDamage(int amount)
 {
-	player->health -= (int)(amount * damage_multiplier);
+	return amount * damage_multiplier;
 }

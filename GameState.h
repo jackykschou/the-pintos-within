@@ -7,6 +7,8 @@
 #include "AudioManager.h"
 #include "NetworkManager.h"
 
+class PlayerSpawner;
+
 #define DEFAULT_CLOCK 60 * 2 // 2 minutes
 
 class GameState : public Singleton<GameState>{
@@ -17,6 +19,9 @@ class GameState : public Singleton<GameState>{
   	void update();
 	  void start();
 	  bool isRunning();
+
+    PlayerSpawner *spawner;
+
 
   private:
   	boost::posix_time::ptime _start;

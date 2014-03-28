@@ -12,6 +12,9 @@ Pistol::Pistol(PlayerCharacter* player_p, std::string mesh_name, float posX,
 			posY, posZ, rotX, rotY, rotZ, rotW, scaleX, scaleY, scaleZ, box)
 
 {
+    Transform* tran = ((GameObject*)player_p)->getComponent<Transform>();
+    node->setPosition(player->mesh->node->convertWorldToLocalPosition(
+        Ogre::Vector3(tran->posX + posX, tran->posY + posY, tran->posZ + posZ)));
     damage = 10;
     shoot_distance = 500;
 }
@@ -32,7 +35,6 @@ void Pistol::shoot_hook()
     rayCallback.m_collisionFilterMask = COL_BULLET_COLLIDER_WITH;
 
     Component::_gameObject->scene->physics_world->rayTest(from, to, rayCallback);
-    LOG("Shoot!");
     if(rayCallback.hasHit())
     {
         LOG("I hit something......");
@@ -40,9 +42,8 @@ void Pistol::shoot_hook()
         
         if(rayCallback.m_collisionObject->getUserPointer() != NULL)
         {
-
-            // HitBox* hit_box = (HitBox*)(rayCallback.m_collisionObject->getUserPointer());
-            // hit_box->takeDamage(damage);
+            HitBox* hit_box = (HitBox*)(rayCallback.m_collisionObject->getUserPointer());
+            int damage_sent = hit_box->getDamage(damage);
             //blood particle system
         }
         else

@@ -34,4 +34,16 @@ enum collisiontypes {
 #define VITALPACK 3
 #define PARTICLEPACK 4
 
+#define WALL "Wall"
+#define FLOORGRASS "FloorGrass"
+#define FLOORTILE "FloorTiled"
+#define PLATFORMDIRT "PlatformDirt"
+#define PLATFORMGREY "PlatformGrey"
+#define PLAYERSPAWNER "Spawner.Player.005"
+#define LIGHT "Sun"
+#define SKY "SkyHemi"
+
+#define MAIN_MENU 1
+#define GAME_MODE 2
+
 #endif // #ifndef __Utility_h_

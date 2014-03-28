@@ -1,11 +1,20 @@
 #include "HeartbeatPacket.h"
 
+#include "PlayerCharacter.h"
+#include "PhysicsManager.h"
+
 HeartbeatPacket::HeartbeatPacket()
 {
 	info.type = HEARTBEATPACK;
 }
 
-void HeartbeatPacket::renewPacket(PlayerCharacter* player)
+void HeartbeatPacket::clear()
+{
+	memset(&info, 0, sizeof(HeartBeatInfo));
+	info.type = HEARTBEATPACK;
+}
+
+void HeartbeatPacket::renewPlayerInfo(PlayerCharacter* player)
 {
 	info.flags = 0;
 
@@ -27,6 +36,10 @@ void HeartbeatPacket::renewPacket(PlayerCharacter* player)
 	info.flags |= player->is_reloading ? RELOADING : 0;
 	info.flags |= player->is_jet_packing ? JETPACKING : 0;
 	info.flags |= player->is_jumping ? JUMPING : 0;
+
+	info.velocityX = player->controller->controller->m_walkDirection.getX();
+	info.velocityY = player->controller->controller->m_walkDirection.getY();
+	info.velocityZ = player->controller->controller->m_walkDirection.getZ();
 
 	info.run_animation_time 	= player->run_animation_time;
 	info.shoot_animation_time 	= player->shoot_animation_time;
@@ -65,6 +78,8 @@ void HeartbeatPacket::updatePlayer(PlayerCharacter* player)
 	player->jump_animation_time		= info.jump_animation_time;
 	player->head_animation_time		= info.head_animation_time;
 	player->die_animation_time		= info.die_animation_time;
+
+	player->controller->controller->setWalkDirection(btVector3(info.velocityX, info.velocityY, info.velocityZ));
 }
 
 
