@@ -87,6 +87,7 @@ public:
 	virtual void changeWeapon(int);
 
 	Transform* transform;
+	Transform* tr;
 };
 
 #endif // #ifndef __PlayerCharacter_h_

@@ -16,7 +16,7 @@ Pistol::Pistol(PlayerCharacter* player_p, std::string mesh_name, float posX,
     node->setPosition(player->mesh->node->convertWorldToLocalPosition(
         Ogre::Vector3(tran->posX + posX, tran->posY + posY, tran->posZ + posZ)));
     damage = 10;
-    shoot_distance = 500;
+    shoot_distance = 2000;
 }
 
 void Pistol::shoot_hook()
@@ -35,6 +35,9 @@ void Pistol::shoot_hook()
     rayCallback.m_collisionFilterMask = COL_BULLET_COLLIDER_WITH;
 
     Component::_gameObject->scene->physics_world->rayTest(from, to, rayCallback);
+    LOG("Shoot!");
+    Ogre::Vector3 curPos = Ogre::Vector3(GameState::instance()->player->tr->posX, GameState::instance()->player->tr->posY, GameState::instance()->player->tr->posZ);
+    AudioManager::instance()->playRifleFire(curPos);
     if(rayCallback.hasHit())
     {
         LOG("I hit something......");
@@ -49,6 +52,7 @@ void Pistol::shoot_hook()
         else
         {
             btVector3 point = rayCallback.m_hitPointWorld;
+            AudioManager::instance()->playBulletDirtCollision(Ogre::Vector3(point.x(), point.y(), point.z()));
             ParticleManager::instance()->EmitSparks(Ogre::Vector3(point.x(), point.y(), point.z()), -cam_dir);
             //dust particle system
         }
