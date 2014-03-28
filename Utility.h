@@ -5,7 +5,7 @@
 // that the size of the struct is a multiple of a word boundary
 // (16 byte on linux) to prevent memcpy from dying on alignment
 #define MEMALIGNED_SIZE(struct) \
-  ((sizeof(struct)/16)+1)*16;
+  ((sizeof(struct)/16)+1)*16
 
 #define CHANCE(chance) \
   ((chance * 10000) >= (rand() % 10000 + 1))

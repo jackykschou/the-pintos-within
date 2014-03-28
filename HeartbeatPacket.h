@@ -26,7 +26,7 @@ struct Information
 	bool is_idle;
 	bool is_reloading;
 	bool is_jet_packing;
-	bool is_jumping;
+	bool is_jumping;	
 
 	float run_animation_time;
 	float shoot_animation_time;

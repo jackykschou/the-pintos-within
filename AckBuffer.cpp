@@ -5,10 +5,10 @@ namespace pt = boost::posix_time;
 Ack::Ack(IPaddress addr, AckId id, void* packetData, int packetLen) {
   this->address    = addr;
   this->id         = id;
-  this->packetLen  = packetLen-sizeof(AckHeader);
+  this->packetLen  = packetLen-MEMALIGNED_SIZE(AckHeader);
   this->packetData = malloc(packetLen);
   this->sentAt     = NULL;
-  memcpy(this->packetData, packetData+sizeof(AckHeader), packetLen);
+  memcpy(this->packetData, packetData+MEMALIGNED_SIZE(AckHeader), packetLen);
   reset();
 }
 

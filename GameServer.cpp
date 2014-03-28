@@ -92,7 +92,7 @@ void GameServer::putDataIntoPacket(UDPpacket* p, void* data, int len, IPaddress*
 		ackPack.id = id;
 	}
 	// shove the ACK on top!
-	memcpy(p->data, &ackPack, sizeof(AckHeader));
+	memcpy(p->data, &ackPack, MEMALIGNED_SIZE(AckHeader));
 }
 
 void GameServer::sendDataToClient(void* data, int len, IPaddress* ip, bool ack,
@@ -172,7 +172,7 @@ void GameServer::broadcastHeartbeat() {
 
 	if (!_lastHeartbeat || diff.total_milliseconds() > HEARTBEAT_MAX_DELAY) {
 		LOG("SENDING HEARTBEAT PACKET");
-		//broadcastString("h", false);
+		broadcastString("h", false);
 
 		if (!_lastHeartbeat) {
 			_lastHeartbeat = (pt::ptime*)malloc(sizeof(pt::ptime));
@@ -198,7 +198,7 @@ void GameServer::processPacket(UDPpacket* packet) {
 #endif
 
 	AckHeader* ackHeader = (AckHeader*)packet->data;
-	void* packetData = packet->data+sizeof(AckHeader);
+	void* packetData = packet->data+MEMALIGNED_SIZE(AckHeader);
 	char packetType = ((char*)packetData)[0];
 	printf("PacketType: %c\n", packetType);
 

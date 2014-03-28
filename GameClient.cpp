@@ -74,7 +74,7 @@ void GameClient::sendData(void* data, int len, bool ack, AckId id, bool isRespon
 	}
 
 	// shove the ACK on top!
-	memcpy(_tmpSendPacket->data, &ackPack, sizeof(AckHeader));
+	memcpy(_tmpSendPacket->data, &ackPack, MEMALIGNED_SIZE(AckHeader));
 
 	if (SDLNet_UDP_Send(_socket, 0, _tmpSendPacket) < 0) {
 		fprintf(stderr, "SDLNet_UDP_Send: %s\n", SDLNet_GetError());
@@ -147,7 +147,7 @@ void GameClient::processPacket(UDPpacket* packet) {
 #endif
 
 	AckHeader* ackHeader = (AckHeader*)packet->data;
-	void* packetData = packet->data+sizeof(AckHeader);
+	void* packetData = packet->data+MEMALIGNED_SIZE(AckHeader);
 	char packetType = ((char*)packetData)[0];
 	printf("PacketType: %c\n", packetType);
 
