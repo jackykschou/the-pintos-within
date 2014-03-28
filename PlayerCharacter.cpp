@@ -209,7 +209,7 @@ void PlayerCharacter::update()
 			if(die_animation_state->getTimePosition() >= (die_animation_state->getLength() + 3.0f))
 			{
 				
-				NetworkManager::instance()->vitalSend->setRemotePlayerDie();
+				NetworkManager::instance()->vitalSend->setPlayerDie();
 				NetworkManager::instance()->sendVital();
 			}
 		}
@@ -505,11 +505,7 @@ void PlayerCharacter::update()
 	{
 		NetworkManager::instance()->heartbeatReceive->updatePlayer(this);
 
-		if(NetworkManager::instance()->vitalReceive->)
-		{
-
-		}
-		else if(is_dead)
+		if(is_dead)
 		{
 			die_animation_state->setEnabled(true);
 			die_animation_state->setWeight(1);

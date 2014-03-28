@@ -19,7 +19,9 @@ Ball::Ball(std::string tag, Scene* scene,
 	_transform->scaleY = scaleY;
 	_transform->scaleZ = scaleZ;
 
-	debouncer = new Debouncer(DEBOUNCE_BALL);
+	debouncer = new Debouncer(DEBOUNCE_BALL, []() {
+		AudioManager::instance()->playDonk();
+	});
 
 	mesh = new Mesh(this, mesh_name);
 
@@ -44,9 +46,7 @@ Ball::Ball(std::string tag, Scene* scene,
 	auto fun = [](btVector3 v1, btVector3 v2, GameObject* itself, GameObject* other) 
 				{
 					Ball *ball = (Ball*)itself;
-					ball->debouncer->run([]() {
-						AudioManager::instance()->playDonk();
-					});
+					ball->debouncer->run();
 					if((other->tag) == std::string("Player") && !ball->collided && GameState::instance()->isRunning())
 					{
 						GameState::instance()->score++;

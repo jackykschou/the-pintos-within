@@ -1,6 +1,15 @@
 #ifndef __Utility_h_
 #define __Utility_h_
 
+// given an arbitrarily-sized struct, MEMALIGNED_SIZE ensures
+// that the size of the struct is a multiple of a word boundary
+// (16 bytes on linux) to prevent memcpy from dying on alignment
+//
+// XXX: If I wasn't such a dick about using pointer arithmetic,
+// we wouldn't have to worry about this -joev
+#define MEMALIGNED_SIZE(struct) \
+  ((sizeof(struct)/16)+1)*16
+
 #define CHANCE(chance) \
   ((chance * 10000) >= (rand() % 10000 + 1))
 

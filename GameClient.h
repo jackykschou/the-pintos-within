@@ -3,6 +3,7 @@
 
 #include <SDL/SDL_net.h>
 #include "GUIManager.h"
+#include "AckBuffer.h"
 
 enum GameClientStatus {
   GameClientReady,
@@ -17,6 +18,7 @@ public:
 
   // initializes SDL_net
   GameClient(char* host, int port);
+  ~GameClient();
 
   // open a socket and try to connect to UDP port on the server
   int connect();
@@ -26,6 +28,9 @@ public:
 
   // called once per game loop
   void update();
+
+  // sends data to the host
+  void sendData(void* data, int len, bool ack, AckId id=0, bool isResponse=false);
 
 private:
 
@@ -42,10 +47,13 @@ private:
   UDPsocket _socket;
 
   // a temporarily allocated packet for sending on the wire
-  UDPpacket *_tmpSendPacket;
+  UDPpacket* _tmpSendPacket;
 
   // a temporarily allocated packet for consuming the wire
-  UDPpacket *_tmpRecvPacket;
+  UDPpacket* _tmpRecvPacket;
+
+  // a buffer for "remembering" sent packets that are awaiting an ACK response
+  AckBuffer* _ackBuffer;
 
   // sends a JOIN request
   int joinGame();
@@ -56,15 +64,17 @@ private:
   // logic of packet processing
   void processPacket(UDPpacket* packet);
 
+  // resend any ACK-requiring packets that we did not hear back about
+  void resendExpiredAcks();
+
   // called when the server acknowledges that a client has joined
-  void handleJoinAckPacket(UDPpacket *packet);
+  void handleJoinAckPacket(UDPpacket* packet);
 
   // called when the server decides to start the game
-  void handleGameStartPacket(UDPpacket *packet);
+  void handleGameStartPacket(UDPpacket* packet);
 
   // called on every heartbeat packet (~6 times per second)
-  void handleHeartbeatPacket(UDPpacket *packet);
-
+  void handleHeartbeatPacket(UDPpacket* packet);
 };
 
 #endif

@@ -1,0 +1,4 @@
+build make
+lineNumberRegex ^(...*?):([0-9]*):?([0-9]*)
+showWhenFinished true
+workingDir $ProjectDir

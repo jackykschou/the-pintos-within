@@ -47,7 +47,7 @@ AudioChannel AudioManager::play2DSound(AudioFile file, int loops)
 	return Mix_PlayChannel(-1, _loadedFiles[file], loops);
 }
 
-AudioChannel AudioManager::play3DSound(AudioFile file, int loops, Ogre::Vector3 v)
+void AudioManager::play3DSound(AudioFile file, int loops, Ogre::Vector3 v)
 {
 	Ogre::Vector3 curPos = Ogre::Vector3(GameState::instance()->player->tr->posX, GameState::instance()->player->tr->posY, GameState::instance()->player->tr->posZ);
 	

@@ -17,7 +17,7 @@ class AudioManager : public Singleton<AudioManager> {
   	void initialize();
   	AudioFile    loadAudioFile(const char* file);
     AudioChannel play2DSound(AudioFile, int loops);
-    AudioChannel play3DSound(AudioFile, int loops, Ogre::Vector3 v);
+    void play3DSound(AudioFile, int loops, Ogre::Vector3 v);
   	void stopChannel(AudioChannel);
   	AudioChannel playDonk();
   	AudioChannel playStartSound();
