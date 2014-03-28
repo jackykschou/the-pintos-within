@@ -19,7 +19,9 @@ PlayerCharacter::PlayerCharacter(bool is_yourself_p, Scene* scene, std::string m
 	health_regen = 1.0;
 	health_regen_rate = 1.0;
 
+
 	Transform* tran = this->getComponent<Transform>();
+	tr = tran;
 
 	tran->posX = posX;
 	tran->posY = posY;
@@ -146,6 +148,8 @@ PlayerCharacter::PlayerCharacter(bool is_yourself_p, Scene* scene, std::string m
 
 	current_reload_animation_state = reload_animation_states[current_weapon->weapon_id];
 	current_shooting_animation_state = shooting_animation_states[current_weapon->weapon_id];
+
+	GameState::instance()->player = this;
 }
 
 PlayerCharacter:: ~PlayerCharacter()
@@ -190,6 +194,8 @@ void PlayerCharacter::update()
 		if(is_dead)
 		{
 			//LOG("Playing dead");
+    		Ogre::Vector3 curPos = Ogre::Vector3(tr->posX, tr->posY, tr->posZ);
+			AudioManager::instance()->playDeath(curPos);
 
 			die_animation_state->setWeight(1);
 			die_animation_state->setEnabled(true);
