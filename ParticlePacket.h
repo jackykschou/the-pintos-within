@@ -37,13 +37,13 @@ struct ParticleInfo
 	float dust_dirYs[DUSTARRAYLENGTH];
 	float dust_dirZs[DUSTARRAYLENGTH];
 
-	float rocketExplode_posXs;
-	float rocketExplode_posYs;
-	float rocketExplode_posZs;
+	float rocketExplode_posX;
+	float rocketExplode_posY;
+	float rocketExplode_posZ;
 
-	float pintoExplode_posXs;
-	float pintoExplode_posYs;
-	float pintoExplode_posZs;
+	float pintoExplode_posX;
+	float pintoExplode_posY;
+	float pintoExplode_posZ;
 };
 
 class ParticlePacket
@@ -52,6 +52,8 @@ public:
   ParticleInfo info;
 
   ParticlePacket();
+
+  void clear();
 
   void setBlood(float, float, float, float, float, float);
   bool hasBlood();
@@ -68,6 +70,8 @@ public:
   void setPintoExplosion(float, float, float);
   bool hasPintoExplosion();
   void initPintoExplosion();
+
+  void updateParticles();
 };
 
 #endif

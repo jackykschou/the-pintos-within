@@ -11,7 +11,7 @@
 #define JETPACKING 32
 #define JUMPING 64
 
-#include "PlayerCharacter.h"
+class PlayerCharacter;
 
 struct HeartBeatInfo
 {
@@ -25,6 +25,10 @@ struct HeartBeatInfo
 	float playerRotY;
 	float playerRotZ;
 	float playerRotW;
+
+	float velocityX;
+	float velocityY;
+	float velocityZ;
 
 	int flags;
 
@@ -43,8 +47,9 @@ public:
 	struct HeartBeatInfo info;
 	HeartbeatPacket();
 
-	void renewPacket(PlayerCharacter* player);
+	void renewPlayerInfo(PlayerCharacter*);
 	void updatePlayer(PlayerCharacter*);
+	void clear();
 };
 
 #endif // #ifndef __HeartbeatPacket_h_

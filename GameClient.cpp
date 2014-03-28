@@ -1,6 +1,12 @@
 #include "GameClient.h"
 #include "GameState.h"
 
+#include "NetworkManager.h"
+
+#include "HeartbeatPacket.h"
+#include "VitalPacket.h"
+#include "ParticlePacket.h"
+
 GameClient::GameClient(char* host, int port) {
 	_host = (char*)malloc(strlen(host));
 	strcpy(_host, host);
@@ -67,7 +73,7 @@ int GameClient::consumePackets() {
 		return -1;
 	}
 
-	while (SDLNet_UDP_Recv(_socket, _tmpRecvPacket)) {
+	if (SDLNet_UDP_Recv(_socket, _tmpRecvPacket)) {
 		processPacket(_tmpRecvPacket);
 	}
 
@@ -91,12 +97,13 @@ void GameClient::processPacket(UDPpacket* packet) {
 
 	switch (packetType) {
 		case 'k':
-			handleJoinAckPacket(packet);
+			memcpy(&(NetworkManager::instance()->vitalReceive->info), packet->data, sizeof(VitalInfo));
 			break;
 		case 's':
 			handleGameStartPacket(packet);
 			break;
 		case 'h':
+			NetworkManager::instance()->heartbeatReceive->clear();
 			handleHeartbeatPacket(packet);
 			break;
 	}

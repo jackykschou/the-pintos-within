@@ -5,7 +5,7 @@ Weapon::Weapon(PlayerCharacter* player_p, std::string mesh_name, int id_p, doubl
 			float posY, float posZ, float rotX, float rotY, float rotZ, float rotW,
 			float scaleX, float scaleY, float scaleZ, PlayerBox* pos) : Component((GameObject*)player_p)
 {
-	Transform* tran = ((GameObject*)player_p)->getComponent<Transform>();
+	_transform = ((GameObject*)player_p)->getComponent<Transform>();
 
 	player = player_p;
 	shoot_pos = pos;
@@ -27,53 +27,62 @@ Weapon::Weapon(PlayerCharacter* player_p, std::string mesh_name, int id_p, doubl
 	is_shooting = false;
 
 	std::ostringstream id_stream;
-  id_stream << _gameObject->id;
+    id_stream << _gameObject->id;
 
-	entity = SceneManager::instance()->current_scene->manager->createEntity(mesh_name + std::string(" Entity") + id_stream.str()
+	entity = ((GameObject*)player_p)->scene->manager->createEntity(mesh_name + std::string(" Entity") + id_stream.str()
 																			, mesh_name.c_str());
+	entity->getMesh()->_setBounds(Ogre::AxisAlignedBox(-50,-50,-50,50,50,50)); //does change bounding box size, but want to do this dynamically
+    // entity->getMesh()->_setBoundingSphereRadius(10.0f);  // set inflation amount
+
+	// entity->getMesh()->_setBounds(Ogre::AxisAlignedBox ( Ogre::AxisAlignedBox::Extent::EXTENT_INFINITE));
+
 	node = player->mesh->node->createChildSceneNode(mesh_name + std::string(" Node") + id_stream.str(), 
-                                                  player->mesh->node->convertWorldToLocalPosition(Ogre::Vector3(posX, posY, posZ)));
+                                                  player->mesh->node->convertWorldToLocalPosition(Ogre::Vector3(_transform->posX + posX, _transform->posX + posY, _transform->posX + posZ)));
 	node->attachObject(entity);
 	entity->setCastShadows(true);
 
-	// node->setPosition(player->mesh->node->convertWorldToLocalPosition(Ogre::Vector3(tran->posX, tran->posY, tran->posZ)));
-	node->setPosition(player->mesh->node->convertWorldToLocalPosition(Ogre::Vector3(tran->posX + posX, tran->posY + posY, tran->posZ + posZ)));
+	node->setPosition(player->mesh->node->convertWorldToLocalPosition(Ogre::Vector3(_transform->posX + posX, _transform->posY + posY, _transform->posZ + posZ)));
 	node->setOrientation(node->convertWorldToLocalOrientation(Ogre::Quaternion(rotW, rotX, rotY, rotZ)));
-	// node->setInheritOrientation(false);
 	node->setInheritScale (false);
 	node->setScale (scaleX, scaleY, scaleZ);
 
 	shooting_animation_state = entity->getAnimationState("Shooting");
 	shooting_animation_state->setLoop(false);
+	shooting_animation_state->setEnabled(false);
 	shooting_animation_state->setWeight(0);
 
 	running_animation_state = entity->getAnimationState("Running");
 	running_animation_state->setLoop(true);
+	running_animation_state->setEnabled(false);
 	running_animation_state->setWeight(0);
 
 	idle_animation_state = entity->getAnimationState("Idle");
 	idle_animation_state->setLoop(true);
+	idle_animation_state->setEnabled(false);
 	idle_animation_state->setWeight(0);
 
 	reload_animation_state = entity->getAnimationState("Reloading");
 	reload_animation_state->setLoop(false);
+	reload_animation_state->setEnabled(false);
 	reload_animation_state->setWeight(0);
 
 	reload_time = reload_animation_state->getLength();
 
 	jumping_animation_state = entity->getAnimationState("Jump");
 	jumping_animation_state->setLoop(false);
+	jumping_animation_state->setEnabled(false);
 	jumping_animation_state->setWeight(0);
 
 	die_animation_state = entity->getAnimationState("Death");
 	die_animation_state->setLoop(false);
+	die_animation_state->setEnabled(false);
 	die_animation_state->setWeight(0);
 }
 
 Weapon::~Weapon()
 {
-	delete node;
-  delete entity;
+ delete node;
+ delete entity;
 }
 
 void Weapon::shoot()
@@ -84,7 +93,6 @@ void Weapon::shoot()
 	{
 		shoot_timer = cooldown;
 		shooting_animation_state->setTimePosition(0);
-		player->current_shooting_animation_state->setTimePosition(0);
 		is_shooting = true;
 		current_mag_count -= shoot_cost;
 		shoot_hook();
@@ -119,8 +127,8 @@ void Weapon::update()
 			{
 				LOG("Finish Reloading...");
 				is_reloading = false;
+				current_ammo = (current_ammo >= max_mag_cap) ? (current_ammo - (max_mag_cap - current_mag_count)) : 0;
 				current_mag_count = (current_ammo >= max_mag_cap) ? max_mag_cap : current_ammo;
-				current_ammo = (current_ammo >= max_mag_cap) ? (current_ammo - max_mag_cap) : 0;
 			}
 		}
 	}

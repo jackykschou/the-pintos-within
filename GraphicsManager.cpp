@@ -46,8 +46,8 @@ bool GraphicsManager::frameRenderingQueued(const Ogre::FrameEvent& evt)
     }
 */
     GUIManager::instance()->update(evt);
-
-    SceneManager::instance()->current_scene->update(evt.timeSinceLastFrame);
+    
+    SceneManager::instance()->updateScene(evt.timeSinceLastFrame);
 
     GameState::instance()->update();
 

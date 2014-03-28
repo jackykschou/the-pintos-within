@@ -1,5 +1,5 @@
-#ifndef __PlayerSpawner_h_
-#define __PlayerSpawner_h_
+#ifndef __WeaponSpawner_h_
+#define __WeaponSpawner_h_
 
 #include "common.h"
 
@@ -7,11 +7,11 @@
 #include "PlayerCharacter.h"
 #include "NetworkManager.h"
 
-class PlayerSpawner : GameObject
+class WeaponSpawner : GameObject
 {
 public:
-	PlayerSpawner(std::string, Scene*);
-	virtual ~PlayerSpawner();
+	WeaponSpawner(std::string, Scene*);
+	virtual ~WeaponSpawner();
 
 	std::vector<Ogre::Vector3> positions;
 

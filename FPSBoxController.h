@@ -29,6 +29,8 @@ protected:
 	void detectInput();
 
 public:
+	bool is_yourself;
+
 	double jet_pack_max;
 	double jet_pack_current;
 
@@ -53,7 +55,7 @@ public:
 
 	void (*onCollision)(btVector3, btVector3, GameObject*);
 
-	FPSBoxController(GameObject*, std::string, double, const btVector3&, btScalar, int, int, Ogre::SceneNode*);
+	FPSBoxController(bool, GameObject*, std::string, double, const btVector3&, btScalar, int, int, Ogre::SceneNode*);
 	virtual ~FPSBoxController();
 
 	virtual void update();

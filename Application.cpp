@@ -1,4 +1,3 @@
-#include "TheEngine.h"
 #include "Application.h"
 
 #define APPLICATION_NAME "Ball Blaster 2000"
@@ -19,16 +18,6 @@ void initializeGame()
     GUIManager::instance()->initialize(APPLICATION_NAME);
     PhysicsManager::instance()->initialize();
     SceneManager::instance()->initialize();
-    AudioManager::instance()->playBALLZ();
-}
-
-void createGameContents()
-{
-    Scene* first_scene = new Scene("New Scene");
-    SceneManager::instance()->changeCurrentScene(first_scene);
-
-    DotSceneLoader loader;
-    loader.parseDotScene(first_scene, "TheGauntlet.scene", Ogre::ResourceGroupManager::DEFAULT_RESOURCE_GROUP_NAME, first_scene->manager);
 }
 
 void startGame()
@@ -39,7 +28,6 @@ void startGame()
 int main(int argc, char *argv[])
 {
     initializeGame();
-    createGameContents();
 
     if (argc == 3 && strcmp(argv[1], "-c") == 0) {
         LOG("STARTING IN CLIENT MODE");
