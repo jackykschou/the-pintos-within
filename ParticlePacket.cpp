@@ -39,7 +39,7 @@ void ParticlePacket::initBlood(ParticleInfo* info_p)
 {
 	for(int i = 0; i < info_p->blood_len;++i)
 	{
-		ParticleManager::instance()->EmitSparks(Ogre::Vector3(info_p->blood_posXs[i], info_p->blood_posYs[i], info_p->blood_posZs[i]), 
+		ParticleManager::instance()->EmitBloodSpurt(Ogre::Vector3(info_p->blood_posXs[i], info_p->blood_posYs[i], info_p->blood_posZs[i]), 
 												Ogre::Vector3(info_p->blood_dirXs[i], info_p->blood_dirYs[i], info_p->blood_dirZs[i]));
 	}
 }
@@ -69,7 +69,7 @@ void ParticlePacket::initDust(ParticleInfo* info_p)
 {
 	for(int i = 0; i < info_p->dust_len;++i)
 	{
-		ParticleManager::instance()->EmitSparks(Ogre::Vector3(info_p->dust_posXs[i], info_p->dust_posYs[i], info_p->dust_posZs[i]), 
+		ParticleManager::instance()->EmitDust(Ogre::Vector3(info_p->dust_posXs[i], info_p->dust_posYs[i], info_p->dust_posZs[i]), 
 												Ogre::Vector3(info_p->dust_dirXs[i], info_p->dust_dirYs[i], info_p->dust_dirZs[i]));
 	}
 }

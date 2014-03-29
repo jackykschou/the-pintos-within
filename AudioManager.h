@@ -25,6 +25,8 @@ class AudioManager : public Singleton<AudioManager> {
     void playRifleFire(Ogre::Vector3 v);
     void playBulletDirtCollision(Ogre::Vector3 v);
     void playDeath(Ogre::Vector3 v);
+    void playWalkStep(Ogre::Vector3 v);
+    void playJetPack(Ogre::Vector3 v);
 
   private:
   	std::vector<Mix_Chunk*> _loadedFiles;

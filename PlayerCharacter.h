@@ -78,6 +78,12 @@ public:
 
 	PlayerBox* jet_pack_shoot_pos;
 
+	Debouncer *walk_sound_debouncer;
+	Debouncer *jump_debouncer;
+
+	Debouncer *jet_pack_sound_debouncer;
+	Debouncer *jet_pack_particle_debouncer;
+
 	Debouncer *health_regen_debouncer;
 
 	PlayerCharacter(bool, Scene*, std::string,
