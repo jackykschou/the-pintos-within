@@ -7,6 +7,8 @@ HeartbeatPacket::HeartbeatPacket()
 {
 	memset(&info, 0, sizeof(HeartBeatInfo));
 	info.type = HEARTBEATPACK;
+
+	info.playerRotW = 1;
 }
 
 void HeartbeatPacket::clear()
@@ -14,6 +16,8 @@ void HeartbeatPacket::clear()
 	memset(&info, 0, sizeof(HeartBeatInfo));
 	info.type = HEARTBEATPACK;
 	info.player_id = NetworkManager::instance()->player_id;
+
+	info.playerRotW = 1;
 }
 
 void HeartbeatPacket::renewPlayerInfo(PlayerCharacter* player)

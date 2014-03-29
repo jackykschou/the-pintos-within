@@ -24,6 +24,7 @@ NetworkManager::NetworkManager()
 
 void NetworkManager::sendVital()
 {
+	LOG("sending vital packet");
 	if(isServer())
 	{
 		server->broadcastData(&vital->info, sizeof(VitalInfo), true);
@@ -110,8 +111,6 @@ void NetworkManager::update()
 	} else if (isClient()) {
 		client->update();
 	}
-
-	heartbeat->clear();
 }
 
 bool NetworkManager::isActive() {

@@ -16,7 +16,7 @@
 #define RAND (((float) rand()) / (float) RAND_MAX)
 
 #define RAND_RANGE(from, to) \
-  (from-to == 0) ? ((rand() % (to - from)) + from) : 0
+  (from-to != 0) ? ((rand() % (to - from)) + from) : 0
 
 #define CUBE_SCALE 1
 

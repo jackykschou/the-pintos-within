@@ -19,9 +19,9 @@ void GameState::reset() {
 void GameState::start() {
 	_running = true;
 	AudioManager::instance()->playStartSound();
-	if (NetworkManager::instance()->isServer()) {
-		NetworkManager::instance()->server->broadcastGameStart();
-	}
+	// if (NetworkManager::instance()->isServer()) {
+	// 	NetworkManager::instance()->server->broadcastGameStart();
+	// }
 }
 
 bool GameState::isRunning() {
