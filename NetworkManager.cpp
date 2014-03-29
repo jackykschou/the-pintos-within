@@ -27,7 +27,6 @@ NetworkManager::NetworkManager()
 
 void NetworkManager::sendVital()
 {
-	LOG("sending vital packet");
 	send(&vital->info, sizeof(VitalInfo), true);
 	vital->clear();
 }

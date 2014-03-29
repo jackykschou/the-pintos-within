@@ -26,6 +26,7 @@ protected:
 
 	void testCollision();
 	void updateTransform();
+	void transformUpdate();
 	void detectInput();
 
 public:

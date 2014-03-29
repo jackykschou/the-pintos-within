@@ -34,7 +34,6 @@ void Scene::removeGameObject(GameObject* gameObject)
 	for(auto g : game_objects)
 	{
 		if(g->id == gameObject->id) {
-			delete g;
 			break;
 		}
 		++i;

@@ -55,10 +55,7 @@ FPSBoxController::~FPSBoxController()
 {
 	dynamics_world->removeCollisionObject((btCollisionObject*)_ghostObject);
 	dynamics_world->removeAction(controller);
-
-	if(is_yourself)
-		delete fps_camera;
-
+ 
 	delete _collisionShape;
 	delete _ghostObject;
 	delete controller;
@@ -66,11 +63,15 @@ FPSBoxController::~FPSBoxController()
 
 void FPSBoxController::update()
 {
-	updateTransform();
 	if(is_yourself)
 	{
+		updateTransform();
 		testCollision();
 		detectInput();
+	}
+	else
+	{
+		transformUpdate();
 	}
 	controller->updateAction(dynamics_world, GraphicsManager::instance()->getFrameEvent()->timeSinceLastFrame);
 }
@@ -201,6 +202,12 @@ void FPSBoxController::updateTransform()
 	controller->setTurnAngle(1);
 
 	_ghostObject->setWorldTransform(btTransform(btQuaternion(_transform->rotX, _transform->rotY, _transform->rotZ, _transform->rotW), pos));
+}
+
+void FPSBoxController::transformUpdate()
+{
+	_ghostObject->setWorldTransform(btTransform(btQuaternion(_transform->rotX, _transform->rotY, _transform->rotZ, _transform->rotW), 
+									btVector3(_transform->posX, _transform->posY, _transform->posZ)));
 }
 
 void FPSBoxController::testCollision()

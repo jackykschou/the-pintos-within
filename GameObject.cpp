@@ -17,6 +17,7 @@ GameObject::~GameObject()
 	{
 		delete c;
 	}
+	LOG("LALALALAALALALALALALALLALALALALALALA gameobject");
 }
 
 Component* GameObject::addComponent(Component* component)

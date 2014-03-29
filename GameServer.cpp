@@ -185,13 +185,13 @@ void GameServer::broadcastGameStart() {
 void GameServer::processPacket(UDPpacket* packet) {
 
 #ifdef DEBUG
-	printf("UDP Packet incoming\n");
-	printf("\tChan:    %d\n", packet->channel);
-	printf("\tData:    %s\n", (char*)packet->data);
-	printf("\tLen:     %d\n", packet->len);
-	printf("\tMaxlen:  %d\n", packet->maxlen);
-	printf("\tStatus:  %d\n", packet->status);
-	printf("\tAddress: %x %x\n", packet->address.host, packet->address.port);
+	// printf("UDP Packet incoming\n");
+	// printf("\tChan:    %d\n", packet->channel);
+	// printf("\tData:    %s\n", (char*)packet->data);
+	// printf("\tLen:     %d\n", packet->len);
+	// printf("\tMaxlen:  %d\n", packet->maxlen);
+	// printf("\tStatus:  %d\n", packet->status);
+	// printf("\tAddress: %x %x\n", packet->address.host, packet->address.port);
 #endif
 
 	AckHeader* ackHeader = (AckHeader*)packet->data;
@@ -222,11 +222,11 @@ void GameServer::processPacket(UDPpacket* packet) {
 			broadcastData(vinfo, sizeof(VitalInfo), true);
 			break;
 		case HEARTBEATPACK:
-			LOG("Server receive HeartBeat...");
 			HeartBeatInfo* hinfo;
 			hinfo =  (HeartBeatInfo*) packetData;
 			NetworkManager::instance()->receiveHeartbeat(hinfo);
 			broadcastData(hinfo, sizeof(HeartBeatInfo), false);
 			break;
+		
 	}
 }

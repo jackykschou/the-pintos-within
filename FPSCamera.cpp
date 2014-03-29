@@ -9,8 +9,6 @@
 FPSCamera::FPSCamera(GameObject* gameObject, std::string name, double height_offset, Ogre::SceneNode* node_p) : Camera(gameObject, name), cameraMan(0)
 {
 	node = node_p;
-	_height_offset = height_offset;
-	cameraMan = new OgreBites::SdkCameraMan(camera);   // create a default camera controller
 	timer = 0.0;
 	bobSpeed = 15.0;
 	bobOffsetY = 0.0;
@@ -29,14 +27,13 @@ FPSCamera::FPSCamera(GameObject* gameObject, std::string name, double height_off
 
 FPSCamera::~FPSCamera()
 {
-	delete cameraMan;
+	LOG("LALALALAALALALALALALALLALALALALALALA FPS");
 }
 
 void FPSCamera::update()
 {	
-
 	float timeSince = GraphicsManager::instance()->getFrameEvent()->timeSinceLastFrame;
-	timer += timeSince*bobSpeed;
+	timer += timeSince * bobSpeed;
 	float waveslice = sin(timer);
 	if (timer > PI * 2) 
 	{

@@ -76,6 +76,8 @@ public:
 	HitBox* head_box;
 	HitBox* body_box;
 
+	PlayerBox* jet_pack_shoot_pos;
+
 	Debouncer *health_regen_debouncer;
 
 	PlayerCharacter(bool, Scene*, std::string,

@@ -28,6 +28,7 @@ bool GraphicsManager::frameRenderingQueued(const Ogre::FrameEvent& evt)
     _frame_event = new Ogre::FrameEvent(evt);
 
     InputManager::instance()->capture();
+
 /* Examples/demos for emitting particles.
     if(InputManager::instance()->isKeyPressed(OIS::KC_B)){
       //Ogre::ParticleSystem* system1=ParticleManager::instance()->Emit("BloodSpurt",Ogre::Vector3{25,25,25},Ogre::Vector3{1,1,1});

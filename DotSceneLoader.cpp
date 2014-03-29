@@ -938,14 +938,13 @@ void DotSceneLoader::createSceneObject(uint32_t scene_type, rapidxml::xml_node<>
 
         if(node_name.find(PLAYERSPAWNER) != std::string::npos)
         {
-            LOG("LAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA");
-
             GameState::instance()->spawner->addSpawnPoint(Ogre::Vector3(position.x, position.y, position.z));
             
             // PlayerCharacter* yourself = new PlayerCharacter(true, _scene, "PixelMan.mesh",
             //                                                 position.x, position.y, position.z,
             //                                                 0, 0, 0, 1,
             //                                                 10, 10, 10, NetworkManager::instance()->player_id);
+            // GameState::instance()->player = yourself;
         }
         if(node_name.find(WALL) != std::string::npos)
         {

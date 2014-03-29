@@ -143,13 +143,13 @@ void GameClient::handleHeartbeatPacket(UDPpacket* packet) {
 void GameClient::processPacket(UDPpacket* packet) {
 
 #ifdef DEBUG
-	printf("UDP Packet incoming\n");
-	printf("\tChan:    %d\n", packet->channel);
-	printf("\tData:    %s\n", (char*)packet->data);
-	printf("\tLen:     %d\n", packet->len);
-	printf("\tMaxlen:  %d\n", packet->maxlen);
-	printf("\tStatus:  %d\n", packet->status);
-	printf("\tAddress: %x %x\n", packet->address.host, packet->address.port);
+	// printf("UDP Packet incoming\n");
+	// printf("\tChan:    %d\n", packet->channel);
+	// printf("\tData:    %s\n", (char*)packet->data);
+	// printf("\tLen:     %d\n", packet->len);
+	// printf("\tMaxlen:  %d\n", packet->maxlen);
+	// printf("\tStatus:  %d\n", packet->status);
+	// printf("\tAddress: %x %x\n", packet->address.host, packet->address.port);
 #endif
 
 	AckHeader* ackHeader = (AckHeader*)packet->data;
@@ -175,7 +175,6 @@ void GameClient::processPacket(UDPpacket* packet) {
 			PlayerIdInfo* pinfo;
 			pinfo = (PlayerIdInfo*) packetData;
 			NetworkManager::instance()->changeId(pinfo->player_id);
-			LOG("RECEIVED player id: " << pinfo->player_id);
 			break;
 		case VITALPACK:
 			VitalInfo* vinfo;
@@ -183,7 +182,6 @@ void GameClient::processPacket(UDPpacket* packet) {
 			NetworkManager::instance()->receiveVital(vinfo);
 			break;
 		case HEARTBEATPACK:
-			LOG("Client receive HeartBeat...");
 			HeartBeatInfo* hinfo;
 			hinfo =  (HeartBeatInfo*) packetData;
 			NetworkManager::instance()->receiveHeartbeat(hinfo);
@@ -192,5 +190,6 @@ void GameClient::processPacket(UDPpacket* packet) {
 	            GameState::instance()->start();
 	        }
 			break;
+		
 	}
 }

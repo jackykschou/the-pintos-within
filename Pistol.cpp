@@ -15,7 +15,7 @@ Pistol::Pistol(PlayerCharacter* player_p, std::string mesh_name, float posX,
     Transform* tran = ((GameObject*)player_p)->getComponent<Transform>();
     node->setPosition(player->mesh->node->convertWorldToLocalPosition(
         Ogre::Vector3(tran->posX + posX, tran->posY + posY, tran->posZ + posZ)));
-    damage = 10;
+    damage = 100;
     shoot_distance = 2000;
 }
 
@@ -26,7 +26,7 @@ void Pistol::shoot_hook()
 
     Ogre::Vector3 shoot_vector = shoot_pos->node->convertLocalToWorldPosition(shoot_pos->node->getPosition());
 
-    btVector3 from = btVector3(cam_pos.x, cam_pos.y, cam_pos.z);
+    btVector3 from = btVector3(cam_pos.x, cam_pos.y, cam_pos.z) + (btVector3(cam_dir.x, cam_dir.y, cam_dir.z) * 120);
     btVector3 to = btVector3(cam_pos.x, cam_pos.y, cam_pos.z) + (btVector3(cam_dir.x, cam_dir.y, cam_dir.z) * shoot_distance);
 
     btCollisionWorld::ClosestRayResultCallback rayCallback(from, to);
@@ -35,7 +35,6 @@ void Pistol::shoot_hook()
     rayCallback.m_collisionFilterMask = COL_BULLET_COLLIDER_WITH;
 
     Component::_gameObject->scene->physics_world->rayTest(from, to, rayCallback);
-    LOG("Shoot!");
     Ogre::Vector3 curPos = Ogre::Vector3(GameState::instance()->player->tr->posX, GameState::instance()->player->tr->posY, GameState::instance()->player->tr->posZ);
     AudioManager::instance()->playRifleFire(curPos);
     if(rayCallback.hasHit())
@@ -45,12 +44,17 @@ void Pistol::shoot_hook()
         
         if(rayCallback.m_collisionObject->getUserPointer() != NULL)
         {
+            LOG("I HIT THE PLAYER!");
+
             HitBox* hit_box = (HitBox*)(rayCallback.m_collisionObject->getUserPointer());
             int damage_sent = hit_box->getDamage(damage);
             uint32_t enemy_id = hit_box->player->player_id;
 
             NetworkManager::instance()->vital->setDamage(damage_sent, enemy_id);
             NetworkManager::instance()->sendVital();
+
+            ParticleManager::instance()->EmitBloodSpurt(Ogre::Vector3(point.x(), point.y(), point.z()), -cam_dir);
+
             
             //blood particle system
         }

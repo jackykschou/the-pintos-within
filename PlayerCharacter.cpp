@@ -2,6 +2,7 @@
 
 #include "Pistol.h"
 #include "NetworkManager.h"
+#include "PlayerSpawner.h"
 
 PlayerCharacter::PlayerCharacter(bool is_yourself_p, Scene* scene, std::string mesh_name,
 	float posX, float posY, float posZ, float rotX, float rotY, float rotZ, float rotW,
@@ -77,7 +78,7 @@ PlayerCharacter::PlayerCharacter(bool is_yourself_p, Scene* scene, std::string m
 
     health_regen_debouncer = new Debouncer(health_regen_rate * 1000);
 
-	controller = new FPSBoxController(is_yourself, this, "Camm", box_half_size.y * scaleY + 1, btVector3(box_half_size.x * scaleX, box_half_size.y * scaleY, box_half_size.z * scaleZ), 
+	controller = new FPSBoxController(is_yourself, this, std::string("Camm"), box_half_size.y * scaleY + 1, btVector3(box_half_size.x * scaleX, box_half_size.y * scaleY, box_half_size.z * scaleZ), 
 										3, COL_CHARACTER, CHARACTER_COLLIDER_WITH, mesh->node);
 	if(is_yourself)
   	{
@@ -114,15 +115,12 @@ PlayerCharacter::PlayerCharacter(bool is_yourself_p, Scene* scene, std::string m
 			0, 0, 0, 1,
 			0.049863, 0.049863, 0.049863, COL_NOTHING, COL_NOTHING));
 
-	// PlayerBox* jet_pack = new PlayerBox(this, "Muzzle.Jetpack",
-	// 									0, 0, 0,
-	// 									);
-
-	// PlayerBox::PlayerBox(PlayerCharacter* player_p, std::string mesh_name,
-	// float posX, float posY, float posZ, float rotX, float rotY, float rotZ, float rotW,
-	// float scaleX, float scaleY, float scaleZ, int col_mask, int col_to_masks) : Component((GameObject*)player_p)
-
-	// P
+	PlayerBox* jet_pack = new PlayerBox(this, "Hitbox.003.mesh",
+										0.251335, 0.635833, -1.066468,
+										0, 0, 0, 1,
+										0.049863, 0.049863, 0.049863,
+										COL_NOTHING, COL_NOTHING);
+	jet_pack->node->setVisible(true);
 
 	// <node name="Hitbox.Head" >
  //        <position z="-0.000000" x="0.000000" y="0.000000" />
@@ -170,8 +168,6 @@ PlayerCharacter::PlayerCharacter(bool is_yourself_p, Scene* scene, std::string m
 
 	current_reload_animation_state = reload_animation_states[current_weapon->weapon_id];
 	current_shooting_animation_state = shooting_animation_states[current_weapon->weapon_id];
-
-	GameState::instance()->player = this;
 }
 
 PlayerCharacter:: ~PlayerCharacter()
@@ -217,8 +213,6 @@ void PlayerCharacter::update()
 		if(is_dead)
 		{
 			//LOG("Playing dead");
-    		Ogre::Vector3 curPos = Ogre::Vector3(tr->posX, tr->posY, tr->posZ);
-			AudioManager::instance()->playDeath(curPos);
 
 			idle_animation_state->setWeight(0);
 			idle_animation_state->setEnabled(false);
@@ -245,12 +239,19 @@ void PlayerCharacter::update()
 			weapon_running_animation_state->setEnabled(false);
 			weapon_running_animation_state->setTimePosition(0);
 
-			if(die_animation_state->getTimePosition() >= (die_animation_state->getLength() + 3.0f))
+			if(die_animation_state->hasEnded())
 			{
 				NetworkManager::instance()->vital->setPlayerDie();
 				NetworkManager::instance()->sendVital();
-				scene->removeGameObject((GameObject*)this);
 				GameState::instance()->players[NetworkManager::instance()->player_id] = NULL;
+				scene->removeGameObject((GameObject*)this);
+				if(NetworkManager::instance()->isServer() || !NetworkManager::instance()->isActive())
+				{
+					LOG("respawning...");
+					GameState::instance()->spawner->spawnPlayer(player_id);
+				}
+				delete this;
+				return;
 			}
 		}
 		else

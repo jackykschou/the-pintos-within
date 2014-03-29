@@ -23,7 +23,7 @@ PlayerBox::PlayerBox(PlayerCharacter* player_p, std::string mesh_name,
   node->setInheritScale (false);
   node->setScale (scaleX, scaleY, scaleZ);
 
-  node->setVisible(false);
+  node->setVisible(true);
 
 	Ogre::Vector3 box_half_size = entity->getBoundingBox().getHalfSize();
 

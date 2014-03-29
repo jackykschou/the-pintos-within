@@ -49,6 +49,9 @@ AudioChannel AudioManager::play2DSound(AudioFile file, int loops)
 
 void AudioManager::play3DSound(AudioFile file, int loops, Ogre::Vector3 v)
 {
+	if(GameState::instance()->player == NULL)
+		return;
+	
 	Ogre::Vector3 curPos = Ogre::Vector3(GameState::instance()->player->tr->posX, GameState::instance()->player->tr->posY, GameState::instance()->player->tr->posZ);
 	
 	//max dist = 100m 

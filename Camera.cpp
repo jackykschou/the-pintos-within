@@ -21,9 +21,9 @@ Camera::Camera(GameObject* gameObject, std::string name) : Component(gameObject)
 
 Camera::~Camera()
 {
+	LOG("LALALALAALALALALALALALLALALALALALALA CAM");
+	GraphicsManager::instance()->getRenderWindow()->removeAllViewports();
 	_gameObject->scene->manager->destroyCamera(name);
-	delete camera;
-	delete viewport;
 }
 
 void Camera::update()
