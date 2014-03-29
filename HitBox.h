@@ -16,11 +16,12 @@ protected:
 	float damage_multiplier;
 
 public:
+	PlayerCharacter* player;
 	HitBox(PlayerCharacter*, std::string, float, float, float, 
 		float, float, float, float,
 		float, float, float, float);
 
-	void takeDamage(int);
+	int getDamage(int);
 };
 
 #endif

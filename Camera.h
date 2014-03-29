@@ -7,7 +7,7 @@
 #include "Transform.h"
 #include "common.h"
 
-class Camera : Component
+class Camera : protected Component
 {
 protected:
 	Transform* _transform;

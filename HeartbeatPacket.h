@@ -11,11 +11,15 @@
 #define JETPACKING 32
 #define JUMPING 64
 
-#include "PlayerCharacter.h"
+class PlayerCharacter;
 
 struct HeartBeatInfo
 {
 	char type;
+
+	uint32_t player_id;
+
+	int flags;
 
 	float playerPosX;
 	float playerPosY;
@@ -26,14 +30,15 @@ struct HeartBeatInfo
 	float playerRotZ;
 	float playerRotW;
 
-	int flags;
+	float velocityX;
+	float velocityY;
+	float velocityZ;
 
 	float run_animation_time;
 	float shoot_animation_time;
 	float idle_animation_time;
 	float reload_animation_time;
 	float jump_animation_time;
-	float head_animation_time;
 	float die_animation_time;
 };
 
@@ -43,8 +48,9 @@ public:
 	struct HeartBeatInfo info;
 	HeartbeatPacket();
 
-	void renewPacket(PlayerCharacter* player);
-	void updatePlayer(PlayerCharacter*);
+	void renewPlayerInfo(PlayerCharacter*);
+	void updatePlayer(HeartBeatInfo*, PlayerCharacter*);
+	void clear();
 };
 
 #endif // #ifndef __HeartbeatPacket_h_

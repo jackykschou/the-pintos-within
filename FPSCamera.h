@@ -12,12 +12,16 @@
 
 #include "GraphicsManager.h"
 
-class FPSCamera : Camera
+class FPSCamera : protected Camera
 {
 protected:
 	float timer;
-	float bobbingAmount;
+	float bobbingAmountX;
+	float bobbingAmountY;
+	float bobbingAmountZ;
+	float bobOffsetX;
 	float bobOffsetY;
+	float bobOffsetZ;
 	float bobSpeed;
 	double _height_offset;
 	void clampCameraRotation();

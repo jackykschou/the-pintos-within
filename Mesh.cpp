@@ -13,7 +13,7 @@ Mesh::Mesh(GameObject* gameObject, std::string mesh_name) : Component(gameObject
   std::ostringstream node_stream;
   node_stream << (Mesh::mesh_node_id_assigner++);
 
-	entity = SceneManager::instance()->current_scene->manager->createEntity((std::string("Entity") + entity_stream.str()).c_str(), mesh_name.c_str());
+	entity = gameObject->scene->manager->createEntity((std::string("Entity") + entity_stream.str()).c_str(), mesh_name.c_str());
 	node = _gameObject->scene->manager->getRootSceneNode()->createChildSceneNode((std::string("Node") + node_stream.str()).c_str(), 
                                                                                 Ogre::Vector3(_transform->posX, _transform->posY, _transform->posZ));
   node->attachObject(entity);

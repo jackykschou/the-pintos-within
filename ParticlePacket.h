@@ -15,6 +15,8 @@ struct ParticleInfo
 {
 	char type;
 
+	uint32_t player_id;
+
 	uint32_t flags;
 
 	uint32_t blood_len;
@@ -37,13 +39,13 @@ struct ParticleInfo
 	float dust_dirYs[DUSTARRAYLENGTH];
 	float dust_dirZs[DUSTARRAYLENGTH];
 
-	float rocketExplode_posXs;
-	float rocketExplode_posYs;
-	float rocketExplode_posZs;
+	float rocketExplode_posX;
+	float rocketExplode_posY;
+	float rocketExplode_posZ;
 
-	float pintoExplode_posXs;
-	float pintoExplode_posYs;
-	float pintoExplode_posZs;
+	float pintoExplode_posX;
+	float pintoExplode_posY;
+	float pintoExplode_posZ;
 };
 
 class ParticlePacket
@@ -53,21 +55,25 @@ public:
 
   ParticlePacket();
 
+  void clear();
+
   void setBlood(float, float, float, float, float, float);
-  bool hasBlood();
-  void initBlood();
+  bool hasBlood(ParticleInfo*);
+  void initBlood(ParticleInfo*);
 
   void setDust(float, float, float, float, float, float);
-  bool hasDust();
-  void initDust();
+  bool hasDust(ParticleInfo*);
+  void initDust(ParticleInfo*);
 
   void setRocketExplosion(float, float, float);
-  bool hasRocketExplosion();
-  void initRocketExplosion();
+  bool hasRocketExplosion(ParticleInfo*);
+  void initRocketExplosion(ParticleInfo*);
 
   void setPintoExplosion(float, float, float);
-  bool hasPintoExplosion();
-  void initPintoExplosion();
+  bool hasPintoExplosion(ParticleInfo*);
+  void initPintoExplosion(ParticleInfo*);
+
+  void updateParticles(ParticleInfo*);
 };
 
 #endif

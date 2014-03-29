@@ -2,57 +2,35 @@
 
 SceneManager::~SceneManager()
 {
-	for(auto scene: _scenes)
-	{
-		delete scene;
-	}
+	delete current_scene;
 }
 
 void SceneManager::initialize()
 {
 	_scene_id_assigner = 0;
+	current_scene = NULL;
+
+	changeCurrentScene(GAME_MODE);
 }
 
-int SceneManager::addScene(Scene* scene)
+void SceneManager::changeCurrentScene(uint32_t scene_type)
 {
-	scene->id = ++_scene_id_assigner;
-	_scenes.push_back(scene);
+
+	if(current_scene != NULL)
+		delete current_scene;
+
+	std::ostringstream scene_id_stream;
+  	scene_id_stream << (_scene_id_assigner++);
+
+	current_scene = new Scene(std::string("New Scene") + scene_id_stream.str());
+
+	if(scene_type == GAME_MODE)
+		scene_loader.parseDotScene(scene_type, current_scene, "TheGauntlet.scene", Ogre::ResourceGroupManager::DEFAULT_RESOURCE_GROUP_NAME, current_scene->manager);
 }
 
-void SceneManager::removeScene(Scene* scene)
+void SceneManager::updateScene(float time)
 {
-	int i = 0;
-	for(auto s : _scenes)
-	{
-		if(s->name == scene->name)
-		{
-			if(s == current_scene)
-			{
-				std::cout << "Cannot erase current scene" << std::endl;
-				return;
-			}
-			else
-			{
-				_scenes.erase(_scenes.begin() + i);
-				delete s;
-			}
-		}
-		++i;
-	}
-}
-
-Scene* SceneManager::getScene(std::string name)
-{
-	for(auto scene : _scenes)
-	{
-		if(scene->name == name)
-			return scene;
-	}
-	return NULL;
-}
-
-void SceneManager::changeCurrentScene(Scene* scene)
-{
-	current_scene = scene;
+	if(current_scene != NULL)
+		current_scene->update(time);
 }
 

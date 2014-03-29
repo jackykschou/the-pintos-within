@@ -7,12 +7,15 @@ class Debouncer
 {
   public:
 	Debouncer(int waitMilliseconds);
+	Debouncer(int waitMilliseconds, void (*lambda)());
 	bool run(void (*lambda)());
+	bool run();
 	void updateTimer(float);
 
   protected:
-  	int _waitMilliseconds;
-  	boost::posix_time::ptime *_lastRun;
+	int _waitMilliseconds;
+	void (*_lambda)();
+	boost::posix_time::ptime *_lastRun;
 };
 
 #endif

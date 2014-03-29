@@ -24,11 +24,14 @@ protected:
 	void regen_health();
 
 public:
+	uint32_t player_id;
+
 	bool is_yourself;
 	
 	bool is_dead;
 	bool is_shooting;
 	bool is_moving;
+	bool is_running;
 	bool is_idle;
 	bool is_reloading;
 	bool is_jet_packing;
@@ -53,7 +56,6 @@ public:
 	Ogre::AnimationState *current_reload_animation_state;
 	Ogre::AnimationState *current_shooting_animation_state;
 
-
 	Ogre::AnimationState *weapon_running_animation_state;
 	Ogre::AnimationState *weapon_idle_animation_state;
 	Ogre::AnimationState *weapon_shooting_animation_state;
@@ -74,16 +76,21 @@ public:
 	HitBox* head_box;
 	HitBox* body_box;
 
+	PlayerBox* jet_pack_shoot_pos;
+
 	Debouncer *health_regen_debouncer;
 
 	PlayerCharacter(bool, Scene*, std::string,
 	float, float, float, float, float, float, float,
-	float, float, float);
+	float, float, float, uint32_t);
 
 	virtual ~PlayerCharacter();
 
 	virtual void update();
 	virtual void changeWeapon(int);
+
+	Transform* transform;
+	Transform* tr;
 };
 
 #endif // #ifndef __PlayerCharacter_h_

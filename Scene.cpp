@@ -7,8 +7,6 @@ Scene::Scene(std::string n)
 	physics_world = PhysicsManager::instance()->createDynamicsWorld();
 	_game_object_id_assigner = 0;
 	manager->setAmbientLight(Ogre::ColourValue(0, 0, 0));
-
-	SceneManager::instance()->addScene(this);
 }
 
 Scene::~Scene()
@@ -17,6 +15,8 @@ Scene::~Scene()
 	{
 		delete gameObject;
 	}
+
+	// OgreFramework::getSingletonPtr()->m_pRoot->destroySceneManager(manager);
 
 	delete manager;
 	delete physics_world;
@@ -34,7 +34,6 @@ void Scene::removeGameObject(GameObject* gameObject)
 	for(auto g : game_objects)
 	{
 		if(g->id == gameObject->id) {
-			delete g;
 			break;
 		}
 		++i;

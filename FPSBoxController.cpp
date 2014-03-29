@@ -1,33 +1,38 @@
 #include "FPSBoxController.h"
 
-FPSBoxController::FPSBoxController(GameObject* gameObject, std::string camera_name, double camera_offset, 
+FPSBoxController::FPSBoxController(bool is_yourself_p, GameObject* gameObject, std::string camera_name, double camera_offset, 
 														const btVector3& boxHalfExtents, btScalar step_height, 
 														int col_mask, int col_to_masks, Ogre::SceneNode* node) : Component(gameObject), currVel(0, 0, 0), jetVel(0, 0, 0)
 {
+	is_yourself = is_yourself_p;
+
 	jet_pack_max = 5000;
 	jet_pack_current = jet_pack_max;
 
 	is_jet_packing = false;
 	is_walking = false;
 
-
 	onCollision = NULL;
 	can_move = true;
 
 	base_movement_speed = 1.0f;
-	jet_bonus_speed = 1.3f;
+	jet_bonus_speed = 2.0f;
 
 	movement_speed_multiplier = 1;
 
 	slowDown = 0.92f;
-	speedUp = 0.02f;
+	speedUp = 0.04f;
 
 	jet_slowDown = 0.92f;
 	jet_speedUp = 0.04f;
 
 	_transform = gameObject->getComponent<Transform>();
 
-	fps_camera = new FPSCamera(gameObject, camera_name, camera_offset, node);
+	if(is_yourself)
+	{
+		fps_camera = new FPSCamera(gameObject, camera_name, camera_offset, node);
+	}
+
 	_collisionShape = new btBoxShape(boxHalfExtents);
 	dynamics_world = _gameObject->scene->physics_world;
 
@@ -36,21 +41,21 @@ FPSBoxController::FPSBoxController(GameObject* gameObject, std::string camera_na
 	_ghostObject->setCollisionShape(_collisionShape);
 	_ghostObject->setWorldTransform(btTransform(btQuaternion(_transform->rotX, _transform->rotY, _transform->rotZ, _transform->rotW), 
 					btVector3(_transform->posX,_transform->posY,_transform->posZ)));
+	_ghostObject->setUserPointer(gameObject);
 	btGhostPairCallback* actorGhostPairCallback = new btGhostPairCallback();
    	PhysicsManager::instance()->overlappingPairCache->getOverlappingPairCache()->setInternalGhostPairCallback(actorGhostPairCallback);
 
 	controller = new OiJE::CharacterController(_ghostObject, _collisionShape, step_height);
 
 	dynamics_world->addCollisionObject(_ghostObject, col_mask, col_to_masks);
-  	dynamics_world->addAction(controller);
+  dynamics_world->addAction(controller);
 }
 
 FPSBoxController::~FPSBoxController()
 {
 	dynamics_world->removeCollisionObject((btCollisionObject*)_ghostObject);
 	dynamics_world->removeAction(controller);
-
-	delete fps_camera;
+ 
 	delete _collisionShape;
 	delete _ghostObject;
 	delete controller;
@@ -58,9 +63,16 @@ FPSBoxController::~FPSBoxController()
 
 void FPSBoxController::update()
 {
-	updateTransform();
-	testCollision();
-	detectInput();
+	if(is_yourself)
+	{
+		updateTransform();
+		testCollision();
+		detectInput();
+	}
+	else
+	{
+		updateTransform();
+	}
 	controller->updateAction(dynamics_world, GraphicsManager::instance()->getFrameEvent()->timeSinceLastFrame);
 }
 
@@ -190,6 +202,12 @@ void FPSBoxController::updateTransform()
 	controller->setTurnAngle(1);
 
 	_ghostObject->setWorldTransform(btTransform(btQuaternion(_transform->rotX, _transform->rotY, _transform->rotZ, _transform->rotW), pos));
+}
+
+void FPSBoxController::transformUpdate()
+{
+	_ghostObject->setWorldTransform(btTransform(btQuaternion(_transform->rotX, _transform->rotY, _transform->rotZ, _transform->rotW), 
+									btVector3(_transform->posX, _transform->posY, _transform->posZ)));
 }
 
 void FPSBoxController::testCollision()

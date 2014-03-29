@@ -11,7 +11,7 @@ PlayerBox::PlayerBox(PlayerCharacter* player_p, std::string mesh_name,
 	std::ostringstream id_stream;
   	id_stream << _gameObject->id;
 
-	entity = SceneManager::instance()->current_scene->manager->createEntity(mesh_name + std::string(" Entity") + id_stream.str(), mesh_name.c_str());
+	entity = ((GameObject*)player_p)->scene->manager->createEntity(mesh_name + std::string(" Entity") + id_stream.str(), mesh_name.c_str());
 	node = player->mesh->node->createChildSceneNode(mesh_name + std::string(" Node") + id_stream.str(), 
                                                   player->mesh->node->convertWorldToLocalPosition(Ogre::Vector3(posX, posY, posZ)));
   node->attachObject(entity);
@@ -23,7 +23,7 @@ PlayerBox::PlayerBox(PlayerCharacter* player_p, std::string mesh_name,
   node->setInheritScale (false);
   node->setScale (scaleX, scaleY, scaleZ);
 
-  // node->setVisible(true);
+  node->setVisible(true);
 
 	Ogre::Vector3 box_half_size = entity->getBoundingBox().getHalfSize();
 

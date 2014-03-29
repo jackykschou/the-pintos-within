@@ -8,6 +8,8 @@
 #include "Debouncer.h"
 #include "PlayerBox.h"
 
+#include "NetworkManager.h"
+
 class PlayerCharacter;
 class PlayerBox;
 
@@ -54,6 +56,9 @@ public:
 	virtual void reload();
 	virtual void update();
 	virtual void switchToThisWeapon();
+
+protected:
+	Transform* _transform;
 
 };
 

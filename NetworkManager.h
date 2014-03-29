@@ -8,14 +8,41 @@
 #include "GameState.h"
 #include "GUIManager.h"
 
-enum NetworkManagerState {
+#include "HeartbeatPacket.h"
+#include "VitalPacket.h"
+#include "ParticlePacket.h"
+
+#define GAME_PORT 5555
+#define HEARTBEATS_PER_SEC 10
+#define HEARTBEAT_MAX_DELAY 1000.0f/HEARTBEATS_PER_SEC
+
+struct PlayerIdInfo
+{
+	char type;
+	uint32_t player_id;
+};
+
+enum NetworkManagerState 
+{
 	NetworkStateReady,
 	NetworkStateClient,
 	NetworkStateServer
 };
 
-class NetworkManager : public Singleton<NetworkManager> {
+class NetworkManager : public Singleton<NetworkManager> 
+{
   public:
+
+  	HeartbeatPacket* heartbeat;
+	VitalPacket*     vital;
+	ParticlePacket*  particle;
+
+	uint32_t player_id;
+	uint32_t num_player;
+
+  	NetworkManager();
+  	~NetworkManager();
+
 	NetworkManagerState state;
 
 	void startServer();
@@ -26,8 +53,26 @@ class NetworkManager : public Singleton<NetworkManager> {
 	bool isServer();
 	bool isClient();
 
-  GameServer* server;
-  GameClient* client;
+	void sendVital();
+	void sendParticle();
+
+	void receiveHeartbeat(HeartBeatInfo* info);
+	void receiveVital(VitalInfo* info);
+	void receiveParticle(ParticleInfo* info);
+
+	void changeId(uint32_t);
+
+	// sends game state to every client
+	void broadcastHeartbeat();
+
+	GameServer* server;
+	GameClient* client;
+
+  private:
+
+	// the timestamp on the last heartbeat
+	boost::posix_time::ptime* _lastHeartbeat;
+	void send(void* data, int size, bool ack);
 };
 
 #endif

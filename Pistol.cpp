@@ -12,8 +12,11 @@ Pistol::Pistol(PlayerCharacter* player_p, std::string mesh_name, float posX,
 			posY, posZ, rotX, rotY, rotZ, rotW, scaleX, scaleY, scaleZ, box)
 
 {
-    damage = 10;
-    shoot_distance = 500;
+    Transform* tran = ((GameObject*)player_p)->getComponent<Transform>();
+    node->setPosition(player->mesh->node->convertWorldToLocalPosition(
+        Ogre::Vector3(tran->posX + posX, tran->posY + posY, tran->posZ + posZ)));
+    damage = 100;
+    shoot_distance = 2000;
 }
 
 void Pistol::shoot_hook()
@@ -23,7 +26,7 @@ void Pistol::shoot_hook()
 
     Ogre::Vector3 shoot_vector = shoot_pos->node->convertLocalToWorldPosition(shoot_pos->node->getPosition());
 
-    btVector3 from = btVector3(cam_pos.x, cam_pos.y, cam_pos.z);
+    btVector3 from = btVector3(cam_pos.x, cam_pos.y, cam_pos.z) + (btVector3(cam_dir.x, cam_dir.y, cam_dir.z) * 120);
     btVector3 to = btVector3(cam_pos.x, cam_pos.y, cam_pos.z) + (btVector3(cam_dir.x, cam_dir.y, cam_dir.z) * shoot_distance);
 
     btCollisionWorld::ClosestRayResultCallback rayCallback(from, to);
@@ -32,24 +35,36 @@ void Pistol::shoot_hook()
     rayCallback.m_collisionFilterMask = COL_BULLET_COLLIDER_WITH;
 
     Component::_gameObject->scene->physics_world->rayTest(from, to, rayCallback);
-    LOG("Shoot!");
+    Ogre::Vector3 curPos = Ogre::Vector3(GameState::instance()->player->tr->posX, GameState::instance()->player->tr->posY, GameState::instance()->player->tr->posZ);
+    AudioManager::instance()->playRifleFire(curPos);
     if(rayCallback.hasHit())
     {
-        LOG("I hit something......");
         btVector3 point = rayCallback.m_hitPointWorld;
         
         if(rayCallback.m_collisionObject->getUserPointer() != NULL)
         {
+            HitBox* hit_box = (HitBox*)(rayCallback.m_collisionObject->getUserPointer());
+            if(hit_box->player->player_id != NetworkManager::instance()->player_id)
+            {
+                int damage_sent = hit_box->getDamage(damage);
+                uint32_t enemy_id = hit_box->player->player_id;
 
-            // HitBox* hit_box = (HitBox*)(rayCallback.m_collisionObject->getUserPointer());
-            // hit_box->takeDamage(damage);
-            //blood particle system
+                NetworkManager::instance()->vital->setDamage(damage_sent, enemy_id);
+                NetworkManager::instance()->sendVital();
+
+                ParticleManager::instance()->EmitBloodSpurt(Ogre::Vector3(point.x(), point.y(), point.z()), -cam_dir);
+                NetworkManager::instance()->particle->setBlood(point.x(), point.y() , point.z(), -cam_dir.x, -cam_dir.y, -cam_dir.z);
+                NetworkManager::instance()->sendParticle();
+            }
         }
         else
         {
-            btVector3 point = rayCallback.m_hitPointWorld;
+            AudioManager::instance()->playBulletDirtCollision(Ogre::Vector3(point.x(), point.y(), point.z()));
+
             ParticleManager::instance()->EmitSparks(Ogre::Vector3(point.x(), point.y(), point.z()), -cam_dir);
-            //dust particle system
+
+            NetworkManager::instance()->particle->setDust(point.x(), point.y() , point.z(), -cam_dir.x, -cam_dir.y, -cam_dir.z);
+            NetworkManager::instance()->sendParticle();
         }
     }
 }

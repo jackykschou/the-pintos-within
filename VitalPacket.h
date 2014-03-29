@@ -2,8 +2,8 @@
 #define __VitalPacket_h_
 
 #define TAKEDAMAGE 1
-#define ENEMY_RESPAWN 2
-#define ENEMY_DIE 4
+#define PLAYER_RESPAWN 2
+#define PLAYER_DIE 4
 #define PINTO_TAKEN 8
 #define PINTO_RESPAWN 16
 #define WEAPON_CHANGE 32
@@ -14,18 +14,23 @@ struct VitalInfo
 {
 	char type;
 
+  uint32_t player_id;
+
 	uint32_t flags;
 
 	uint32_t damage;
+  uint32_t damaged_player_id;
+
 	uint32_t weapon_index;
 
   float pintoPosX;
   float pintoPosY;
   float pintoPosZ;
 
-  float playerPosX;
-  float playerPosY;
-  float playerPosZ;
+  uint32_t player_respawn_id;
+  float playerX;
+  float playerY;
+  float playerZ;
 };
 
 class VitalPacket
@@ -35,27 +40,31 @@ public:
 
   VitalPacket();
 
-  void setDamage(int);
-  bool hasDamage();
-  int getDamage();
+  void clear();
+
+  void setDamage(int, uint32_t);
+  bool hasDamage(VitalInfo*);
+  int getDamage(VitalInfo*);
 
   void setChangeWeapon(int);
-  bool hasChangeWeapon();
-  int getWeaponIndex();
+  bool hasChangeWeapon(VitalInfo*);
+  int getWeaponIndex(VitalInfo*);
 
-  void setEnemyDie();
-  bool hasEnemyDie();
+  void setPlayerDie();
+  bool hasPlayerDie(VitalInfo*);
 
-  void setEnemyRespawn(float, float, float);
-  bool hasEnemyRespawn();
-  Ogre::Vector3 getEnemyRespawnPos();
+  void setPlayerRespawn(float, float, float, uint32_t);
+  bool hasPlayerRespawn(VitalInfo*);
+  Ogre::Vector3 getPlayerRespawnPos(VitalInfo*);
 
   void setPintoTaken();
-  bool hasPintoTaken();
+  bool hasPintoTaken(VitalInfo*);
 
-  void setPintoRespawn(float, float, float);
-  bool hasPintoRespawn();
-  Ogre::Vector3 getPintoRespawnPos();
+  void setPintoRespawn(float, float, float, uint32_t);
+  bool hasPintoRespawn(VitalInfo*);
+  Ogre::Vector3 getPintoRespawnPos(VitalInfo*);
+
+  void updatePacket(VitalInfo*);
 };
 
 #endif
