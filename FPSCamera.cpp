@@ -27,7 +27,6 @@ FPSCamera::FPSCamera(GameObject* gameObject, std::string name, double height_off
 
 FPSCamera::~FPSCamera()
 {
-	LOG("LALALALAALALALALALALALLALALALALALALA FPS");
 }
 
 void FPSCamera::update()

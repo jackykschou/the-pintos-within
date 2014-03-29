@@ -203,7 +203,7 @@ void PlayerCharacter::update()
 		current_reload_animation_state = reload_animation_states[current_weapon->weapon_id];
 		current_shooting_animation_state = shooting_animation_states[current_weapon->weapon_id];
 
-		if((health <= 0 || transform->posY <= -100) && !is_dead)
+		if((health <= 0 || transform->posY <= -150) && !is_dead)
 		{
 			is_dead = true;
 			controller->can_move = false;
@@ -244,12 +244,9 @@ void PlayerCharacter::update()
 				NetworkManager::instance()->vital->setPlayerDie();
 				NetworkManager::instance()->sendVital();
 				GameState::instance()->players[NetworkManager::instance()->player_id] = NULL;
+				GameState::instance()->player = NULL;
 				scene->removeGameObject((GameObject*)this);
-				if(NetworkManager::instance()->isServer() || !NetworkManager::instance()->isActive())
-				{
-					LOG("respawning...");
-					GameState::instance()->spawner->spawnPlayer(player_id);
-				}
+				LOG("Plyaer " << NetworkManager::instance()->player_id << " die.");
 				delete this;
 				return;
 			}
@@ -560,6 +557,9 @@ void PlayerCharacter::update()
 			weapon_die_animation_state->setEnabled(false);
 			weapon_die_animation_state->setWeight(0);
 
+			die_animation_state->setTimePosition(0);
+			weapon_die_animation_state->setTimePosition(0);
+
 			if(is_moving)
 			{
 				running_animation_state->setEnabled(true);
@@ -567,8 +567,11 @@ void PlayerCharacter::update()
 				weapon_running_animation_state->setEnabled(true);
 				weapon_running_animation_state->setWeight(1);
 
-				running_animation_state->setTimePosition(run_animation_time);
-				weapon_running_animation_state->setTimePosition(run_animation_time);
+				running_animation_state->addTime(GraphicsManager::instance()->getFrameEvent()->timeSinceLastFrame);
+				weapon_running_animation_state->addTime(GraphicsManager::instance()->getFrameEvent()->timeSinceLastFrame);
+
+				// running_animation_state->setTimePosition(run_animation_time);
+				// weapon_running_animation_state->setTimePosition(run_animation_time);
 			}
 			else
 			{
@@ -576,6 +579,9 @@ void PlayerCharacter::update()
 				running_animation_state->setWeight(0);
 				weapon_running_animation_state->setEnabled(false);
 				weapon_running_animation_state->setWeight(0);
+
+				running_animation_state->setTimePosition(0);
+				weapon_running_animation_state->setTimePosition(0);
 			}
 
 			if(is_shooting)
@@ -608,8 +614,11 @@ void PlayerCharacter::update()
 				weapon_idle_animation_state->setEnabled(true);
 				weapon_idle_animation_state->setWeight(1);
 
-				idle_animation_state->setTimePosition(idle_animation_time);
-				weapon_idle_animation_state->setTimePosition(idle_animation_time);
+				// idle_animation_state->setTimePosition(idle_animation_time);
+				// weapon_idle_animation_state->setTimePosition(idle_animation_time);
+
+				idle_animation_state->addTime(GraphicsManager::instance()->getFrameEvent()->timeSinceLastFrame);
+				weapon_idle_animation_state->addTime(GraphicsManager::instance()->getFrameEvent()->timeSinceLastFrame);
 			}
 			else
 			{
@@ -617,6 +626,9 @@ void PlayerCharacter::update()
 				idle_animation_state->setWeight(0);
 				weapon_idle_animation_state->setEnabled(false);
 				weapon_idle_animation_state->setWeight(0);
+
+				idle_animation_state->setTimePosition(0);
+				weapon_idle_animation_state->setTimePosition(0);
 			}
 
 			if(is_reloading)

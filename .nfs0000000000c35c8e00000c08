@@ -44,21 +44,18 @@ void Pistol::shoot_hook()
         
         if(rayCallback.m_collisionObject->getUserPointer() != NULL)
         {
+            LOG("I HIT THE PLAYER!");
+
             HitBox* hit_box = (HitBox*)(rayCallback.m_collisionObject->getUserPointer());
-            if(hit_box->player->player_id != NetworkManager::instance()->player_id)
-            {
-                 LOG("I HIT THE PLAYER!");
-                int damage_sent = hit_box->getDamage(damage);
-                uint32_t enemy_id = hit_box->player->player_id;
+            int damage_sent = hit_box->getDamage(damage);
+            uint32_t enemy_id = hit_box->player->player_id;
 
-                NetworkManager::instance()->vital->setDamage(damage_sent, enemy_id);
-                NetworkManager::instance()->sendVital();
+            NetworkManager::instance()->vital->setDamage(damage_sent, enemy_id);
+            NetworkManager::instance()->sendVital();
 
-                ParticleManager::instance()->EmitBloodSpurt(Ogre::Vector3(point.x(), point.y(), point.z()), -cam_dir);
-                NetworkManager::instance()->particle->setBlood(point.x(), point.y() , point.z(), -cam_dir.x, -cam_dir.y, -cam_dir.z);
-                NetworkManager::instance()->sendParticle();
-            }
+            ParticleManager::instance()->EmitBloodSpurt(Ogre::Vector3(point.x(), point.y(), point.z()), -cam_dir);
 
+            
             //blood particle system
         }
         else

@@ -119,15 +119,15 @@ void VitalPacket::updatePacket(VitalInfo* info_p)
 	if(hasPlayerDie(info_p) && GameState::instance()->players[info_p->player_id])
 	{
 		((GameObject*)(GameState::instance()->players[info_p->player_id]))->scene->removeGameObject((GameObject*)GameState::instance()->players[info_p->player_id]);
+		delete GameState::instance()->players[info_p->player_id];
 		GameState::instance()->players[info_p->player_id] = NULL;
 
 		if(NetworkManager::instance()->isServer())
 		{
-			Ogre::Vector3 pos = GameState::instance()->spawner->spawnPlayer(info_p->player_respawn_id);
-			NetworkManager::instance()->vital->setPlayerRespawn(pos.x, pos.y, pos.z, info_p->player_respawn_id);
+			Ogre::Vector3 pos = GameState::instance()->spawner->spawnPlayer(info_p->player_id);
+			NetworkManager::instance()->vital->setPlayerRespawn(pos.x, pos.y, pos.z, info_p->player_id);
 			NetworkManager::instance()->sendVital();
 		}
-
 	}
 
 	if(hasChangeWeapon(info_p) && GameState::instance()->players[info_p->player_id])

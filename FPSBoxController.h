@@ -20,7 +20,6 @@ protected:
 	double base_movement_speed;
 
 	Transform* _transform;
-	btPairCachingGhostObject* _ghostObject;
 	btConvexShape* _collisionShape;
 	btDiscreteDynamicsWorld* dynamics_world;
 
@@ -41,6 +40,7 @@ public:
 
 	FPSCamera* fps_camera;
 	OiJE::CharacterController* controller;
+	btPairCachingGhostObject* _ghostObject;
 
 	bool can_move;
 	double movement_speed_multiplier;

@@ -48,7 +48,7 @@ FPSBoxController::FPSBoxController(bool is_yourself_p, GameObject* gameObject, s
 	controller = new OiJE::CharacterController(_ghostObject, _collisionShape, step_height);
 
 	dynamics_world->addCollisionObject(_ghostObject, col_mask, col_to_masks);
-  	dynamics_world->addAction(controller);
+  dynamics_world->addAction(controller);
 }
 
 FPSBoxController::~FPSBoxController()
@@ -71,7 +71,7 @@ void FPSBoxController::update()
 	}
 	else
 	{
-		transformUpdate();
+		updateTransform();
 	}
 	controller->updateAction(dynamics_world, GraphicsManager::instance()->getFrameEvent()->timeSinceLastFrame);
 }

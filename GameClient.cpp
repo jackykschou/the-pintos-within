@@ -155,7 +155,7 @@ void GameClient::processPacket(UDPpacket* packet) {
 	AckHeader* ackHeader = (AckHeader*)packet->data;
 	void* packetData = packet->data+MEMALIGNED_SIZE(AckHeader);
 	char packetType = ((char*)packetData)[0];
-	printf("PacketType: %c\n", packetType);
+	// printf("PacketType: %c\n", packetType);
 
 	// deal with ACKs immediately
 	if (ackHeader->isResponse) {
@@ -189,6 +189,11 @@ void GameClient::processPacket(UDPpacket* packet) {
 		        GameState::instance()->reset();
 	            GameState::instance()->start();
 	        }
+			break;
+		case PARTICLEPACK:
+			ParticleInfo* particleinfo;
+			particleinfo =  (ParticleInfo*) packetData;
+			NetworkManager::instance()->receiveParticle(particleinfo);
 			break;
 		
 	}
