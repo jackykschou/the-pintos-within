@@ -16,7 +16,7 @@
 #define RAND (((float) rand()) / (float) RAND_MAX)
 
 #define RAND_RANGE(from, to) \
-  ((rand() % to) + from)
+  (from-to == 0) ? ((rand() % (to - from)) + from) : 0
 
 #define CUBE_SCALE 1
 
@@ -49,7 +49,7 @@ enum collisiontypes {
 #define FLOORTILE "FloorTiled"
 #define PLATFORMDIRT "PlatformDirt"
 #define PLATFORMGREY "PlatformGrey"
-#define PLAYERSPAWNER "Spawner.Player.005"
+#define PLAYERSPAWNER "Spawner.Player"
 #define LIGHT "Sun"
 #define SKY "SkyHemi"
 

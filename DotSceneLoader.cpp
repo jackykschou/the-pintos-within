@@ -31,6 +31,8 @@ void DotSceneLoader::parseDotScene(uint32_t scene_type, Scene* s, const Ogre::St
 {
     _scene = s;
 
+    GameState::instance()->spawner = new PlayerSpawner("Spawner", _scene);
+
     // set up shared object values
     m_sGroupName = groupName;
     mSceneMgr = yourSceneMgr;
@@ -890,10 +892,6 @@ void DotSceneLoader::createSceneObject(uint32_t scene_type, rapidxml::xml_node<>
 {
     if(scene_type == GAME_MODE)
     {
-        PlayerSpawner* spawner = new PlayerSpawner("Player Spawner", _scene);
-
-        GameState::instance()->spawner = spawner;
-
         Ogre::Vector3 position;
         Ogre::Quaternion rotation;
         Ogre::Vector3 scale;
@@ -926,7 +924,7 @@ void DotSceneLoader::createSceneObject(uint32_t scene_type, rapidxml::xml_node<>
         while(pElement)
             pElement = pElement->next_sibling("node");
 
-        LOG("node name: " << node_name);
+        // LOG("node name: " << node_name);
 
         //-----
 
@@ -940,7 +938,10 @@ void DotSceneLoader::createSceneObject(uint32_t scene_type, rapidxml::xml_node<>
 
         if(node_name.find(PLAYERSPAWNER) != std::string::npos)
         {
-            spawner->addSpawnPoint(Ogre::Vector3(position.x, position.y, position.z));
+            LOG("LAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA");
+
+            GameState::instance()->spawner->addSpawnPoint(Ogre::Vector3(position.x, position.y, position.z));
+            
             // PlayerCharacter* yourself = new PlayerCharacter(true, _scene, "PixelMan.mesh",
             //                                                 position.x, position.y, position.z,
             //                                                 0, 0, 0, 1,

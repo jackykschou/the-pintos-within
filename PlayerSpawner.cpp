@@ -2,7 +2,7 @@
 
 #include "NetworkManager.h"
 
-PlayerSpawner::PlayerSpawner(std::string tag, Scene* s) : GameObject(tag, s), positions(0)
+PlayerSpawner::PlayerSpawner(std::string tag, Scene* s) : GameObject(tag, s), positions()
 {
 }
 
@@ -14,6 +14,8 @@ void PlayerSpawner::startGame()
 {
 	if(NetworkManager::instance()->isServer())
 	{
+		LOG("number of players: " << NetworkManager::instance()->num_player);
+		LOG("size of spawned position: " << positions.size());
 		std::vector<Ogre::Vector3> spawned_positions;
 		for(int i = 0; i < NetworkManager::instance()->num_player; ++i)
 		{	
@@ -22,8 +24,11 @@ void PlayerSpawner::startGame()
 			{
 				position = positions[RAND_RANGE(0, positions.size())];
 			}while(std::find(spawned_positions.begin(), spawned_positions.end(), position) != spawned_positions.end());
-
+			spawned_positions.push_back(position);
 			spawnPlayer(position.x, position.y, position.z, i);
+
+			NetworkManager::instance()->vital->setPlayerRespawn(position.x, position.y, position.z, i);
+			NetworkManager::instance()->sendVital();
 		}
 	}
 }

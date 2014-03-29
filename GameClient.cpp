@@ -175,7 +175,7 @@ void GameClient::processPacket(UDPpacket* packet) {
 		case ASSIGNPLAYERID:
 			PlayerIdInfo* pinfo;
 			pinfo = (PlayerIdInfo*) packetData;
-			NetworkManager::instance()->player_id = pinfo->player_id;
+			NetworkManager::instance()->changeId(pinfo->player_id);
 			LOG("RECEIVED player id: " << pinfo->player_id);
 			break;
 		case VITALPACK:

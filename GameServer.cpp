@@ -32,7 +32,7 @@ int GameServer::start()
 
 	if (state != GameServerReady) return -1;
 
-	NetworkManager::instance()->player_id = 0;
+	NetworkManager::instance()->changeId(0);
 
 	state = GameServerRunning;
 
