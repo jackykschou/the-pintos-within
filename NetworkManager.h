@@ -12,6 +12,10 @@
 #include "VitalPacket.h"
 #include "ParticlePacket.h"
 
+#define GAME_PORT 5555
+#define HEARTBEATS_PER_SEC 10
+#define HEARTBEAT_MAX_DELAY 1000.0f/HEARTBEATS_PER_SEC
+
 struct PlayerIdInfo
 {
 	char type;
@@ -28,12 +32,12 @@ enum NetworkManagerState
 class NetworkManager : public Singleton<NetworkManager> 
 {
   public:
+
   	HeartbeatPacket* heartbeat;
-	VitalPacket* vital;
-	ParticlePacket* particle;
+	VitalPacket*     vital;
+	ParticlePacket*  particle;
 
 	uint32_t player_id;
-
 	uint32_t num_player;
 
   	NetworkManager();

@@ -5,7 +5,6 @@
 #include "Singleton.h"
 #include "GUIManager.h"
 #include "AudioManager.h"
-#include "NetworkManager.h"
 
 class PlayerSpawner;
 class PlayerCharacter;
@@ -28,8 +27,9 @@ class GameState : public Singleton<GameState>
 
     PlayerCharacter* player;
     PlayerSpawner* spawner;
-
     PlayerCharacter* players[MAX_PLAYER];
+
+    void broadcastHeartbeat();
 
   private:
   	boost::posix_time::ptime _start;

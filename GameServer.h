@@ -5,10 +5,7 @@
 #include "GUIManager.h"
 #include "common.h"
 #include "AckBuffer.h"
-
-#define HEARTBEATS_PER_SEC 10
-
-#define HEARTBEAT_MAX_DELAY 1000.0f/HEARTBEATS_PER_SEC
+#include "Debouncer.h"
 
 enum GameServerStatus {
   GameServerReady,
@@ -45,6 +42,8 @@ public:
   // sends a chunk of data to a single client
   void sendDataToClient(void* data, int len, IPaddress* ip, bool ack, AckId id=0, bool isResponse=false);
 
+  // advertise ourselves as a game server over ipv4 multicast
+  void sendMulticastAdvertisement();
 
 private:
   // the socket that is bound
@@ -52,6 +51,8 @@ private:
 
   // the UDP port
   int _port;
+
+  Debouncer *_multicastDebouncer;
 
   // list of connected clients (addresses)
   std::vector<IPaddress> _clients;

@@ -1,7 +1,5 @@
 #include "NetworkManager.h"
 
-#define GAME_PORT 5555
-
 namespace pt = boost::posix_time;
 
 NetworkManager::NetworkManager()
@@ -9,8 +7,8 @@ NetworkManager::NetworkManager()
 	state = NetworkStateReady;
 
 	heartbeat = new HeartbeatPacket();
-	vital = new VitalPacket();
-	particle = new ParticlePacket();
+	vital     = new VitalPacket();
+	particle  = new ParticlePacket();
 
 	player_id = -1;
 	num_player = 0;
@@ -22,6 +20,7 @@ NetworkManager::NetworkManager()
  	delete heartbeat;
 	delete vital;
 	delete particle;
+	if (_lastHeartbeat) free(_lastHeartbeat);
  }
 
 void NetworkManager::sendVital()
@@ -37,16 +36,16 @@ void NetworkManager::sendParticle()
 
 void NetworkManager::receiveHeartbeat(HeartBeatInfo* info)
 {
-	if(info->player_id == NetworkManager::instance()->player_id)
+	if (info->player_id == NetworkManager::instance()->player_id)
 		return;
-	LOG("In receiveHeartbeat");
-	if(GameState::instance()->players[info->player_id])
+
+	if (GameState::instance()->players[info->player_id])
 		heartbeat->updatePlayer(info, GameState::instance()->players[info->player_id]);
 }
 
 void NetworkManager::receiveVital(VitalInfo* info)
 {
-	if(info->player_id == NetworkManager::instance()->player_id)
+	if (info->player_id == NetworkManager::instance()->player_id)
 		return;
 
 	vital->updatePacket(info);
@@ -54,7 +53,7 @@ void NetworkManager::receiveVital(VitalInfo* info)
 
 void NetworkManager::receiveParticle(ParticleInfo* info)
 {
-	if(info->player_id == NetworkManager::instance()->player_id)
+	if (info->player_id == NetworkManager::instance()->player_id)
 		return;
 
 	particle->updateParticles(info);
@@ -92,7 +91,7 @@ void NetworkManager::startClient(char* host) {
 void NetworkManager::update() 
 {
 	if (!isActive()) return;
-
+	
 	if (GameState::instance()->isRunning()) {
 		broadcastHeartbeat();
 	}
@@ -141,7 +140,7 @@ void NetworkManager::broadcastHeartbeat() {
 void NetworkManager::send(void* data, int size, bool ack)
 {
 	if (!isActive()) return;
-	if(isServer())
+	if (isServer())
 	{
 		server->broadcastData(data, size, ack);
 	}

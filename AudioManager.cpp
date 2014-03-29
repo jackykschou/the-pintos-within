@@ -1,6 +1,7 @@
 #include "AudioManager.h"
 #include "GameState.h"
 #include "PlayerCharacter.h"
+
 void AudioManager::initialize() {
 	SDL_Init(SDL_INIT_AUDIO);
 	if (Mix_OpenAudio(AUDIO_RATE, AUDIO_FORMAT, AUDIO_CHANNELS, AUDIO_BUFFERS)) {

@@ -1,8 +1,6 @@
 #include "GameServer.h"
 #include "GameState.h"
-
 #include "NetworkManager.h"
-
 #include "HeartbeatPacket.h"
 #include "VitalPacket.h"
 #include "ParticlePacket.h"
@@ -16,12 +14,18 @@ GameServer::GameServer(int port)
 	_tmpSendPacket = SDLNet_AllocPacket(4096);
 	_tmpRecvPacket = SDLNet_AllocPacket(4096);
 	_ackBuffer     = new AckBuffer();
+	_multicastDebouncer = new Debouncer(1000, []() {
+		if (!GameState::instance()->isRunning()) {
+			NetworkManager::instance()->server->sendMulticastAdvertisement();
+		}
+	});
 }
 
 GameServer::~GameServer() {
 	SDLNet_FreePacket(_tmpSendPacket);
 	SDLNet_FreePacket(_tmpRecvPacket);
 	delete _ackBuffer;
+	delete _multicastDebouncer;
 }
 
 // starts the web server (opens UDP port 5555)
@@ -57,6 +61,7 @@ void GameServer::stop() {
 // called from the render loop
 void GameServer::update() {
 	consumePackets();
+	_multicastDebouncer->run();
 }
 
 // sends a single packet to a single client
@@ -169,6 +174,10 @@ void GameServer::handleJoinPacket(UDPpacket *packet) {
 	sendDataToClient(&info, sizeof(PlayerIdInfo), &ip, true);
 
 	LOG("Assigning player id: " << id);
+}
+
+void GameServer::sendMulticastAdvertisement() {
+	
 }
 
 // This is the "meat" of the packet processing logic in GameServer
