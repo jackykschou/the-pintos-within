@@ -62,9 +62,9 @@ void AudioManager::play3DSound(AudioFile file, int loops, Ogre::Vector3 v)
 	int volume = 64;
 	if (distance > 1)
 		volume -= (int)(64.0*distance/maxDist);
-	LOG("Distance: " << distance);
+	// LOG("Distance: " << distance);
 	if (volume > 0) {
-		LOG("Volume: " << volume);
+		// LOG("Volume: " << volume);
 		int chan = Mix_PlayChannel(-1, _loadedFiles[file], loops);
 		Mix_Volume(chan, volume);
 	}

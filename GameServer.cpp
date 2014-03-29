@@ -66,7 +66,7 @@ void GameServer::update() {
 
 // sends a single packet to a single client
 void GameServer::sendPacketToClient(UDPpacket* packet, IPaddress* ip) {
-	printf("Sending response packet to %x:%x..\n", ip->host, ip->port);
+	// printf("Sending response packet to %x:%x..\n", ip->host, ip->port);
 
 	// unbind from our previous client
 	SDLNet_UDP_Unbind(_socket, 0);
@@ -197,7 +197,7 @@ void GameServer::processPacket(UDPpacket* packet) {
 	AckHeader* ackHeader = (AckHeader*)packet->data;
 	void* packetData = packet->data+MEMALIGNED_SIZE(AckHeader);
 	char packetType = ((char*)packetData)[0];
-	printf("PacketType: %c\n", packetType);
+	// printf("PacketType: %c\n", packetType);
 
 	if (ackHeader->isResponse) {
 		// woot. expire our ACK.
@@ -226,6 +226,12 @@ void GameServer::processPacket(UDPpacket* packet) {
 			hinfo =  (HeartBeatInfo*) packetData;
 			NetworkManager::instance()->receiveHeartbeat(hinfo);
 			broadcastData(hinfo, sizeof(HeartBeatInfo), false);
+			break;
+		case PARTICLEPACK:
+			ParticleInfo* pinfo;
+			pinfo =  (ParticleInfo*) packetData;
+			NetworkManager::instance()->receiveParticle(pinfo);
+			broadcastData(pinfo, sizeof(ParticleInfo), true);
 			break;
 		
 	}

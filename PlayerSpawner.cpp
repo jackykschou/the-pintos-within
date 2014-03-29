@@ -82,8 +82,24 @@ Ogre::Vector3 PlayerSpawner::spawnPlayer(uint32_t player_id)
 	{
 		GameState::instance()->player = player;
 	}
+
+	LOG("Plyaer " << player_id << " respawned.");
 	
 	return position;
+}
+
+void PlayerSpawner::update()
+{
+	GameObject::update();
+	if(NetworkManager::instance()->isServer() && GameState::instance()->isRunning())
+	{
+		if(GameState::instance()->player == NULL)
+		{
+			Ogre::Vector3 pos = GameState::instance()->spawner->spawnPlayer(NetworkManager::instance()->player_id);
+			NetworkManager::instance()->vital->setPlayerRespawn(pos.x, pos.y, pos.z, NetworkManager::instance()->player_id);
+			NetworkManager::instance()->sendVital();
+		}
+	}
 }
 
 

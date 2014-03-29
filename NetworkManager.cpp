@@ -31,6 +31,7 @@ void NetworkManager::sendVital()
 
 void NetworkManager::sendParticle()
 {
+	send(&particle->info, sizeof(ParticleInfo), true);
 	particle->clear();
 }
 
@@ -39,7 +40,7 @@ void NetworkManager::receiveHeartbeat(HeartBeatInfo* info)
 	if (info->player_id == NetworkManager::instance()->player_id)
 		return;
 
-	if (GameState::instance()->players[info->player_id])
+	if(GameState::instance()->players[info->player_id])
 		heartbeat->updatePlayer(info, GameState::instance()->players[info->player_id]);
 }
 
@@ -125,7 +126,6 @@ void NetworkManager::broadcastHeartbeat() {
 	}
 
 	if (!_lastHeartbeat || diff.total_milliseconds() > HEARTBEAT_MAX_DELAY) {
-		LOG("SENDING HEARTBEAT PACKET");
 		// SEND IT HERE
 		send(&(heartbeat->info), sizeof(HeartBeatInfo), false);
 
