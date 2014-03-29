@@ -14,7 +14,17 @@ void PlayerSpawner::startGame()
 {
 	if(NetworkManager::instance()->isServer())
 	{
+		std::vector<Ogre::Vector3> spawned_positions;
+		for(int i = 0; i < NetworkManager::instance()->num_player; ++i)
+		{	
+			Ogre::Vector3 position;
+			do
+			{
+				position = positions[RAND_RANGE(0, positions.size())];
+			}while(std::find(spawned_positions.begin(), spawned_positions.end(), position) != spawned_positions.end());
 
+			spawnPlayer(position.x, position.y, position.z, i);
+		}
 	}
 }
 
@@ -58,6 +68,8 @@ Ogre::Vector3 PlayerSpawner::spawnPlayer(uint32_t player_id)
             0, 0, 0, 1,
             10, 10, 10,
             player_id);
+
+	GameState::instance()->players[player_id] = player;
 
 	if(self)
 	{

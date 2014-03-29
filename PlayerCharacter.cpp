@@ -114,6 +114,16 @@ PlayerCharacter::PlayerCharacter(bool is_yourself_p, Scene* scene, std::string m
 			0, 0, 0, 1,
 			0.049863, 0.049863, 0.049863, COL_NOTHING, COL_NOTHING));
 
+	// PlayerBox* jet_pack = new PlayerBox(this, "Muzzle.Jetpack",
+	// 									0, 0, 0,
+	// 									);
+
+	// PlayerBox::PlayerBox(PlayerCharacter* player_p, std::string mesh_name,
+	// float posX, float posY, float posZ, float rotX, float rotY, float rotZ, float rotW,
+	// float scaleX, float scaleY, float scaleZ, int col_mask, int col_to_masks) : Component((GameObject*)player_p)
+
+	// P
+
 	// <node name="Hitbox.Head" >
  //        <position z="-0.000000" x="0.000000" y="0.000000" />
  //        <rotation qw="1.000000" qx="0.000000" qy="0.000000" qz="-0.000000" />

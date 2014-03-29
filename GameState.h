@@ -29,8 +29,6 @@ class GameState : public Singleton<GameState>
     PlayerCharacter* player;
     PlayerSpawner* spawner;
 
-    uint32_t num_player;
-
     PlayerCharacter* players[MAX_PLAYER];
 
   private:

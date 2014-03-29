@@ -80,9 +80,6 @@ private:
   void putDataIntoPacket(UDPpacket *p, void *data, int len,
                          IPaddress* a, bool ack, AckId id=-1, bool isResponse=false);
 
-  // broadcasts a single packet to all connected clients
-  void broadcastPacket(UDPpacket* packet, bool ack);
-
   // broadcasts a single cstring (data->"\x00") to a bunch of clients
   void broadcastString(const char* data, bool ack);
 

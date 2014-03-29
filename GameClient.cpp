@@ -91,7 +91,8 @@ int GameClient::joinGame() {
 	printf("Sending join game request...");
 
 	state = GameClientRunning;
-	sendData((void*)"j", 2, true);
+	char x = JOINGAME;
+	sendData(&x, 1, true);
 
 	return 0;
 }
@@ -169,16 +170,24 @@ void GameClient::processPacket(UDPpacket* packet) {
 		LOG("ACK REPLIED BY CLIENT.");
 	}
 
-	switch (packetType) {
-		case 'k':
-			// memcpy(&(NetworkManager::instance()->vitalReceive->info), packet->data, sizeof(VitalInfo));
+	switch (packetType) 
+	{
+		case ASSIGNPLAYERID:
+			PlayerIdInfo* pinfo;
+			pinfo = (PlayerIdInfo*) packetData;
+			NetworkManager::instance()->player_id = pinfo->player_id;
+			LOG("RECEIVED player id: " << pinfo->player_id);
+			break;
+		case VITALPACK:
+			VitalInfo* vinfo;
+			vinfo =  (VitalInfo*) packetData;
+			NetworkManager::instance()->vital->updatePacket(vinfo);
 			break;
 		case 's':
 			handleGameStartPacket(packet);
 			break;
 		case 'h':
 			// NetworkManager::instance()->heartbeatReceive->clear();
-			handleHeartbeatPacket(packet);
 			break;
 	}
 }

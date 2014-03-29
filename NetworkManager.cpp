@@ -11,6 +11,7 @@ NetworkManager::NetworkManager()
 	particle = new ParticlePacket();
 
 	player_id = -1;
+	num_player = 0;
 }
 
  NetworkManager::~NetworkManager()
@@ -20,16 +21,17 @@ NetworkManager::NetworkManager()
 	delete particle;
  }
 
+
 void NetworkManager::sendVital()
 {
-	// if(isServer())
-	// {
-	// 	server->broadcastData();
-	// }
-	// else
-	// {
-	// 	client->sendData();
-	// }
+	if(isServer())
+	{
+		server->broadcastData(&vital->info, sizeof(VitalInfo), true);
+	}
+	else
+	{
+		client->sendData(&vital->info, sizeof(VitalInfo), true);
+	}
 	vital->clear();
 }
 

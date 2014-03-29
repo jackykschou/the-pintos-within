@@ -1,13 +1,16 @@
 #include "GameServer.h"
 #include "GameState.h"
 
+#include "NetworkManager.h"
+
 #include "HeartbeatPacket.h"
 #include "VitalPacket.h"
 #include "ParticlePacket.h"
 
 namespace pt = boost::posix_time;
 
-GameServer::GameServer(int port) {
+GameServer::GameServer(int port) 
+{
 	state          = GameServerReady;
 	_port          = port;
 	_tmpSendPacket = SDLNet_AllocPacket(4096);
@@ -23,8 +26,13 @@ GameServer::~GameServer() {
 }
 
 // starts the web server (opens UDP port 5555)
-int GameServer::start() {
+int GameServer::start() 
+{
+	NetworkManager::instance()->num_player = 1;
+
 	if (state != GameServerReady) return -1;
+
+	NetworkManager::instance()->player_id = 0;
 
 	state = GameServerRunning;
 
@@ -99,6 +107,7 @@ void GameServer::putDataIntoPacket(UDPpacket* p, void* data, int len, IPaddress*
 	memcpy(p->data, &ackPack, MEMALIGNED_SIZE(AckHeader));
 }
 
+// Adds the ACK header and sends to client
 void GameServer::sendDataToClient(void* data, int len, IPaddress* ip, bool ack,
 								  AckId id, bool isResponse) {
 	putDataIntoPacket(_tmpSendPacket, data, len, ip, ack, id, isResponse);
@@ -153,8 +162,19 @@ void GameServer::handleJoinPacket(UDPpacket *packet) {
 	printf("CLIENT %x %d JOINED\n", packet->address.host, packet->address.port);
 
 	_clients.push_back(packet->address);
+	int id = _clients.size();
+	++(NetworkManager::instance()->num_player);
 
 	memcpy(&ip, &(packet->address), sizeof(IPaddress));
+
+	PlayerIdInfo info;
+	info.type = ASSIGNPLAYERID;
+	info.player_id = id;
+
+	char x = ASSIGNPLAYERID;
+	sendDataToClient(&info, sizeof(PlayerIdInfo), &ip, true);
+
+	LOG("Assigning player id: " << id);
 
 	// the host can now start the game
 	GUIManager::instance()->hideWaitingMenu();
@@ -219,9 +239,15 @@ void GameServer::processPacket(UDPpacket* packet) {
 	}
 
 	switch (packetType) {
-		case 'j':
+		case JOINGAME:
 			// JOIN request adds a character to the game
 			handleJoinPacket(packet);
+			break;
+		case VITALPACK:
+			VitalInfo* vinfo;
+			vinfo =  (VitalInfo*) packetData;
+			NetworkManager::instance()->vital->updatePacket(vinfo);
+			broadcastData(vinfo, sizeof(VitalInfo), true);
 			break;
 	}
 }

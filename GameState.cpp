@@ -7,7 +7,6 @@ namespace pt = boost::posix_time;
 GameState::GameState()
 {
 	memset(&players, 0, sizeof(PlayerCharacter*) * MAX_PLAYER);
-	num_player = 0;
 }
 
 void GameState::reset() {

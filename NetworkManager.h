@@ -12,6 +12,12 @@
 #include "VitalPacket.h"
 #include "ParticlePacket.h"
 
+struct PlayerIdInfo
+{
+	char type;
+	uint32_t player_id;
+};
+
 enum NetworkManagerState 
 {
 	NetworkStateReady,
@@ -28,6 +34,8 @@ class NetworkManager : public Singleton<NetworkManager>
 
 	uint32_t player_id;
 
+	uint32_t num_player;
+
   	NetworkManager();
   	~NetworkManager();
 
@@ -41,7 +49,6 @@ class NetworkManager : public Singleton<NetworkManager>
 	bool isServer();
 	bool isClient();
 
-	void sendHeartbeat();
 	void sendVital();
 	void sendParticle();
 

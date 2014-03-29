@@ -39,9 +39,10 @@ enum collisiontypes {
 #define COL_HIT_BOX_COLLIDER_WITH (COL_BULLET)
 
 #define HEARTBEATPACK 1
-#define JOINPACK 2
+#define ASSIGNPLAYERID 2
 #define VITALPACK 3
 #define PARTICLEPACK 4
+#define JOINGAME 5
 
 #define WALL "Wall"
 #define FLOORGRASS "FloorGrass"
