@@ -1,4 +1,4 @@
-#include "InputManager.h"
+Uinclude "InputManager.h"
 #include "GraphicsManager.h"
 
 InputManager::InputManager() :
@@ -55,10 +55,6 @@ void InputManager::capture()
 
 	if (InputManager::instance()->isKeyPressed(OIS::KC_ESCAPE)) {
         GraphicsManager::instance()->stopRendering();
-    }
-
-    if (InputManager::instance()->isKeyPressed(OIS::KC_H)) {
-        GUIManager::instance()->toggleDebugPanel();
     }
 }
 
@@ -169,29 +165,43 @@ OIS::Keyboard* InputManager::getKeyboard() {
 // Input callbacks
 bool InputManager::keyPressed(const OIS::KeyEvent &arg) {
 	_lastKeyPressedEvt = new OIS::KeyEvent(arg);
+	if(GuiManager::instance()->IsExpectingKeyboard()){
+		CEGUI::System::getSingletonPtr()->injectKeyDown(arg.key);
+		CEGUI::System::getSingletonPtr()->injectChar(arg.text);
+	}
 	return true;
 }
 
 bool InputManager::keyReleased(const OIS::KeyEvent &arg) {
 	_lastKeyReleasedEvt = new OIS::KeyEvent(arg);
+	if(GuiManager::instance()->IsExpectingKeyboard()){
+		CEGUI::System::getSingletonPtr()->injectKeyUp(arg.key);
+	}
 	return true;
 }
 
 bool InputManager::mouseMoved(const OIS::MouseEvent &arg) {
-	if (GUIManager::instance()->injectMouseMove(arg)) return true;
 	_lastMouseMovedEvt = new OIS::MouseEvent(arg);
+	if(GuiManager::instance()->IsExpectingMouse()){
+		CEGUI::System::getSingletonPtr()->injectMousePosition(arg.state.X.abs,arg.state.Y.abs);
+		//CEGUI::System::getSingletonPtr()->injectMouseMove(arg.state.X.rel,arg.state.Y.rel);
+	}
 	return true;
 }
 
 bool InputManager::mousePressed(const OIS::MouseEvent &arg, OIS::MouseButtonID id) {
-	if (GUIManager::instance()->injectMouseDown(arg, id)) return true;
 	_lastMousePressedEvt = new OIS::MouseEvent(arg);
+	if(GuiManager::instance()->IsExpectingMouse()){
+		CEGUI::System::getSingletonPtr()->injectMouseButtonDown(GuiManager::TranslateButton(id));
+	}
 	return true;
 }
 
 bool InputManager::mouseReleased(const OIS::MouseEvent &arg, OIS::MouseButtonID id) {
-	if (GUIManager::instance()->injectMouseUp(arg, id)) return true;
 	_lastMouseReleasedEvt = new OIS::MouseEvent(arg);
+	if(GuiManager::instance()->IsExpectingMouse()){
+		CEGUI::System::getSingletonPtr()->injectMouseButtonUp(GuiManager::TranslateButton(id));
+   	}
 	return true;
 }
 
