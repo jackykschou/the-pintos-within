@@ -27,6 +27,17 @@ void AudioManager::initialize() {
 	_bulletDirtCollision[4] = AudioManager::instance()->loadAudioFile("media/sounds/Bullet_Dirt_Collision5.wav");
 	_bulletDirtCollision[5] = AudioManager::instance()->loadAudioFile("media/sounds/Bullet_Dirt_Collision6.wav");
 	_bulletDirtCollision[6] = AudioManager::instance()->loadAudioFile("media/sounds/Bullet_Dirt_Collision7.wav");
+
+	_footstep[0] = AudioManager::instance()->loadAudioFile("media/sounds/Footstep1.wav");
+	_footstep[1] = AudioManager::instance()->loadAudioFile("media/sounds/Footstep2.wav");
+	_footstep[2] = AudioManager::instance()->loadAudioFile("media/sounds/Footstep3.wav");
+	_footstep[3] = AudioManager::instance()->loadAudioFile("media/sounds/Footstep4.wav");
+	_footstep[4] = AudioManager::instance()->loadAudioFile("media/sounds/Footstep5.wav");
+	_footstep[5] = AudioManager::instance()->loadAudioFile("media/sounds/Footstep6.wav");
+	_footstep[6] = AudioManager::instance()->loadAudioFile("media/sounds/Footstep7.wav");
+
+	_jetpack = AudioManager::instance()->loadAudioFile("media/sounds/Jetpack1.wav");
+
 	_death = AudioManager::instance()->loadAudioFile("media/sounds/Death.wav");
 }
 
@@ -89,11 +100,19 @@ void AudioManager::playBALLZ() {
 }
 
 void AudioManager::playRifleFire(Ogre::Vector3 v) {
-	play3DSound(_rifleFire[rand() % 7], 0, v);
+	play3DSound(_rifleFire[RAND_RANGE(0, 7)], 0, v);
 }
 
 void AudioManager::playBulletDirtCollision(Ogre::Vector3 v) {
-	play3DSound(_bulletDirtCollision[rand() % 7], 0, v);
+	play3DSound(_bulletDirtCollision[RAND_RANGE(0, 7)], 0, v);
+}
+
+void AudioManager::playWalkStep(Ogre::Vector3 v) {
+	play3DSound(_bulletDirtCollision[RAND_RANGE(0, 7)], 0, v);
+}
+
+void AudioManager::playJetPack(Ogre::Vector3 v) {
+	play3DSound(_jetpack, 0, v);
 }
 
 void AudioManager::playDeath(Ogre::Vector3 v) {

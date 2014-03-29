@@ -78,32 +78,27 @@ PlayerCharacter::PlayerCharacter(bool is_yourself_p, Scene* scene, std::string m
 
     health_regen_debouncer = new Debouncer(health_regen_rate * 1000);
 
+    walk_sound_debouncer = new Debouncer(0.2 * 1000, [this]()
+    {
+    	AudioManager::instance()->playWalkStep(Ogre::Vector3(transform->posX, transform->posY, transform->posZ));
+    });
+
+    jet_pack_particle_debouncer = new Debouncer(0.1 * 1000, [this](){
+    	Ogre::Vector3 pos = jet_pack_shoot_pos->node->
+    						convertLocalToWorldPosition(jet_pack_shoot_pos->node->getPosition());
+    	ParticleManager::instance()->EmitSparks(pos, Ogre::Vector3::NEGATIVE_UNIT_Y);
+    });
+
+    jet_pack_sound_debouncer = new Debouncer(0.1 * 1000, [this](){
+    	AudioManager::instance()->playJetPack(Ogre::Vector3(transform->posX, transform->posY, transform->posZ));
+    });
+
 	controller = new FPSBoxController(is_yourself, this, std::string("Camm"), box_half_size.y * scaleY + 1, btVector3(box_half_size.x * scaleX, box_half_size.y * scaleY, box_half_size.z * scaleZ), 
 										3, COL_CHARACTER, CHARACTER_COLLIDER_WITH, mesh->node);
 	if(is_yourself)
   	{
 		scene->main_camera = (Camera*)(controller->fps_camera);
 	}
-
-   // <node name="Rifle" >
-   //      <position y="0.000000" x="0.000000" z="-0.000000" />
-   //      <rotation qz="-0.000000" qy="0.000000" qx="0.709822" qw="0.704381" />
-   //      <scale y="1.000000" x="1.000000" z="1.000000" />
-   //      <game >
-
-	// </node>
-	//      <node name="Muzzle.Rifle" >
-	//        <position y="0.000000" x="0.000000" z="-0.000000" />
-	//        <rotation qz="-0.000000" qy="0.000000" qx="0.000000" qw="1.000000" />
-	//        <scale y="0.049863" x="0.049863" z="0.049863" />
-	//        <game >
-	//          <sensors />
-	//          <actuators />
-	//        </game>
-	//        <entity velocity_max="0.0" velocity_min="0.0" damping_rot="0.10000000149011612" mass_radius="1.0" ghost="False" lock_rot_z="False" lock_rot_x="False" lock_rot_y="False" damping_trans="0.03999999910593033" friction_z="1.0" friction_y="1.0" friction_x="1.0" physics_type="STATIC" name="Hitbox.002" anisotropic_friction="False" meshFile="Hitbox.002.mesh" lock_trans_y="False" lock_trans_x="False" inertia_tensor="0.4000000059604645" lock_trans_z="False" actor="False" mass="1.0" />
-	//      </node>
-
-	 // <rotation qx="0.000000" qy="-0.707107" qz="-0.000000" qw="0.707107" />
 
 	//hard code position
 	Weapon* pistol = new Pistol(this, "Gun.mesh", 
@@ -115,33 +110,26 @@ PlayerCharacter::PlayerCharacter(bool is_yourself_p, Scene* scene, std::string m
 			0, 0, 0, 1,
 			0.049863, 0.049863, 0.049863, COL_NOTHING, COL_NOTHING));
 
-	PlayerBox* jet_pack = new PlayerBox(this, "Hitbox.003.mesh",
+	// PlayerBox* jet_pack = new PlayerBox(this, "Hitbox.003.mesh",
+	// 									2.51335, 10.66468, 6.35833,
+	// 									0, 0, 0, 1,
+	// 									4.99, 4.99, 4.99,
+	// 									COL_NOTHING, COL_NOTHING);
+
+	// jet_pack->node->setVisible(true);
+
+	jet_pack_shoot_pos = new PlayerBox(this, "Hitbox.005.mesh",
 										0.251335, 0.635833, -1.066468,
 										0, 0, 0, 1,
-										0.049863, 0.049863, 0.049863,
+										5, 5, 5,
 										COL_NOTHING, COL_NOTHING);
-	jet_pack->node->setVisible(true);
 
-	// <node name="Hitbox.Head" >
- //        <position z="-0.000000" x="0.000000" y="0.000000" />
- //        <rotation qw="1.000000" qx="0.000000" qy="0.000000" qz="-0.000000" />
- //        <scale z="0.100000" x="0.100000" y="0.100000" />
- //        <game >
- //          <sensors />
- //          <actuators />
- //        </game>
+
 
 	head_box = new HitBox(this, "Hitbox.mesh",
 							0, 0, 0, 
 							0, 0, 0, 1,
 							1, 1, 1, 2.0);
-
-	// // <node name="Hitbox.Chest" >
- // //        <position z="-0.000000" x="0.000000" y="0.000000" />
- // //        <rotation qw="1.000000" qx="0.000000" qy="0.000000" qz="-0.000000" />
- // //        <scale z="0.100000" x="0.100000" y="0.116851" />
- // //        <game >
- // //          <sensors />
 
 	body_box = new HitBox(this, "Hitbox.001.mesh",
 							0, 0, 0, 
@@ -176,6 +164,7 @@ PlayerCharacter:: ~PlayerCharacter()
 		scene->main_camera = NULL;
 
 	delete health_regen_debouncer;
+	delete walk_sound_debouncer;
 }
 
 void PlayerCharacter::update()
@@ -241,12 +230,12 @@ void PlayerCharacter::update()
 
 			if(die_animation_state->hasEnded())
 			{
+				AudioManager::instance()->playDeath(Ogre::Vector3(transform->posX, transform->posY, transform->posZ));
 				NetworkManager::instance()->vital->setPlayerDie();
 				NetworkManager::instance()->sendVital();
 				GameState::instance()->players[NetworkManager::instance()->player_id] = NULL;
 				GameState::instance()->player = NULL;
 				scene->removeGameObject((GameObject*)this);
-				LOG("Plyaer " << NetworkManager::instance()->player_id << " die.");
 				delete this;
 				return;
 			}
@@ -282,7 +271,8 @@ void PlayerCharacter::update()
 			if(controller->is_jet_packing && !controller->controller->isJumping())
 			{
 				is_jet_packing = true;
-				//Particle
+				jet_pack_sound_debouncer->run();
+				jet_pack_particle_debouncer->run();
 			}
 			else
 			{
@@ -335,6 +325,11 @@ void PlayerCharacter::update()
 				}
 				else
 					running_animation_state->addTime(GraphicsManager::instance()->getFrameEvent()->timeSinceLastFrame);
+
+				if(running_animation_state->getTimePosition() > 0.2f && running_animation_state->getTimePosition() < 0.3f)
+					walk_sound_debouncer->run();
+				else if(running_animation_state->getTimePosition() > 0.5f && running_animation_state->getTimePosition() < 0.7f)
+					walk_sound_debouncer->run();
 
 				weapon_running_animation_state->setWeight(1);
 				weapon_running_animation_state->setEnabled(true);
@@ -560,6 +555,12 @@ void PlayerCharacter::update()
 			die_animation_state->setTimePosition(0);
 			weapon_die_animation_state->setTimePosition(0);
 
+			if(is_jet_packing)
+			{
+				jet_pack_sound_debouncer->run();
+				jet_pack_particle_debouncer->run();
+			}
+
 			if(is_moving)
 			{
 				running_animation_state->setEnabled(true);
@@ -569,9 +570,6 @@ void PlayerCharacter::update()
 
 				running_animation_state->addTime(GraphicsManager::instance()->getFrameEvent()->timeSinceLastFrame);
 				weapon_running_animation_state->addTime(GraphicsManager::instance()->getFrameEvent()->timeSinceLastFrame);
-
-				// running_animation_state->setTimePosition(run_animation_time);
-				// weapon_running_animation_state->setTimePosition(run_animation_time);
 			}
 			else
 			{
@@ -613,9 +611,6 @@ void PlayerCharacter::update()
 				idle_animation_state->setWeight(1);
 				weapon_idle_animation_state->setEnabled(true);
 				weapon_idle_animation_state->setWeight(1);
-
-				// idle_animation_state->setTimePosition(idle_animation_time);
-				// weapon_idle_animation_state->setTimePosition(idle_animation_time);
 
 				idle_animation_state->addTime(GraphicsManager::instance()->getFrameEvent()->timeSinceLastFrame);
 				weapon_idle_animation_state->addTime(GraphicsManager::instance()->getFrameEvent()->timeSinceLastFrame);

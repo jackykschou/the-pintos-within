@@ -19,6 +19,8 @@ public:
 
 
 	virtual void shoot_hook();
+
+	Debouncer *shoot_sound_debouncer;
 };
 
 #endif // #ifndef __Pistol_h_
