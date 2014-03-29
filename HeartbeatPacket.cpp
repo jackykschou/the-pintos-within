@@ -22,7 +22,11 @@ void HeartbeatPacket::clear()
 
 void HeartbeatPacket::renewPlayerInfo(PlayerCharacter* player)
 {
+	LOG("RENEWING PLAYER...");
+
 	info.flags = 0;
+
+	info.type = HEARTBEATPACK;
 
 	info.player_id = NetworkManager::instance()->player_id;
 
@@ -60,6 +64,8 @@ void HeartbeatPacket::renewPlayerInfo(PlayerCharacter* player)
 
 void HeartbeatPacket::updatePlayer(HeartBeatInfo* info_p, PlayerCharacter* player)
 {
+	LOG("UPDATING OTHER PLAYER...");
+
 	Transform* tran = ((GameObject*)player)->getComponent<Transform>();
 
 	tran->posX = info_p->playerPosX;

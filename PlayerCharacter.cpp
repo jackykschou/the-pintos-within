@@ -207,7 +207,7 @@ void PlayerCharacter::update()
 		current_reload_animation_state = reload_animation_states[current_weapon->weapon_id];
 		current_shooting_animation_state = shooting_animation_states[current_weapon->weapon_id];
 
-		if((health <= 0 || transform->posY <= -130) && !is_dead)
+		if((health <= 0 || transform->posY <= -100) && !is_dead)
 		{
 			is_dead = true;
 			controller->can_move = false;

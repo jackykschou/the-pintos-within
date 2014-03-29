@@ -61,7 +61,6 @@ int GameClient::connect() {
 
 // sends a chunk of data in a UDP packet to the host
 void GameClient::sendData(void* data, int len, bool ack, AckId id, bool isResponse) {
-	printf("%d\n", id);
 	// place the rest of the data
 	memcpy(_tmpSendPacket->data+MEMALIGNED_SIZE(AckHeader), data, len);
 	_tmpSendPacket->len = len+MEMALIGNED_SIZE(AckHeader);
@@ -181,13 +180,17 @@ void GameClient::processPacket(UDPpacket* packet) {
 		case VITALPACK:
 			VitalInfo* vinfo;
 			vinfo =  (VitalInfo*) packetData;
-			NetworkManager::instance()->vital->updatePacket(vinfo);
+			NetworkManager::instance()->receiveVital(vinfo);
 			break;
-		case 's':
-			handleGameStartPacket(packet);
-			break;
-		case 'h':
-			// NetworkManager::instance()->heartbeatReceive->clear();
+		case HEARTBEATPACK:
+			LOG("Client receive HeartBeat...");
+			HeartBeatInfo* hinfo;
+			hinfo =  (HeartBeatInfo*) packetData;
+			NetworkManager::instance()->receiveHeartbeat(hinfo);
+			if (!GameState::instance()->isRunning()) {
+		        GameState::instance()->reset();
+	            GameState::instance()->start();
+	        }
 			break;
 	}
 }

@@ -58,8 +58,17 @@ class NetworkManager : public Singleton<NetworkManager>
 
 	void changeId(uint32_t);
 
+	// sends game state to every client
+	void broadcastHeartbeat();
+
 	GameServer* server;
 	GameClient* client;
+
+  private:
+
+	// the timestamp on the last heartbeat
+	boost::posix_time::ptime* _lastHeartbeat;
+	void send(void* data, int size, bool ack);
 };
 
 #endif

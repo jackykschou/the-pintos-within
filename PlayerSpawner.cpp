@@ -51,6 +51,8 @@ void PlayerSpawner::spawnPlayer(float x, float y, float z, uint32_t player_id)
             10, 10, 10,
             player_id);
 
+	GameState::instance()->players[player_id] = player;
+
 	if(self)
 	{
 		GameState::instance()->player = player;

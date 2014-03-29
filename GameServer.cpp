@@ -15,7 +15,6 @@ GameServer::GameServer(int port)
 	_port          = port;
 	_tmpSendPacket = SDLNet_AllocPacket(4096);
 	_tmpRecvPacket = SDLNet_AllocPacket(4096);
-	_lastHeartbeat = NULL;
 	_ackBuffer     = new AckBuffer();
 }
 
@@ -58,11 +57,6 @@ void GameServer::stop() {
 // called from the render loop
 void GameServer::update() {
 	consumePackets();
-
-	// send a heartbeat if necessary
-	if (GameState::instance()->isRunning()) {
-		broadcastHeartbeat();
-	}
 }
 
 // sends a single packet to a single client
@@ -186,28 +180,6 @@ void GameServer::broadcastGameStart() {
 	broadcastData((void*)"s", 2, true);
 }
 
-// sends game state to every client every HEARTBEAT_MAX_DELAY milliseconds
-void GameServer::broadcastHeartbeat() {
-	pt::ptime now = pt::microsec_clock::local_time();
-	pt::time_duration diff;
-
-	if (_lastHeartbeat) {
-		diff = now - *_lastHeartbeat;
-	}
-
-	if (!_lastHeartbeat || diff.total_milliseconds() > HEARTBEAT_MAX_DELAY) {
-		LOG("SENDING HEARTBEAT PACKET");
-		broadcastString("h", false);
-
-		if (!_lastHeartbeat) {
-			_lastHeartbeat = (pt::ptime*)malloc(sizeof(pt::ptime));
-		}
-
-		*_lastHeartbeat = now;
-	}
-}
-
-
 // This is the "meat" of the packet processing logic in GameServer
 // Requests are dished out based on their first byte
 void GameServer::processPacket(UDPpacket* packet) {
@@ -246,8 +218,15 @@ void GameServer::processPacket(UDPpacket* packet) {
 		case VITALPACK:
 			VitalInfo* vinfo;
 			vinfo =  (VitalInfo*) packetData;
-			NetworkManager::instance()->vital->updatePacket(vinfo);
+			NetworkManager::instance()->receiveVital(vinfo);
 			broadcastData(vinfo, sizeof(VitalInfo), true);
+			break;
+		case HEARTBEATPACK:
+			LOG("Server receive HeartBeat...");
+			HeartBeatInfo* hinfo;
+			hinfo =  (HeartBeatInfo*) packetData;
+			NetworkManager::instance()->receiveHeartbeat(hinfo);
+			broadcastData(hinfo, sizeof(HeartBeatInfo), false);
 			break;
 	}
 }

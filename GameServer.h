@@ -47,10 +47,6 @@ public:
 
 
 private:
-
-  // the timestamp on the last heartbeat
-  boost::posix_time::ptime* _lastHeartbeat;
-
   // the socket that is bound
   UDPsocket _socket;
 
@@ -82,9 +78,6 @@ private:
 
   // broadcasts a single cstring (data->"\x00") to a bunch of clients
   void broadcastString(const char* data, bool ack);
-
-  // sends game state to every client
-  void broadcastHeartbeat();
 
   // a temporarily allocated packet for sending on the wire
   UDPpacket* _tmpSendPacket;

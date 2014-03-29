@@ -45,8 +45,6 @@ bool GraphicsManager::frameRenderingQueued(const Ogre::FrameEvent& evt)
       //ParticleManager::instance()->EmitExplosion(Ogre::Vector3{10,25,-10});
     }
 */
-    LOG("I am rendering");
-
     GUIManager::instance()->update(evt);
     
     SceneManager::instance()->updateScene(evt.timeSinceLastFrame);
