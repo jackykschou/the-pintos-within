@@ -20,10 +20,6 @@ class GUIManager : public Singleton<GUIManager>, public OgreBites::SdkTrayListen
 	void showGameOverMenu();
 	void flipGameOverLabel();
 
-	// HUD panel: shows time and stats
-	void hideHUD();
-	void showHUD();
-
 	// Waiting (network) menu
 	void showWaitingMenu();
 	void hideWaitingMenu();
@@ -34,8 +30,6 @@ class GUIManager : public Singleton<GUIManager>, public OgreBites::SdkTrayListen
 	bool injectMouseMove(const OIS::MouseEvent& evt);
 
   private:
-  	void buildHUD();
-  	void updateHUD();
   	void buildDebugPanel();
 	void updateDebugPanel();
 	void buildGameOverMenu();
@@ -45,7 +39,6 @@ class GUIManager : public Singleton<GUIManager>, public OgreBites::SdkTrayListen
 	OgreBites::SdkTrayManager* _trayMgr;
 	OgreBites::ParamsPanel*    _debugPanel;
 	Ogre::Overlay*             _mainMenuOverlay;
-	Ogre::Overlay*             _hudOverlay;
 	Ogre::Overlay*             _gameOverOverlay;
 	Ogre::Overlay*             _waitingOverlay;
 };

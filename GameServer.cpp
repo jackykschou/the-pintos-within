@@ -169,15 +169,6 @@ void GameServer::handleJoinPacket(UDPpacket *packet) {
 	sendDataToClient(&info, sizeof(PlayerIdInfo), &ip, true);
 
 	LOG("Assigning player id: " << id);
-
-	// the host can now start the game
-	GUIManager::instance()->hideWaitingMenu();
-	GUIManager::instance()->showGameOverMenu();
-}
-
-// sends GAME START event to every client
-void GameServer::broadcastGameStart() {
-	broadcastData((void*)"s", 2, true);
 }
 
 // This is the "meat" of the packet processing logic in GameServer

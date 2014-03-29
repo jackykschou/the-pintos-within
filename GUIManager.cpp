@@ -2,7 +2,6 @@
 #include "InputManager.h"
 #include "Camera.h"
 #include "GameState.h"
-#include "PlayerSpawner.h"
 
 void GUIManager::initialize(const Ogre::String& appName) {
 	_trayMgr = new OgreBites::SdkTrayManager(
@@ -15,14 +14,12 @@ void GUIManager::initialize(const Ogre::String& appName) {
     _trayMgr->hideCursor();
 
     buildDebugPanel();
-    buildHUD();
     buildGameOverMenu();
     buildWaitingMenu();
     
     hideDebugPanel();
     hideWaitingMenu();
 
-    showHUD();
     showGameOverMenu();
 }
 
@@ -30,7 +27,6 @@ void GUIManager::initialize(const Ogre::String& appName) {
 void GUIManager::update(const Ogre::FrameEvent& evt) {
     _trayMgr->frameRenderingQueued(evt);
     updateDebugPanel();
-    updateHUD();
     handleMouseGameOver();
 }
 
@@ -93,37 +89,9 @@ bool GUIManager::isDebugPanelVisible() {
     return _debugPanel->getTrayLocation() != OgreBites::TL_NONE;
 }
 
-// HUD functions
-
-void GUIManager::hideHUD() {
-    _hudOverlay->hide();
-}
-
-void GUIManager::showHUD() {
-    _hudOverlay->show();
-}
-
-void GUIManager::buildHUD() {
-    _hudOverlay = static_cast<Ogre::Overlay*>(Ogre::OverlayManager::getSingleton().getByName("MyOverlays/HUDOverlay"));    
-}
-
-void GUIManager::updateHUD() {
-    char str[24];
-    Ogre::OverlayElement* score = _hudOverlay->getChild("HUDPanel")->getChild("Score");
-    snprintf(str, 24, "Score: %d", GameState::instance()->score);
-    score->setCaption(str);
-
-    Ogre::OverlayElement* clock = _hudOverlay->getChild("HUDPanel")->getChild("Clock");
-    int seconds = GameState::instance()->timeLeft % 60;
-    int minutes = GameState::instance()->timeLeft / 60;
-    snprintf(str, 24, "%d:%02d", minutes, seconds);
-    clock->setCaption(str);
-}
-
 // Game Over menu functions
 
 void GUIManager::showGameOverMenu() {
-    LOG("SHOWING GAME LABEL...");
     _gameOverOverlay->show();
     _trayMgr->showCursor();
 }
@@ -157,9 +125,6 @@ void GUIManager::handleMouseGameOver() {
     if (!_gameOverOverlay->isVisible()) return;
     if (InputManager::instance()->isMouseLeftClicked()) {
         if (!NetworkManager::instance()->isClient()) {
-            GameState::instance()->spawner->startGame();
-            hideGameOverMenu();
-            GameState::instance()->reset();
             GameState::instance()->start();
         }
     }

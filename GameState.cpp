@@ -1,5 +1,5 @@
 #include "GameState.h"
-
+#include "PlayerSpawner.h"
 #include "PlayerCharacter.h"
 
 namespace pt = boost::posix_time;
@@ -17,7 +17,10 @@ void GameState::reset() {
 }
 
 void GameState::start() {
+	reset();
 	_running = true;
+    spawner->startGame();
+    GUIManager::instance()->hideGameOverMenu();
 	AudioManager::instance()->playStartSound();
 	GUIManager::instance()->hideWaitingMenu();
 }
@@ -27,11 +30,7 @@ bool GameState::isRunning() {
 }
 
 void GameState::update() {
-	if (timeLeft < 1 || !_running) {
-		if (!NetworkManager::instance()->isActive()) {
-			GUIManager::instance()->showGameOverMenu();
-		}
-	} else {
+	if (!(timeLeft < 1 || !_running)) {
 		pt::ptime now = pt::second_clock::local_time();
 		pt::time_duration diff = now - _start;
 		timeLeft = DEFAULT_CLOCK - diff.total_seconds();

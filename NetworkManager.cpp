@@ -24,7 +24,6 @@ NetworkManager::NetworkManager()
 	delete particle;
  }
 
-
 void NetworkManager::sendVital()
 {
 	send(&vital->info, sizeof(VitalInfo), true);
@@ -33,14 +32,6 @@ void NetworkManager::sendVital()
 
 void NetworkManager::sendParticle()
 {
-	// if(isServer())
-	// {
-	// 	server->broadcastData();
-	// }
-	// else
-	// {
-	// 	client->sendData();
-	// }
 	particle->clear();
 }
 
@@ -76,11 +67,11 @@ void NetworkManager::startServer() {
 
 	server = new GameServer(GAME_PORT);
 	if (server->start() < 0) {
+		LOG("ERROR: SERVER FAILED TO START.");
 		return;
 	}
 
-	GUIManager::instance()->hideGameOverMenu();
-	GUIManager::instance()->showWaitingMenu();
+	GUIManager::instance()->showGameOverMenu();
 }
 
 void NetworkManager::startClient(char* host) {
@@ -90,6 +81,7 @@ void NetworkManager::startClient(char* host) {
 
 	client = new GameClient(host, GAME_PORT);
 	if (client->connect() < 0) {
+		LOG("ERROR: CLIENT FAILED TO CONNECT.");
 		return;
 	}
 
@@ -123,7 +115,6 @@ bool NetworkManager::isServer() {
 bool NetworkManager::isClient() {
 	return state == NetworkStateClient;
 }
-
 
 // sends game state to every client every HEARTBEAT_MAX_DELAY milliseconds
 void NetworkManager::broadcastHeartbeat() {
