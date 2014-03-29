@@ -9,14 +9,19 @@
 
 GameClient::GameClient(char* host, int port) {
 	// copy the string into a new chunk of memory :)
-	_host = (char*)malloc(strlen(host)+1);
-	strcpy(_host, host);
+	if (host) {
+		_host = (char*)malloc(strlen(host)+1);
+		strcpy(_host, host);
+	} else {
+		_host = NULL;
+	}
 
 	_port          = port;
 	state          = GameClientReady;
 	_tmpSendPacket = SDLNet_AllocPacket(4096);
 	_tmpRecvPacket = SDLNet_AllocPacket(4096);
 	_ackBuffer     = new AckBuffer();
+	_discoverySocket = NULL;
 }
 
 GameClient::~GameClient() {
@@ -59,6 +64,20 @@ int GameClient::connect() {
 	return 0; 
 }
 
+void GameClient::startListeningForAdvertisements() {
+	LOG("LISTENING FOR ADS");
+	state = GameClientDiscovering;
+	if (!(_discoverySocket = SDLNet_UDP_Open(DISCOVERY_PORT))) {
+		fprintf(stderr, "SDLNet_UDP_Open: %s\n", SDLNet_GetError());
+		return;
+	}
+}
+
+void GameClient::stopListeningForAdvertisements() {
+	state = GameClientReady;
+	_discoverySocket = NULL;
+}
+
 // sends a chunk of data in a UDP packet to the host
 void GameClient::sendData(void* data, int len, bool ack, AckId id, bool isResponse) {
 	// place the rest of the data
@@ -98,6 +117,7 @@ int GameClient::joinGame() {
 
 void GameClient::update() {
 	consumePackets();
+	consumeDiscoveryPackets();
 	resendExpiredAcks();
 }
 
@@ -107,7 +127,7 @@ int GameClient::consumePackets() {
 		return -1;
 	}
 
-	if (SDLNet_UDP_Recv(_socket, _tmpRecvPacket)) {
+	while (SDLNet_UDP_Recv(_socket, _tmpRecvPacket)) {
 		processPacket(_tmpRecvPacket);
 	}
 
@@ -127,17 +147,18 @@ void GameClient::resendExpiredAcks() {
 	}
 }
 
-void GameClient::handleGameStartPacket(UDPpacket* packet) {
-	LOG("STARTING GAME.");
-	GUIManager::instance()->hideWaitingMenu();
-	GameState::instance()->reset();
-	GameState::instance()->start();
-}
+void GameClient::consumeDiscoveryPackets() {
+	if (state != GameClientDiscovering) {
+		return;
+	}
 
-void GameClient::handleHeartbeatPacket(UDPpacket* packet) {
-	LOG("RECEIVED HEARTBEAT PACKET");
+	while (SDLNet_UDP_Recv(_discoverySocket, _tmpRecvPacket)) {
+		void* packetData = _tmpRecvPacket->data+MEMALIGNED_SIZE(AckHeader);
+		ServerAdvertisement* ad;
+		ad = (ServerAdvertisement*)packetData;
+		printf("RECEIVED SERVER DISCOVERY PACKET\n%s\n%s\n", ad->name, ad->description);
+	}
 }
-
 
 // This is the "meat" of the packet processing logic in GameServer
 void GameClient::processPacket(UDPpacket* packet) {

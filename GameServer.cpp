@@ -14,9 +14,10 @@ GameServer::GameServer(int port)
 	_tmpSendPacket = SDLNet_AllocPacket(4096);
 	_tmpRecvPacket = SDLNet_AllocPacket(4096);
 	_ackBuffer     = new AckBuffer();
+	_hostname      = NULL;
 	_multicastDebouncer = new Debouncer(1000, []() {
 		if (!GameState::instance()->isRunning()) {
-			NetworkManager::instance()->server->sendMulticastAdvertisement();
+			NetworkManager::instance()->server->sendAdvertisement();
 		}
 	});
 }
@@ -26,6 +27,7 @@ GameServer::~GameServer() {
 	SDLNet_FreePacket(_tmpRecvPacket);
 	delete _ackBuffer;
 	delete _multicastDebouncer;
+	if (_hostname) free(_hostname);
 }
 
 // starts the web server (opens UDP port 5555)
@@ -39,15 +41,18 @@ int GameServer::start()
 
 	state = GameServerRunning;
 
-	if (SDLNet_Init() < 0) {
-		fprintf(stderr, "SDLNet_Init: %s\n", SDLNet_GetError());
-		return -1;
-	}
-
 	if (!(_socket = SDLNet_UDP_Open(_port))) {
 		fprintf(stderr, "SDLNet_UDP_Open: %s\n", SDLNet_GetError());
 		return -1;
 	}
+
+	if (SDLNet_ResolveHost(&_udpBroadcastAddress, "255.255.255.255", DISCOVERY_PORT) == -1) {
+		fprintf(stderr, "Failed to resolve broadcast address: %s\n", SDLNet_GetError());
+		return -1;
+	}
+
+	_hostname = (char*)malloc(256);
+	gethostname(_hostname, 256);
 
 	return 0;
 }
@@ -176,8 +181,15 @@ void GameServer::handleJoinPacket(UDPpacket *packet) {
 	LOG("Assigning player id: " << id);
 }
 
-void GameServer::sendMulticastAdvertisement() {
-	
+// sends a UDP broadcast to clients in the same NAT subnet
+// that we are running a LAN game here.
+void GameServer::sendAdvertisement() {
+	LOG("BROADCASTING ADVERTISEMENT");
+	ServerAdvertisement ad;
+	strncpy(ad.magic, DISCOVERY_SIGNATURE, 5);
+	strncpy(ad.name, _hostname, 256);
+	strncpy(ad.description, "JOES COOL GAME", 256);
+	sendDataToClient(&ad, sizeof(ServerAdvertisement), &_udpBroadcastAddress, false);
 }
 
 // This is the "meat" of the packet processing logic in GameServer

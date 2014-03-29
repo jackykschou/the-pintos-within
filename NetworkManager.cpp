@@ -13,6 +13,11 @@ NetworkManager::NetworkManager()
 	player_id = -1;
 	num_player = 0;
 	_lastHeartbeat = NULL;
+
+
+	if (SDLNet_Init() < 0) {
+		fprintf(stderr, "SDLNet_Init: %s\n", SDLNet_GetError());
+	}
 }
 
  NetworkManager::~NetworkManager()
@@ -87,6 +92,15 @@ void NetworkManager::startClient(char* host) {
 
 	GUIManager::instance()->hideGameOverMenu();
 	GUIManager::instance()->showWaitingMenu();
+}
+
+void NetworkManager::startClientDiscovery() {
+	LOG("Starting client...");
+
+	state = NetworkStateClient;
+
+	client = new GameClient(NULL, GAME_PORT);
+	client->startListeningForAdvertisements();
 }
 
 void NetworkManager::update() 
