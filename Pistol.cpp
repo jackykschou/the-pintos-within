@@ -39,7 +39,6 @@ void Pistol::shoot_hook()
     AudioManager::instance()->playRifleFire(curPos);
     if(rayCallback.hasHit())
     {
-        LOG("I hit something......");
         btVector3 point = rayCallback.m_hitPointWorld;
         
         if(rayCallback.m_collisionObject->getUserPointer() != NULL)
@@ -47,7 +46,6 @@ void Pistol::shoot_hook()
             HitBox* hit_box = (HitBox*)(rayCallback.m_collisionObject->getUserPointer());
             if(hit_box->player->player_id != NetworkManager::instance()->player_id)
             {
-                 LOG("I HIT THE PLAYER!");
                 int damage_sent = hit_box->getDamage(damage);
                 uint32_t enemy_id = hit_box->player->player_id;
 
@@ -58,16 +56,15 @@ void Pistol::shoot_hook()
                 NetworkManager::instance()->particle->setBlood(point.x(), point.y() , point.z(), -cam_dir.x, -cam_dir.y, -cam_dir.z);
                 NetworkManager::instance()->sendParticle();
             }
-
-            //blood particle system
         }
         else
         {
-            btVector3 point = rayCallback.m_hitPointWorld;
             AudioManager::instance()->playBulletDirtCollision(Ogre::Vector3(point.x(), point.y(), point.z()));
+
             ParticleManager::instance()->EmitSparks(Ogre::Vector3(point.x(), point.y(), point.z()), -cam_dir);
 
-            //dust particle system
+            NetworkManager::instance()->particle->setDust(point.x(), point.y() , point.z(), -cam_dir.x, -cam_dir.y, -cam_dir.z);
+            NetworkManager::instance()->sendParticle();
         }
     }
 }

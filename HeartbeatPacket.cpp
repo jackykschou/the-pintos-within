@@ -71,10 +71,6 @@ void HeartbeatPacket::updatePlayer(HeartBeatInfo* info_p, PlayerCharacter* playe
 	// 														player->controller->controller->m_walkDirection.getZ());
 	// LOG("Velocity after: " << info_p->velocityX << " " << info_p->velocityY << " " << info_p->velocityZ);
 
-	// tran->posX = info_p->playerPosX;
-	// tran->posY = info_p->playerPosY;
-	// tran->posZ = info_p->playerPosZ;
-
 	player->controller->_ghostObject->setWorldTransform(btTransform(btQuaternion(tran->rotX, tran->rotY, tran->rotZ, tran->rotW), 
 									btVector3(info_p->playerPosX, info_p->playerPosY, info_p->playerPosZ)));
 
