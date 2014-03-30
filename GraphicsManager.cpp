@@ -1,4 +1,5 @@
 #include "GraphicsManager.h"
+#include "GuiManager.h"
 
 #define FRAME_RATE 60
 
@@ -46,13 +47,14 @@ bool GraphicsManager::frameRenderingQueued(const Ogre::FrameEvent& evt)
       //ParticleManager::instance()->EmitExplosion(Ogre::Vector3{10,25,-10});
     }
 */
-    GuiManager::instance()->Update(evt);
 
     SceneManager::instance()->updateScene(evt.timeSinceLastFrame);
 
     GameState::instance()->update();
 
     NetworkManager::instance()->update();
+
+    GuiManager::instance()->Update(evt);
 
     return true;
 }

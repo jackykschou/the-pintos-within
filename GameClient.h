@@ -2,7 +2,6 @@
 #define __GameClient_h_
 
 #include <SDL/SDL_net.h>
-#include "GUIManager.h"
 #include "AckBuffer.h"
 
 enum GameClientStatus {
@@ -17,7 +16,7 @@ class GameClient {
 public:
 
   // initializes SDL_net
-  GameClient(char* host, int port);
+  GameClient(const char* host, int port);
   ~GameClient();
 
   // open a socket and try to connect to UDP port on the server

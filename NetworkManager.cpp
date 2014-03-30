@@ -71,10 +71,10 @@ void NetworkManager::startServer() {
 		return;
 	}
 
-	GUIManager::instance()->showGameOverMenu();
+	//GUIManager::instance()->showGameOverMenu();
 }
 
-void NetworkManager::startClient(char* host) {
+void NetworkManager::startClient(const char* host) {
 	LOG("Starting client...");
 
 	state = NetworkStateClient;
@@ -85,8 +85,8 @@ void NetworkManager::startClient(char* host) {
 		return;
 	}
 
-	GUIManager::instance()->hideGameOverMenu();
-	GUIManager::instance()->showWaitingMenu();
+	//GUIManager::instance()->hideGameOverMenu();
+	//GUIManager::instance()->showWaitingMenu();
 }
 
 void NetworkManager::update() 

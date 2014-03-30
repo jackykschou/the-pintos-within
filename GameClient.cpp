@@ -7,7 +7,7 @@
 #include "VitalPacket.h"
 #include "ParticlePacket.h"
 
-GameClient::GameClient(char* host, int port) {
+GameClient::GameClient(const char* host, int port) {
 	// copy the string into a new chunk of memory :)
 	_host = (char*)malloc(strlen(host)+1);
 	strcpy(_host, host);
@@ -129,7 +129,7 @@ void GameClient::resendExpiredAcks() {
 
 void GameClient::handleGameStartPacket(UDPpacket* packet) {
 	LOG("STARTING GAME.");
-	GUIManager::instance()->hideWaitingMenu();
+	//GUIManager::instance()->hideWaitingMenu();
 	GameState::instance()->reset();
 	GameState::instance()->start();
 }

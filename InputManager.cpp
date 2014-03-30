@@ -1,5 +1,6 @@
-Uinclude "InputManager.h"
+#include "InputManager.h"
 #include "GraphicsManager.h"
+#include "GuiManager.h"
 
 InputManager::InputManager() :
 	_mInputManager(0),

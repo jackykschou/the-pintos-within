@@ -20,9 +20,9 @@ void GameState::start() {
 	reset();
 	_running = true;
     spawner->startGame();
-    GUIManager::instance()->hideGameOverMenu();
+    //GUIManager::instance()->hideGameOverMenu();
 	AudioManager::instance()->playStartSound();
-	GUIManager::instance()->hideWaitingMenu();
+	//GUIManager::instance()->hideWaitingMenu();
 }
 
 bool GameState::isRunning() {

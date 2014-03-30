@@ -6,7 +6,6 @@
 #include "GameServer.h"
 #include "GameClient.h"
 #include "GameState.h"
-#include "GUIManager.h"
 
 #include "HeartbeatPacket.h"
 #include "VitalPacket.h"
@@ -46,7 +45,7 @@ class NetworkManager : public Singleton<NetworkManager>
 	NetworkManagerState state;
 
 	void startServer();
-	void startClient(char* host);
+	void startClient(const char* host);
 	void update();
 
 	bool isActive();

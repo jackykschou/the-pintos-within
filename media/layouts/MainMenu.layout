@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<GUILayout >
+  <Window Type="DefaultWindow" Name="MainMenu" >
+    <Property Name="InheritsAlpha" Value="False" />
+    <Property Name="UnifiedMaxSize" Value="{{1,0},{1,0}}" />
+    <Property Name="UnifiedAreaRect" Value="{{0,0},{0,0},{1,0},{1,0}}" />
+    <Window Type="TaharezLook/Button" Name="MainMenu/HostGame" >
+      <Property Name="Text" Value="Host Game" />
+      <Property Name="UnifiedMaxSize" Value="{{0.33,0},{0.25,0}}" />
+      <Property Name="UnifiedAreaRect" Value="{{0.33,0},{0.0625,0},{0.66,0},{0.3125,0}}" />
+    </Window>
+    <Window Type="TaharezLook/Button" Name="MainMenu/JoinGame" >
+      <Property Name="Text" Value="Join Game" />
+      <Property Name="UnifiedMaxSize" Value="{{0.33,0},{0.25,0}}" />
+      <Property Name="UnifiedAreaRect" Value="{{0.33,0},{0.375,0},{0.66,0},{0.625,0}}" />
+    </Window>
+    <Window Type="TaharezLook/Button" Name="MainMenu/Exit" >
+      <Property Name="Text" Value="Exit" />
+      <Property Name="UnifiedMaxSize" Value="{{0.33,0},{0.25,0}}" />
+      <Property Name="UnifiedAreaRect" Value="{{0.33,0},{0.6875,0},{0.66,0},{0.9375,0}}" />
+    </Window>
+  </Window>
+</GUILayout>

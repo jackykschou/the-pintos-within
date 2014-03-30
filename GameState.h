@@ -3,7 +3,6 @@
 
 #include "common.h"
 #include "Singleton.h"
-#include "GUIManager.h"
 #include "AudioManager.h"
 
 class PlayerSpawner;

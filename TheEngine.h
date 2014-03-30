@@ -19,7 +19,7 @@
 #include "FPSCamera.h"
 #include "FPSBoxController.h"
 #include "InputManager.h"
-#include "GUIManager.h"
+#include "GuiManager.h"
 #include "AudioManager.h"
 #include "Rigidbody.h"
 #include "SphereRigidbody.h"

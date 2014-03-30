@@ -2,7 +2,6 @@
 #define __GameServer_h_
 
 #include <SDL/SDL_net.h>
-#include "GUIManager.h"
 #include "common.h"
 #include "AckBuffer.h"
 #include "Debouncer.h"

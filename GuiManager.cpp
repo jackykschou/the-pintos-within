@@ -1,41 +1,74 @@
 #include "GuiManager.h"
 
-GuiManager::GuiManager(){
+GuiManager::GuiManager():_isDisplayed{false}{
 }
 GuiManager::~GuiManager(){
+  delete _hud;
+  delete _mainMenu;
+  delete _waitingPrompt;
+  delete _hostDialog;
   CEGUI::OgreRenderer::destroySystem();
 }
-void GuiManager::Update(const Ogre::FrameEvent& event){}
+void GuiManager::Update(const Ogre::FrameEvent& event){
+  CEGUI::System::getSingleton().injectTimePulse(event.timeSinceLastFrame);
+  if(_isDisplayed){
+    if(_current==_hud){
+      PlayerCharacter* player=GameState::instance()->player;
+      if(player!=nullptr){
+        Hud* hud=static_cast<Hud*>(_hud);
+        hud->UpdateHealth(0.01f*player->health);
+      }
+    }
+  }else{
+    _isDisplayed=true;
+    //_current=_waitingPrompt;
+    _current->Display();
+  }
+}
 void GuiManager::Initialize(std::string applicationName){
   _renderer=&CEGUI::OgreRenderer::bootstrapSystem();
   CEGUI::SchemeManager::getSingleton().create( "TaharezLook.scheme" );
-  CEGUI::WindowManager& wmgr = CEGUI::WindowManager::getSingleton();
-  CEGUI::Window* myRoot = wmgr.createWindow( "DefaultWindow", "root" );
-  CEGUI::System::getSingleton().setGUISheet( myRoot );
-  CEGUI::FrameWindow* fWnd = static_cast<CEGUI::FrameWindow*>(
-      wmgr.createWindow( "TaharezLook/FrameWindow", "testWindow" ));
-  myRoot->addChildWindow( fWnd );
-  // position a quarter of the way in from the top-left of parent.
-  fWnd->setPosition( CEGUI::UVector2( CEGUI::UDim( 0.25f, 0 ), CEGUI::UDim( 0.25f, 0 ) ) );
-  // set size to be half the size of the parent
-  fWnd->setSize( CEGUI::UVector2( CEGUI::UDim( 0.5f, 0 ), CEGUI::UDim( 0.5f, 0 ) ) );
-  fWnd->setText(applicationName);
+  CEGUI::System::getSingletonPtr()->setDefaultMouseCursor("TaharezLook","MouseArrow");
 
-  CEGUI::ProgressBar* healthBar = static_cast<CEGUI::ProgressBar*>(
-      wmgr.createWindow("TaharezLook/ProgressBar","HealthBar"));
-  myRoot->addChildWindow(healthBar);
-  healthBar->setProgress(0.75f);
-  healthBar->setPosition(CEGUI::UVector2(CEGUI::UDim(0.0f, 10.0f), CEGUI::UDim( 0.92f, 0.0f)));
-  healthBar->setSize(CEGUI::UVector2(CEGUI::UDim(0.15f, 0.0f), CEGUI::UDim(0.02f, 0.0f)));
-
-  CEGUI::ProgressBar* fuelBar = static_cast<CEGUI::ProgressBar*>(
-      wmgr.createWindow("TaharezLook/ProgressBar","FuelBar"));
-  myRoot->addChildWindow(fuelBar);
-  fuelBar->setProgress(0.2f);
-  fuelBar->setPosition(CEGUI::UVector2(CEGUI::UDim(0.0f, 10.0f), CEGUI::UDim( 0.96f, 0.0f)));
-  fuelBar->setSize(CEGUI::UVector2(CEGUI::UDim(0.15f, 0.0f), CEGUI::UDim(0.02f, 0.0f)));
+  _hud=new Hud;
+  _mainMenu=new MainMenu;
+  _waitingPrompt=new WaitingPrompt;
+  _hostDialog=new HostDialog;
+  _current=_mainMenu;
 }
-CEGUI::MouseButton GuiManager::convertButton(OIS::MouseButtonID buttonId){
+bool GuiManager::IsExpectingMouse(){
+  return _current!=_hud;
+}
+bool GuiManager::IsExpectingKeyboard(){
+  return _current==_hostDialog;
+}
+bool GuiManager::HostGame(const CEGUI::EventArgs& e){
+  _current=_waitingPrompt;
+  _current->Display();
+  LOG("STARTING IN SERVER MODE");
+  NetworkManager::instance()->startServer();
+  return false;
+}
+bool GuiManager::JoinGame(const CEGUI::EventArgs& e){
+  _current=_hostDialog;
+  _current->Display();
+  return false;
+}
+bool GuiManager::Exit(const CEGUI::EventArgs& e){
+  GraphicsManager::instance()->stopRendering();
+  return false;
+}
+bool GuiManager::Start(const CEGUI::EventArgs& e){
+  return false;
+}
+bool GuiManager::Connect(const CEGUI::EventArgs& e){
+  LOG("STARTING IN CLIENT MODE");
+  NetworkManager::instance()->startClient(static_cast<HostDialog*>(_hostDialog)->ReadHost());
+  _current=_waitingPrompt;
+  _current->Display();
+  return false;
+}
+CEGUI::MouseButton GuiManager::TranslateButton(OIS::MouseButtonID buttonId){
   switch(buttonId){
     case OIS::MB_Left:
 	  return CEGUI::LeftButton;
@@ -46,4 +79,50 @@ CEGUI::MouseButton GuiManager::convertButton(OIS::MouseButtonID buttonId){
     default:
       return CEGUI::LeftButton;
   }
+}
+
+Hud::Hud():Gui("Hud.layout"){/*
+  _healthBar = static_cast<CEGUI::ProgressBar*>(
+      CEGUI::WindowManager::getSingletonPtr()->createWindow("TaharezLook/ProgressBar","HealthBar"));
+  _root->addChildWindow(_healthBar);
+  _healthBar->setPosition(CEGUI::UVector2(CEGUI::UDim(0.0f, 10.0f), CEGUI::UDim( 0.92f, 0.0f)));
+  _healthBar->setSize(CEGUI::UVector2(CEGUI::UDim(0.15f, 0.0f), CEGUI::UDim(0.02f, 0.0f)));
+
+  _fuelBar = static_cast<CEGUI::ProgressBar*>(
+      CEGUI::WindowManager::getSingletonPtr()->createWindow("TaharezLook/ProgressBar","FuelBar"));
+  _root->addChildWindow(_fuelBar);
+  _fuelBar->setPosition(CEGUI::UVector2(CEGUI::UDim(0.0f, 10.0f), CEGUI::UDim( 0.96f, 0.0f)));
+  _fuelBar->setSize(CEGUI::UVector2(CEGUI::UDim(0.15f, 0.0f), CEGUI::UDim(0.02f, 0.0f)));
+*/
+}
+void Hud::UpdateHealth(float percentHealth){
+  _healthBar->setProgress(0.75f);
+}
+void Hud::UpdateFuel(float percentFuel){
+  _fuelBar->setProgress(0.2f);
+}
+MainMenu::MainMenu():Gui("MainMenu.layout"){
+  _hostGame=static_cast<CEGUI::PushButton*>(_root->getChild("MainMenu/HostGame"));
+  _joinGame=static_cast<CEGUI::PushButton*>(_root->getChild("MainMenu/JoinGame"));
+  _exit=static_cast<CEGUI::PushButton*>(_root->getChild("MainMenu/Exit"));
+
+  _hostGame->subscribeEvent(CEGUI::PushButton::EventClicked,CEGUI::Event::Subscriber(&GuiManager::HostGame,GuiManager::instance()));
+  _joinGame->subscribeEvent(CEGUI::PushButton::EventClicked,CEGUI::Event::Subscriber(&GuiManager::JoinGame,GuiManager::instance()));
+  _exit->subscribeEvent(CEGUI::PushButton::EventClicked,CEGUI::Event::Subscriber(&GuiManager::Exit,GuiManager::instance()));
+}
+WaitingPrompt::WaitingPrompt():Gui("WaitingPrompt.layout"){
+  _start=static_cast<CEGUI::PushButton*>(_root->getChild("WaitingPrompt/Start"));
+  _start->disable();
+}
+HostDialog::HostDialog():Gui("HostDialog.layout"){
+  _host=static_cast<CEGUI::Editbox*>(_root->getChild("HostDialog/HostName"));
+  _connect=static_cast<CEGUI::PushButton*>(_root->getChild("HostDialog/Connect"));
+  _connect->subscribeEvent(CEGUI::PushButton::EventClicked,CEGUI::Event::Subscriber(&GuiManager::Connect,GuiManager::instance()));
+}
+const char* HostDialog::ReadHost(){
+  return _host->getText().c_str();
+}
+Gui::Gui(std::string layoutFileName):_root(CEGUI::WindowManager::getSingletonPtr()->loadWindowLayout(layoutFileName)){}
+void Gui::Display(){
+  CEGUI::System::getSingleton().setGUISheet(_root);
 }

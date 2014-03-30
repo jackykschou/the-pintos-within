@@ -15,9 +15,9 @@ void initializeGame()
     ResourcesManager::instance()->initialize(resourcesCfg, pluginsCfg);
     AudioManager::instance()->initialize();
     InputManager::instance()->initialize();
-    GUIManager::instance()->initialize(APPLICATION_NAME);
     PhysicsManager::instance()->initialize();
     SceneManager::instance()->initialize();
+    GuiManager::instance()->Initialize(APPLICATION_NAME);
 }
 
 void startGame()
@@ -28,7 +28,7 @@ void startGame()
 int main(int argc, char *argv[])
 {
     initializeGame();
-
+/*
     if (argc == 3 && strcmp(argv[1], "-c") == 0) {
         LOG("STARTING IN CLIENT MODE");
         NetworkManager::instance()->startClient(argv[2]);
@@ -36,7 +36,7 @@ int main(int argc, char *argv[])
         LOG("STARTING IN SERVER MODE");
         NetworkManager::instance()->startServer();
     }
-
+*/
     startGame();
 
     return 0;
