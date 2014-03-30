@@ -12,16 +12,21 @@ GuiManager::~GuiManager(){
 void GuiManager::Update(const Ogre::FrameEvent& event){
   CEGUI::System::getSingleton().injectTimePulse(event.timeSinceLastFrame);
   if(_isDisplayed){
-    if(_current==_hud){
+    if(_current==_hud||GameState::instance()->isRunning()){
+      if(_current!=_hud){
+        _current=_hud;
+        _current->Display();
+      }
       PlayerCharacter* player=GameState::instance()->player;
       if(player!=nullptr){
         Hud* hud=static_cast<Hud*>(_hud);
         hud->UpdateHealth(0.01f*player->health);
       }
-    }
+    }//else if(_current==WaitingPrompt&&){
+      //EnableStart();
+    //}
   }else{
     _isDisplayed=true;
-    //_current=_waitingPrompt;
     _current->Display();
   }
 }
@@ -50,6 +55,7 @@ bool GuiManager::HostGame(const CEGUI::EventArgs& e){
   return false;
 }
 bool GuiManager::JoinGame(const CEGUI::EventArgs& e){
+  static_cast<WaitingPrompt*>(_waitingPrompt)->RemoveStart();
   _current=_hostDialog;
   _current->Display();
   return false;
@@ -59,6 +65,10 @@ bool GuiManager::Exit(const CEGUI::EventArgs& e){
   return false;
 }
 bool GuiManager::Start(const CEGUI::EventArgs& e){
+  _current=_hud;
+  _current->Display();
+  LOG("STARTING GAME.");
+  GameState::instance()->start();
   return false;
 }
 bool GuiManager::Connect(const CEGUI::EventArgs& e){
@@ -67,6 +77,9 @@ bool GuiManager::Connect(const CEGUI::EventArgs& e){
   _current=_waitingPrompt;
   _current->Display();
   return false;
+}
+void GuiManager::EnableStart(){
+  static_cast<WaitingPrompt*>(_waitingPrompt)->EnableStart();
 }
 CEGUI::MouseButton GuiManager::TranslateButton(OIS::MouseButtonID buttonId){
   switch(buttonId){
@@ -112,7 +125,14 @@ MainMenu::MainMenu():Gui("MainMenu.layout"){
 }
 WaitingPrompt::WaitingPrompt():Gui("WaitingPrompt.layout"){
   _start=static_cast<CEGUI::PushButton*>(_root->getChild("WaitingPrompt/Start"));
+  _start->subscribeEvent(CEGUI::PushButton::EventClicked,CEGUI::Event::Subscriber(&GuiManager::Start,GuiManager::instance()));
   _start->disable();
+}
+void WaitingPrompt::EnableStart(){
+  _start->enable();
+}
+void WaitingPrompt::RemoveStart(){
+  _root->removeChildWindow(_start);
 }
 HostDialog::HostDialog():Gui("HostDialog.layout"){
   _host=static_cast<CEGUI::Editbox*>(_root->getChild("HostDialog/HostName"));

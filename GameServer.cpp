@@ -4,6 +4,7 @@
 #include "HeartbeatPacket.h"
 #include "VitalPacket.h"
 #include "ParticlePacket.h"
+#include "GuiManager.h"
 
 namespace pt = boost::posix_time;
 
@@ -174,6 +175,7 @@ void GameServer::handleJoinPacket(UDPpacket *packet) {
 	sendDataToClient(&info, sizeof(PlayerIdInfo), &ip, true);
 
 	LOG("Assigning player id: " << id);
+        GuiManager::instance()->EnableStart();
 }
 
 void GameServer::sendMulticastAdvertisement() {

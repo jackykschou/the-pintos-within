@@ -186,9 +186,10 @@ void GameClient::processPacket(UDPpacket* packet) {
 			hinfo =  (HeartBeatInfo*) packetData;
 			NetworkManager::instance()->receiveHeartbeat(hinfo);
 			if (!GameState::instance()->isRunning()) {
-		        GameState::instance()->reset();
-	            GameState::instance()->start();
-	        }
+				LOG("STARTING GAME.");
+		        	GameState::instance()->reset();
+	           		GameState::instance()->start();
+	        	}
 			break;
 		case PARTICLEPACK:
 			ParticleInfo* particleinfo;

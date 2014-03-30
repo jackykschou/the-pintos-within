@@ -17,6 +17,7 @@ class GuiManager:public Singleton<GuiManager>{
   public:
     GuiManager();
     virtual ~GuiManager();
+    void EnableStart();
     void Update(const Ogre::FrameEvent& event);
     void Initialize(std::string applicationName);
     bool IsExpectingMouse();
@@ -64,6 +65,8 @@ class Hud:public Gui{
 class WaitingPrompt:public Gui{
   public:
     WaitingPrompt();
+    void EnableStart();
+    void RemoveStart();
   private:
     CEGUI::PushButton* _start;
 };
