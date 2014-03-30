@@ -134,7 +134,7 @@ PlayerCharacter::PlayerCharacter(bool is_yourself_p, Scene* scene, std::string m
 	body_box = new HitBox(this, "Hitbox.001.mesh",
 							0, 0, 0, 
 							0, 0, 0, 1,
-							1, 1.16851, 1, 2.0);
+							1, 1.16851, 1, 1.0);
 
 	weapons[0] = pistol;
 	current_weapon = pistol;
@@ -268,7 +268,7 @@ void PlayerCharacter::update()
 			if(!is_dead && health_regen_debouncer->run(NULL))
 				regen_health();
 
-			if(controller->is_jet_packing && !controller->controller->isJumping())
+			if(controller->is_jet_packing && InputManager::instance()->isMouseRightDown())
 			{
 				is_jet_packing = true;
 				jet_pack_sound_debouncer->run();

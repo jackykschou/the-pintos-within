@@ -29,10 +29,9 @@ void Rigidbody::update()
 void Rigidbody::updateRigidbodyFromTransform () 
 {
 	btTransform trans;
-	rigidbody->getMotionState()->getWorldTransform(trans);
 	trans.setOrigin(btVector3 (_transform->posX, _transform->posY, _transform->posZ));
 	trans.setRotation(btQuaternion(_transform->rotX, _transform->rotY, _transform->rotZ, _transform->rotW));
-	rigidbody->getMotionState()->setWorldTransform(trans);
+	rigidbody->setCenterOfMassTransform(trans);
 }
 
 void Rigidbody::updateTransformFromRigidbody () 

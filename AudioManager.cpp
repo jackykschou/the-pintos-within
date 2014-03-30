@@ -38,7 +38,9 @@ void AudioManager::initialize() {
 
 	_jetpack = AudioManager::instance()->loadAudioFile("media/sounds/Jetpack1.wav");
 
-	_death = AudioManager::instance()->loadAudioFile("media/sounds/Death.wav");
+	_death = AudioManager::instance()->loadAudioFile("media/sounds/Death1.wav");
+
+	_reload = AudioManager::instance()->loadAudioFile("media/sounds/Reload.wav");
 }
 
 // returns an audioFileKey that references the loaded resource
@@ -113,6 +115,10 @@ void AudioManager::playWalkStep(Ogre::Vector3 v) {
 
 void AudioManager::playJetPack(Ogre::Vector3 v) {
 	play3DSound(_jetpack, 0, v);
+}
+
+void AudioManager::playReload(Ogre::Vector3 v) {
+	play3DSound(_reload, 0, v);
 }
 
 void AudioManager::playDeath(Ogre::Vector3 v) {

@@ -92,7 +92,7 @@ void GameClient::sendData(void* data, int len, bool ack, AckId id, bool isRespon
 	// inject the ACK info if necessary
 	if (ack && id == 0) {
 		ackPack.id = _ackBuffer->injectAck(_tmpSendPacket, _srvadd);
-		LOG("INJECTING ACK HEADER INTO PACKET " << ackPack.id);
+		// LOG("INJECTING ACK HEADER INTO PACKET " << ackPack.id);
 	} else {
 		ackPack.id = id;
 	}

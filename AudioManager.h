@@ -27,6 +27,7 @@ class AudioManager : public Singleton<AudioManager> {
     void playDeath(Ogre::Vector3 v);
     void playWalkStep(Ogre::Vector3 v);
     void playJetPack(Ogre::Vector3 v);
+    void playReload(Ogre::Vector3 v);
 
   private:
   	std::vector<Mix_Chunk*> _loadedFiles;
@@ -38,6 +39,7 @@ class AudioManager : public Singleton<AudioManager> {
     AudioFile _death;
     AudioFile _footstep[7];
     AudioFile _jetpack;
+    AudioFile _reload;
 };
 
 #endif

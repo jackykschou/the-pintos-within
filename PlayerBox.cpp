@@ -28,7 +28,7 @@ PlayerBox::PlayerBox(PlayerCharacter* player_p, std::string mesh_name,
 	Ogre::Vector3 box_half_size = entity->getBoundingBox().getHalfSize();
 
 	btVector3 inertia(0, 0, 0);
-	float mass = 0.0f;
+	float mass = 0;
 
 	btCollisionShape* collisionShape = new btBoxShape(btVector3(box_half_size.x * scaleX, 
 		box_half_size.y * scaleY, box_half_size.z * scaleZ));

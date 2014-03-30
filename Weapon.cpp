@@ -105,6 +105,7 @@ void Weapon::reload()
 		(current_ammo != 0) && !player->is_dead && !is_shooting)
 	{
 		LOG("Reloading...");
+		AudioManager::instance()->playReload(Ogre::Vector3(player->transform->posX, player->transform->posY, player->transform->posZ));
 		reload_timer = 0;
 		reload_animation_state->setTimePosition(0);
 		is_reloading = true;

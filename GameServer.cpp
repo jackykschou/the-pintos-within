@@ -137,7 +137,7 @@ void GameServer::resendExpiredAcks() {
 	for (iter = _ackBuffer->buffer.begin(); iter != _ackBuffer->buffer.end();) {
 		Ack* ack = iter->second;
 		if (ack->isExpired()) {
-			LOG("ACK EXPIRED. RESENDING REQUEST.");
+			// LOG("ACK EXPIRED. RESENDING REQUEST.");
 			sendDataToClient(ack->packetData, ack->packetLen, &ack->address, true, ack->id);
 			ack->reset();
 		} else {
@@ -214,12 +214,12 @@ void GameServer::processPacket(UDPpacket* packet) {
 	if (ackHeader->isResponse) {
 		// woot. expire our ACK.
 		_ackBuffer->forgetAck(ackHeader->id);
-		LOG("ACK RECEIVED BY HOST: "<<ackHeader->id);
+		// LOG("ACK RECEIVED BY HOST: "<<ackHeader->id);
 		return;
 	} else if (ackHeader->ackRequired) {
 		// fire off the ACK!
 		sendDataToClient((void*)"A", 2, &(packet->address), false, ackHeader->id, true);
-		LOG("ACK REPLIED BY HOST: "<<ackHeader->id);
+		// LOG("ACK REPLIED BY HOST: "<<ackHeader->id);
 	}
 
 	switch (packetType) {
