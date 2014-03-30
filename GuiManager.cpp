@@ -10,25 +10,39 @@ GuiManager::~GuiManager(){
   CEGUI::OgreRenderer::destroySystem();
 }
 void GuiManager::Update(const Ogre::FrameEvent& event){
-  CEGUI::System::getSingleton().injectTimePulse(event.timeSinceLastFrame);
   if(_isDisplayed){
     if(_current==_hud||GameState::instance()->isRunning()){
       if(_current!=_hud){
         _current=_hud;
         _current->Display();
+        CEGUI::MouseCursor::getSingletonPtr()->hide();
       }
       PlayerCharacter* player=GameState::instance()->player;
       if(player!=nullptr){
         Hud* hud=static_cast<Hud*>(_hud);
-        hud->UpdateHealth(0.01f*player->health);
+        hud->UpdateHealth(0.01f*player->health>=0?0.01f*player->health:0.0f);
+        FPSBoxController* controller=player->controller;
+        if(controller!=nullptr){
+          hud->UpdateFuel(controller->jet_pack_current/controller->jet_pack_max);
+        }
+        Weapon* weapon=player->current_weapon;
+        if(weapon!=nullptr){
+          hud->UpdateAmmoCount(weapon->current_mag_count);
+          hud->UpdateMagCount(weapon->current_ammo/weapon->max_mag_cap);
+        }
       }
-    }//else if(_current==WaitingPrompt&&){
-      //EnableStart();
-    //}
+    }else{
+     // Ogre::Root* r=Ogre::Root::getSingletonPtr();
+     // auto i=r->getSceneManagerIterator();
+     // for(auto& m:i){
+     //   m.second->getCurrentViewport()->clear();
+     // }
+    }
   }else{
     _isDisplayed=true;
     _current->Display();
   }
+  CEGUI::System::getSingleton().injectTimePulse(event.timeSinceLastFrame);
 }
 void GuiManager::Initialize(std::string applicationName){
   _renderer=&CEGUI::OgreRenderer::bootstrapSystem();
@@ -67,6 +81,7 @@ bool GuiManager::Exit(const CEGUI::EventArgs& e){
 bool GuiManager::Start(const CEGUI::EventArgs& e){
   _current=_hud;
   _current->Display();
+  CEGUI::MouseCursor::getSingletonPtr()->hide();
   LOG("STARTING GAME.");
   GameState::instance()->start();
   return false;
@@ -94,25 +109,23 @@ CEGUI::MouseButton GuiManager::TranslateButton(OIS::MouseButtonID buttonId){
   }
 }
 
-Hud::Hud():Gui("Hud.layout"){/*
-  _healthBar = static_cast<CEGUI::ProgressBar*>(
-      CEGUI::WindowManager::getSingletonPtr()->createWindow("TaharezLook/ProgressBar","HealthBar"));
-  _root->addChildWindow(_healthBar);
-  _healthBar->setPosition(CEGUI::UVector2(CEGUI::UDim(0.0f, 10.0f), CEGUI::UDim( 0.92f, 0.0f)));
-  _healthBar->setSize(CEGUI::UVector2(CEGUI::UDim(0.15f, 0.0f), CEGUI::UDim(0.02f, 0.0f)));
-
-  _fuelBar = static_cast<CEGUI::ProgressBar*>(
-      CEGUI::WindowManager::getSingletonPtr()->createWindow("TaharezLook/ProgressBar","FuelBar"));
-  _root->addChildWindow(_fuelBar);
-  _fuelBar->setPosition(CEGUI::UVector2(CEGUI::UDim(0.0f, 10.0f), CEGUI::UDim( 0.96f, 0.0f)));
-  _fuelBar->setSize(CEGUI::UVector2(CEGUI::UDim(0.15f, 0.0f), CEGUI::UDim(0.02f, 0.0f)));
-*/
+Hud::Hud():Gui("Hud.layout"){
+  _healthBar=static_cast<CEGUI::ProgressBar*>(_root->getChild("Hud/HealthBar"));
+  _fuelBar=static_cast<CEGUI::ProgressBar*>(_root->getChild("Hud/FuelBar"));
+  _ammoCount=_root->getChild("Hud/AmmoCount");
+  _magCount=_root->getChild("Hud/MagCount");
 }
 void Hud::UpdateHealth(float percentHealth){
-  _healthBar->setProgress(0.75f);
+  _healthBar->setProgress(percentHealth);
 }
 void Hud::UpdateFuel(float percentFuel){
-  _fuelBar->setProgress(0.2f);
+  _fuelBar->setProgress(percentFuel);
+}
+void Hud::UpdateAmmoCount(int ammoCount){
+  _ammoCount->setText(std::to_string(ammoCount));
+}
+void Hud::UpdateMagCount(int magCount){
+  _magCount->setText(std::to_string(magCount));
 }
 MainMenu::MainMenu():Gui("MainMenu.layout"){
   _hostGame=static_cast<CEGUI::PushButton*>(_root->getChild("MainMenu/HostGame"));
@@ -145,4 +158,7 @@ const char* HostDialog::ReadHost(){
 Gui::Gui(std::string layoutFileName):_root(CEGUI::WindowManager::getSingletonPtr()->loadWindowLayout(layoutFileName)){}
 void Gui::Display(){
   CEGUI::System::getSingleton().setGUISheet(_root);
+}
+void Gui::Render(){
+  _root->render();
 }

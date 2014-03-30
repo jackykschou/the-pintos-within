@@ -41,6 +41,7 @@ class GuiManager:public Singleton<GuiManager>{
 class Gui{
   public:
     void Display();
+    void Render();
   protected:
     Gui(std::string layoutFileName);
     CEGUI::Window* _root;
@@ -58,9 +59,13 @@ class Hud:public Gui{
 	Hud();
     void UpdateHealth(float percentHealth);
     void UpdateFuel(float percentFuel);
+    void UpdateAmmoCount(int ammoCount);
+    void UpdateMagCount(int magCount);
   private:
     CEGUI::ProgressBar* _healthBar;
     CEGUI::ProgressBar* _fuelBar;
+    CEGUI::Window* _ammoCount;
+    CEGUI::Window* _magCount;
 };
 class WaitingPrompt:public Gui{
   public:
