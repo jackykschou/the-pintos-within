@@ -109,9 +109,12 @@ void VitalPacket::updatePacket(VitalInfo* info_p)
 {
 	if(hasDamage(info_p))
 	{
-		if(GameState::instance()->players[info_p->damaged_player_id] &&
+		LOG("Receiving damage");
+		if(info_p->damaged_player_id == NetworkManager::instance()->player_id &&
+			GameState::instance()->players[info_p->damaged_player_id] &&
 			!GameState::instance()->players[info_p->damaged_player_id]->is_dead)
 		{
+			LOG("Receiving damage2....");
 			GameState::instance()->players[info_p->damaged_player_id]->health -= info_p->damage;
 		}
 	}

@@ -6,6 +6,7 @@
 
 enum GameClientStatus {
   GameClientReady,
+  GameClientDiscovering,
   GameClientConnecting,
   GameClientRunning,
   GameClientStopped
@@ -21,6 +22,10 @@ public:
 
   // open a socket and try to connect to UDP port on the server
   int connect();
+
+  // let a client temporarily listen on a socket for advertisement
+  void startListeningForAdvertisements();
+  void stopListeningForAdvertisements();
 
   // the state of the client connection
   GameClientStatus state;
@@ -45,6 +50,9 @@ private:
   // the UDP socket we will be recv and sending through
   UDPsocket _socket;
 
+  // the UDP socket we will receive broadcasts from
+  UDPsocket _discoverySocket;
+
   // a temporarily allocated packet for sending on the wire
   UDPpacket* _tmpSendPacket;
 
@@ -66,14 +74,7 @@ private:
   // resend any ACK-requiring packets that we did not hear back about
   void resendExpiredAcks();
 
-  // called when the server acknowledges that a client has joined
-  void handleJoinAckPacket(UDPpacket* packet);
-
-  // called when the server decides to start the game
-  void handleGameStartPacket(UDPpacket* packet);
-
-  // called on every heartbeat packet (~6 times per second)
-  void handleHeartbeatPacket(UDPpacket* packet);
+  void consumeDiscoveryPackets();
 };
 
 #endif

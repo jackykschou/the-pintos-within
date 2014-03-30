@@ -41,8 +41,8 @@ public:
   // sends a chunk of data to a single client
   void sendDataToClient(void* data, int len, IPaddress* ip, bool ack, AckId id=0, bool isResponse=false);
 
-  // advertise ourselves as a game server over ipv4 multicast
-  void sendMulticastAdvertisement();
+  // advertise ourselves as a game server over UDP broadcast
+  void sendAdvertisement();
 
 private:
   // the socket that is bound
@@ -51,7 +51,14 @@ private:
   // the UDP port
   int _port;
 
+  // the UDP broadcast address, used for multicast advertisement
+  IPaddress _udpBroadcastAddress;
+
+  // Used to delay calls to multicast advertisement to once per minute
   Debouncer *_multicastDebouncer;
+
+  // The local hostname, used for server advertisement
+  char* _hostname;
 
   // list of connected clients (addresses)
   std::vector<IPaddress> _clients;

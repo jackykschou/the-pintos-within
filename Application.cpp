@@ -29,9 +29,15 @@ int main(int argc, char *argv[])
 {
     initializeGame();
 /*
-    if (argc == 3 && strcmp(argv[1], "-c") == 0) {
-        LOG("STARTING IN CLIENT MODE");
-        NetworkManager::instance()->startClient(argv[2]);
+
+    if (argc > 1 && strcmp(argv[1], "-c") == 0) {
+        if (argc > 2) {
+            LOG("STARTING IN CLIENT MODE");
+            NetworkManager::instance()->startClient(argv[2]);
+        } else {
+            LOG("STARTING IN CLIENT DISCOVERY MODE");
+            NetworkManager::instance()->startClientDiscovery();
+        }
     } else { // if (argc == 2 && strcmp(argv[1], "-h") == 0) {
         LOG("STARTING IN SERVER MODE");
         NetworkManager::instance()->startServer();
@@ -41,3 +47,4 @@ int main(int argc, char *argv[])
 
     return 0;
 }
+

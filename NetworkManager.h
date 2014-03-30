@@ -11,14 +11,23 @@
 #include "VitalPacket.h"
 #include "ParticlePacket.h"
 
+#define DISCOVERY_PORT 9999
 #define GAME_PORT 5555
 #define HEARTBEATS_PER_SEC 10
 #define HEARTBEAT_MAX_DELAY 1000.0f/HEARTBEATS_PER_SEC
+#define DISCOVERY_SIGNATURE "JOEV"
 
 struct PlayerIdInfo
 {
 	char type;
 	uint32_t player_id;
+};
+
+struct ServerAdvertisement
+{
+	char magic[5];
+	char name[256];
+	char description[256];
 };
 
 enum NetworkManagerState 
@@ -46,6 +55,7 @@ class NetworkManager : public Singleton<NetworkManager>
 
 	void startServer();
 	void startClient(const char* host);
+	void startClientDiscovery();
 	void update();
 
 	bool isActive();

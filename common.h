@@ -12,6 +12,7 @@
 #include <sstream>
 #include <unistd.h>
 #include <cstdint>
+#include <functional>
 
 #include <algorithm>
 #include <random>

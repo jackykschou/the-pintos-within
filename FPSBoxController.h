@@ -34,6 +34,7 @@ public:
 	double jet_pack_max;
 	double jet_pack_current;
 
+	bool is_jet_started;
 	bool is_jet_packing;
 	bool is_walking;
 	bool is_running;

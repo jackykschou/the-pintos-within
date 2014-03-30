@@ -9,6 +9,7 @@ FPSBoxController::FPSBoxController(bool is_yourself_p, GameObject* gameObject, s
 	jet_pack_max = 5000;
 	jet_pack_current = jet_pack_max;
 
+	is_jet_started = false;
 	is_jet_packing = false;
 	is_walking = false;
 
@@ -99,16 +100,26 @@ void FPSBoxController::detectInput()
 				is_walking = true;
 		}
 
-		if(InputManager::instance()->isMouseRightDown() && (jet_pack_current > 10))
+		if(jet_pack_current < 100)
+		{
+			is_jet_started = false;
+			jet_pack_current = ((jet_pack_current + 1) >= jet_pack_max) ? (jet_pack_max) : (jet_pack_current + 1);
+			movement_speed_multiplier = 1.0f;
+		}
+		else if(jet_pack_current >= 100 && InputManager::instance()->isMouseRightClicked())
+		{
+			is_jet_started = true;
+		}
+		else if(InputManager::instance()->isMouseRightDown() && is_jet_started)
 		{
 			jet_pack_current -= 10;
 			is_jet_packing = true;
 			jetTempDir += btVector3(0,JET_PACK_SPEED,0);
 			movement_speed_multiplier = 2.0f;
 		}
-		else if(jet_pack_current < jet_pack_max)
+		else
 		{
-			jet_pack_current = ((jet_pack_current + 2) >= jet_pack_max) ? (jet_pack_max) : (jet_pack_current + 2);
+			jet_pack_current = ((jet_pack_current + 1) >= jet_pack_max) ? (jet_pack_max) : (jet_pack_current + 1);
 			movement_speed_multiplier = 1.0f;
 		}
 

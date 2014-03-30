@@ -1,5 +1,7 @@
 #include "HitBox.h"
 
+#include "PhysicsManager.h"
+
 HitBox::HitBox(PlayerCharacter* player_p, std::string mesh_name,
 	float posX, float posY, float posZ, float rotX, float rotY, float rotZ, float rotW,
 	float scaleX, float scaleY, float scaleZ, float damage_multiplier_p): 
@@ -8,6 +10,8 @@ HitBox::HitBox(PlayerCharacter* player_p, std::string mesh_name,
 {
 	player = player_p;
 	damage_multiplier = damage_multiplier_p;
+	// ((Rigidbody*)rigidbody)->rigidbody->setCollisionFlags(((Rigidbody*)rigidbody)->rigidbody->getCollisionFlags() | 
+	// 	CollisionObject::CF_KINEMATIC_OBJECT);;
 	((Rigidbody*)rigidbody)->rigidbody->setUserPointer(this);
 }
 
