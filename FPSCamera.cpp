@@ -103,7 +103,8 @@ void FPSCamera::updateTransformRotation()
 
 	Ogre::Vector3 to = Ogre::Vector3(_transform->posX, _transform->posY, _transform->posZ) + (dir * 70);
 
-	camera->setPosition(to.x + bobOffsetX, to.y + 35 + bobOffsetY, to.z + bobOffsetZ);
+	Ogre::Vector3 cam_dir = camera->getDirection();
+	camera->setPosition(to.x + bobOffsetX, to.y + 35 + bobOffsetY + (-cam_dir.y * 50), to.z + bobOffsetZ);
 
 
 	if(evt && node)
