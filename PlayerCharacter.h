@@ -9,6 +9,7 @@
 #include "Mesh.h"
 #include "Weapon.h"
 #include "Debouncer.h"
+#include "GuiManager.h"
 // #include "HitBox.h"
 
 #include <OgreAnimationState.h>

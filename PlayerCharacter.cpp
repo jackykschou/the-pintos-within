@@ -237,6 +237,7 @@ void PlayerCharacter::update()
 				GameState::instance()->player = NULL;
 				scene->removeGameObject((GameObject*)this);
 				delete this;
+		                GuiManager::instance()->Reinitialize();
 				return;
 			}
 		}

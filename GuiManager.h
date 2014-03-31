@@ -12,7 +12,6 @@
 #include "PlayerCharacter.h"
 
 class Gui;
-class Hud;
 class GuiManager:public Singleton<GuiManager>{
   public:
     GuiManager();
@@ -28,20 +27,22 @@ class GuiManager:public Singleton<GuiManager>{
     bool Start(const CEGUI::EventArgs& e);
     bool Connect(const CEGUI::EventArgs& e);
     static CEGUI::MouseButton TranslateButton(OIS::MouseButtonID buttonId);
+    void Reinitialize();
   private:
     CEGUI::MouseButton convertButton(OIS::MouseButtonID buttonId);
     CEGUI::OgreRenderer* _renderer;
     bool _isDisplayed;
-    Gui* _current;
     Gui* _hud;
     Gui* _mainMenu;
     Gui* _waitingPrompt;
     Gui* _hostDialog;
+    Gui* _current;
 };
 class Gui{
   public:
+    Gui();
+    virtual ~Gui(); 
     void Display();
-    void Render();
   protected:
     Gui(std::string layoutFileName);
     CEGUI::Window* _root;

@@ -31,12 +31,6 @@ void GuiManager::Update(const Ogre::FrameEvent& event){
           hud->UpdateMagCount(weapon->current_ammo/weapon->max_mag_cap);
         }
       }
-    }else{
-     // Ogre::Root* r=Ogre::Root::getSingletonPtr();
-     // auto i=r->getSceneManagerIterator();
-     // for(auto& m:i){
-     //   m.second->getCurrentViewport()->clear();
-     // }
     }
   }else{
     _isDisplayed=true;
@@ -54,6 +48,10 @@ void GuiManager::Initialize(std::string applicationName){
   _waitingPrompt=new WaitingPrompt;
   _hostDialog=new HostDialog;
   _current=_mainMenu;
+}
+void GuiManager::Reinitialize(){
+  CEGUI::OgreRenderer::destroySystem();
+  Initialize("");
 }
 bool GuiManager::IsExpectingMouse(){
   return _current!=_hud;
@@ -156,9 +154,9 @@ const char* HostDialog::ReadHost(){
   return _host->getText().c_str();
 }
 Gui::Gui(std::string layoutFileName):_root(CEGUI::WindowManager::getSingletonPtr()->loadWindowLayout(layoutFileName)){}
+Gui::~Gui(){
+  _root->destroy();
+}
 void Gui::Display(){
   CEGUI::System::getSingleton().setGUISheet(_root);
-}
-void Gui::Render(){
-  _root->render();
 }
