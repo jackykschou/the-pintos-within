@@ -41,7 +41,6 @@ class GuiManager:public Singleton<GuiManager>{
 class Gui{
   public:
     Gui();
-    virtual ~Gui(); 
     void Display();
   protected:
     Gui(std::string layoutFileName);
