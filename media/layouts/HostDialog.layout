@@ -17,13 +17,13 @@
       <Property Name="UnifiedAreaRect" Value="{{0.375,0},{0.15,0},{0.625,0},{0.3,0}}" />
     </Window>
     <Window Type="TaharezLook/Editbox" Name="HostDialog/HostName" >
-      <Property Name="Text" Value="Host" />
+      <Property Name="Text" Value="Server" />
       <Property Name="MaxTextLength" Value="999" />
       <Property Name="UnifiedMaxSize" Value="{{0.25,0},{0.125,0}}" />
       <Property Name="UnifiedAreaRect" Value="{{0.375,0},{0.4,0},{0.625,0},{0.45,0}}" />
     </Window>
     <Window Type="TaharezLook/Editbox" Name="HostDialog/PlayerName" >
-      <Property Name="Text" Value="Name" />
+      <Property Name="Text" Value="Your Name" />
       <Property Name="MaxTextLength" Value="999" />
       <Property Name="UnifiedMaxSize" Value="{{0.25,0},{0.125,0}}" />
       <Property Name="UnifiedAreaRect" Value="{{0.375,0},{0.5,0},{0.625,0},{0.55,0}}" />

@@ -182,21 +182,21 @@ char* trim(const char* str) {
 }
 
 bool HostDialog::NameCaretMoved(const CEGUI::EventArgs& e){
-  if (strcmp(ReadName(), "Name") == 0) {
+  if (strcmp(ReadName(), "Your Name") == 0) {
     _name->setText("");
   }
 
   if (strcmp(trim(ReadHost()), "") == 0) {
-    _host->setText("Host");
+    _host->setText("Server");
   }
 }
 
 bool HostDialog::HostCaretMoved(const CEGUI::EventArgs& e){
   if (strcmp(trim(ReadName()), "") == 0) {
-    _name->setText("Name");
+    _name->setText("Your Name");
   }
 
-  if (strcmp(ReadHost(), "Host") == 0) {
+  if (strcmp(ReadHost(), "Server") == 0) {
     _host->setText("");
   }
 }
