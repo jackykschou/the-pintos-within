@@ -1,7 +1,6 @@
 #include "GuiManager.h"
 
-GuiManager::GuiManager():_isDisplayed{false}{
-}
+GuiManager::GuiManager():_isDisplayed{false}{}
 GuiManager::~GuiManager(){
   delete _hud;
   delete _mainMenu;
@@ -98,6 +97,7 @@ bool GuiManager::Connect(const CEGUI::EventArgs& e){
 void GuiManager::EnableStart(){
   static_cast<WaitingPrompt*>(_waitingPrompt)->EnableStart();
 }
+
 CEGUI::MouseButton GuiManager::TranslateButton(OIS::MouseButtonID buttonId){
   switch(buttonId){
     case OIS::MB_Left:
@@ -149,14 +149,52 @@ void WaitingPrompt::EnableStart(){
 void WaitingPrompt::RemoveStart(){
   _root->removeChildWindow(_start);
 }
+
+
 HostDialog::HostDialog():Gui("HostDialog.layout"){
-  _host=static_cast<CEGUI::Editbox*>(_root->getChild("HostDialog/HostName"));
-  _connect=static_cast<CEGUI::PushButton*>(_root->getChild("HostDialog/Connect"));
-  _connect->subscribeEvent(CEGUI::PushButton::EventClicked,CEGUI::Event::Subscriber(&GuiManager::Connect,GuiManager::instance()));
+  _host = static_cast<CEGUI::Editbox*>(_root->getChild("HostDialog/HostName"));
+  _name = static_cast<CEGUI::Editbox*>(_root->getChild("HostDialog/PlayerName"));
+  // cegui mispells caret.
+  _host->subscribeEvent(CEGUI::Editbox::EventCaratMoved, CEGUI::Event::Subscriber(&HostDialog::HostCaretMoved, this));
+  _name->subscribeEvent(CEGUI::Editbox::EventCaratMoved, CEGUI::Event::Subscriber(&HostDialog::NameCaretMoved, this));
+  _connect = static_cast<CEGUI::PushButton*>(_root->getChild("HostDialog/Connect"));
+  _connect->subscribeEvent(CEGUI::PushButton::EventClicked, CEGUI::Event::Subscriber(&GuiManager::Connect, GuiManager::instance()));
+  _back = static_cast<CEGUI::PushButton*>(_root->getChild("HostDialog/Back"));
 }
 const char* HostDialog::ReadHost(){
   return _host->getText().c_str();
 }
+const char* HostDialog::ReadName(){
+  return _name->getText().c_str();
+}
+
+// random c helper
+char* trim(const char* str) {
+  char *s = (char*)str;
+  while (*s == ' ') s++;
+  return s;
+}
+
+bool HostDialog::NameCaretMoved(const CEGUI::EventArgs& e){
+  if (strcmp(ReadName(), "Name") == 0) {
+    _name->setText("");
+  }
+
+  if (strcmp(trim(ReadHost()), "") == 0) {
+    _host->setText("Host");
+  }
+}
+
+bool HostDialog::HostCaretMoved(const CEGUI::EventArgs& e){
+  if (strcmp(trim(ReadName()), "") == 0) {
+    _name->setText("Name");
+  }
+
+  if (strcmp(ReadHost(), "Host") == 0) {
+    _host->setText("");
+  }
+}
+
 Gui::Gui(std::string layoutFileName):_root(CEGUI::WindowManager::getSingletonPtr()->loadWindowLayout(layoutFileName)){}
 void Gui::Display(){
   CEGUI::System::getSingleton().setGUISheet(_root);

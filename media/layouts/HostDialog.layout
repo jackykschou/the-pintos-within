@@ -3,18 +3,40 @@
 <GUILayout >
   <Window Type="TaharezLook/FrameWindow" Name="HostDialog" >
     <Property Name="InheritsAlpha" Value="False" />
-    <Property Name="UnifiedMaxSize" Value="{{1,0},{1,0}}" />
-    <Property Name="UnifiedAreaRect" Value="{{0,0},{0,0},{1,0},{1,0}}" />
-    <Window Type="TaharezLook/Editbox" Name="HostDialog/HostName" >
-      <Property Name="Text" Value="Enter Host" />
-      <Property Name="MaxTextLength" Value="1073741823" />
+    <Property Name="TitlebarEnabled" Value="True" />
+    <Property Name="SizingEnabled" Value="False" />
+    <Property Name="DragMovingEnabled" Value="False" />
+    <Property Name="UnifiedMaxSize" Value="{{1,200},{1,200}}" />
+    <Property Name="UnifiedAreaRect" Value="{{0,-50},{0,-50},{1,100},{1,100}}" />
+    <Property Name="CloseButtonEnabled" Value="False" />
+    <Window Type="TaharezLook/StaticText" Name="HostDialog/Message" >
+      <Property Name="Text" Value="Join Game" />
+      <Property Name="HorzFormatting" Value="HorzCentred" />
+      <Property Name="VertFormatting" Value="VertCentred" />
       <Property Name="UnifiedMaxSize" Value="{{0.25,0},{0.125,0}}" />
-      <Property Name="UnifiedAreaRect" Value="{{0.375,0},{0.4375,0},{0.625,0},{0.5625,0}}" />
+      <Property Name="UnifiedAreaRect" Value="{{0.375,0},{0.15,0},{0.625,0},{0.3,0}}" />
+    </Window>
+    <Window Type="TaharezLook/Editbox" Name="HostDialog/HostName" >
+      <Property Name="Text" Value="Host" />
+      <Property Name="MaxTextLength" Value="999" />
+      <Property Name="UnifiedMaxSize" Value="{{0.25,0},{0.125,0}}" />
+      <Property Name="UnifiedAreaRect" Value="{{0.375,0},{0.4,0},{0.625,0},{0.45,0}}" />
+    </Window>
+    <Window Type="TaharezLook/Editbox" Name="HostDialog/PlayerName" >
+      <Property Name="Text" Value="Name" />
+      <Property Name="MaxTextLength" Value="999" />
+      <Property Name="UnifiedMaxSize" Value="{{0.25,0},{0.125,0}}" />
+      <Property Name="UnifiedAreaRect" Value="{{0.375,0},{0.5,0},{0.625,0},{0.55,0}}" />
     </Window>
     <Window Type="TaharezLook/Button" Name="HostDialog/Connect" >
       <Property Name="Text" Value="Connect" />
-      <Property Name="UnifiedMaxSize" Value="{{0.1,0},{0.05,0}}" />
-      <Property Name="UnifiedAreaRect" Value="{{0.525,0},{0.6125,0},{0.625,0},{0.6625,0}}" />
+      <Property Name="UnifiedMaxSize" Value="{{0.1,0},{0.125,0}}" />
+      <Property Name="UnifiedAreaRect" Value="{{0.5,0},{0.6125,0},{0.625,0},{0.6625,0}}" />
+    </Window>
+    <Window Type="TaharezLook/Button" Name="HostDialog/Back" >
+      <Property Name="Text" Value="Back" />
+      <Property Name="UnifiedMaxSize" Value="{{0.1,0},{0.125,0}}" />
+      <Property Name="UnifiedAreaRect" Value="{{0.375,0},{0.6125,0},{0.5,0},{0.6625,0}}" />
     </Window>
   </Window>
 </GUILayout>

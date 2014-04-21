@@ -75,12 +75,20 @@ class WaitingPrompt:public Gui{
   private:
     CEGUI::PushButton* _start;
 };
-class HostDialog:public Gui{
+
+class HostDialog: public Gui {
   public:
     HostDialog();
     const char* ReadHost();
+    const char* ReadName();
+    bool NameCaretMoved(const CEGUI::EventArgs& e);
+    bool HostCaretMoved(const CEGUI::EventArgs& e);
+
   private:
-    CEGUI::Editbox* _host;
+    CEGUI::Editbox*    _host;
+    CEGUI::Editbox*    _name;
     CEGUI::PushButton* _connect;
+    CEGUI::PushButton* _back;
 };
+
 #endif
