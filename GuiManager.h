@@ -28,6 +28,7 @@ class GuiManager:public Singleton<GuiManager>{
     bool Connect(const CEGUI::EventArgs& e);
     static CEGUI::MouseButton TranslateButton(OIS::MouseButtonID buttonId);
     void Reinitialize();
+    bool BackToMainMenu(const CEGUI::EventArgs& e);
   private:
     CEGUI::MouseButton convertButton(OIS::MouseButtonID buttonId);
     CEGUI::OgreRenderer* _renderer;

@@ -97,6 +97,11 @@ bool GuiManager::Connect(const CEGUI::EventArgs& e){
 void GuiManager::EnableStart(){
   static_cast<WaitingPrompt*>(_waitingPrompt)->EnableStart();
 }
+bool GuiManager::BackToMainMenu(const CEGUI::EventArgs& e){
+  _current=_mainMenu;
+  _current->Display();
+  return false;
+}
 
 CEGUI::MouseButton GuiManager::TranslateButton(OIS::MouseButtonID buttonId){
   switch(buttonId){
@@ -154,12 +159,13 @@ void WaitingPrompt::RemoveStart(){
 HostDialog::HostDialog():Gui("HostDialog.layout"){
   _host = static_cast<CEGUI::Editbox*>(_root->getChild("HostDialog/HostName"));
   _name = static_cast<CEGUI::Editbox*>(_root->getChild("HostDialog/PlayerName"));
-  // cegui mispells caret.
+  // cegui mispells caret V_V
   _host->subscribeEvent(CEGUI::Editbox::EventCaratMoved, CEGUI::Event::Subscriber(&HostDialog::HostCaretMoved, this));
   _name->subscribeEvent(CEGUI::Editbox::EventCaratMoved, CEGUI::Event::Subscriber(&HostDialog::NameCaretMoved, this));
   _connect = static_cast<CEGUI::PushButton*>(_root->getChild("HostDialog/Connect"));
   _connect->subscribeEvent(CEGUI::PushButton::EventClicked, CEGUI::Event::Subscriber(&GuiManager::Connect, GuiManager::instance()));
   _back = static_cast<CEGUI::PushButton*>(_root->getChild("HostDialog/Back"));
+  _back->subscribeEvent(CEGUI::PushButton::EventClicked, CEGUI::Event::Subscriber(&GuiManager::BackToMainMenu, GuiManager::instance()));
 }
 const char* HostDialog::ReadHost(){
   return _host->getText().c_str();
