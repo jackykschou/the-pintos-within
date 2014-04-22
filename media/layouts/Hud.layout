@@ -44,5 +44,10 @@
       <Property Name="UnifiedAreaRect" Value="{{0.8,0},{0.825,0},{0.95,0},{0.95,0}}" />
       <Property Name="BackgroundEnabled" Value="False" />
     </Window>
+    <Window Type="TaharezLook/Editbox" Name="Hud/Console">
+      <Property Name="FrameEnabled" Value="False" />
+      <Property Name="UnifiedAreaRect" Value="{{0,0},{0,0},{1.0,0},{0.3,0}}" />
+
+    </Window>
   </Window>
 </GUILayout>

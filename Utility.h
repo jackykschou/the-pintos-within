@@ -43,6 +43,7 @@ enum collisiontypes {
 #define VITALPACK 3
 #define PARTICLEPACK 4
 #define JOINGAME 5
+#define CHATPACK 6
 
 #define WALL "Wall"
 #define FLOORGRASS "FloorGrass"

@@ -28,6 +28,13 @@ NetworkManager::NetworkManager()
 	if (_lastHeartbeat) free(_lastHeartbeat);
  }
 
+void NetworkManager::receiveChat(ChatPacket* packet)
+{
+	LOG("" << packet->playerId << " SAYS: " << packet->message);
+
+	// show it in the related gui snippet
+}
+
 void NetworkManager::sendVital()
 {
 	send(&vital->info, sizeof(VitalInfo), true);
