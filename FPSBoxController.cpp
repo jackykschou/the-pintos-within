@@ -1,4 +1,5 @@
 #include "FPSBoxController.h"
+#include "GuiManager.h"
 
 FPSBoxController::FPSBoxController(bool is_yourself_p, GameObject* gameObject, std::string camera_name, double camera_offset, 
 														const btVector3& boxHalfExtents, btScalar step_height, 
@@ -91,7 +92,7 @@ void FPSBoxController::detectInput()
 	is_jet_packing = false;
 	is_running = false;
 
-	if(can_move)
+	if(can_move && !GuiManager::instance()->IsConsoleVisible())
 	{
 		if(InputManager::instance()->isKeyPressed(OIS::KC_SPACE) && !is_jet_packing)
 		{

@@ -1,4 +1,5 @@
 #include "NetworkManager.h"
+#include "ChatManager.h"
 
 namespace pt = boost::posix_time;
 
@@ -30,9 +31,15 @@ NetworkManager::NetworkManager()
 
 void NetworkManager::receiveChat(ChatPacket* packet)
 {
-	LOG("" << packet->playerId << " SAYS: " << packet->message);
+	ChatManager::instance()->addMessage("joe", packet->message);
+}
 
-	// show it in the related gui snippet
+void NetworkManager::sendChat(char* msg)
+{
+	ChatPacket cp;
+	cp.type = CHATPACK;
+	cp.message = msg;
+	send(&cp, sizeof(ChatPacket), true);
 }
 
 void NetworkManager::sendVital()

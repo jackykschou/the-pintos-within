@@ -10,6 +10,10 @@ void initializeGame()
     resourcesCfg = "resources.cfg";
     pluginsCfg = "plugins.cfg";
 
+    ChatManager::instance()->addMessage("joe", "wassup");
+    ChatManager::instance()->addMessage("joe", "asl");
+    ChatManager::instance()->addMessage("joe", "i put on my robe and wizard hat");
+
     GameState::instance()->reset();
 	GraphicsManager::instance()->initialize(APPLICATION_NAME, pluginsCfg);
     ResourcesManager::instance()->initialize(resourcesCfg, pluginsCfg);

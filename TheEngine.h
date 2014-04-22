@@ -37,5 +37,6 @@
 #include "HeartbeatPacket.h"
 #include "VitalPacket.h"
 #include "ParticlePacket.h"
+#include "ChatManager.h"
 
 #endif // #ifndef __TheEngine_h_

@@ -29,6 +29,8 @@ class GuiManager:public Singleton<GuiManager>{
     static CEGUI::MouseButton TranslateButton(OIS::MouseButtonID buttonId);
     void Reinitialize();
     bool BackToMainMenu(const CEGUI::EventArgs& e);
+    void ToggleConsole();
+    bool IsConsoleVisible();
   private:
     CEGUI::MouseButton convertButton(OIS::MouseButtonID buttonId);
     CEGUI::OgreRenderer* _renderer;
@@ -62,11 +64,20 @@ class Hud:public Gui{
     void UpdateFuel(float percentFuel);
     void UpdateAmmoCount(int ammoCount);
     void UpdateMagCount(int magCount);
+    void ToggleConsole();
+    bool IsConsoleVisible();
+    void SetConsoleText(std::string str);
+    void UpdateConsole();
+    void ChatSubmitted(const CEGUI::EventArgs& e);
   private:
     CEGUI::ProgressBar* _healthBar;
     CEGUI::ProgressBar* _fuelBar;
     CEGUI::Window* _ammoCount;
     CEGUI::Window* _magCount;
+    CEGUI::Window* _console;
+    CEGUI::Editbox* _consoleInput;
+    CEGUI::MultiLineEditbox* _consoleText;
+    int _consoleSize;
 };
 class WaitingPrompt:public Gui{
   public:

@@ -247,6 +247,10 @@ void GameServer::processPacket(UDPpacket* packet) {
 			NetworkManager::instance()->receiveParticle(pinfo);
 			broadcastData(pinfo, sizeof(ParticleInfo), true);
 			break;
-		
+		case CHATPACK:
+			ChatPacket* chat;
+			chat = (ChatPacket*)packetData;
+			NetworkManager::instance()->receiveChat(chat);
+			break;
 	}
 }
