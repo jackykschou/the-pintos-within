@@ -68,7 +68,7 @@ class Hud:public Gui{
     bool IsConsoleVisible();
     void SetConsoleText(std::string str);
     void UpdateConsole();
-    void ChatSubmitted(const CEGUI::EventArgs& e);
+    bool ChatSubmitted(const CEGUI::EventArgs& e);
   private:
     CEGUI::ProgressBar* _healthBar;
     CEGUI::ProgressBar* _fuelBar;

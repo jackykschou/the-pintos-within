@@ -38,7 +38,7 @@ void NetworkManager::sendChat(char* msg)
 {
 	ChatPacket cp;
 	cp.type = CHATPACK;
-	cp.message = msg;
+	strncpy(cp.message, msg, sizeof(cp.message));
 	send(&cp, sizeof(ChatPacket), true);
 }
 

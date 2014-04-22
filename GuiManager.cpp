@@ -136,8 +136,9 @@ Hud::Hud():Gui("Hud.layout"){
   _console=_root->getChild("Hud/Console");
   _consoleInput = static_cast<CEGUI::Editbox*>(_console->getChild("Hud/ConsoleInput"));
   _consoleText  = static_cast<CEGUI::MultiLineEditbox*>(_console->getChild("Hud/ConsoleText"));
-  _consoleInput->subscribeEvent(CEGUI::Editbox::EventTextAccepted,
-    CEGUI::Event::Subscriber(&Hud::ChatSubmitted,this)
+  _consoleInput->subscribeEvent(
+    CEGUI::Editbox::EventTextAccepted,
+    CEGUI::Event::Subscriber(&Hud::ChatSubmitted, this)
   );
   _root->removeChildWindow(_console);
   _consoleSize = 0;
@@ -154,8 +155,9 @@ void Hud::UpdateAmmoCount(int ammoCount){
 void Hud::UpdateMagCount(int magCount){
   _magCount->setText(std::to_string(magCount));
 }
-void Hud::ChatSubmitted(const CEGUI::EventArgs& e) {
-  NetworkManager::instance()->sendChat(_consoleInput.getText());
+bool Hud::ChatSubmitted(const CEGUI::EventArgs& e) {
+  NetworkManager::instance()->sendChat(_consoleInput->getText().c_str());
+  return false;
 }
 void Hud::ToggleConsole() {
   if (IsConsoleVisible()) {
