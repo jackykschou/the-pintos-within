@@ -5,8 +5,10 @@ GuiManager::GuiManager():_isDisplayed{false}{
 GuiManager::~GuiManager(){
   delete _hud;
   delete _mainMenu;
+  delete _joinGameMenu;
+  delete _createGameMenu;
+  delete _lobby;
   delete _waitingPrompt;
-  delete _hostDialog;
   CEGUI::OgreRenderer::destroySystem();
 }
 void GuiManager::Update(const Ogre::FrameEvent& event){
@@ -45,15 +47,19 @@ void GuiManager::Initialize(std::string applicationName){
 
   _hud=new Hud;
   _mainMenu=new MainMenu;
+  _joinGame=new JoinGame;
+  _createGame=new CreateGame;
+  _lobby=new Lobby;
   _waitingPrompt=new WaitingPrompt;
-  _hostDialog=new HostDialog;
   _current=_mainMenu;
 }
 void GuiManager::Reinitialize(){
   delete _hud;
   delete _mainMenu;
+  delete _joinGameMenu;
+  delete _createGameMenu;
+  delete _lobby;
   delete _waitingPrompt;
-  delete _hostDialog;
   CEGUI::OgreRenderer::destroySystem();
   Initialize("");
 }
@@ -151,7 +157,7 @@ void WaitingPrompt::RemoveStart(){
 }
 HostDialog::HostDialog():Gui("HostDialog.layout"){
   _host=static_cast<CEGUI::Editbox*>(_root->getChild("HostDialog/HostName"));
-  _connect=static_cast<CEGUI::PushButton*>(_root->getChild("HostDialog/Connect"));
+  _connect=static_cast<CEGUI::PushButton*>(_root->getChild("HostDialog/Continue"));
   _connect->subscribeEvent(CEGUI::PushButton::EventClicked,CEGUI::Event::Subscriber(&GuiManager::Connect,GuiManager::instance()));
 }
 const char* HostDialog::ReadHost(){

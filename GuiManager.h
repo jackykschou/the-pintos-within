@@ -34,8 +34,10 @@ class GuiManager:public Singleton<GuiManager>{
     bool _isDisplayed;
     Gui* _hud;
     Gui* _mainMenu;
+    Gui* _joinGame;
+    Gui* _createGame;
+    Gui* _lobby;
     Gui* _waitingPrompt;
-    Gui* _hostDialog;
     Gui* _current;
 };
 class Gui{
@@ -45,14 +47,6 @@ class Gui{
   protected:
     Gui(std::string layoutFileName);
     CEGUI::Window* _root;
-};
-class MainMenu:public Gui{
-  public:
-	MainMenu();
-  private:
-	CEGUI::PushButton* _hostGame;
-	CEGUI::PushButton* _joinGame;
-	CEGUI::PushButton* _exit;
 };
 class Hud:public Gui{
   public:
@@ -67,6 +61,25 @@ class Hud:public Gui{
     CEGUI::Window* _ammoCount;
     CEGUI::Window* _magCount;
 };
+class MainMenu:public Gui{
+  public:
+	MainMenu();
+  private:
+	CEGUI::PushButton* _hostGame;
+	CEGUI::PushButton* _joinGame;
+	CEGUI::PushButton* _exit;
+};
+class JoinGameMenu:public Gui{};
+class CreateGameMenu:public Gui{
+  public:
+    HostDialog();
+    const char* ReadHost();
+  private:
+    CEGUI::Editbox* _host;
+    CEGUI::PushButton* _connect;
+};
+class Lobby:public Gui{
+};
 class WaitingPrompt:public Gui{
   public:
     WaitingPrompt();
@@ -74,13 +87,5 @@ class WaitingPrompt:public Gui{
     void RemoveStart();
   private:
     CEGUI::PushButton* _start;
-};
-class HostDialog:public Gui{
-  public:
-    HostDialog();
-    const char* ReadHost();
-  private:
-    CEGUI::Editbox* _host;
-    CEGUI::PushButton* _connect;
 };
 #endif

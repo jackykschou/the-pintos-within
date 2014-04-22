@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<GUILayout >
+  <Window Type="TaharezLook/FrameWindow" Name="HostDialog" >
+    <Property Name="InheritsAlpha" Value="False" />
+    <Property Name="UnifiedMaxSize" Value="{{1,0},{1,0}}" />
+    <Property Name="UnifiedAreaRect" Value="{{0,0},{0,0},{1,0},{1,0}}" />
+    <Window Type="TaharezLook/StaticText" Name="HostDialog/NameLabel" >
+      <Property Name="Text" Value="your name:" />
+      <Property Name="UnifiedAreaRect" Value="{{0.375,0},{0.4375,0},{0.625,0},{0.5625,0}}" />
+    </Window>
+    <Window Type="TaharezLook/Editbox" Name="HostDialog/Name" >
+      <Property Name="UnifiedAreaRect" Value="{{0.375,0},{0.4375,0},{0.625,0},{0.5625,0}}" />
+    </Window>
+    <Window Type="TaharezLook/StaticText" Name="HostDialog/GameTypeLabel" >
+      <Property Name="Text" Value="game type:" />
+      <Property Name="UnifiedAreaRect" Value="{{0.375,0},{0.4375,0},{0.625,0},{0.5625,0}}" />
+      <Window Type="TaharezLook/Combobox" Name="HostDialog/GameType" >
+        <Window Type="TaharezLook/ComboDropList" Name="HostDialog/GameTypeList" >
+          <Window Type="TaharezLook/ListboxItem" >
+            <Property Name="Text" Value="Game Type 1" />
+          </Window>
+          <Window Type="TaharezLook/ListboxItem" >
+            <Property Name="Text" Value="Game Type 2" />
+          </Window>
+        </Window>
+      </Window>
+    </Window>
+    <Window Type="TaharezLook/StaticText" Name="HostDialog/TimeLimitLabel" >
+      <Property Name="Text" Value="time limit (minutes):" />
+      <Property Name="UnifiedAreaRect" Value="{{0.375,0},{0.4375,0},{0.625,0},{0.5625,0}}" />
+    </Window>
+    <Window Type="TaharezLook/Editbox" Name="HostDialog/TimeLimit" >
+      <Property Name="UnifiedAreaRect" Value="{{0.375,0},{0.4375,0},{0.625,0},{0.5625,0}}" />
+    </Window>
+    <Window Type="TaharezLook/StaticText" Name="HostDialog/MaxPlayersLabel" >
+      <Property Name="Text" Value="max players:" />
+      <Property Name="UnifiedAreaRect" Value="{{0.375,0},{0.4375,0},{0.625,0},{0.5625,0}}" />
+    </Window>
+    <Window Type="TaharezLook/Editbox" Name="HostDialog/MaxPlayers" >
+      <Property Name="UnifiedAreaRect" Value="{{0.375,0},{0.4375,0},{0.625,0},{0.5625,0}}" />
+    </Window>
+    <Window Type="TaharezLook/Button" Name="HostDialog/Continue" >
+      <Property Name="Text" Value="Continue" />
+      <Property Name="UnifiedMaxSize" Value="{{0.1,0},{0.05,0}}" />
+      <Property Name="UnifiedAreaRect" Value="{{0.525,0},{0.6125,0},{0.625,0},{0.6625,0}}" />
+    </Window>
+  </Window>
+</GUILayout>
