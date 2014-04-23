@@ -198,16 +198,6 @@ void GameServer::sendAdvertisement() {
 // Requests are dished out based on their first byte
 void GameServer::processPacket(UDPpacket* packet) {
 
-#ifdef DEBUG
-	// printf("UDP Packet incoming\n");
-	// printf("\tChan:    %d\n", packet->channel);
-	// printf("\tData:    %s\n", (char*)packet->data);
-	// printf("\tLen:     %d\n", packet->len);
-	// printf("\tMaxlen:  %d\n", packet->maxlen);
-	// printf("\tStatus:  %d\n", packet->status);
-	// printf("\tAddress: %x %x\n", packet->address.host, packet->address.port);
-#endif
-
 	AckHeader* ackHeader = (AckHeader*)packet->data;
 	void* packetData = packet->data+MEMALIGNED_SIZE(AckHeader);
 	char packetType = ((char*)packetData)[0];

@@ -156,11 +156,14 @@ void Hud::UpdateMagCount(int magCount){
   _magCount->setText(std::to_string(magCount));
 }
 bool Hud::ChatSubmitted(const CEGUI::EventArgs& e) {
+  if (strlen(_consoleInput->getText().c_str()) == 0) return false;
   NetworkManager::instance()->sendChat(_consoleInput->getText().c_str());
+  ChatManager::instance()->addMessage("you", _consoleInput->getText().c_str());
+  _consoleInput->setText("");
   return false;
 }
 void Hud::ToggleConsole() {
-  if (IsConsoleVisible()) {
+  if (IsConsoleVisible() && GameState::instance()->isRunning()) {
     _root->removeChildWindow(_console);
   } else {
     _root->addChildWindow(_console);

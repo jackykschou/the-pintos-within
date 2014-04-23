@@ -71,7 +71,7 @@ class NetworkManager : public Singleton<NetworkManager>
 
 	void sendVital();
 	void sendParticle();
-	void sendChat(char* msg);
+	void sendChat(const char* msg);
 
 	void receiveChat(ChatPacket* packet);
 	void receiveHeartbeat(HeartBeatInfo* info);

@@ -31,13 +31,16 @@ NetworkManager::NetworkManager()
 
 void NetworkManager::receiveChat(ChatPacket* packet)
 {
-	ChatManager::instance()->addMessage("joe", packet->message);
+	char name[24];
+	sprintf(name, "Player %d", packet->playerId);
+	ChatManager::instance()->addMessage(name, packet->message);
 }
 
-void NetworkManager::sendChat(char* msg)
+void NetworkManager::sendChat(const char* msg)
 {
 	ChatPacket cp;
 	cp.type = CHATPACK;
+	cp.playerId = player_id;
 	strncpy(cp.message, msg, sizeof(cp.message));
 	send(&cp, sizeof(ChatPacket), true);
 }

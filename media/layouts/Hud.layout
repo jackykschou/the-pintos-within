@@ -50,7 +50,7 @@
       <Property Name="SizingBorderThickness" Value="1.0" />
 
       <Window Type="TaharezLook/MultiLineEditbox" Name="Hud/ConsoleText">
-        <Property Name="Text" Value="input goeth here"/>
+        <Property Name="Text" Value=""/>
         <Property Name="ReadOnly" Value="True" />
         <Property Name="FrameEnabled" Value="False" />
         <Property Name="UnifiedAreaRect" Value="{{0,0},{0,0},{1.0,0},{1.0,0}}" />
