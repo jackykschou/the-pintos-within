@@ -79,8 +79,9 @@ void HeartbeatPacket::updatePlayer(HeartBeatInfo* info_p, PlayerCharacter* playe
 	tran->rotZ = info_p->playerRotZ;
 	tran->rotW = info_p->playerRotW;
 
-	if(!player->is_shooting && ((info_p->flags & RELOADING) == RELOADING))
-		AudioManager::instance()->playRifleFire(Ogre::Vector3(info_p->playerPosX, info_p->playerPosY, info_p->playerPosZ));
+	if(!player->is_shooting && ((info_p->flags & SHOOTING) == SHOOTING))
+		AudioManager::instance()->playWeaponFire(Ogre::Vector3(info_p->playerPosX, info_p->playerPosY, info_p->playerPosZ),
+												player->current_weapon->weapon_id);
 
 	player->controller->_ghostObject->setWorldTransform(btTransform(btQuaternion(tran->rotX, tran->rotY, tran->rotZ, tran->rotW), 
 									btVector3(info_p->playerPosX, info_p->playerPosY, info_p->playerPosZ)));

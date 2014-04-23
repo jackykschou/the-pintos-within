@@ -21,7 +21,11 @@ public:
 		float, float, float, float,
 		float, float, float, float);
 
+	void Enable();
+	void Disable();
+
 	int getDamage(int);
+	bool enabled;
 };
 
 #endif

@@ -37,5 +37,11 @@
 #include "HeartbeatPacket.h"
 #include "VitalPacket.h"
 #include "ParticlePacket.h"
+#include "ShotGun.h"
+#include "AssaultRifle.h"
+#include "Blaster.h"
+#include "PlayerPickUp.h"
+#include "WeaponSpawner.h"
+// #include "Melee.h"
 
 #endif // #ifndef __TheEngine_h_

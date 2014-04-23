@@ -8,7 +8,7 @@
 Pistol::Pistol(PlayerCharacter* player_p, std::string mesh_name, float posX, 
 			float posY, float posZ, float rotX, float rotY, float rotZ, float rotW,
 			float scaleX, float scaleY, float scaleZ, PlayerBox* box) : 
-			Weapon(player_p, mesh_name, 0, 3, 1, 12, 3000, 0.1, posX, 
+			Weapon(player_p, mesh_name, PISTOL_ID, 3, 1, 12, 3000, 0.1, posX, 
 			posY, posZ, rotX, rotY, rotZ, rotW, scaleX, scaleY, scaleZ, box)
 
 {
@@ -35,8 +35,6 @@ void Pistol::shoot_hook()
     rayCallback.m_collisionFilterMask = COL_BULLET_COLLIDER_WITH;
 
     Component::_gameObject->scene->physics_world->rayTest(from, to, rayCallback);
-    Ogre::Vector3 curPos = Ogre::Vector3(GameState::instance()->player->tr->posX, GameState::instance()->player->tr->posY, GameState::instance()->player->tr->posZ);
-    AudioManager::instance()->playRifleFire(curPos);
     if(rayCallback.hasHit())
     {
         btVector3 point = rayCallback.m_hitPointWorld;
@@ -51,7 +49,6 @@ void Pistol::shoot_hook()
                 uint32_t enemy_id = hit_box->player->player_id;
 
                 NetworkManager::instance()->vital->setDamage(damage_sent, enemy_id);
-                NetworkManager::instance()->sendVital();
 
                 ParticleManager::instance()->EmitBloodSpurt(Ogre::Vector3(point.x(), point.y(), point.z()), -cam_dir);
                 NetworkManager::instance()->particle->setBlood(point.x(), point.y() , point.z(), -cam_dir.x, -cam_dir.y, -cam_dir.z);

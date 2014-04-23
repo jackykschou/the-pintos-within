@@ -1,9 +1,10 @@
-#include "Debouncer.h"
+ #include "Debouncer.h"
 
 Debouncer::Debouncer(int waitMilliseconds)
 {
 	_waitMilliseconds = waitMilliseconds;
 	_lastRun = NULL;
+	_lambda = NULL;
 }
 
 Debouncer::Debouncer(int waitMilliseconds, std::function<void()> lambda)
@@ -35,7 +36,7 @@ bool Debouncer::run() {
 	{
 		if (_lastRun) delete _lastRun;
 		_lastRun = new boost::posix_time::ptime(now);
-		_lambda();
+		if (_lambda)   _lambda();
 		return true;
 	}
 	return false;

@@ -1,7 +1,8 @@
 #include "SphereRigidbody.h"
 
 SphereRigidbody::SphereRigidbody (GameObject *gameObject, float radius, float mass, int col_mask, int col_to_masks,
-	 btRigidBody::btRigidBodyConstructionInfo* _rigid_info) : Rigidbody(gameObject) 
+	 btRigidBody::btRigidBodyConstructionInfo* _rigid_info, 
+	 float x_offset, float y_offset, float z_offset) : Rigidbody(gameObject, x_offset, y_offset, z_offset)
 {
 	motionState = new btDefaultMotionState(btTransform(btQuaternion(_transform->rotX, _transform->rotY, _transform->rotZ, _transform->rotW)
 		, btVector3(_transform->posX, _transform->posY, _transform->posZ)));
@@ -19,7 +20,6 @@ SphereRigidbody::SphereRigidbody (GameObject *gameObject, float radius, float ma
 
 	rigidbody = new btRigidBody(*_rigid_info);
 	dynamics_world->addRigidBody(rigidbody, col_mask, col_to_masks);
-
 
 	rigidbody->setMotionState(motionState);
 

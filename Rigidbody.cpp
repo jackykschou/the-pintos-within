@@ -1,8 +1,11 @@
 #include "Rigidbody.h"
 
-Rigidbody::Rigidbody(GameObject *gameObject) : Component(gameObject) 
+Rigidbody::Rigidbody(GameObject *gameObject, float x_offset, float y_offset, float z_offset) : Component(gameObject) 
 {
 	onCollision = NULL;
+	xOffset = x_offset;
+	yOffset = y_offset;
+	zOffset = z_offset;
 
 	_transform = gameObject->getComponent<Transform>();
 
@@ -29,7 +32,7 @@ void Rigidbody::update()
 void Rigidbody::updateRigidbodyFromTransform () 
 {
 	btTransform trans;
-	trans.setOrigin(btVector3 (_transform->posX, _transform->posY, _transform->posZ));
+	trans.setOrigin(btVector3 (_transform->posX + xOffset, _transform->posY + yOffset, _transform->posZ + zOffset));
 	trans.setRotation(btQuaternion(_transform->rotX, _transform->rotY, _transform->rotZ, _transform->rotW));
 	rigidbody->setCenterOfMassTransform(trans);
 }

@@ -1,0 +1,35 @@
+// PintoInner genrated by blender2ogre 0.6.0
+
+material PintoInner 
+{
+    receive_shadows on 
+
+    technique
+    {
+        pass PintoInner
+        {
+            ambient 0.19017809629440308 0.10411069542169571 0.04933783411979675 1.0
+            diffuse 0.15214247930262204 0.08328855757845277 0.03947026788399022 1.0
+            specular 0.5 0.5 0.5 1.0 12.5
+            emissive 0.0 0.0 0.0 1.0
+
+            alpha_to_coverage off
+            colour_write on
+            cull_hardware clockwise
+            depth_check on
+            depth_func less_equal
+            depth_write on
+            illumination_stage 
+            light_clip_planes off
+            light_scissor off
+            lighting on
+            normalise_normals off
+            polygon_mode solid
+            scene_blend one zero
+            scene_blend_op add
+            shading gouraud
+            transparent_sorting on
+
+        }
+    }
+}

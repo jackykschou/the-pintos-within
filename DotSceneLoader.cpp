@@ -32,6 +32,7 @@ void DotSceneLoader::parseDotScene(uint32_t scene_type, Scene* s, const Ogre::St
     _scene = s;
 
     GameState::instance()->spawner = new PlayerSpawner("Spawner", _scene);
+    GameState::instance()->weapon_spawner = new WeaponSpawner("Weapon Spawner", _scene);
 
     // set up shared object values
     m_sGroupName = groupName;
@@ -890,7 +891,7 @@ void DotSceneLoader::processUserDataReference(rapidxml::xml_node<>* XMLNode, Ogr
 
 void DotSceneLoader::createSceneObject(uint32_t scene_type, rapidxml::xml_node<>* XMLNode, std::string node_name)
 {
-    if(scene_type == GAME_MODE)
+    if(scene_type == THEGAUNTLET)
     {
         Ogre::Vector3 position;
         Ogre::Quaternion rotation;
@@ -939,13 +940,13 @@ void DotSceneLoader::createSceneObject(uint32_t scene_type, rapidxml::xml_node<>
         if(node_name.find(PLAYERSPAWNER) != std::string::npos)
         {
             GameState::instance()->spawner->addSpawnPoint(Ogre::Vector3(position.x, position.y, position.z));
-            
-            // PlayerCharacter* yourself = new PlayerCharacter(true, _scene, "PixelMan.mesh",
-            //                                                 position.x, position.y, position.z,
-            //                                                 0, 0, 0, 1,
-            //                                                 10, 10, 10, NetworkManager::instance()->player_id);
-            // GameState::instance()->player = yourself;
         }
+
+        if(node_name.find(WEAPONSPAWNER) != std::string::npos)
+        {
+            GameState::instance()->weapon_spawner->addSpawnPoint(Ogre::Vector3(position.x, position.y, position.z));
+        }
+
         if(node_name.find(WALL) != std::string::npos)
         {
             Ogre::String meshFile = getAttrib(XMLNode, "meshFile");
