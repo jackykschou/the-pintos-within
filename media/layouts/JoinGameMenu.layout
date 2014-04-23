@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<GUILayout >
+  <Window Type="TaharezLook/FrameWindow" Name="JoinGameMenu" >
+    <Window Type="TaharezLook/StaticText" Name="JoinGameMenu/NameLabel" >
+      <Property Name="Text" Value="max players:" />
+      <Property Name="UnifiedAreaRect" Value="{{0.375,0},{0.4375,0},{0.625,0},{0.5625,0}}" />
+    </Window>
+    <Window Type="TaharezLook/Editbox" Name="JoinGameMenu/Name" >
+      <Property Name="UnifiedAreaRect" Value="{{0.375,0},{0.4375,0},{0.625,0},{0.5625,0}}" />
+    </Window>
+    <Window Type="TaharezLook/StaticText" Name="JoinGameMenu/HostsLabel" >
+      <Property Name="Text" Value="max players:" />
+      <Property Name="UnifiedAreaRect" Value="{{0.375,0},{0.4375,0},{0.625,0},{0.5625,0}}" />
+    </Window>
+    <Window Type="TaharezLook/ItemListbox" Name="JoinGameMenu/Hosts" >
+      <Property Name="UnifiedAreaRect" Value="{{0.04,0},{0.18,0},{0.46,0},{0.48,0}}" />
+        <Window Type="TaharezLook/ListboxItem" >
+          <Property Name="Text" Value="Game 1" />
+        </Window>
+        <Window Type="TaharezLook/ListboxItem" >
+          <Property Name="Text" Value="Game 2" />
+        </Window>
+    </Window>
+    <Window Type="TaharezLook/StaticText" Name="JoinGameMenu/HostLabel" >
+      <Property Name="Text" Value="max players:" />
+      <Property Name="UnifiedAreaRect" Value="{{0.375,0},{0.4375,0},{0.625,0},{0.5625,0}}" />
+    </Window>
+    <Window Type="TaharezLook/Editbox" Name="JoinGameMenu/Host" >
+      <Property Name="UnifiedAreaRect" Value="{{0.375,0},{0.4375,0},{0.625,0},{0.5625,0}}" />
+    </Window>
+  </Window>
+</GUILayout>

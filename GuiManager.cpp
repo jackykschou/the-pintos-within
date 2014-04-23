@@ -47,8 +47,8 @@ void GuiManager::Initialize(std::string applicationName){
 
   _hud=new Hud;
   _mainMenu=new MainMenu;
-  _joinGame=new JoinGame;
-  _createGame=new CreateGame;
+  _joinGameMenu=new JoinGameMenu;
+  _createGameMenu=new CreateGameMenu;
   _lobby=new Lobby;
   _waitingPrompt=new WaitingPrompt;
   _current=_mainMenu;
@@ -67,10 +67,10 @@ bool GuiManager::IsExpectingMouse(){
   return _current!=_hud;
 }
 bool GuiManager::IsExpectingKeyboard(){
-  return _current==_hostDialog;
+  return _current==_joinGameMenu||_current==_createGameMenu||_current==_lobby;
 }
 bool GuiManager::HostGame(const CEGUI::EventArgs& e){
-  _current=_waitingPrompt;
+  _current=_createGameMenu;
   _current->Display();
   LOG("STARTING IN SERVER MODE");
   NetworkManager::instance()->startServer();
@@ -78,7 +78,7 @@ bool GuiManager::HostGame(const CEGUI::EventArgs& e){
 }
 bool GuiManager::JoinGame(const CEGUI::EventArgs& e){
   static_cast<WaitingPrompt*>(_waitingPrompt)->RemoveStart();
-  _current=_hostDialog;
+  _current=_joinGameMenu;
   _current->Display();
   return false;
 }
@@ -96,7 +96,7 @@ bool GuiManager::Start(const CEGUI::EventArgs& e){
 }
 bool GuiManager::Connect(const CEGUI::EventArgs& e){
   LOG("STARTING IN CLIENT MODE");
-  NetworkManager::instance()->startClient(static_cast<HostDialog*>(_hostDialog)->ReadHost());
+  //NetworkManager::instance()->startClient(static_cast<HostDialog*>(_hostDialog)->ReadHost());
   _current=_waitingPrompt;
   _current->Display();
   return false;
@@ -144,6 +144,26 @@ MainMenu::MainMenu():Gui("MainMenu.layout"){
   _joinGame->subscribeEvent(CEGUI::PushButton::EventClicked,CEGUI::Event::Subscriber(&GuiManager::JoinGame,GuiManager::instance()));
   _exit->subscribeEvent(CEGUI::PushButton::EventClicked,CEGUI::Event::Subscriber(&GuiManager::Exit,GuiManager::instance()));
 }
+JoinGameMenu::JoinGameMenu():Gui("JoinGameMenu.layout"){
+  //_name=static_cast<CEGUI::Editbox*>(_root->getChild("JoinGameMenu/Name"));
+  //_hosts=
+  //_host=static_cast<CEGUI::Editbox*>(_root->getChild("JoinGameMenu/Host"));
+}
+CreateGameMenu::CreateGameMenu():Gui("CreateGameMenu.layout"){
+  _name=static_cast<CEGUI::Editbox*>(_root->getChild("CreateGameMenu/Name"));
+  _timeLimit=static_cast<CEGUI::Editbox*>(_root->getChild("CreateGameMenu/TimeLimit"));
+  _maxPlayers=static_cast<CEGUI::Editbox*>(_root->getChild("CreateGameMenu/MaxPlayers"));
+  _teamOrganization=static_cast<CEGUI::Combobox*>(_root->getChild("CreateGameMenu/TeamOrganization"));
+  _teamOrganization->addItem(new CEGUI::ListboxTextItem("Free-for-All",0));
+  _teamOrganization->addItem(new CEGUI::ListboxTextItem("Team",1));
+  _gameType=static_cast<CEGUI::Combobox*>(_root->getChild("CreateGameMenu/GameType"));
+  _gameType->addItem(new CEGUI::ListboxTextItem("Death Match",0));
+  _gameType->addItem(new CEGUI::ListboxTextItem("Hardcore",1));
+  _gameType->addItem(new CEGUI::ListboxTextItem("Pintos",2));
+  _continue=static_cast<CEGUI::PushButton*>(_root->getChild("CreateGameMenu/Continue"));
+  _continue->subscribeEvent(CEGUI::PushButton::EventClicked,CEGUI::Event::Subscriber(&GuiManager::Connect,GuiManager::instance()));
+}
+Lobby::Lobby():Gui("Lobby.layout"){}
 WaitingPrompt::WaitingPrompt():Gui("WaitingPrompt.layout"){
   _start=static_cast<CEGUI::PushButton*>(_root->getChild("WaitingPrompt/Start"));
   _start->subscribeEvent(CEGUI::PushButton::EventClicked,CEGUI::Event::Subscriber(&GuiManager::Start,GuiManager::instance()));
@@ -155,14 +175,9 @@ void WaitingPrompt::EnableStart(){
 void WaitingPrompt::RemoveStart(){
   _root->removeChildWindow(_start);
 }
-HostDialog::HostDialog():Gui("HostDialog.layout"){
-  _host=static_cast<CEGUI::Editbox*>(_root->getChild("HostDialog/HostName"));
-  _connect=static_cast<CEGUI::PushButton*>(_root->getChild("HostDialog/Continue"));
-  _connect->subscribeEvent(CEGUI::PushButton::EventClicked,CEGUI::Event::Subscriber(&GuiManager::Connect,GuiManager::instance()));
-}
-const char* HostDialog::ReadHost(){
-  return _host->getText().c_str();
-}
+//const char* HostDialog::ReadHost(){
+//  return _host->getText().c_str();
+//}
 Gui::Gui(std::string layoutFileName):_root(CEGUI::WindowManager::getSingletonPtr()->loadWindowLayout(layoutFileName)){}
 void Gui::Display(){
   CEGUI::System::getSingleton().setGUISheet(_root);

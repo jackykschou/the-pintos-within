@@ -34,8 +34,8 @@ class GuiManager:public Singleton<GuiManager>{
     bool _isDisplayed;
     Gui* _hud;
     Gui* _mainMenu;
-    Gui* _joinGame;
-    Gui* _createGame;
+    Gui* _joinGameMenu;
+    Gui* _createGameMenu;
     Gui* _lobby;
     Gui* _waitingPrompt;
     Gui* _current;
@@ -50,7 +50,7 @@ class Gui{
 };
 class Hud:public Gui{
   public:
-	Hud();
+    Hud();
     void UpdateHealth(float percentHealth);
     void UpdateFuel(float percentFuel);
     void UpdateAmmoCount(int ammoCount);
@@ -63,22 +63,31 @@ class Hud:public Gui{
 };
 class MainMenu:public Gui{
   public:
-	MainMenu();
+    MainMenu();
   private:
-	CEGUI::PushButton* _hostGame;
-	CEGUI::PushButton* _joinGame;
-	CEGUI::PushButton* _exit;
+    CEGUI::PushButton* _hostGame;
+    CEGUI::PushButton* _joinGame;
+    CEGUI::PushButton* _exit;
 };
-class JoinGameMenu:public Gui{};
+class JoinGameMenu:public Gui{
+  public:
+    JoinGameMenu();
+};
 class CreateGameMenu:public Gui{
   public:
-    HostDialog();
-    const char* ReadHost();
+    CreateGameMenu();
+    //const char* ReadHost();
   private:
-    CEGUI::Editbox* _host;
-    CEGUI::PushButton* _connect;
+    CEGUI::Editbox* _name;
+    CEGUI::Editbox* _timeLimit;
+    CEGUI::Editbox* _maxPlayers;
+    CEGUI::Combobox* _teamOrganization;
+    CEGUI::Combobox* _gameType;
+    CEGUI::PushButton* _continue;
 };
 class Lobby:public Gui{
+  public:
+    Lobby();
 };
 class WaitingPrompt:public Gui{
   public:
