@@ -1,5 +1,6 @@
 #include "NetworkManager.h"
 #include "ChatManager.h"
+#include "PlayerCharacter.h"
 
 namespace pt = boost::posix_time;
 
@@ -12,7 +13,6 @@ NetworkManager::NetworkManager()
 	particle  = new ParticlePacket();
 
 	player_id = -1;
-	num_player = 0;
 	_lastHeartbeat = NULL;
 
 
@@ -48,12 +48,6 @@ void NetworkManager::sendChat(const char* msg)
 	send(&cp, sizeof(ChatPacket), true);
 }
 
-void NetworkManager::sendVital()
-{
-	send(&vital->info, sizeof(VitalInfo), true);
-	vital->clear();
-}
-
 void NetworkManager::sendParticle()
 {
 	send(&particle->info, sizeof(ParticleInfo), true);
@@ -67,14 +61,6 @@ void NetworkManager::receiveHeartbeat(HeartBeatInfo* info)
 
 	if(GameState::instance()->players[info->player_id])
 		heartbeat->updatePlayer(info, GameState::instance()->players[info->player_id]);
-}
-
-void NetworkManager::receiveVital(VitalInfo* info)
-{
-	if (info->player_id == player_id)
-		return;
-
-	vital->updatePacket(info);
 }
 
 void NetworkManager::receiveParticle(ParticleInfo* info)
@@ -123,7 +109,7 @@ void NetworkManager::startClientDiscovery() {
 	client->startListeningForAdvertisements();
 }
 
-void NetworkManager::update() 
+void NetworkManager::update()
 {
 	if (!isActive()) return;
 	
@@ -189,7 +175,6 @@ void NetworkManager::changeId(uint32_t id)
 	player_id = id;
 
 	heartbeat->info.player_id = id;
-	vital->info.player_id = id;
 	particle->info.player_id = id;
 }
 

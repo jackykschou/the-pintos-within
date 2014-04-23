@@ -19,7 +19,7 @@ struct HeartBeatInfo
 
 	uint32_t player_id;
 
-	int flags;
+	uint32_t flags;
 
 	float playerPosX;
 	float playerPosY;

@@ -87,15 +87,23 @@ Weapon::~Weapon()
 
 void Weapon::shoot()
 {
+	Ogre::Vector3 curPos = Ogre::Vector3(player->tr->posX, player->tr->posY, player->tr->posZ);
 	// LOG("Can I shoot? " << ((player->current_weapon == this) && current_mag_count >= shoot_cost && !is_reloading && !player->is_dead));
-	LOG("current_mag_count: " << current_mag_count << " / " << current_ammo);
-	if((player->current_weapon == this) && current_mag_count >= shoot_cost && !is_reloading && !player->is_dead && (shoot_timer <= 0))
+	if((player->current_weapon == this) && InputManager::instance()->isMouseLeftClicked() && !is_reloading && !player->is_dead)
 	{
-		shoot_timer = cooldown;
-		shooting_animation_state->setTimePosition(0);
-		is_shooting = true;
-		current_mag_count -= shoot_cost;
-		shoot_hook();
+		if(current_mag_count >= shoot_cost && (shoot_timer <= 0))
+		{
+			shoot_timer = cooldown;
+			shooting_animation_state->setTimePosition(0);
+			is_shooting = true;
+			current_mag_count -= shoot_cost;
+	    	AudioManager::instance()->playWeaponFire(curPos, weapon_id);
+			shoot_hook();
+		}
+		else if(current_ammo == 0 && current_mag_count == 0)
+		{
+			AudioManager::instance()->playOutOfAmmo(curPos);
+		}
 	}
 }
 
@@ -105,7 +113,8 @@ void Weapon::reload()
 		(current_ammo != 0) && !player->is_dead && !is_shooting)
 	{
 		LOG("Reloading...");
-		AudioManager::instance()->playReload(Ogre::Vector3(player->transform->posX, player->transform->posY, player->transform->posZ));
+		AudioManager::instance()->playReload(Ogre::Vector3(player->transform->posX, player->transform->posY, player->transform->posZ),
+											weapon_id);
 		reload_timer = 0;
 		reload_animation_state->setTimePosition(0);
 		is_reloading = true;

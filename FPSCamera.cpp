@@ -72,8 +72,8 @@ void FPSCamera::update()
 void FPSCamera::clampCameraRotation()
 {
 	Ogre::Vector3 dir = camera->getDirection();
-    if (dir.y>.6) dir.y=.6;
-    if (dir.y<-.6) dir.y=-.6;
+    if (dir.y>.8) dir.y=.8;
+    if (dir.y<-.8) dir.y=-.8;
     camera->setDirection(dir);
 }
 
