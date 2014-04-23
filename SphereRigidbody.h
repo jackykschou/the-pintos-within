@@ -7,7 +7,8 @@ class SphereRigidbody : Rigidbody
 {
 public:
 	SphereRigidbody(GameObject*, float, float, 
-					int, int, btRigidBody::btRigidBodyConstructionInfo* _rigid_info = NULL);
+					int, int, btRigidBody::btRigidBodyConstructionInfo* _rigid_info = NULL,
+					float x_offset = 0, float y_offset = 0, float z_offset = 0);
 	virtual ~SphereRigidbody();
 
 	virtual void update();

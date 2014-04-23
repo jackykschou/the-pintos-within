@@ -1,6 +1,7 @@
 #include "GameState.h"
 #include "PlayerSpawner.h"
 #include "PlayerCharacter.h"
+#include "NetworkManager.h"
 
 namespace pt = boost::posix_time;
 
@@ -19,10 +20,17 @@ void GameState::reset() {
 void GameState::start() {
 	reset();
 	_running = true;
-    spawner->startGame();
     //GUIManager::instance()->hideGameOverMenu();
-	AudioManager::instance()->playStartSound();
+	// AudioManager::instance()->playStartSound();
 	//GUIManager::instance()->hideWaitingMenu();
+  if(NetworkManager::instance()->isServer())
+  {
+  	PlayerNumInfo info;
+		info.type = PLAYERNUM;
+		info.num_player = num_player;
+  	NetworkManager::instance()->send(&info, sizeof(PlayerNumInfo), true);
+  }
+  spawner->startGame();
 }
 
 bool GameState::isRunning() {

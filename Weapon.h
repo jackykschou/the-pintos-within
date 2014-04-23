@@ -43,7 +43,7 @@ public:
 	bool is_reloading;
 
 	Ogre::Entity* entity;
-  Ogre::SceneNode* node;
+  	Ogre::SceneNode* node;
   
 	Weapon(PlayerCharacter*, std::string, int, double, 
 			int, int, int, double, float, 
@@ -51,7 +51,7 @@ public:
 			float, float, float, PlayerBox*);
 	virtual ~Weapon();
 
-	void shoot();
+	virtual void shoot();
 	virtual void shoot_hook() = 0;
 	virtual void reload();
 	virtual void update();

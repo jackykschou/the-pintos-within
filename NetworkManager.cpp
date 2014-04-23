@@ -1,4 +1,5 @@
 #include "NetworkManager.h"
+#include "PlayerCharacter.h"
 
 namespace pt = boost::posix_time;
 
@@ -11,7 +12,6 @@ NetworkManager::NetworkManager()
 	particle  = new ParticlePacket();
 
 	player_id = -1;
-	num_player = 0;
 	_lastHeartbeat = NULL;
 
 
@@ -28,12 +28,6 @@ NetworkManager::NetworkManager()
 	if (_lastHeartbeat) free(_lastHeartbeat);
  }
 
-void NetworkManager::sendVital()
-{
-	send(&vital->info, sizeof(VitalInfo), true);
-	vital->clear();
-}
-
 void NetworkManager::sendParticle()
 {
 	send(&particle->info, sizeof(ParticleInfo), true);
@@ -42,19 +36,16 @@ void NetworkManager::sendParticle()
 
 void NetworkManager::receiveHeartbeat(HeartBeatInfo* info)
 {
+	// LOG("From " << NetworkManager::instance()->player_id << " to " << info->player_id << " Id: " << 
+			// GameState::instance()->players[info->player_id]->player_id);
+
 	if (info->player_id == NetworkManager::instance()->player_id)
 		return;
 
-	if(GameState::instance()->players[info->player_id])
+	if(GameState::instance()->players[info->player_id] != NULL)
+	{
 		heartbeat->updatePlayer(info, GameState::instance()->players[info->player_id]);
-}
-
-void NetworkManager::receiveVital(VitalInfo* info)
-{
-	if (info->player_id == NetworkManager::instance()->player_id)
-		return;
-
-	vital->updatePacket(info);
+	}
 }
 
 void NetworkManager::receiveParticle(ParticleInfo* info)
@@ -103,7 +94,7 @@ void NetworkManager::startClientDiscovery() {
 	client->startListeningForAdvertisements();
 }
 
-void NetworkManager::update() 
+void NetworkManager::update()
 {
 	if (!isActive()) return;
 	
@@ -169,7 +160,6 @@ void NetworkManager::changeId(uint32_t id)
 	player_id = id;
 
 	heartbeat->info.player_id = id;
-	vital->info.player_id = id;
 	particle->info.player_id = id;
 }
 

@@ -23,6 +23,12 @@ struct PlayerIdInfo
 	uint32_t player_id;
 };
 
+struct PlayerNumInfo
+{
+	char type;
+	uint32_t num_player;
+};
+
 struct ServerAdvertisement
 {
 	char magic[5];
@@ -46,7 +52,6 @@ class NetworkManager : public Singleton<NetworkManager>
 	ParticlePacket*  particle;
 
 	uint32_t player_id;
-	uint32_t num_player;
 
   	NetworkManager();
   	~NetworkManager();
@@ -62,11 +67,9 @@ class NetworkManager : public Singleton<NetworkManager>
 	bool isServer();
 	bool isClient();
 
-	void sendVital();
 	void sendParticle();
 
 	void receiveHeartbeat(HeartBeatInfo* info);
-	void receiveVital(VitalInfo* info);
 	void receiveParticle(ParticleInfo* info);
 
 	void changeId(uint32_t);
@@ -77,11 +80,12 @@ class NetworkManager : public Singleton<NetworkManager>
 	GameServer* server;
 	GameClient* client;
 
+	void send(void* data, int size, bool ack);
+
   private:
 
 	// the timestamp on the last heartbeat
 	boost::posix_time::ptime* _lastHeartbeat;
-	void send(void* data, int size, bool ack);
 };
 
 #endif
