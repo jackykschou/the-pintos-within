@@ -1,4 +1,5 @@
 #include "NetworkManager.h"
+#include "ChatManager.h"
 #include "PlayerCharacter.h"
 
 namespace pt = boost::posix_time;
@@ -28,6 +29,25 @@ NetworkManager::NetworkManager()
 	if (_lastHeartbeat) free(_lastHeartbeat);
  }
 
+void NetworkManager::receiveChat(ChatPacket* packet)
+{
+	if (packet->playerId == player_id)
+		return;
+
+	char name[24];
+	sprintf(name, "Player %d", packet->playerId);
+	ChatManager::instance()->addMessage(name, packet->message);
+}
+
+void NetworkManager::sendChat(const char* msg)
+{
+	ChatPacket cp;
+	cp.type = CHATPACK;
+	cp.playerId = player_id;
+	strncpy(cp.message, msg, sizeof(cp.message));
+	send(&cp, sizeof(ChatPacket), true);
+}
+
 void NetworkManager::sendParticle()
 {
 	send(&particle->info, sizeof(ParticleInfo), true);
@@ -36,21 +56,16 @@ void NetworkManager::sendParticle()
 
 void NetworkManager::receiveHeartbeat(HeartBeatInfo* info)
 {
-	// LOG("From " << NetworkManager::instance()->player_id << " to " << info->player_id << " Id: " << 
-			// GameState::instance()->players[info->player_id]->player_id);
-
-	if (info->player_id == NetworkManager::instance()->player_id)
+	if (info->player_id == player_id)
 		return;
 
-	if(GameState::instance()->players[info->player_id] != NULL)
-	{
+	if(GameState::instance()->players[info->player_id])
 		heartbeat->updatePlayer(info, GameState::instance()->players[info->player_id]);
-	}
 }
 
 void NetworkManager::receiveParticle(ParticleInfo* info)
 {
-	if (info->player_id == NetworkManager::instance()->player_id)
+	if (info->player_id == player_id)
 		return;
 
 	particle->updateParticles(info);

@@ -41,6 +41,7 @@ enum collisiontypes {
 
 #define HEARTBEATPACK 1
 #define ASSIGNPLAYERID 2
+
 #define PARTICLEPACK 3
 #define JOINGAME 4
 #define PLAYERNUM 5
@@ -49,6 +50,7 @@ enum collisiontypes {
 #define PLAYER_DIE 8
 #define WEAPON_CHANGE 9
 #define WEAPON_SPAWN 10
+#define CHATPACK 11
 
 #define WALL "Wall"
 #define FLOORGRASS "FloorGrass"

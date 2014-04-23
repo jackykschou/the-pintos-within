@@ -36,6 +36,13 @@ struct ServerAdvertisement
 	char description[256];
 };
 
+struct ChatPacket
+{
+	char type;
+	char playerId;
+	char message[256];
+};
+
 enum NetworkManagerState 
 {
 	NetworkStateReady,
@@ -68,7 +75,9 @@ class NetworkManager : public Singleton<NetworkManager>
 	bool isClient();
 
 	void sendParticle();
+	void sendChat(const char* msg);
 
+	void receiveChat(ChatPacket* packet);
 	void receiveHeartbeat(HeartBeatInfo* info);
 	void receiveParticle(ParticleInfo* info);
 

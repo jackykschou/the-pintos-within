@@ -44,5 +44,25 @@
       <Property Name="UnifiedAreaRect" Value="{{0.8,0},{0.825,0},{0.95,0},{0.95,0}}" />
       <Property Name="BackgroundEnabled" Value="False" />
     </Window>
+    <Window Type="DefaultWindow" Name="Hud/Console">
+      <Property Name="FrameEnabled" Value="False" />
+      <Property Name="UnifiedAreaRect" Value="{{0,0},{0,0},{1.0,0},{0.3,0}}" />
+      <Property Name="SizingBorderThickness" Value="1.0" />
+
+      <Window Type="TaharezLook/MultiLineEditbox" Name="Hud/ConsoleText">
+        <Property Name="Text" Value=""/>
+        <Property Name="MaxTextLength" Value="255"/>
+        <Property Name="ReadOnly" Value="True" />
+        <Property Name="FrameEnabled" Value="False" />
+        <Property Name="UnifiedAreaRect" Value="{{0,0},{0,0},{1.0,0},{1.0,-30}}" />
+        <Property Name="SizingBorderThickness" Value="1.0" />
+      </Window>
+
+      <Window Type="TaharezLook/Editbox" Name="Hud/ConsoleInput">
+        <Property Name="FrameEnabled" Value="False" />
+        <Property Name="UnifiedAreaRect" Value="{{0.0,0},{1.0,-30},{1.0,0},{1.0,0}}" />
+        <Property Name="SizingBorderThickness" Value="1.0" />
+      </Window>
+    </Window>
   </Window>
 </GUILayout>

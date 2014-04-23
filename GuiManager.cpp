@@ -1,4 +1,5 @@
 #include "GuiManager.h"
+#include "ChatManager.h"
 
 GuiManager::GuiManager():_isDisplayed{false}{}
 GuiManager::~GuiManager(){
@@ -9,6 +10,7 @@ GuiManager::~GuiManager(){
   CEGUI::OgreRenderer::destroySystem();
 }
 void GuiManager::Update(const Ogre::FrameEvent& event){
+  Hud* hud=static_cast<Hud*>(_hud);
   if(_isDisplayed){
     if(_current==_hud||GameState::instance()->isRunning()){
       if(_current!=_hud){
@@ -18,7 +20,6 @@ void GuiManager::Update(const Ogre::FrameEvent& event){
       }
       PlayerCharacter* player=GameState::instance()->player;
       if(player!=nullptr){
-        Hud* hud=static_cast<Hud*>(_hud);
         hud->UpdateHealth(0.01f*player->health>=0?0.01f*player->health:0.0f);
         FPSBoxController* controller=player->controller;
         if(controller!=nullptr){
@@ -31,6 +32,7 @@ void GuiManager::Update(const Ogre::FrameEvent& event){
         }
       }
     }//else{Ogre::Root::getSingletonPtr()->getRenderSystem()->clearFrameBuffer(0);}
+    hud->UpdateConsole();
   }else{
     _isDisplayed=true;
     _current->Display();
@@ -60,7 +62,8 @@ bool GuiManager::IsExpectingMouse(){
   return _current!=_hud;
 }
 bool GuiManager::IsExpectingKeyboard(){
-  return _current==_hostDialog;
+  Hud* hud=static_cast<Hud*>(_hud);
+  return _current==_hostDialog || hud->IsConsoleVisible();
 }
 bool GuiManager::HostGame(const CEGUI::EventArgs& e){
   _current=_waitingPrompt;
@@ -85,6 +88,7 @@ bool GuiManager::Start(const CEGUI::EventArgs& e){
   CEGUI::MouseCursor::getSingletonPtr()->hide();
   LOG("STARTING GAME.");
   GameState::instance()->start();
+  Hud* hud=static_cast<Hud*>(_hud);
   return false;
 }
 bool GuiManager::Connect(const CEGUI::EventArgs& e){
@@ -102,11 +106,19 @@ bool GuiManager::BackToMainMenu(const CEGUI::EventArgs& e){
   _current->Display();
   return false;
 }
+void GuiManager::ToggleConsole() {
+  Hud* hud=static_cast<Hud*>(_hud);
+  hud->ToggleConsole();
+}
+bool GuiManager::IsConsoleVisible() {
+  Hud* hud=static_cast<Hud*>(_hud);
+  return hud->IsConsoleVisible();
+}
 
 CEGUI::MouseButton GuiManager::TranslateButton(OIS::MouseButtonID buttonId){
   switch(buttonId){
     case OIS::MB_Left:
-	  return CEGUI::LeftButton;
+	    return CEGUI::LeftButton;
     case OIS::MB_Right:
       return CEGUI::RightButton;
     case OIS::MB_Middle:
@@ -121,6 +133,15 @@ Hud::Hud():Gui("Hud.layout"){
   _fuelBar=static_cast<CEGUI::ProgressBar*>(_root->getChild("Hud/FuelBar"));
   _ammoCount=_root->getChild("Hud/AmmoCount");
   _magCount=_root->getChild("Hud/MagCount");
+  _console=_root->getChild("Hud/Console");
+  _consoleInput = static_cast<CEGUI::Editbox*>(_console->getChild("Hud/ConsoleInput"));
+  _consoleText  = static_cast<CEGUI::MultiLineEditbox*>(_console->getChild("Hud/ConsoleText"));
+  _consoleInput->subscribeEvent(
+    CEGUI::Editbox::EventTextAccepted,
+    CEGUI::Event::Subscriber(&Hud::ChatSubmitted, this)
+  );
+  _root->removeChildWindow(_console);
+  _consoleSize = 0;
 }
 void Hud::UpdateHealth(float percentHealth){
   _healthBar->setProgress(percentHealth);
@@ -134,6 +155,37 @@ void Hud::UpdateAmmoCount(int ammoCount){
 void Hud::UpdateMagCount(int magCount){
   _magCount->setText(std::to_string(magCount));
 }
+bool Hud::ChatSubmitted(const CEGUI::EventArgs& e) {
+  if (strlen(_consoleInput->getText().c_str()) == 0) return false;
+  NetworkManager::instance()->sendChat(_consoleInput->getText().c_str());
+  ChatManager::instance()->addMessage("you", _consoleInput->getText().c_str());
+  _consoleInput->setText("");
+  return false;
+}
+void Hud::ToggleConsole() {
+  if (IsConsoleVisible() && GameState::instance()->isRunning()) {
+    _root->removeChildWindow(_console);
+  } else {
+    _root->addChildWindow(_console);
+    _consoleInput->activate();
+  }
+}
+void Hud::SetConsoleText(std::string str) {
+  _consoleText->setText(str.c_str());
+}
+bool Hud::IsConsoleVisible() {
+  return !!(_console->getParent());
+}
+void Hud::UpdateConsole() {
+  if (_consoleSize != ChatManager::instance()->size()) {
+    _consoleSize = ChatManager::instance()->size();
+    SetConsoleText(ChatManager::instance()->getTextForConsole().c_str());
+    CEGUI::Scrollbar* scroller = _consoleText->getVertScrollbar();
+    float offset = scroller->getDocumentSize() + 100;
+    scroller->setScrollPosition(std::max(offset, 0.0f));
+  }
+}
+
 MainMenu::MainMenu():Gui("MainMenu.layout"){
   _hostGame=static_cast<CEGUI::PushButton*>(_root->getChild("MainMenu/HostGame"));
   _joinGame=static_cast<CEGUI::PushButton*>(_root->getChild("MainMenu/JoinGame"));
@@ -143,6 +195,8 @@ MainMenu::MainMenu():Gui("MainMenu.layout"){
   _joinGame->subscribeEvent(CEGUI::PushButton::EventClicked,CEGUI::Event::Subscriber(&GuiManager::JoinGame,GuiManager::instance()));
   _exit->subscribeEvent(CEGUI::PushButton::EventClicked,CEGUI::Event::Subscriber(&GuiManager::Exit,GuiManager::instance()));
 }
+
+
 WaitingPrompt::WaitingPrompt():Gui("WaitingPrompt.layout"){
   _start=static_cast<CEGUI::PushButton*>(_root->getChild("WaitingPrompt/Start"));
   _start->subscribeEvent(CEGUI::PushButton::EventClicked,CEGUI::Event::Subscriber(&GuiManager::Start,GuiManager::instance()));
@@ -154,6 +208,7 @@ void WaitingPrompt::EnableStart(){
 void WaitingPrompt::RemoveStart(){
   _root->removeChildWindow(_start);
 }
+
 
 
 HostDialog::HostDialog():Gui("HostDialog.layout"){

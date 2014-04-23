@@ -37,6 +37,7 @@
 #include "HeartbeatPacket.h"
 #include "VitalPacket.h"
 #include "ParticlePacket.h"
+#include "ChatManager.h"
 #include "ShotGun.h"
 #include "AssaultRifle.h"
 #include "Blaster.h"

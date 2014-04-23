@@ -162,20 +162,9 @@ void GameClient::consumeDiscoveryPackets() {
 // This is the "meat" of the packet processing logic in GameServer
 void GameClient::processPacket(UDPpacket* packet) {
 
-#ifdef DEBUG
-	// printf("UDP Packet incoming\n");
-	// printf("\tChan:    %d\n", packet->channel);
-	// printf("\tData:    %s\n", (char*)packet->data);
-	// printf("\tLen:     %d\n", packet->len);
-	// printf("\tMaxlen:  %d\n", packet->maxlen);
-	// printf("\tStatus:  %d\n", packet->status);
-	// printf("\tAddress: %x %x\n", packet->address.host, packet->address.port);
-#endif
-
 	AckHeader* ackHeader = (AckHeader*)packet->data;
 	void* packetData = packet->data+MEMALIGNED_SIZE(AckHeader);
 	char packetType = ((char*)packetData)[0];
-	// printf("PacketType: %c\n", packetType);
 
 	// deal with ACKs immediately
 	if (ackHeader->isResponse) {
@@ -216,6 +205,11 @@ void GameClient::processPacket(UDPpacket* packet) {
 			particleinfo =  (ParticleInfo*) packetData;
 			NetworkManager::instance()->receiveParticle(particleinfo);
 			break;
+		case CHATPACK:
+			ChatPacket* chat;
+			chat = (ChatPacket*)packetData;
+			NetworkManager::instance()->receiveChat(chat);
+			break;
 		case TAKEDAMAGE:
 			PlayerDamageInfo* damage_info;
 			damage_info =  (PlayerDamageInfo*) packetData;
@@ -235,5 +229,6 @@ void GameClient::processPacket(UDPpacket* packet) {
 			WeaponSpawnInfo* weapon_spawn_info;
 			weapon_spawn_info =  (WeaponSpawnInfo*) packetData;
 			NetworkManager::instance()->vital->receiveSpawnWeapon(weapon_spawn_info);
+			break;
 	}
 }
