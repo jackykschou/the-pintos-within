@@ -241,6 +241,7 @@ void GameServer::processPacket(UDPpacket* packet) {
 			ChatPacket* chat;
 			chat = (ChatPacket*)packetData;
 			NetworkManager::instance()->receiveChat(chat);
+			broadcastData(chat, sizeof(ChatPacket), true);
 			break;
 	}
 }

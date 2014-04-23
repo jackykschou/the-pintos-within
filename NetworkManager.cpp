@@ -31,6 +31,9 @@ NetworkManager::NetworkManager()
 
 void NetworkManager::receiveChat(ChatPacket* packet)
 {
+	if (packet->playerId == player_id)
+		return;
+
 	char name[24];
 	sprintf(name, "Player %d", packet->playerId);
 	ChatManager::instance()->addMessage(name, packet->message);
@@ -59,7 +62,7 @@ void NetworkManager::sendParticle()
 
 void NetworkManager::receiveHeartbeat(HeartBeatInfo* info)
 {
-	if (info->player_id == NetworkManager::instance()->player_id)
+	if (info->player_id == player_id)
 		return;
 
 	if(GameState::instance()->players[info->player_id])
@@ -68,7 +71,7 @@ void NetworkManager::receiveHeartbeat(HeartBeatInfo* info)
 
 void NetworkManager::receiveVital(VitalInfo* info)
 {
-	if (info->player_id == NetworkManager::instance()->player_id)
+	if (info->player_id == player_id)
 		return;
 
 	vital->updatePacket(info);
@@ -76,7 +79,7 @@ void NetworkManager::receiveVital(VitalInfo* info)
 
 void NetworkManager::receiveParticle(ParticleInfo* info)
 {
-	if (info->player_id == NetworkManager::instance()->player_id)
+	if (info->player_id == player_id)
 		return;
 
 	particle->updateParticles(info);
