@@ -54,7 +54,7 @@
         <Property Name="MaxTextLength" Value="255"/>
         <Property Name="ReadOnly" Value="True" />
         <Property Name="FrameEnabled" Value="False" />
-        <Property Name="UnifiedAreaRect" Value="{{0,0},{0,0},{1.0,0},{1.0,0}}" />
+        <Property Name="UnifiedAreaRect" Value="{{0,0},{0,0},{1.0,0},{1.0,-30}}" />
         <Property Name="SizingBorderThickness" Value="1.0" />
       </Window>
 

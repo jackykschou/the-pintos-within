@@ -180,6 +180,9 @@ void Hud::UpdateConsole() {
   if (_consoleSize != ChatManager::instance()->size()) {
     _consoleSize = ChatManager::instance()->size();
     SetConsoleText(ChatManager::instance()->getTextForConsole().c_str());
+    CEGUI::Scrollbar* scroller = _consoleText->getVertScrollbar();
+    float offset = scroller->getDocumentSize() + 100;
+    scroller->setScrollPosition(std::max(offset, 0.0f));
   }
 }
 
