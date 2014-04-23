@@ -6,7 +6,7 @@ FPSBoxController::FPSBoxController(bool is_yourself_p, GameObject* gameObject, s
 {
 	is_yourself = is_yourself_p;
 
-	jet_pack_max = 1500;
+	jet_pack_max = 2000;
 	jet_pack_current = jet_pack_max;
 
 	is_jet_started = false;
@@ -17,7 +17,7 @@ FPSBoxController::FPSBoxController(bool is_yourself_p, GameObject* gameObject, s
 	can_move = true;
 
 	base_movement_speed = 1.0f;
-	jet_bonus_speed = 2.0f;
+	jet_bonus_speed = 2.5f;
 
 	movement_speed_multiplier = 1;
 
