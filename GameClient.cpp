@@ -162,20 +162,9 @@ void GameClient::consumeDiscoveryPackets() {
 // This is the "meat" of the packet processing logic in GameServer
 void GameClient::processPacket(UDPpacket* packet) {
 
-#ifdef DEBUG
-	// printf("UDP Packet incoming\n");
-	// printf("\tChan:    %d\n", packet->channel);
-	// printf("\tData:    %s\n", (char*)packet->data);
-	// printf("\tLen:     %d\n", packet->len);
-	// printf("\tMaxlen:  %d\n", packet->maxlen);
-	// printf("\tStatus:  %d\n", packet->status);
-	// printf("\tAddress: %x %x\n", packet->address.host, packet->address.port);
-#endif
-
 	AckHeader* ackHeader = (AckHeader*)packet->data;
 	void* packetData = packet->data+MEMALIGNED_SIZE(AckHeader);
 	char packetType = ((char*)packetData)[0];
-	// printf("PacketType: %c\n", packetType);
 
 	// deal with ACKs immediately
 	if (ackHeader->isResponse) {
@@ -191,15 +180,15 @@ void GameClient::processPacket(UDPpacket* packet) {
 
 	switch (packetType) 
 	{
+		case PLAYERNUM:
+			PlayerNumInfo* ninfo;
+			ninfo = (PlayerNumInfo*) packetData;
+			GameState::instance()->num_player = ninfo->num_player;
+			break;
 		case ASSIGNPLAYERID:
 			PlayerIdInfo* pinfo;
 			pinfo = (PlayerIdInfo*) packetData;
 			NetworkManager::instance()->changeId(pinfo->player_id);
-			break;
-		case VITALPACK:
-			VitalInfo* vinfo;
-			vinfo =  (VitalInfo*) packetData;
-			NetworkManager::instance()->receiveVital(vinfo);
 			break;
 		case HEARTBEATPACK:
 			HeartBeatInfo* hinfo;
@@ -216,6 +205,30 @@ void GameClient::processPacket(UDPpacket* packet) {
 			particleinfo =  (ParticleInfo*) packetData;
 			NetworkManager::instance()->receiveParticle(particleinfo);
 			break;
-		
+		case CHATPACK:
+			ChatPacket* chat;
+			chat = (ChatPacket*)packetData;
+			NetworkManager::instance()->receiveChat(chat);
+			break;
+		case TAKEDAMAGE:
+			PlayerDamageInfo* damage_info;
+			damage_info =  (PlayerDamageInfo*) packetData;
+			NetworkManager::instance()->vital->receiveDamage(damage_info);
+			break;
+		case PLAYER_RESPAWN:
+			PlayerRespawnInfo* player_respawn_info;
+			player_respawn_info =  (PlayerRespawnInfo*) packetData;
+			NetworkManager::instance()->vital->receivePlayerRespawn(player_respawn_info);
+			break;
+		case WEAPON_CHANGE:
+			ChangeWeaponInfo* weapon_change_info;
+			weapon_change_info =  (ChangeWeaponInfo*) packetData;
+			NetworkManager::instance()->vital->receiveChangeWeapon(weapon_change_info);
+			break;
+		case WEAPON_SPAWN:
+			WeaponSpawnInfo* weapon_spawn_info;
+			weapon_spawn_info =  (WeaponSpawnInfo*) packetData;
+			NetworkManager::instance()->vital->receiveSpawnWeapon(weapon_spawn_info);
+			break;
 	}
 }

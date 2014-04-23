@@ -1,4 +1,6 @@
 #include "NetworkManager.h"
+#include "ChatManager.h"
+#include "PlayerCharacter.h"
 
 namespace pt = boost::posix_time;
 
@@ -11,7 +13,6 @@ NetworkManager::NetworkManager()
 	particle  = new ParticlePacket();
 
 	player_id = -1;
-	num_player = 0;
 	_lastHeartbeat = NULL;
 
 
@@ -28,10 +29,23 @@ NetworkManager::NetworkManager()
 	if (_lastHeartbeat) free(_lastHeartbeat);
  }
 
-void NetworkManager::sendVital()
+void NetworkManager::receiveChat(ChatPacket* packet)
 {
-	send(&vital->info, sizeof(VitalInfo), true);
-	vital->clear();
+	if (packet->playerId == player_id)
+		return;
+
+	char name[24];
+	sprintf(name, "Player %d", packet->playerId);
+	ChatManager::instance()->addMessage(name, packet->message);
+}
+
+void NetworkManager::sendChat(const char* msg)
+{
+	ChatPacket cp;
+	cp.type = CHATPACK;
+	cp.playerId = player_id;
+	strncpy(cp.message, msg, sizeof(cp.message));
+	send(&cp, sizeof(ChatPacket), true);
 }
 
 void NetworkManager::sendParticle()
@@ -42,24 +56,16 @@ void NetworkManager::sendParticle()
 
 void NetworkManager::receiveHeartbeat(HeartBeatInfo* info)
 {
-	if (info->player_id == NetworkManager::instance()->player_id)
+	if (info->player_id == player_id)
 		return;
 
 	if(GameState::instance()->players[info->player_id])
 		heartbeat->updatePlayer(info, GameState::instance()->players[info->player_id]);
 }
 
-void NetworkManager::receiveVital(VitalInfo* info)
-{
-	if (info->player_id == NetworkManager::instance()->player_id)
-		return;
-
-	vital->updatePacket(info);
-}
-
 void NetworkManager::receiveParticle(ParticleInfo* info)
 {
-	if (info->player_id == NetworkManager::instance()->player_id)
+	if (info->player_id == player_id)
 		return;
 
 	particle->updateParticles(info);
@@ -103,7 +109,7 @@ void NetworkManager::startClientDiscovery() {
 	client->startListeningForAdvertisements();
 }
 
-void NetworkManager::update() 
+void NetworkManager::update()
 {
 	if (!isActive()) return;
 	
@@ -169,7 +175,6 @@ void NetworkManager::changeId(uint32_t id)
 	player_id = id;
 
 	heartbeat->info.player_id = id;
-	vital->info.player_id = id;
 	particle->info.player_id = id;
 }
 

@@ -34,7 +34,7 @@ GameServer::~GameServer() {
 // starts the web server (opens UDP port 5555)
 int GameServer::start() 
 {
-	NetworkManager::instance()->num_player = 1;
+	GameState::instance()->num_player = 1;
 
 	if (state != GameServerReady) return -1;
 
@@ -59,13 +59,15 @@ int GameServer::start()
 }
 
 // stops the web server
-void GameServer::stop() {
+void GameServer::stop() 
+{
 	if (state != GameServerRunning) return;
 	state = GameServerStopped;
 }
 
 // called from the render loop
-void GameServer::update() {
+void GameServer::update() 
+{
 	consumePackets();
 	_multicastDebouncer->run();
 }
@@ -168,7 +170,7 @@ void GameServer::handleJoinPacket(UDPpacket *packet) {
 
 	_clients.push_back(packet->address);
 	int id = _clients.size();
-	++(NetworkManager::instance()->num_player);
+	GameState::instance()->num_player = (GameState::instance()->num_player + 1);
 
 	memcpy(&ip, &(packet->address), sizeof(IPaddress));
 
@@ -198,16 +200,6 @@ void GameServer::sendAdvertisement() {
 // Requests are dished out based on their first byte
 void GameServer::processPacket(UDPpacket* packet) {
 
-#ifdef DEBUG
-	// printf("UDP Packet incoming\n");
-	// printf("\tChan:    %d\n", packet->channel);
-	// printf("\tData:    %s\n", (char*)packet->data);
-	// printf("\tLen:     %d\n", packet->len);
-	// printf("\tMaxlen:  %d\n", packet->maxlen);
-	// printf("\tStatus:  %d\n", packet->status);
-	// printf("\tAddress: %x %x\n", packet->address.host, packet->address.port);
-#endif
-
 	AckHeader* ackHeader = (AckHeader*)packet->data;
 	void* packetData = packet->data+MEMALIGNED_SIZE(AckHeader);
 	char packetType = ((char*)packetData)[0];
@@ -229,12 +221,6 @@ void GameServer::processPacket(UDPpacket* packet) {
 			// JOIN request adds a character to the game
 			handleJoinPacket(packet);
 			break;
-		case VITALPACK:
-			VitalInfo* vinfo;
-			vinfo =  (VitalInfo*) packetData;
-			NetworkManager::instance()->receiveVital(vinfo);
-			broadcastData(vinfo, sizeof(VitalInfo), true);
-			break;
 		case HEARTBEATPACK:
 			HeartBeatInfo* hinfo;
 			hinfo =  (HeartBeatInfo*) packetData;
@@ -247,6 +233,35 @@ void GameServer::processPacket(UDPpacket* packet) {
 			NetworkManager::instance()->receiveParticle(pinfo);
 			broadcastData(pinfo, sizeof(ParticleInfo), true);
 			break;
-		
+		case CHATPACK:
+			ChatPacket* chat;
+			chat = (ChatPacket*)packetData;
+			NetworkManager::instance()->receiveChat(chat);
+			broadcastData(chat, sizeof(ChatPacket), true);
+			break;
+		case TAKEDAMAGE:
+			PlayerDamageInfo* damage_info;
+			damage_info =  (PlayerDamageInfo*) packetData;
+			NetworkManager::instance()->vital->receiveDamage(damage_info);
+			broadcastData(damage_info, sizeof(PlayerDamageInfo), true);
+			break;
+		case PLAYER_DIE:
+			PlayerDieInfo* player_die_info;
+			player_die_info =  (PlayerDieInfo*) packetData;
+			NetworkManager::instance()->vital->receivePlayerDie(player_die_info);
+			break;
+		case WEAPON_CHANGE:
+			ChangeWeaponInfo* weapon_change_info;
+			weapon_change_info =  (ChangeWeaponInfo*) packetData;
+			NetworkManager::instance()->vital->receiveChangeWeapon(weapon_change_info);
+			broadcastData(weapon_change_info, sizeof(ChangeWeaponInfo), true);
+			break;
+		case WEAPON_SPAWN:
+			WeaponSpawnInfo* weapon_spawn_info;
+			weapon_spawn_info =  (WeaponSpawnInfo*) packetData;
+			NetworkManager::instance()->vital->receiveSpawnWeapon(weapon_spawn_info);
+			broadcastData(weapon_spawn_info, sizeof(WeaponSpawnInfo), true);
 	}
 }
+
+

@@ -13,4 +13,4 @@ To join a 2P game:  ./OgreApp -c hostname.utexas.edu
 
 INSTRUCTIONS:
 
-Move the mouse to change the view. Press H to enable the debug menu.
+Mouse and WASD to control the character. Press ` to toggle the chat box.

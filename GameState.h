@@ -7,6 +7,7 @@
 
 class PlayerSpawner;
 class PlayerCharacter;
+class WeaponSpawner;
 
 #define DEFAULT_CLOCK 60 * 2 // 2 minutes
 
@@ -17,6 +18,11 @@ class GameState : public Singleton<GameState>
   public:
     GameState();
 
+    uint32_t map;
+    uint32_t game_mode;
+    uint32_t team_mode;
+    uint32_t current_state;
+    int num_player;
   	int score;
   	int timeLeft;
   	void reset();
@@ -26,6 +32,7 @@ class GameState : public Singleton<GameState>
 
     PlayerCharacter* player;
     PlayerSpawner* spawner;
+    WeaponSpawner* weapon_spawner;
     PlayerCharacter* players[MAX_PLAYER];
 
     void broadcastHeartbeat();

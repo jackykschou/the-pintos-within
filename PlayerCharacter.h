@@ -54,6 +54,16 @@ public:
 	Ogre::AnimationState *head_animation_state;
 	Ogre::AnimationState *die_animation_state;
 
+	Ogre::AnimationState *jet_pack_running_animation_state;
+	Ogre::AnimationState *jet_pack_idle_animation_state;
+	Ogre::AnimationState *jet_pack_shooting_animation_states[WEAPON_NUM];
+	Ogre::AnimationState *jet_pack_reload_animation_states[WEAPON_NUM];
+	Ogre::AnimationState *jet_pack_jumping_animation_state;
+	Ogre::AnimationState *jet_pack_die_animation_state;
+
+	Ogre::AnimationState *current_jet_pack_reload_animation_state;
+	Ogre::AnimationState *current_jet_pack_shooting_animation_state;
+
 	Ogre::AnimationState *current_reload_animation_state;
 	Ogre::AnimationState *current_shooting_animation_state;
 
@@ -64,6 +74,7 @@ public:
 	Ogre::AnimationState *weapon_jumping_animation_state;
 	Ogre::AnimationState *weapon_die_animation_state;
 
+	int max_health;
 	int health;
 
 	int health_regen;
@@ -77,7 +88,8 @@ public:
 	HitBox* head_box;
 	HitBox* body_box;
 
-	PlayerBox* jet_pack_shoot_pos;
+	PlayerBox* jet_pack_shoot_pos1;
+	PlayerBox* jet_pack_shoot_pos2;
 
 	Debouncer *walk_sound_debouncer;
 	Debouncer *jump_debouncer;

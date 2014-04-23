@@ -19,7 +19,11 @@ class Rigidbody : public Component, public btCollisionWorld::ContactResultCallba
 		btRigidBody::btRigidBodyConstructionInfo* _rigid_info;
 
 	public:
-		Rigidbody(GameObject*);
+		float xOffset;
+		float yOffset;
+		float zOffset;
+
+		Rigidbody(GameObject*, float, float, float);
 		virtual ~Rigidbody();
 
 		virtual void update();

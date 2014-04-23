@@ -14,10 +14,8 @@ void PlayerSpawner::startGame()
 {
 	if(NetworkManager::instance()->isServer())
 	{
-		LOG("number of players: " << NetworkManager::instance()->num_player);
-		LOG("size of spawned position: " << positions.size());
 		std::vector<Ogre::Vector3> spawned_positions;
-		for(int i = 0; i < NetworkManager::instance()->num_player; ++i)
+		for(int i = 0; i < GameState::instance()->num_player; ++i)
 		{	
 			Ogre::Vector3 position;
 			do
@@ -28,7 +26,6 @@ void PlayerSpawner::startGame()
 			spawnPlayer(position.x, position.y, position.z, i);
 
 			NetworkManager::instance()->vital->setPlayerRespawn(position.x, position.y, position.z, i);
-			NetworkManager::instance()->sendVital();
 		}
 	}
 }
@@ -83,8 +80,6 @@ Ogre::Vector3 PlayerSpawner::spawnPlayer(uint32_t player_id)
 		GameState::instance()->player = player;
 	}
 
-	LOG("Plyaer " << player_id << " respawned.");
-	
 	return position;
 }
 
@@ -97,7 +92,6 @@ void PlayerSpawner::update()
 		{
 			Ogre::Vector3 pos = GameState::instance()->spawner->spawnPlayer(NetworkManager::instance()->player_id);
 			NetworkManager::instance()->vital->setPlayerRespawn(pos.x, pos.y, pos.z, NetworkManager::instance()->player_id);
-			NetworkManager::instance()->sendVital();
 		}
 	}
 }

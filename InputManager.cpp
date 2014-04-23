@@ -54,8 +54,12 @@ void InputManager::capture()
 	_mKeyboard->capture();
 	_mMouse->capture();
 
-	if (InputManager::instance()->isKeyPressed(OIS::KC_ESCAPE)) {
+	if (isKeyPressed(OIS::KC_ESCAPE)) {
         GraphicsManager::instance()->stopRendering();
+    }
+
+    if (isKeyPressed(OIS::KC_GRAVE)) { // the tilde key
+        GuiManager::instance()->ToggleConsole();
     }
 }
 

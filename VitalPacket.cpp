@@ -3,143 +3,123 @@
 #include "NetworkManager.h"
 #include "PlayerCharacter.h"
 #include "PlayerSpawner.h"
-
-VitalPacket::VitalPacket()
-{
-	memset(&info, 0, sizeof(VitalInfo));
-	info.type = VITALPACK;
-}
-
-void VitalPacket::clear()
-{
-	memset(&info, 0, sizeof(VitalInfo));
-	info.type = VITALPACK;
-	info.player_id = NetworkManager::instance()->player_id;
-}
+#include "WeaponSpawner.h"
 
 void VitalPacket::setDamage(int damage, uint32_t player_id)
 {
-	info.flags |= TAKEDAMAGE;
-	info.damage += damage;
+	PlayerDamageInfo info;
+	info.type = TAKEDAMAGE;
+	info.player_id = NetworkManager::instance()->player_id;
+	info.damage = damage;
 	info.damaged_player_id = player_id;
+	NetworkManager::instance()->send(&info, sizeof(PlayerDamageInfo), true);
 }
 
-bool VitalPacket::hasDamage(VitalInfo* info_p)
+void VitalPacket::receiveDamage(PlayerDamageInfo* info_p)
 {
-	return ((info_p->flags & TAKEDAMAGE) == TAKEDAMAGE);
-}
+	if (info_p->player_id == NetworkManager::instance()->player_id)
+		return;
 
-int VitalPacket::getDamage(VitalInfo* info_p)
-{
-	return info_p->damage;
-}
-
-void VitalPacket::setChangeWeapon(int index)
-{
-	info.flags |= WEAPON_CHANGE;
-	info.weapon_index = index;
-}
-
-bool VitalPacket::hasChangeWeapon(VitalInfo* info_p)
-{
-	return ((info_p->flags & WEAPON_CHANGE) == WEAPON_CHANGE);
-}
-
-int VitalPacket::getWeaponIndex(VitalInfo* info_p)
-{
-	return info_p->weapon_index;
-}
-
-void VitalPacket::setPlayerDie()
-{
-	info.flags |= PLAYER_DIE;
-}
-
-bool VitalPacket::hasPlayerDie(VitalInfo* info_p)
-{
-	return ((info_p->flags & PLAYER_DIE) == PLAYER_DIE);
+	if(info_p->damaged_player_id == NetworkManager::instance()->player_id &&
+			GameState::instance()->players[info_p->damaged_player_id] &&
+			!GameState::instance()->players[info_p->damaged_player_id]->is_dead)
+	{
+		GameState::instance()->player->health -= info_p->damage;
+		AudioManager::instance()->playBlootSplat(Ogre::Vector3(GameState::instance()->player->transform->posX,
+												GameState::instance()->player->transform->posY,
+												GameState::instance()->player->transform->posZ));
+	}
 }
 
 void VitalPacket::setPlayerRespawn(float posX, float posY, float posZ, uint32_t player_id)
 {
-	info.flags |= PLAYER_RESPAWN;
+	PlayerRespawnInfo info;
+	info.type = PLAYER_RESPAWN;
+	info.player_id = NetworkManager::instance()->player_id;
 	info.player_respawn_id = player_id;
 	info.playerX = posX;
 	info.playerY = posY;
 	info.playerZ = posZ;
-
-}
-bool VitalPacket::hasPlayerRespawn(VitalInfo* info_p)
-{
-	return ((info_p->flags & PLAYER_RESPAWN) == PLAYER_RESPAWN);
+	NetworkManager::instance()->send(&info, sizeof(PlayerRespawnInfo), true);
 }
 
-Ogre::Vector3 VitalPacket::getPlayerRespawnPos(VitalInfo* info_p)
+void VitalPacket::receivePlayerRespawn(PlayerRespawnInfo* info_p)
 {
-	return Ogre::Vector3(info_p->playerX, info_p->playerY, info_p->playerZ);
-}
+	if (info_p->player_id == NetworkManager::instance()->player_id)
+		return;
 
-void VitalPacket::setPintoTaken()
-{
-	info.flags |= PINTO_TAKEN;
-}
-bool VitalPacket::hasPintoTaken(VitalInfo* info_p)
-{
-	return ((info_p->flags & PINTO_TAKEN) == PINTO_TAKEN);
-}
+	LOG("Player " << info_p->player_respawn_id << " respawn");
 
-void VitalPacket::setPintoRespawn(float posX, float posY, float posZ, uint32_t player_respawn_id_p)
-{
-	info.flags |= PINTO_RESPAWN;
-	info.pintoPosX = posX;
-	info.pintoPosY = posY;
-	info.pintoPosZ = posZ;
-	info.player_respawn_id = player_respawn_id_p;
-}
-bool VitalPacket::hasPintoRespawn(VitalInfo* info_p)
-{
-	return ((info_p->flags & PINTO_RESPAWN) == PINTO_RESPAWN);
-}
-Ogre::Vector3 VitalPacket::getPintoRespawnPos(VitalInfo* info_p)
-{
-	return Ogre::Vector3(info_p->pintoPosX, info_p->pintoPosY, info_p->pintoPosZ);
-}
-
-void VitalPacket::updatePacket(VitalInfo* info_p)
-{
-	if(hasDamage(info_p))
+	if(GameState::instance()->players[info_p->player_respawn_id] != NULL)
 	{
-		LOG("Receiving damage");
-		if(info_p->damaged_player_id == NetworkManager::instance()->player_id &&
-			GameState::instance()->players[info_p->damaged_player_id] &&
-			!GameState::instance()->players[info_p->damaged_player_id]->is_dead)
-		{
-			LOG("Receiving damage2....");
-			GameState::instance()->players[info_p->damaged_player_id]->health -= info_p->damage;
-		}
+		((GameObject*)(GameState::instance()->players[info_p->player_respawn_id]))->scene->removeGameObject((GameObject*)GameState::instance()->players[info_p->player_respawn_id]);
+		delete GameState::instance()->players[info_p->player_respawn_id];
+		GameState::instance()->players[info_p->player_respawn_id] = NULL;
 	}
 
-	if(hasPlayerDie(info_p) && GameState::instance()->players[info_p->player_id])
+	GameState::instance()->spawner->spawnPlayer(info_p->playerX, info_p->playerY, info_p->playerZ, info_p->player_respawn_id);
+}
+
+void VitalPacket::setPlayerDie()
+{
+	PlayerDieInfo info;
+	info.type = PLAYER_DIE;
+	info.player_id = NetworkManager::instance()->player_id;
+	NetworkManager::instance()->send(&info, sizeof(PlayerDieInfo), true);
+}
+
+void VitalPacket::receivePlayerDie(PlayerDieInfo* info_p)
+{
+	if (info_p->player_id == NetworkManager::instance()->player_id)
+		return;
+	
+	if(GameState::instance()->players[info_p->player_id] != NULL)
 	{
 		((GameObject*)(GameState::instance()->players[info_p->player_id]))->scene->removeGameObject((GameObject*)GameState::instance()->players[info_p->player_id]);
 		delete GameState::instance()->players[info_p->player_id];
 		GameState::instance()->players[info_p->player_id] = NULL;
-
-		if(NetworkManager::instance()->isServer())
-		{
-			Ogre::Vector3 pos = GameState::instance()->spawner->spawnPlayer(info_p->player_id);
-			NetworkManager::instance()->vital->setPlayerRespawn(pos.x, pos.y, pos.z, info_p->player_id);
-			NetworkManager::instance()->sendVital();
-		}
 	}
 
-	if(hasChangeWeapon(info_p) && GameState::instance()->players[info_p->player_id])
+	if(NetworkManager::instance()->isServer())
 	{
-		 GameState::instance()->players[info_p->player_id]->changeWeapon(info_p->weapon_index);
+		Ogre::Vector3 pos = GameState::instance()->spawner->spawnPlayer(info_p->player_id);
+		NetworkManager::instance()->vital->setPlayerRespawn(pos.x, pos.y, pos.z, info_p->player_id);
 	}
+}
 
-	if(hasPlayerRespawn(info_p))
-	{
-		GameState::instance()->spawner->spawnPlayer(info_p->playerX, info_p->playerY, info_p->playerZ, info_p->player_respawn_id);
-	}
+void VitalPacket::setChangeWeapon(uint32_t index)
+{
+	ChangeWeaponInfo info;
+	info.type = WEAPON_CHANGE;
+	info.player_id = NetworkManager::instance()->player_id;
+	info.weapon_index = index;
+	NetworkManager::instance()->send(&info, sizeof(ChangeWeaponInfo), true);
+}
+
+void VitalPacket::receiveChangeWeapon(ChangeWeaponInfo* info_p)
+{
+	if (info_p->player_id == NetworkManager::instance()->player_id)
+		return;
+
+	GameState::instance()->players[info_p->player_id]->changeWeapon(info_p->weapon_index);
+}
+
+void VitalPacket::setSpawnWeapon(uint32_t id, float x, float y, float z)
+{
+	WeaponSpawnInfo info;
+	info.type = WEAPON_SPAWN;
+	info.player_id = NetworkManager::instance()->player_id;
+	info.weapon_id = id;
+	info.spawnX = x;
+ 	info.spawnY = y;
+  	info.spawnZ = z;
+	NetworkManager::instance()->send(&info, sizeof(WeaponSpawnInfo), true);
+}
+
+void VitalPacket::receiveSpawnWeapon(WeaponSpawnInfo* info)
+{
+	if (info->player_id == NetworkManager::instance()->player_id)
+		return;
+	
+	GameState::instance()->weapon_spawner->spawnWeapon(info->spawnX, info->spawnY, info->spawnZ, info->weapon_id);
 }

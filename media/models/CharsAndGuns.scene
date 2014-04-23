@@ -1,0 +1,299 @@
+<scene exported_by="Keegan" previous_export_time="1397612438.032863" formatVersion="1.0.1" export_time="1397612669.739254" >
+  <nodes >
+    <node name="_DNR.PointLight.001" >
+      <position y="17.127161" x="8.095354" z="-2.627409" />
+      <rotation qz="0.040103" qy="-0.002032" qx="-0.139465" qw="0.989413" />
+      <scale y="1.000000" x="1.000000" z="1.000000" />
+      <game >
+        <sensors />
+        <actuators />
+      </game>
+    </node>
+    <node name="_DNR.PointLight" >
+      <position y="-5.400759" x="12.493165" z="20.319645" />
+      <rotation qz="-0.087383" qy="0.004427" qx="0.303884" qw="0.948683" />
+      <scale y="1.000000" x="1.000000" z="1.000000" />
+      <game >
+        <sensors />
+        <actuators />
+      </game>
+    </node>
+    <node name="Sun.002" >
+      <position y="24.413017" x="193.447693" z="-755.995728" />
+      <rotation qz="-0.860579" qy="-0.382995" qx="-0.158397" qw="0.296023" />
+      <scale y="1.000000" x="1.000000" z="1.000000" />
+      <game >
+        <sensors />
+        <actuators />
+      </game>
+      <light type="directional" name="Sun.002" powerScale="0.34000006318092346" >
+        <position y="24.413017" x="193.447693" z="-755.995728" />
+        <lightAttenuation range="5000" linear="0.04" constant="1.0" quadratic="0.0" />
+        <direction y="0.531" x="0.388" z="-0.753" />
+        <colourDiffuse g="1.0" b="1.0" r="1.0" />
+        <colourSpecular g="1.0" b="1.0" r="1.0" />
+      </light>
+    </node>
+    <node name="Sun.003" >
+      <position y="21.572922" x="222.342117" z="-747.686157" />
+      <rotation qz="0.328039" qy="0.145865" qx="-0.379214" qw="0.852825" />
+      <scale y="1.000000" x="1.000000" z="1.000000" />
+      <game >
+        <sensors />
+        <actuators />
+      </game>
+      <light type="directional" name="Sun.003" powerScale="1.0" >
+        <position y="21.572922" x="222.342117" z="-747.686157" />
+        <lightAttenuation range="5000" linear="0.04" constant="1.0" quadratic="0.0" />
+        <direction y="-0.497" x="-0.449" z="-0.743" />
+        <colourDiffuse g="1.0" b="1.0" r="1.0" />
+        <colourSpecular g="1.0" b="1.0" r="1.0" />
+      </light>
+    </node>
+    <node name="Armature" >
+      <position y="0.000000" x="0.000000" z="-0.000000" />
+      <rotation qz="-0.000000" qy="0.000000" qx="0.000000" qw="1.000000" />
+      <scale y="10.000000" x="10.000000" z="10.000000" />
+      <game >
+        <sensors />
+        <actuators />
+      </game>
+      <node name="BFG" >
+        <position y="0.000000" x="0.000000" z="-0.000000" />
+        <rotation qz="-0.000000" qy="0.000000" qx="0.000000" qw="1.000000" />
+        <scale y="1.000000" x="1.000000" z="1.000000" />
+        <game >
+          <sensors />
+          <actuators />
+        </game>
+        <entity damping_rot="0.10000000149011612" damping_trans="0.03999999910593033" meshFile="BFG.mesh" velocity_min="0.0" friction_y="1.0" anisotropic_friction="False" mass_radius="1.0" lock_rot_y="False" inertia_tensor="0.4000000059604645" ghost="False" friction_z="1.0" actor="False" friction_x="1.0" physics_type="STATIC" mass="1.0" lock_rot_z="False" lock_rot_x="False" name="BFG" velocity_max="0.0" lock_trans_y="False" lock_trans_x="False" lock_trans_z="False" />
+      </node>
+      <node name="Hitbox.PixelMan.Chest" >
+        <position y="-0.475911" x="0.000000" z="-0.101981" />
+        <rotation qz="-0.000000" qy="0.000000" qx="0.000000" qw="1.000000" />
+        <scale y="2.157996" x="0.824681" z="0.907342" />
+        <game >
+          <sensors />
+          <actuators />
+        </game>
+        <entity damping_rot="0.10000000149011612" damping_trans="0.03999999910593033" meshFile="Hitbox.mesh" velocity_min="0.0" friction_y="1.0" anisotropic_friction="False" mass_radius="1.0" lock_rot_y="False" inertia_tensor="0.4000000059604645" ghost="False" friction_z="1.0" actor="False" friction_x="1.0" physics_type="STATIC" mass="1.0" lock_rot_z="False" lock_rot_x="False" name="Hitbox" velocity_max="0.0" lock_trans_y="False" lock_trans_x="False" lock_trans_z="False" />
+      </node>
+      <node name="Hitbox.PixelMan.Head" >
+        <position y="2.120457" x="-0.000000" z="-0.137225" />
+        <rotation qz="-0.000000" qy="0.000000" qx="0.000000" qw="1.000000" />
+        <scale y="0.425870" x="0.353341" z="0.350068" />
+        <game >
+          <sensors />
+          <actuators />
+        </game>
+        <entity damping_rot="0.10000000149011612" damping_trans="0.03999999910593033" meshFile="Hitbox.mesh" velocity_min="0.0" friction_y="1.0" anisotropic_friction="False" mass_radius="1.0" lock_rot_y="False" inertia_tensor="0.4000000059604645" ghost="False" friction_z="1.0" actor="False" friction_x="1.0" physics_type="STATIC" mass="1.0" lock_rot_z="False" lock_rot_x="False" name="Hitbox" velocity_max="0.0" lock_trans_y="False" lock_trans_x="False" lock_trans_z="False" />
+      </node>
+      <node name="Jetpack" >
+        <position y="0.000000" x="0.000000" z="-0.000000" />
+        <rotation qz="-0.000000" qy="0.000000" qx="0.000000" qw="1.000000" />
+        <scale y="0.100000" x="0.100000" z="0.100000" />
+        <game >
+          <sensors />
+          <actuators />
+        </game>
+        <entity damping_rot="0.10000000149011612" damping_trans="0.03999999910593033" meshFile="Jetpack.mesh" velocity_min="0.0" friction_y="1.0" anisotropic_friction="False" mass_radius="1.0" lock_rot_y="False" inertia_tensor="0.4000000059604645" ghost="False" friction_z="1.0" actor="False" friction_x="1.0" physics_type="STATIC" mass="1.0" lock_rot_z="False" lock_rot_x="False" name="Jetpack" velocity_max="0.0" lock_trans_y="False" lock_trans_x="False" lock_trans_z="False" />
+      </node>
+      <node name="Muzzle.Jetpack" >
+        <position y="0.635833" x="0.251335" z="-1.066468" />
+        <rotation qz="-0.000000" qy="0.000000" qx="0.000000" qw="1.000000" />
+        <scale y="0.049863" x="0.049863" z="0.049863" />
+        <game >
+          <sensors />
+          <actuators />
+        </game>
+        <entity damping_rot="0.10000000149011612" damping_trans="0.03999999910593033" meshFile="Hitbox.003.mesh" velocity_min="0.0" friction_y="1.0" anisotropic_friction="False" mass_radius="1.0" lock_rot_y="False" inertia_tensor="0.4000000059604645" ghost="False" friction_z="1.0" actor="False" friction_x="1.0" physics_type="STATIC" mass="1.0" lock_rot_z="False" lock_rot_x="False" name="Hitbox.003" velocity_max="0.0" lock_trans_y="False" lock_trans_x="False" lock_trans_z="False" />
+      </node>
+      <node name="Muzzle.Jetpack.001" >
+        <position y="0.609656" x="0.630319" z="-0.792315" />
+        <rotation qz="-0.000000" qy="0.000000" qx="0.000000" qw="1.000000" />
+        <scale y="0.049863" x="0.049863" z="0.049863" />
+        <game >
+          <sensors />
+          <actuators />
+        </game>
+        <entity damping_rot="0.10000000149011612" damping_trans="0.03999999910593033" meshFile="Hitbox.003.mesh" velocity_min="0.0" friction_y="1.0" anisotropic_friction="False" mass_radius="1.0" lock_rot_y="False" inertia_tensor="0.4000000059604645" ghost="False" friction_z="1.0" actor="False" friction_x="1.0" physics_type="STATIC" mass="1.0" lock_rot_z="False" lock_rot_x="False" name="Hitbox.003" velocity_max="0.0" lock_trans_y="False" lock_trans_x="False" lock_trans_z="False" />
+      </node>
+      <node name="Muzzle.Pistol" >
+        <position y="1.624599" x="-0.550735" z="1.731446" />
+        <rotation qz="-0.000000" qy="0.000000" qx="0.000000" qw="1.000000" />
+        <scale y="0.049863" x="0.049863" z="0.049863" />
+        <game >
+          <sensors />
+          <actuators />
+        </game>
+        <entity damping_rot="0.10000000149011612" damping_trans="0.03999999910593033" meshFile="Hitbox.003.mesh" velocity_min="0.0" friction_y="1.0" anisotropic_friction="False" mass_radius="1.0" lock_rot_y="False" inertia_tensor="0.4000000059604645" ghost="False" friction_z="1.0" actor="False" friction_x="1.0" physics_type="STATIC" mass="1.0" lock_rot_z="False" lock_rot_x="False" name="Hitbox.003" velocity_max="0.0" lock_trans_y="False" lock_trans_x="False" lock_trans_z="False" />
+      </node>
+      <node name="Muzzle.Shotgun" >
+        <position y="1.670380" x="-0.511495" z="2.732070" />
+        <rotation qz="-0.000000" qy="0.000000" qx="0.000000" qw="1.000000" />
+        <scale y="0.049863" x="0.049863" z="0.049863" />
+        <game >
+          <sensors />
+          <actuators />
+        </game>
+        <entity damping_rot="0.10000000149011612" damping_trans="0.03999999910593033" meshFile="Hitbox.003.mesh" velocity_min="0.0" friction_y="1.0" anisotropic_friction="False" mass_radius="1.0" lock_rot_y="False" inertia_tensor="0.4000000059604645" ghost="False" friction_z="1.0" actor="False" friction_x="1.0" physics_type="STATIC" mass="1.0" lock_rot_z="False" lock_rot_x="False" name="Hitbox.003" velocity_max="0.0" lock_trans_y="False" lock_trans_x="False" lock_trans_z="False" />
+      </node>
+      <node name="Pistol" >
+        <position y="0.000000" x="0.000000" z="-0.000000" />
+        <rotation qz="-0.000000" qy="0.000000" qx="0.000000" qw="1.000000" />
+        <scale y="1.000000" x="1.000000" z="1.000000" />
+        <game >
+          <sensors />
+          <actuators />
+        </game>
+        <entity damping_rot="0.10000000149011612" damping_trans="0.03999999910593033" meshFile="Pistol.mesh" velocity_min="0.0" friction_y="1.0" anisotropic_friction="False" mass_radius="1.0" lock_rot_y="False" inertia_tensor="0.4000000059604645" ghost="False" friction_z="1.0" actor="False" friction_x="1.0" physics_type="STATIC" mass="1.0" lock_rot_z="False" lock_rot_x="False" name="Pistol" velocity_max="0.0" lock_trans_y="False" lock_trans_x="False" lock_trans_z="False" />
+      </node>
+      <node name="PixelMan" >
+        <position y="0.000000" x="0.000000" z="-0.000000" />
+        <rotation qz="-0.000000" qy="0.000000" qx="0.000000" qw="1.000000" />
+        <scale y="1.000000" x="1.000000" z="1.000000" />
+        <game >
+          <sensors />
+          <actuators />
+        </game>
+        <entity damping_rot="0.1589999943971634" damping_trans="0.02539999969303608" meshFile="PixelMan.mesh" velocity_min="0.0" friction_y="1.0" anisotropic_friction="False" mass_radius="1.0" lock_rot_y="False" inertia_tensor="0.4000000059604645" ghost="False" friction_z="1.0" actor="False" friction_x="1.0" physics_type="STATIC" mass="1.0" lock_rot_z="False" lock_rot_x="False" name="PixelMan" velocity_max="0.0" lock_trans_y="False" lock_trans_x="False" lock_trans_z="False" />
+      </node>
+      <node name="Rifle" >
+        <position y="0.000000" x="0.000000" z="-0.000000" />
+        <rotation qz="-0.000000" qy="0.000000" qx="0.000000" qw="1.000000" />
+        <scale y="1.000000" x="1.000000" z="1.000000" />
+        <game >
+          <sensors />
+          <actuators />
+        </game>
+        <entity damping_rot="0.10000000149011612" damping_trans="0.03999999910593033" meshFile="Rifle.mesh" velocity_min="0.0" friction_y="1.0" anisotropic_friction="False" mass_radius="1.0" lock_rot_y="False" inertia_tensor="0.4000000059604645" ghost="False" friction_z="1.0" actor="False" friction_x="1.0" physics_type="STATIC" mass="1.0" lock_rot_z="False" lock_rot_x="False" name="Rifle" velocity_max="0.0" lock_trans_y="False" lock_trans_x="False" lock_trans_z="False" />
+      </node>
+      <node name="Shotgun" >
+        <position y="0.000000" x="0.000000" z="-0.000000" />
+        <rotation qz="-0.000000" qy="0.000000" qx="0.000000" qw="1.000000" />
+        <scale y="1.000000" x="1.000000" z="1.000000" />
+        <game >
+          <sensors />
+          <actuators />
+        </game>
+        <entity damping_rot="0.10000000149011612" damping_trans="0.03999999910593033" meshFile="Shotgun.mesh" velocity_min="0.0" friction_y="1.0" anisotropic_friction="False" mass_radius="1.0" lock_rot_y="False" inertia_tensor="0.4000000059604645" ghost="False" friction_z="1.0" actor="False" friction_x="1.0" physics_type="STATIC" mass="1.0" lock_rot_z="False" lock_rot_x="False" name="Shotgun" velocity_max="0.0" lock_trans_y="False" lock_trans_x="False" lock_trans_z="False" />
+      </node>
+    </node>
+    <node name="Pickup.Pistol" >
+      <position y="-12.403924" x="-4.754661" z="8.347228" />
+      <rotation qz="0.606939" qy="0.379518" qx="-0.564052" qw="0.411626" />
+      <scale y="10.000001" x="10.000001" z="10.000000" />
+      <game >
+        <sensors />
+        <actuators />
+      </game>
+      <entity damping_rot="0.10000000149011612" damping_trans="0.03999999910593033" meshFile="Pickup.Pistol.mesh" velocity_min="0.0" friction_y="1.0" anisotropic_friction="False" mass_radius="1.0" lock_rot_y="False" inertia_tensor="0.4000000059604645" ghost="False" friction_z="1.0" actor="False" friction_x="1.0" physics_type="STATIC" mass="1.0" lock_rot_z="False" lock_rot_x="False" name="Pickup.Pistol" velocity_max="0.0" lock_trans_y="False" lock_trans_x="False" lock_trans_z="False" />
+    </node>
+    <node name="Pickup.Rifle" >
+      <position y="-13.367468" x="-2.755642" z="8.416443" />
+      <rotation qz="0.606939" qy="0.379518" qx="-0.564052" qw="0.411626" />
+      <scale y="10.000001" x="10.000001" z="10.000000" />
+      <game >
+        <sensors />
+        <actuators />
+      </game>
+      <entity damping_rot="0.10000000149011612" damping_trans="0.03999999910593033" meshFile="Pickup.Rifle.mesh" velocity_min="0.0" friction_y="1.0" anisotropic_friction="False" mass_radius="1.0" lock_rot_y="False" inertia_tensor="0.4000000059604645" ghost="False" friction_z="1.0" actor="False" friction_x="1.0" physics_type="STATIC" mass="1.0" lock_rot_z="False" lock_rot_x="False" name="Pickup.Rifle" velocity_max="0.0" lock_trans_y="False" lock_trans_x="False" lock_trans_z="False" />
+    </node>
+    <node name="Pickup.Shotgun" >
+      <position y="-12.760995" x="-0.048563" z="8.440967" />
+      <rotation qz="0.606939" qy="0.379518" qx="-0.564052" qw="0.411626" />
+      <scale y="10.000001" x="10.000001" z="10.000000" />
+      <game >
+        <sensors />
+        <actuators />
+      </game>
+      <entity damping_rot="0.10000000149011612" damping_trans="0.03999999910593033" meshFile="Pickup.Shotgun.mesh" velocity_min="0.0" friction_y="1.0" anisotropic_friction="False" mass_radius="1.0" lock_rot_y="False" inertia_tensor="0.4000000059604645" ghost="False" friction_z="1.0" actor="False" friction_x="1.0" physics_type="STATIC" mass="1.0" lock_rot_z="False" lock_rot_x="False" name="Pickup.Shotgun" velocity_max="0.0" lock_trans_y="False" lock_trans_x="False" lock_trans_z="False" />
+    </node>
+    <node name="Pickup.BFG" >
+      <position y="-13.951767" x="0.570462" z="8.413512" />
+      <rotation qz="0.606939" qy="0.379518" qx="-0.564052" qw="0.411626" />
+      <scale y="10.000001" x="10.000001" z="10.000000" />
+      <game >
+        <sensors />
+        <actuators />
+      </game>
+      <entity damping_rot="0.10000000149011612" damping_trans="0.03999999910593033" meshFile="Pickup.BFG.mesh" velocity_min="0.0" friction_y="1.0" anisotropic_friction="False" mass_radius="1.0" lock_rot_y="False" inertia_tensor="0.4000000059604645" ghost="False" friction_z="1.0" actor="False" friction_x="1.0" physics_type="STATIC" mass="1.0" lock_rot_z="False" lock_rot_x="False" name="Pickup.BFG" velocity_max="0.0" lock_trans_y="False" lock_trans_x="False" lock_trans_z="False" />
+    </node>
+    <node name="PintoArmature" >
+      <position y="-3.514641" x="-0.000000" z="-4.722799" />
+      <rotation qz="-0.000000" qy="0.000000" qx="0.000000" qw="1.000000" />
+      <scale y="5.000000" x="5.000000" z="5.000000" />
+      <game >
+        <sensors />
+        <actuators />
+      </game>
+      <node name="Hitbox.Pinto.Chest" >
+        <position y="-1.251614" x="0.000000" z="0.434679" />
+        <rotation qz="-0.000000" qy="0.000000" qx="0.000000" qw="1.000000" />
+        <scale y="3.210484" x="1.288072" z="1.463416" />
+        <game >
+          <sensors />
+          <actuators />
+        </game>
+        <entity damping_rot="0.10000000149011612" damping_trans="0.03999999910593033" meshFile="Hitbox.mesh" velocity_min="0.0" friction_y="1.0" anisotropic_friction="False" mass_radius="1.0" lock_rot_y="False" inertia_tensor="0.4000000059604645" ghost="False" friction_z="1.0" actor="False" friction_x="1.0" physics_type="STATIC" mass="1.0" lock_rot_z="False" lock_rot_x="False" name="Hitbox" velocity_max="0.0" lock_trans_y="False" lock_trans_x="False" lock_trans_z="False" />
+      </node>
+      <node name="Knife" >
+        <position y="0.000000" x="0.000000" z="0.000000" />
+        <rotation qz="-0.000000" qy="0.000000" qx="0.000000" qw="1.000000" />
+        <scale y="1.000000" x="1.000000" z="1.000000" />
+        <game >
+          <sensors />
+          <actuators />
+        </game>
+        <entity damping_rot="0.10000000149011612" damping_trans="0.03999999910593033" meshFile="Knife.mesh" velocity_min="0.0" friction_y="1.0" anisotropic_friction="False" mass_radius="1.0" lock_rot_y="False" inertia_tensor="0.4000000059604645" ghost="False" friction_z="1.0" actor="False" friction_x="1.0" physics_type="STATIC" mass="1.0" lock_rot_z="False" lock_rot_x="False" name="Knife" velocity_max="0.0" lock_trans_y="False" lock_trans_x="False" lock_trans_z="False" />
+      </node>
+      <node name="Pinto" >
+        <position y="0.000000" x="0.000000" z="0.000000" />
+        <rotation qz="-0.000000" qy="0.000000" qx="0.000000" qw="1.000000" />
+        <scale y="1.000000" x="1.000000" z="1.000000" />
+        <game >
+          <sensors />
+          <actuators />
+        </game>
+        <entity damping_rot="0.10000000149011612" damping_trans="0.03999999910593033" meshFile="Icosphere.mesh" velocity_min="0.0" friction_y="1.0" anisotropic_friction="False" mass_radius="1.0" lock_rot_y="False" inertia_tensor="0.4000000059604645" ghost="False" friction_z="1.0" actor="False" friction_x="1.0" physics_type="STATIC" mass="1.0" lock_rot_z="False" lock_rot_x="False" name="Icosphere" velocity_max="0.0" lock_trans_y="False" lock_trans_x="False" lock_trans_z="False" />
+      </node>
+    </node>
+  </nodes>
+  <externals >
+    <item type="material" >
+      <file name="C:\Users\Keegan\Documents\GameTech\Characters and Guns\Metal.material" />
+    </item>
+    <item type="material" >
+      <file name="C:\Users\Keegan\Documents\GameTech\Characters and Guns\Red_Metal.material" />
+    </item>
+    <item type="material" >
+      <file name="C:\Users\Keegan\Documents\GameTech\Characters and Guns\Wood.material" />
+    </item>
+    <item type="material" >
+      <file name="C:\Users\Keegan\Documents\GameTech\Characters and Guns\White_Metal.material" />
+    </item>
+    <item type="material" >
+      <file name="C:\Users\Keegan\Documents\GameTech\Characters and Guns\PixelManMaterial.material" />
+    </item>
+    <item type="material" >
+      <file name="C:\Users\Keegan\Documents\GameTech\Characters and Guns\PintoOuter.material" />
+    </item>
+    <item type="material" >
+      <file name="C:\Users\Keegan\Documents\GameTech\Characters and Guns\PintoInner.material" />
+    </item>
+    <item type="material" >
+      <file name="C:\Users\Keegan\Documents\GameTech\Characters and Guns\EyeOuter.material" />
+    </item>
+    <item type="material" >
+      <file name="C:\Users\Keegan\Documents\GameTech\Characters and Guns\EyeInner.material" />
+    </item>
+    <item type="material" >
+      <file name="C:\Users\Keegan\Documents\GameTech\Characters and Guns\Silver.material" />
+    </item>
+  </externals>
+  <environment >
+    <colourBackground g="0.05087608844041824" b="0.05087608844041824" r="0.05087608844041824" />
+    <colourDiffuse g="0.05087608844041824" b="0.05087608844041824" r="0.05087608844041824" />
+    <colourAmbient g="0.0" b="0.0" r="0.0" />
+  </environment>
+</scene>

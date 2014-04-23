@@ -3,14 +3,18 @@
 <GUILayout >
   <Window Type="TaharezLook/FrameWindow" Name="WaitingPrompt" >
     <Property Name="InheritsAlpha" Value="False" />
-    <Property Name="UnifiedMaxSize" Value="{{1,0},{1,0}}" />
-    <Property Name="UnifiedAreaRect" Value="{{0,0},{0,0},{1,0},{1,0}}" />
+    <Property Name="TitlebarEnabled" Value="True" />
+    <Property Name="SizingEnabled" Value="False" />
+    <Property Name="DragMovingEnabled" Value="False" />
+    <Property Name="UnifiedMaxSize" Value="{{1,200},{1,200}}" />
+    <Property Name="UnifiedAreaRect" Value="{{0,-50},{0,-50},{1,100},{1,100}}" />
+    <Property Name="CloseButtonEnabled" Value="False" />
     <Window Type="TaharezLook/StaticText" Name="WaitingPrompt/Prompt" >
       <Property Name="Text" Value="Waiting for player . . ." />
       <Property Name="HorzFormatting" Value="HorzCentred" />
       <Property Name="VertFormatting" Value="VertCentred" />
       <Property Name="UnifiedMaxSize" Value="{{0.25,0},{0.125,0}}" />
-      <Property Name="UnifiedAreaRect" Value="{{0.375,0},{0.4375,0},{0.625,0},{0.5625,0}}" />
+      <Property Name="UnifiedAreaRect" Value="{{0.375,0},{0.4,0},{0.625,0},{0.5625,0}}" />
     </Window>
     <Window Type="TaharezLook/Button" Name="WaitingPrompt/Start" >
       <Property Name="Text" Value="Start" />

@@ -18,7 +18,6 @@ PlayerBox::PlayerBox(PlayerCharacter* player_p, std::string mesh_name,
   entity->setCastShadows(true);
 
   node->setPosition(player->mesh->node->convertWorldToLocalPosition(Ogre::Vector3(tran->posX + posX, tran->posY + posY, tran->posZ + posZ)));
-  // node->setInheritOrientation(false);
   node->setOrientation(node->convertWorldToLocalOrientation(Ogre::Quaternion(rotW, rotX, rotY, rotZ)));
   node->setInheritScale (false);
   node->setScale (scaleX, scaleY, scaleZ);
@@ -36,7 +35,7 @@ PlayerBox::PlayerBox(PlayerCharacter* player_p, std::string mesh_name,
 	btRigidBody::btRigidBodyConstructionInfo* info = new btRigidBody::btRigidBodyConstructionInfo(mass ,NULL,collisionShape,inertia);
 
 	rigidbody = new BoxRigidbody((GameObject*)player_p, btVector3(box_half_size.x * scaleX, box_half_size.y * scaleY, box_half_size.z * scaleZ), 
-		0, col_mask, col_to_masks, info);
+		0, col_mask, col_to_masks, info, posX, posY, posZ);
 }
 
 PlayerBox::~PlayerBox()

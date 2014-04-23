@@ -79,5 +79,6 @@ Ogre::ParticleSystem* ParticleManager::EmitBloodSpurt(Ogre::Vector3 origin,Ogre:
 }
 
 Ogre::ParticleSystem* ParticleManager::EmitDust(Ogre::Vector3 origin,Ogre::Vector3 direction){
+  AudioManager::instance()->playBulletDirtCollision(origin);
   return ParticleManager::instance()->Emit("DustCloud",origin,direction);
 }
