@@ -48,12 +48,6 @@ void NetworkManager::sendChat(const char* msg)
 	send(&cp, sizeof(ChatPacket), true);
 }
 
-void NetworkManager::sendParticle()
-{
-	send(&particle->info, sizeof(ParticleInfo), true);
-	particle->clear();
-}
-
 void NetworkManager::receiveHeartbeat(HeartBeatInfo* info)
 {
 	if (info->player_id == player_id)
@@ -61,14 +55,6 @@ void NetworkManager::receiveHeartbeat(HeartBeatInfo* info)
 
 	if(GameState::instance()->players[info->player_id])
 		heartbeat->updatePlayer(info, GameState::instance()->players[info->player_id]);
-}
-
-void NetworkManager::receiveParticle(ParticleInfo* info)
-{
-	if (info->player_id == player_id)
-		return;
-
-	particle->updateParticles(info);
 }
 
 void NetworkManager::startServer() {
@@ -175,7 +161,6 @@ void NetworkManager::changeId(uint32_t id)
 	player_id = id;
 
 	heartbeat->info.player_id = id;
-	particle->info.player_id = id;
 }
 
 

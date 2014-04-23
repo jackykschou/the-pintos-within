@@ -1,79 +1,59 @@
 #ifndef __ParticlePacket_h_
 #define __ParticlePacket_h_
 
-#define BLOODARRAYLENGTH 8
-#define DUSTARRAYLENGTH 8
-
-#define BLOOD 1
-#define DUST 2
-#define ROCKET_EXPLODE 8
-#define PINTO_EXPLODE 16
-
 #include "common.h"
 
-struct ParticleInfo
+struct DustInfo
 {
 	char type;
-
 	uint32_t player_id;
 
-	uint32_t flags;
+	float posX;
+	float posY;
+	float posZ;
 
-	uint32_t blood_len;
+	float dirX;
+	float dirY;
+	float dirZ;
+};
 
-	float blood_posXs[BLOODARRAYLENGTH];
-	float blood_posYs[BLOODARRAYLENGTH];
-	float blood_posZs[BLOODARRAYLENGTH];
+struct BloodInfo
+{
+	char type;
+	uint32_t player_id;
 
-	float blood_dirXs[BLOODARRAYLENGTH];
-	float blood_dirYs[BLOODARRAYLENGTH];
-	float blood_dirZs[BLOODARRAYLENGTH];
+	float posX;
+	float posY;
+	float posZ;
 
-	uint32_t dust_len;
+	float dirX;
+	float dirY;
+	float dirZ;
+};
 
-	float dust_posXs[DUSTARRAYLENGTH];
-	float dust_posYs[DUSTARRAYLENGTH];
-	float dust_posZs[DUSTARRAYLENGTH];
+struct BlasterExplodeInfo
+{
+	char type;
+	uint32_t player_id;
 
-	float dust_dirXs[DUSTARRAYLENGTH];
-	float dust_dirYs[DUSTARRAYLENGTH];
-	float dust_dirZs[DUSTARRAYLENGTH];
+	float posX;
+	float posY;
+	float posZ;
 
-	float rocketExplode_posX;
-	float rocketExplode_posY;
-	float rocketExplode_posZ;
-
-	float pintoExplode_posX;
-	float pintoExplode_posY;
-	float pintoExplode_posZ;
+	float radius;
 };
 
 class ParticlePacket
 {
 public:
-  ParticleInfo info;
-
-  ParticlePacket();
-
-  void clear();
-
   void setBlood(float, float, float, float, float, float);
-  bool hasBlood(ParticleInfo*);
-  void initBlood(ParticleInfo*);
+  void receiveBlood(BloodInfo*);
 
   void setDust(float, float, float, float, float, float);
-  bool hasDust(ParticleInfo*);
-  void initDust(ParticleInfo*);
+  void receiveDust(DustInfo*);
 
-  void setRocketExplosion(float, float, float);
-  bool hasRocketExplosion(ParticleInfo*);
-  void initRocketExplosion(ParticleInfo*);
-
-  void setPintoExplosion(float, float, float);
-  bool hasPintoExplosion(ParticleInfo*);
-  void initPintoExplosion(ParticleInfo*);
-
-  void updateParticles(ParticleInfo*);
+  void setBlasterExplosion(float, float, float, float);
+  void receiveBlasterExplosion(BlasterExplodeInfo*);
 };
 
 #endif

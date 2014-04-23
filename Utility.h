@@ -51,6 +51,9 @@ enum collisiontypes {
 #define WEAPON_CHANGE 9
 #define WEAPON_SPAWN 10
 #define CHATPACK 11
+#define BLOOD 12
+#define DUST 13
+#define BLASTER_EXPLODE 14
 
 #define WALL "Wall"
 #define FLOORGRASS "FloorGrass"

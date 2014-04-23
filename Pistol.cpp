@@ -17,6 +17,10 @@ Pistol::Pistol(PlayerCharacter* player_p, std::string mesh_name, float posX,
         Ogre::Vector3(tran->posX + posX, tran->posY + posY, tran->posZ + posZ)));
     damage = 16;
     shoot_distance = 2000;
+
+    reload_speed = 0.7f;
+
+    reload_time = reload_animation_state->getLength() * reload_speed;
 }
 
 void Pistol::shoot_hook()
@@ -52,7 +56,6 @@ void Pistol::shoot_hook()
 
                 ParticleManager::instance()->EmitBloodSpurt(Ogre::Vector3(point.x(), point.y(), point.z()), -cam_dir);
                 NetworkManager::instance()->particle->setBlood(point.x(), point.y() , point.z(), -cam_dir.x, -cam_dir.y, -cam_dir.z);
-                NetworkManager::instance()->sendParticle();
             }
         }
         else
@@ -62,7 +65,6 @@ void Pistol::shoot_hook()
             ParticleManager::instance()->EmitDust(Ogre::Vector3(point.x(), point.y(), point.z()), -cam_dir);
 
             NetworkManager::instance()->particle->setDust(point.x(), point.y() , point.z(), -cam_dir.x, -cam_dir.y, -cam_dir.z);
-            NetworkManager::instance()->sendParticle();
         }
     }
 }

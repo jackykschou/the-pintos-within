@@ -25,7 +25,7 @@ PlayerCharacter::PlayerCharacter(bool is_yourself_p, Scene* scene, std::string m
 	max_health = 100;
 	health = max_health;
 	health_regen = 1.0;
-	health_regen_rate = 1.0;
+	health_regen_rate = 0.3;
 
 	Transform* tran = this->getComponent<Transform>();
 	tr = tran;
@@ -594,7 +594,7 @@ void PlayerCharacter::update()
 				is_reloading = true;
 				weapon_reload_animation_state->setWeight(1);
 				weapon_reload_animation_state->setEnabled(true);
-				weapon_reload_animation_state->addTime(GraphicsManager::instance()->getFrameEvent()->timeSinceLastFrame);
+				weapon_reload_animation_state->addTime(GraphicsManager::instance()->getFrameEvent()->timeSinceLastFrame * (1 / current_weapon->reload_speed));
 
 				current_jet_pack_reload_animation_state->setWeight(1);
 				current_jet_pack_reload_animation_state->setEnabled(true);

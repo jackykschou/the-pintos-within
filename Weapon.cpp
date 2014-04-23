@@ -5,6 +5,8 @@ Weapon::Weapon(PlayerCharacter* player_p, std::string mesh_name, int id_p, doubl
 			float posY, float posZ, float rotX, float rotY, float rotZ, float rotW,
 			float scaleX, float scaleY, float scaleZ, PlayerBox* pos) : Component((GameObject*)player_p)
 {
+	reload_speed = 1.0f;
+
 	_transform = ((GameObject*)player_p)->getComponent<Transform>();
 
 	player = player_p;
@@ -66,7 +68,7 @@ Weapon::Weapon(PlayerCharacter* player_p, std::string mesh_name, int id_p, doubl
 	reload_animation_state->setEnabled(false);
 	reload_animation_state->setWeight(0);
 
-	reload_time = reload_animation_state->getLength();
+	reload_time = reload_animation_state->getLength() * reload_speed;
 
 	jumping_animation_state = entity->getAnimationState("Jump");
 	jumping_animation_state->setLoop(false);
@@ -112,7 +114,6 @@ void Weapon::reload()
 	if((player->current_weapon == this) && !is_reloading && (current_mag_count != max_mag_cap) && 
 		(current_ammo != 0) && !player->is_dead && !is_shooting)
 	{
-		LOG("Reloading...");
 		AudioManager::instance()->playReload(Ogre::Vector3(player->transform->posX, player->transform->posY, player->transform->posZ),
 											weapon_id);
 		reload_timer = 0;
@@ -135,7 +136,6 @@ void Weapon::update()
 			reload_timer += GraphicsManager::instance()->getFrameEvent()->timeSinceLastFrame;
 			if(reload_timer >= reload_time) 
 			{
-				LOG("Finish Reloading...");
 				is_reloading = false;
 				current_ammo = (current_ammo >= max_mag_cap) ? (current_ammo - (max_mag_cap - current_mag_count)) : 0;
 				current_mag_count = (current_ammo >= max_mag_cap) ? max_mag_cap : current_ammo;

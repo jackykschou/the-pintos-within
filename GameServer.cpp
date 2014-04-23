@@ -227,12 +227,6 @@ void GameServer::processPacket(UDPpacket* packet) {
 			NetworkManager::instance()->receiveHeartbeat(hinfo);
 			broadcastData(hinfo, sizeof(HeartBeatInfo), false);
 			break;
-		case PARTICLEPACK:
-			ParticleInfo* pinfo;
-			pinfo =  (ParticleInfo*) packetData;
-			NetworkManager::instance()->receiveParticle(pinfo);
-			broadcastData(pinfo, sizeof(ParticleInfo), true);
-			break;
 		case CHATPACK:
 			ChatPacket* chat;
 			chat = (ChatPacket*)packetData;
@@ -261,6 +255,24 @@ void GameServer::processPacket(UDPpacket* packet) {
 			weapon_spawn_info =  (WeaponSpawnInfo*) packetData;
 			NetworkManager::instance()->vital->receiveSpawnWeapon(weapon_spawn_info);
 			broadcastData(weapon_spawn_info, sizeof(WeaponSpawnInfo), true);
+			break;
+		case BLOOD:
+			BloodInfo* blood_info;
+			blood_info =  (BloodInfo*) packetData;
+			NetworkManager::instance()->particle->receiveBlood(blood_info);
+			broadcastData(blood_info, sizeof(BloodInfo), true);
+			break;
+		case DUST:
+			DustInfo* dust_info;
+			dust_info =  (DustInfo*) packetData;
+			NetworkManager::instance()->particle->receiveDust(dust_info);
+			broadcastData(dust_info, sizeof(DustInfo), true);
+			break;
+		case BLASTER_EXPLODE:
+			BlasterExplodeInfo* blaster_info;
+			blaster_info =  (BlasterExplodeInfo*) packetData;
+			NetworkManager::instance()->particle->receiveBlasterExplosion(blaster_info);
+			broadcastData(blaster_info, sizeof(BlasterExplodeInfo), true);
 	}
 }
 

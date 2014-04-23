@@ -29,6 +29,8 @@ public:
 	float reload_timer;
 	float shoot_timer;
 
+	float reload_speed;
+
 	int weapon_id;
 
 	double reload_time;
