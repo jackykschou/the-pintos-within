@@ -2,19 +2,21 @@
 
 <GUILayout >
   <Window Type="TaharezLook/FrameWindow" Name="JoinGameMenu" >
+    <Property Name="InheritsAlpha" Value="False" />
+    <Property Name="UnifiedAreaRect" Value="{{0,0},{0,0},{1,0},{1,0}}" />
     <Window Type="TaharezLook/StaticText" Name="JoinGameMenu/NameLabel" >
-      <Property Name="Text" Value="max players:" />
-      <Property Name="UnifiedAreaRect" Value="{{0.375,0},{0.4375,0},{0.625,0},{0.5625,0}}" />
+      <Property Name="Text" Value="your name:" />
+      <Property Name="UnifiedAreaRect" Value="{{0.25,0},{0.0244,0},{0.75,0},{0.0844,0}}" />
     </Window>
     <Window Type="TaharezLook/Editbox" Name="JoinGameMenu/Name" >
-      <Property Name="UnifiedAreaRect" Value="{{0.375,0},{0.4375,0},{0.625,0},{0.5625,0}}" />
+      <Property Name="UnifiedAreaRect" Value="{{0.25,0},{0.1089,0},{0.75,0},{0.1689,0}}" />
     </Window>
     <Window Type="TaharezLook/StaticText" Name="JoinGameMenu/HostsLabel" >
-      <Property Name="Text" Value="max players:" />
-      <Property Name="UnifiedAreaRect" Value="{{0.375,0},{0.4375,0},{0.625,0},{0.5625,0}}" />
+      <Property Name="Text" Value="connect to a host:" />
+      <Property Name="UnifiedAreaRect" Value="{{0.25,0},{0.1933,0},{0.75,0},{0.2533,0}}" />
     </Window>
     <Window Type="TaharezLook/ItemListbox" Name="JoinGameMenu/Hosts" >
-      <Property Name="UnifiedAreaRect" Value="{{0.04,0},{0.18,0},{0.46,0},{0.48,0}}" />
+      <Property Name="UnifiedAreaRect" Value="{{0.25,0},{0.2778,0},{0.75,0},{0.6378,0}}" />
         <Window Type="TaharezLook/ListboxItem" >
           <Property Name="Text" Value="Game 1" />
         </Window>
@@ -22,12 +24,20 @@
           <Property Name="Text" Value="Game 2" />
         </Window>
     </Window>
+    <Window Type="TaharezLook/Button" Name="JoinGameMenu/HostsJoin" >
+      <Property Name="Text" Value="Continue" />
+      <Property Name="UnifiedAreaRect" Value="{{0.525,0},{0.6622,0},{0.75,0},{0.7222,0}}" />
+    </Window>
     <Window Type="TaharezLook/StaticText" Name="JoinGameMenu/HostLabel" >
-      <Property Name="Text" Value="max players:" />
-      <Property Name="UnifiedAreaRect" Value="{{0.375,0},{0.4375,0},{0.625,0},{0.5625,0}}" />
+      <Property Name="Text" Value="manual connect:" />
+      <Property Name="UnifiedAreaRect" Value="{{0.25,0},{0.7467,0},{0.75,0},{0.8067,0}}" />
     </Window>
     <Window Type="TaharezLook/Editbox" Name="JoinGameMenu/Host" >
-      <Property Name="UnifiedAreaRect" Value="{{0.375,0},{0.4375,0},{0.625,0},{0.5625,0}}" />
+      <Property Name="UnifiedAreaRect" Value="{{0.25,0},{0.8311,0},{0.75,0},{0.8911,0}}" />
+    </Window>
+    <Window Type="TaharezLook/Button" Name="JoinGameMenu/HostJoin" >
+      <Property Name="Text" Value="Continue" />
+      <Property Name="UnifiedAreaRect" Value="{{0.525,0},{0.9156,0},{0.75,0},{0.9756,0}}" />
     </Window>
   </Window>
 </GUILayout>

@@ -84,6 +84,12 @@ class MainMenu:public Gui{
 class JoinGameMenu:public Gui{
   public:
     JoinGameMenu();
+  private:
+    CEGUI::Editbox* _name;
+    CEGUI::ItemListbox* _hosts;
+    CEGUI::PushButton* _hostsJoin;
+    CEGUI::Editbox* _host;
+    CEGUI::PushButton* _hostJoin;
 };
 class CreateGameMenu:public Gui{
   public:

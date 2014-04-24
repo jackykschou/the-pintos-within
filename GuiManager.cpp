@@ -100,7 +100,7 @@ bool GuiManager::Start(const CEGUI::EventArgs& e){
 bool GuiManager::Connect(const CEGUI::EventArgs& e){
   LOG("STARTING IN CLIENT MODE");
   //NetworkManager::instance()->startClient(static_cast<HostDialog*>(_hostDialog)->ReadHost());
-  _current=_waitingPrompt;
+  _current=_lobby;
   _current->Display();
   return false;
 }
@@ -202,9 +202,14 @@ MainMenu::MainMenu():Gui("MainMenu.layout"){
   _exit->subscribeEvent(CEGUI::PushButton::EventClicked,CEGUI::Event::Subscriber(&GuiManager::Exit,GuiManager::instance()));
 }
 JoinGameMenu::JoinGameMenu():Gui("JoinGameMenu.layout"){
-  //_name=static_cast<CEGUI::Editbox*>(_root->getChild("JoinGameMenu/Name"));
-  //_hosts=
-  //_host=static_cast<CEGUI::Editbox*>(_root->getChild("JoinGameMenu/Host"));
+  _name=static_cast<CEGUI::Editbox*>(_root->getChild("JoinGameMenu/Name"));
+  _hosts=static_cast<CEGUI::ItemListbox*>(_root->getChild("JoinGameMenu/Hosts"));
+  _hostsJoin=static_cast<CEGUI::PushButton*>(_root->getChild("JoinGameMenu/HostsJoin"));
+  _host=static_cast<CEGUI::Editbox*>(_root->getChild("JoinGameMenu/Host"));
+  _hostJoin=static_cast<CEGUI::PushButton*>(_root->getChild("JoinGameMenu/HostJoin"));
+  
+  _hostsJoin->subscribeEvent(CEGUI::PushButton::EventClicked,CEGUI::Event::Subscriber(&GuiManager::Connect,GuiManager::instance()));
+  _hostJoin->subscribeEvent(CEGUI::PushButton::EventClicked,CEGUI::Event::Subscriber(&GuiManager::Connect,GuiManager::instance()));
 }
 CreateGameMenu::CreateGameMenu():Gui("CreateGameMenu.layout"){
   _name=static_cast<CEGUI::Editbox*>(_root->getChild("CreateGameMenu/Name"));
