@@ -10,7 +10,7 @@
 ShotGun::ShotGun(PlayerCharacter* player_p, std::string mesh_name, float posX, 
 			float posY, float posZ, float rotX, float rotY, float rotZ, float rotW,
 			float scaleX, float scaleY, float scaleZ, PlayerBox* box) : 
-			Weapon(player_p, mesh_name, SHOTGUN_ID, 3, 1, 1, 30, 0.4, posX, 
+			Weapon(player_p, mesh_name, 1, 3, 1, 1, 40, 0.4, posX, 
 			posY, posZ, rotX, rotY, rotZ, rotW, scaleX, scaleY, scaleZ, box)
 
 {
@@ -32,14 +32,14 @@ void ShotGun::shoot_hook()
 
     Ogre::Vector3 shoot_vector = shoot_pos->node->convertLocalToWorldPosition(shoot_pos->node->getPosition());
 
-    btVector3 from = btVector3(cam_pos.x, cam_pos.y, cam_pos.z) + (btVector3(cam_dir.x, cam_dir.y, cam_dir.z) * 75);
+    btVector3 from = btVector3(cam_pos.x, cam_pos.y, cam_pos.z) + (btVector3(cam_dir.x, cam_dir.y, cam_dir.z) * shoot_from_offset);
     btVector3 pre_to = btVector3(cam_pos.x, cam_pos.y, cam_pos.z) + (btVector3(cam_dir.x, cam_dir.y, cam_dir.z) * shoot_distance);
 
     btVector3 to;
 
     for (int i = 0; i < SHOOT_NUM; ++i)
     {
-        int rand_shoot_offset = 200;
+        int rand_shoot_offset = 300;
         to = pre_to + btVector3(RAND_RANGE(0, rand_shoot_offset) - rand_shoot_offset / 2, RAND_RANGE(0, rand_shoot_offset) - rand_shoot_offset / 2, 
             RAND_RANGE(0, rand_shoot_offset) - rand_shoot_offset / 2);
 

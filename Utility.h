@@ -29,7 +29,8 @@ enum collisiontypes {
     COL_BALL = BIT(2),
     COL_BULLET = BIT(3),
     COL_PICKUP = BIT(4),
-    COL_HIT_BOX = BIT(5)
+    COL_HIT_BOX = BIT(5),
+    COL_INACTIVE = BIT(6)
 };
 
 #define STATIC_COLLIDER_WITH (COL_BALL | COL_CHARACTER | COL_BULLET | COL_PICKUP)
@@ -54,6 +55,8 @@ enum collisiontypes {
 #define BLOOD 12
 #define DUST 13
 #define BLASTER_EXPLODE 14
+#define PLAY_FIRE_SOUND 15
+#define CHANGE_PINTO 16
 
 #define WALL "Wall"
 #define FLOORGRASS "FloorGrass"
@@ -65,15 +68,16 @@ enum collisiontypes {
 #define SKY "SkyHemi"
 #define WEAPONSPAWNER "Spawner.Weapon"
 
-#define MAX_PLAYER 10
-
 //current_state
 #define MAIN_MENU 1
 #define HOST_MENU 2
 #define CLIENT_MENU 3
 #define LOBBY_AS_HOST 4
 #define LOBBY_AS_CLIENT 5
-#define IN_GAME 6
+#define LOADING 6
+#define IN_GAME 7
+
+#define MAX_PLAYER 15
 
 //game_mode
 #define ELIMINATION 1
@@ -86,6 +90,7 @@ enum collisiontypes {
 
 //map
 #define THEGAUNTLET 1
+#define DUSTTWO 2
 
 #define PISTOL_ID 0
 #define SHOTGUN_ID 1

@@ -7,55 +7,109 @@
 
 Melee::Melee(PlayerCharacter* player_p, std::string mesh_name, float posX, 
 			float posY, float posZ, float rotX, float rotY, float rotZ, float rotW,
-			float scaleX, float scaleY, float scaleZ, PlayerBox* box) : 
-			Weapon(player_p, mesh_name, MELEE_ID, 3, 0, 1, 1, 0.3, posX, 
-			posY, posZ, rotX, rotY, rotZ, rotW, scaleX, scaleY, scaleZ, box)
-
+			float scaleX, float scaleY, float scaleZ, PlayerBox* box) : Weapon(player_p)
 {
+    reload_speed = 1.0f;
+
+    _transform = ((GameObject*)player_p)->getComponent<Transform>();
+
+    player = player_p;
+    shoot_pos = box;
+
+    max_mag_cap = 1;
+    max_ammo = 1;
+
+    current_mag_count = 1;
+    current_ammo = 1;
+
+    weapon_id = 4;
+    shoot_cost = 0;
+    reload_time = 1;
+    cooldown = 0.4;
+    reload_timer = 0;
+    shoot_timer = 0;
+
+    is_reloading = false;
+    is_shooting = false;
+
+    std::ostringstream id_stream;
+    id_stream << _gameObject->id;
+
+    entity = ((GameObject*)player_p)->scene->manager->createEntity(mesh_name + std::string(" Entity") + id_stream.str()
+                                                                            , mesh_name.c_str());
+    entity->getMesh()->_setBounds(Ogre::AxisAlignedBox(-50,-50,-50,50,50,50)); //does change bounding box size, but want to do this dynamically
+    // entity->getMesh()->_setBoundingSphereRadius(10.0f);  // set inflation amount
+
+    // entity->getMesh()->_setBounds(Ogre::AxisAlignedBox ( Ogre::AxisAlignedBox::Extent::EXTENT_INFINITE));
+
+    node = player->mesh->node->createChildSceneNode(mesh_name + std::string(" Node") + id_stream.str(), 
+                                                  player->mesh->node->convertWorldToLocalPosition(Ogre::Vector3(_transform->posX + posX, _transform->posX + posY, _transform->posX + posZ)));
+    node->attachObject(entity);
+    entity->setCastShadows(true);
+
+    node->setPosition(player->mesh->node->convertWorldToLocalPosition(Ogre::Vector3(_transform->posX + posX, _transform->posY + posY, _transform->posZ + posZ)));
+    node->setOrientation(node->convertWorldToLocalOrientation(Ogre::Quaternion(rotW, rotX, rotY, rotZ)));
+    node->setInheritScale (false);
+    node->setScale (scaleX, scaleY, scaleZ);
+
+    shooting_animation_state = entity->getAnimationState("PintoStab");
+    shooting_animation_state->setLoop(false);
+    shooting_animation_state->setEnabled(false);
+    shooting_animation_state->setWeight(0);
+
+    running_animation_state = entity->getAnimationState("PintoRun");
+    running_animation_state->setLoop(true);
+    running_animation_state->setEnabled(false);
+    running_animation_state->setWeight(0);
+
+    idle_animation_state = entity->getAnimationState("PintoIdle");
+    idle_animation_state->setLoop(true);
+    idle_animation_state->setEnabled(false);
+    idle_animation_state->setWeight(0);
+
+    reload_animation_state = entity->getAnimationState("PintoStab");
+    reload_animation_state->setLoop(false);
+    reload_animation_state->setEnabled(false);
+    reload_animation_state->setWeight(0);
+
+    reload_time = reload_animation_state->getLength() * reload_speed;
+
+    jumping_animation_state = entity->getAnimationState("PintoJump");
+    jumping_animation_state->setLoop(false);
+    jumping_animation_state->setEnabled(false);
+    jumping_animation_state->setWeight(0);
+
+    die_animation_state = entity->getAnimationState("PintoDeath");
+    die_animation_state->setLoop(false);
+    die_animation_state->setEnabled(false);
+    die_animation_state->setWeight(0);
+
+
     Transform* tran = ((GameObject*)player_p)->getComponent<Transform>();
     node->setPosition(player->mesh->node->convertWorldToLocalPosition(
         Ogre::Vector3(tran->posX + posX, tran->posY + posY, tran->posZ + posZ)));
-    damage = 60;
-    damage_radius = 50;
+    
+    damage = 30;
+    damage_radius = 150;
+
+    shooting_animation_state->setTimePosition(0);
+    reload_animation_state->setTimePosition(0);
 }
 
 void Melee::shoot_hook()
 {
-    Ogre::Vector3 cam_dir = ((Camera*)(player->controller->fps_camera))->camera->getDirection();
-    Ogre::Vector3 cam_pos = ((Camera*)(player->controller->fps_camera))->camera->getPosition();
+    btVector3 point = btVector3(node->_getDerivedPosition().x, node->_getDerivedPosition().y, node->_getDerivedPosition().z);
 
-    Ogre::Vector3 shoot_vector = shoot_pos->node->convertLocalToWorldPosition(shoot_pos->node->getPosition());
-
-    btVector3 from = btVector3(cam_pos.x, cam_pos.y, cam_pos.z) + (btVector3(cam_dir.x, cam_dir.y, cam_dir.z) * 75);
-    btVector3 to = btVector3(cam_pos.x, cam_pos.y, cam_pos.z) + (btVector3(cam_dir.x, cam_dir.y, cam_dir.z) * shoot_distance);
-
-    btCollisionWorld::ClosestRayResultCallback rayCallback(from, to);
-
-    rayCallback.m_collisionFilterGroup = COL_BULLET;
-    rayCallback.m_collisionFilterMask = COL_BULLET_COLLIDER_WITH;
-
-    Component::_gameObject->scene->physics_world->rayTest(from, to, rayCallback);
-    if(rayCallback.hasHit())
+    for(int i = 0; i < GameState::instance()->num_player; ++i)
     {
-        btVector3 point = rayCallback.m_hitPointWorld;
-        float radius = blast_radius * charge_scale;
-        int damage_sent = damage * charge_scale;
-
-        // ParticleManager::instance()->EmitBloodSpurt(Ogre::Vector3(point.x(), point.y(), point.z()), -cam_dir);
-        // NetworkManager::instance()->particle->setBlood(point.x(), point.y() , point.z(), -cam_dir.x, -cam_dir.y, -cam_dir.z);
-        // NetworkManager::instance()->sendParticle();
-
-        for(int i = 0; i < GameState::instance()->num_player; ++i)
+        if(GameState::instance()->players[i] != NULL && GameState::instance()->players[i] != GameState::instance()->player)
         {
-            if(GameState::instance()->players[i] != NULL && GameState::instance()->players[i] != GameState::instance()->player)
+            Transform* tran = GameState::instance()->players[i]->transform;
+            btVector3 tran_vector = btVector3(tran->posX, tran->posY, tran->posZ);
+            if(tran_vector.distance(point) <= damage_radius)
             {
-                Transform* tran = GameState::instance()->players[i]->transform;
-                btVector3 tran_vector = btVector3(tran->posX, tran->posY, tran->posZ);
-                if(tran_vector.distance(point) <= radius)
-                {
-                    uint32_t enemy_id = GameState::instance()->players[i]->player_id;
-                    NetworkManager::instance()->vital->setDamage(damage_sent, enemy_id);
-                }
+                uint32_t enemy_id = GameState::instance()->players[i]->player_id;
+                NetworkManager::instance()->vital->setDamage(damage, enemy_id);
             }
         }
     }

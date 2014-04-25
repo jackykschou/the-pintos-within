@@ -43,6 +43,6 @@
 #include "Blaster.h"
 #include "PlayerPickUp.h"
 #include "WeaponSpawner.h"
-// #include "Melee.h"
+#include "Melee.h"
 
 #endif // #ifndef __TheEngine_h_

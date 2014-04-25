@@ -8,7 +8,7 @@
 Pistol::Pistol(PlayerCharacter* player_p, std::string mesh_name, float posX, 
 			float posY, float posZ, float rotX, float rotY, float rotZ, float rotW,
 			float scaleX, float scaleY, float scaleZ, PlayerBox* box) : 
-			Weapon(player_p, mesh_name, PISTOL_ID, 3, 1, 12, 3000, 0.1, posX, 
+			Weapon(player_p, mesh_name, 0, 3, 1, 12, 120, 0.1, posX, 
 			posY, posZ, rotX, rotY, rotZ, rotW, scaleX, scaleY, scaleZ, box)
 
 {
@@ -18,7 +18,7 @@ Pistol::Pistol(PlayerCharacter* player_p, std::string mesh_name, float posX,
     damage = 16;
     shoot_distance = 2000;
 
-    reload_speed = 0.7f;
+    reload_speed = 1.0;
 
     reload_time = reload_animation_state->getLength() * reload_speed;
 }
@@ -30,7 +30,7 @@ void Pistol::shoot_hook()
 
     Ogre::Vector3 shoot_vector = shoot_pos->node->convertLocalToWorldPosition(shoot_pos->node->getPosition());
 
-    btVector3 from = btVector3(cam_pos.x, cam_pos.y, cam_pos.z) + (btVector3(cam_dir.x, cam_dir.y, cam_dir.z) * 75);
+    btVector3 from = btVector3(cam_pos.x, cam_pos.y, cam_pos.z) + (btVector3(cam_dir.x, cam_dir.y, cam_dir.z) * shoot_from_offset);
     btVector3 to = btVector3(cam_pos.x, cam_pos.y, cam_pos.z) + (btVector3(cam_dir.x, cam_dir.y, cam_dir.z) * shoot_distance);
 
     btCollisionWorld::ClosestRayResultCallback rayCallback(from, to);
@@ -46,7 +46,6 @@ void Pistol::shoot_hook()
         if(rayCallback.m_collisionObject->getUserPointer() != NULL)
         {
             HitBox* hit_box = (HitBox*)(rayCallback.m_collisionObject->getUserPointer());
-            LOG("hitted player id: " << hit_box->player->player_id << "killer id: " << NetworkManager::instance()->player_id);
             if(hit_box->player->player_id != NetworkManager::instance()->player_id)
             {
                 int damage_sent = hit_box->getDamage(damage);

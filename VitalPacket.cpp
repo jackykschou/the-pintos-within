@@ -48,8 +48,6 @@ void VitalPacket::receivePlayerRespawn(PlayerRespawnInfo* info_p)
 	if (info_p->player_id == NetworkManager::instance()->player_id)
 		return;
 
-	LOG("Player " << info_p->player_respawn_id << " respawn");
-
 	if(GameState::instance()->players[info_p->player_respawn_id] != NULL)
 	{
 		((GameObject*)(GameState::instance()->players[info_p->player_respawn_id]))->scene->removeGameObject((GameObject*)GameState::instance()->players[info_p->player_respawn_id]);
@@ -101,7 +99,8 @@ void VitalPacket::receiveChangeWeapon(ChangeWeaponInfo* info_p)
 	if (info_p->player_id == NetworkManager::instance()->player_id)
 		return;
 
-	GameState::instance()->players[info_p->player_id]->changeWeapon(info_p->weapon_index);
+	if(GameState::instance()->players[info_p->player_id] != NULL)
+		GameState::instance()->players[info_p->player_id]->changeWeapon(info_p->weapon_index);
 }
 
 void VitalPacket::setSpawnWeapon(uint32_t id, float x, float y, float z)
@@ -123,3 +122,48 @@ void VitalPacket::receiveSpawnWeapon(WeaponSpawnInfo* info)
 	
 	GameState::instance()->weapon_spawner->spawnWeapon(info->spawnX, info->spawnY, info->spawnZ, info->weapon_id);
 }
+
+void VitalPacket::setPlayerFireSound()
+{
+	PlayFireSoundInfo info;
+	info.type = PLAY_FIRE_SOUND;
+	info.player_id = NetworkManager::instance()->player_id;
+
+	NetworkManager::instance()->send(&info, sizeof(PlayFireSoundInfo), true);
+}
+
+void VitalPacket::receivePlayFireSound(PlayFireSoundInfo* info_p)
+{
+	if (info_p->player_id == NetworkManager::instance()->player_id)
+		return;
+
+	if(GameState::instance()->players[info_p->player_id] != NULL)
+	{
+		AudioManager::instance()->playWeaponFire(Ogre::Vector3(GameState::instance()->players[info_p->player_id]->transform->posX, 
+																GameState::instance()->players[info_p->player_id]->transform->posY, 
+																GameState::instance()->players[info_p->player_id]->transform->posZ),
+												GameState::instance()->players[info_p->player_id]->current_weapon->weapon_id);
+	}
+}
+
+void VitalPacket::setChangePinto()
+{
+	ChangePintoInfo info;
+	info.type = CHANGE_PINTO;
+	info.player_id = NetworkManager::instance()->player_id;
+
+	NetworkManager::instance()->send(&info, sizeof(ChangePintoInfo), true);
+}
+
+void VitalPacket::receiveChangePinto(ChangePintoInfo* info_p)
+{
+	if (info_p->player_id == NetworkManager::instance()->player_id)
+		return;
+
+	if(GameState::instance()->players[info_p->player_id] != NULL)
+	{
+		GameState::instance()->players[info_p->player_id]->changeToPinto();
+	}
+
+}
+

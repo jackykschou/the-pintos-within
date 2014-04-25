@@ -18,6 +18,9 @@ void ParticlePacket::setBlood(float posX, float posY, float posZ, float dirX, fl
 
 void ParticlePacket::receiveBlood(BloodInfo* info_p)
 {
+	if (info_p->player_id == NetworkManager::instance()->player_id)
+		return;
+
 	ParticleManager::instance()->EmitBloodSpurt(Ogre::Vector3(info_p->posX, info_p->posY, info_p->posZ), 
 											Ogre::Vector3(info_p->dirX, info_p->dirY, info_p->dirZ));
 }
@@ -39,6 +42,9 @@ void ParticlePacket::setDust(float posX, float posY, float posZ, float dirX, flo
 
 void ParticlePacket::receiveDust(DustInfo* info_p)
 {
+	if (info_p->player_id == NetworkManager::instance()->player_id)
+		return;
+
 	ParticleManager::instance()->EmitDust(Ogre::Vector3(info_p->posX, info_p->posY, info_p->posZ), 
 											Ogre::Vector3(info_p->dirX, info_p->dirY, info_p->dirZ));
 }
@@ -58,5 +64,8 @@ void ParticlePacket::setBlasterExplosion(float posX, float posY, float posZ, flo
 
 void ParticlePacket::receiveBlasterExplosion(BlasterExplodeInfo* info_p)
 {
+	if (info_p->player_id == NetworkManager::instance()->player_id)
+		return;
+	
 	ParticleManager::instance()->EmitRocketExplosion(Ogre::Vector3(info_p->posX, info_p->posY, info_p->posZ));
 }

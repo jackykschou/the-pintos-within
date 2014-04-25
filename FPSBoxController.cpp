@@ -5,6 +5,8 @@ FPSBoxController::FPSBoxController(bool is_yourself_p, GameObject* gameObject, s
 														const btVector3& boxHalfExtents, btScalar step_height, 
 														int col_mask, int col_to_masks, Ogre::SceneNode* node) : Component(gameObject), currVel(0, 0, 0), jetVel(0, 0, 0)
 {
+	player = (PlayerCharacter*) gameObject;
+
 	is_yourself = is_yourself_p;
 
 	jet_pack_max = 2000;

@@ -239,5 +239,15 @@ void GameClient::processPacket(UDPpacket* packet) {
 			BlasterExplodeInfo* blaster_info;
 			blaster_info =  (BlasterExplodeInfo*) packetData;
 			NetworkManager::instance()->particle->receiveBlasterExplosion(blaster_info);
+			break;
+		case PLAY_FIRE_SOUND:
+			PlayFireSoundInfo* fire_info;
+			fire_info =  (PlayFireSoundInfo*) packetData;
+			NetworkManager::instance()->vital->receivePlayFireSound(fire_info);
+			break;
+		case CHANGE_PINTO:
+			ChangePintoInfo* change_pinto_info;
+			change_pinto_info =  (ChangePintoInfo*) packetData;
+			NetworkManager::instance()->vital->receiveChangePinto(change_pinto_info);
 	}
 }

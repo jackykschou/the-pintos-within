@@ -17,7 +17,6 @@ WeaponPickUp::WeaponPickUp(std::string tag, Scene* scene, std::string mesh_name,
 
 void WeaponPickUp::onPicked(PlayerCharacter* player)
 {
-	LOG("LAAAAAAAAAAAAAAAAAAAAAAAAA");
 	player->changeWeapon(weapon_id);
 }
 

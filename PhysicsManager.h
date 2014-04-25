@@ -24,9 +24,7 @@ protected:
 
 class PhysicsManager : public Singleton<PhysicsManager> 
 {
-
 	protected:
-
 	public:
 		btDefaultCollisionConfiguration* collisionConfiguration;
 		btCollisionDispatcher* dispatcher;

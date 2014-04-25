@@ -79,6 +79,16 @@ Weapon::Weapon(PlayerCharacter* player_p, std::string mesh_name, int id_p, doubl
 	die_animation_state->setLoop(false);
 	die_animation_state->setEnabled(false);
 	die_animation_state->setWeight(0);
+
+	shoot_from_offset = 100.0;
+
+	shooting_animation_state->setTimePosition(0);
+	reload_animation_state->setTimePosition(0);
+}
+
+Weapon::Weapon(PlayerCharacter* player_p):Component((GameObject*)player_p)
+{
+	shoot_from_offset = 100.0;
 }
 
 Weapon::~Weapon()
@@ -99,7 +109,10 @@ void Weapon::shoot()
 			shooting_animation_state->setTimePosition(0);
 			is_shooting = true;
 			current_mag_count -= shoot_cost;
-	    	AudioManager::instance()->playWeaponFire(curPos, weapon_id);
+
+	    AudioManager::instance()->playWeaponFire(curPos, weapon_id);
+	    NetworkManager::instance()->vital->setPlayerFireSound();
+
 			shoot_hook();
 		}
 		else if(current_ammo == 0 && current_mag_count == 0)
@@ -152,7 +165,5 @@ void Weapon::switchToThisWeapon()
 	reload_animation_state->setTimePosition(0);
 	current_mag_count = max_mag_cap;
 	current_ammo = max_ammo;
-
-	player->current_weapon = this;
 }
 
