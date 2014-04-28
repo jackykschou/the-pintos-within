@@ -71,8 +71,12 @@ bool GuiManager::IsExpectingKeyboard(){
   Hud* hud=static_cast<Hud*>(_hud);
   return _current==_joinGameMenu||_current==_createGameMenu||_current==_lobby||(_current==_hud&&hud->IsConsoleVisible());
 }
-bool GuiManager::HostGame(const CEGUI::EventArgs& e){
+bool GuiManager::CreateGame(const CEGUI::EventArgs& e){
   _current=_createGameMenu;
+  _current->Display();
+}
+bool GuiManager::HostGame(const CEGUI::EventArgs& e){
+  _current=_lobby;
   _current->Display();
   LOG("STARTING IN SERVER MODE");
   NetworkManager::instance()->startServer();
@@ -97,9 +101,15 @@ bool GuiManager::Start(const CEGUI::EventArgs& e){
   Hud* hud=static_cast<Hud*>(_hud);
   return false;
 }
-bool GuiManager::Connect(const CEGUI::EventArgs& e){
+bool GuiManager::ConnectToNamedHost(const CEGUI::EventArgs& e){
+  Connect(static_cast<JoinGameMenu*>(_joinGameMenu)->ReadNamedHost());
+}
+bool GuiManager::ConnectToSelectedHost(const CEGUI::EventArgs& e){
+  Connect(static_cast<JoinGameMenu*>(_joinGameMenu)->ReadSelectedHost());
+}
+bool GuiManager::Connect(const char* host){
   LOG("STARTING IN CLIENT MODE");
-  //NetworkManager::instance()->startClient(static_cast<HostDialog*>(_hostDialog)->ReadHost());
+  NetworkManager::instance()->startClient(host);
   _current=_lobby;
   _current->Display();
   return false;
@@ -197,7 +207,7 @@ MainMenu::MainMenu():Gui("MainMenu.layout"){
   _joinGame=static_cast<CEGUI::PushButton*>(_root->getChild("MainMenu/JoinGame"));
   _exit=static_cast<CEGUI::PushButton*>(_root->getChild("MainMenu/Exit"));
 
-  _hostGame->subscribeEvent(CEGUI::PushButton::EventClicked,CEGUI::Event::Subscriber(&GuiManager::HostGame,GuiManager::instance()));
+  _hostGame->subscribeEvent(CEGUI::PushButton::EventClicked,CEGUI::Event::Subscriber(&GuiManager::CreateGame,GuiManager::instance()));
   _joinGame->subscribeEvent(CEGUI::PushButton::EventClicked,CEGUI::Event::Subscriber(&GuiManager::JoinGame,GuiManager::instance()));
   _exit->subscribeEvent(CEGUI::PushButton::EventClicked,CEGUI::Event::Subscriber(&GuiManager::Exit,GuiManager::instance()));
 }
@@ -207,9 +217,20 @@ JoinGameMenu::JoinGameMenu():Gui("JoinGameMenu.layout"){
   _hostsJoin=static_cast<CEGUI::PushButton*>(_root->getChild("JoinGameMenu/HostsJoin"));
   _host=static_cast<CEGUI::Editbox*>(_root->getChild("JoinGameMenu/Host"));
   _hostJoin=static_cast<CEGUI::PushButton*>(_root->getChild("JoinGameMenu/HostJoin"));
+
+  _hosts->setMultiSelectEnabled(false);
   
-  _hostsJoin->subscribeEvent(CEGUI::PushButton::EventClicked,CEGUI::Event::Subscriber(&GuiManager::Connect,GuiManager::instance()));
-  _hostJoin->subscribeEvent(CEGUI::PushButton::EventClicked,CEGUI::Event::Subscriber(&GuiManager::Connect,GuiManager::instance()));
+  _hostsJoin->subscribeEvent(CEGUI::PushButton::EventClicked,CEGUI::Event::Subscriber(&GuiManager::ConnectToSelectedHost,GuiManager::instance()));
+  _hostJoin->subscribeEvent(CEGUI::PushButton::EventClicked,CEGUI::Event::Subscriber(&GuiManager::ConnectToNamedHost,GuiManager::instance()));
+}
+const char* JoinGameMenu::ReadNamedHost(){
+  return _host->getText().c_str();
+}
+const char* JoinGameMenu::ReadSelectedHost(){
+  return _hosts->getSelectedCount()>0?_hosts->getFirstSelectedItem()->getText().c_str():nullptr;
+}
+const char* JoinGameMenu::ReadName(){
+  return _name->getText().c_str();
 }
 CreateGameMenu::CreateGameMenu():Gui("CreateGameMenu.layout"){
   _name=static_cast<CEGUI::Editbox*>(_root->getChild("CreateGameMenu/Name"));
@@ -223,7 +244,7 @@ CreateGameMenu::CreateGameMenu():Gui("CreateGameMenu.layout"){
   _gameType->addItem(new CEGUI::ListboxTextItem("Hardcore",1));
   _gameType->addItem(new CEGUI::ListboxTextItem("Pintos",2));
   _continue=static_cast<CEGUI::PushButton*>(_root->getChild("CreateGameMenu/Continue"));
-  _continue->subscribeEvent(CEGUI::PushButton::EventClicked,CEGUI::Event::Subscriber(&GuiManager::Connect,GuiManager::instance()));
+  _continue->subscribeEvent(CEGUI::PushButton::EventClicked,CEGUI::Event::Subscriber(&GuiManager::HostGame,GuiManager::instance()));
 }
 Lobby::Lobby():Gui("Lobby.layout"){}
 
@@ -238,10 +259,7 @@ void WaitingPrompt::EnableStart(){
 void WaitingPrompt::RemoveStart(){
   _root->removeChildWindow(_start);
 }
-//const char* HostDialog::ReadHost(){
-//  return _host->getText().c_str();
-//}
-
+/*
 HostDialog::HostDialog():Gui("HostDialog.layout"){
   _host = static_cast<CEGUI::Editbox*>(_root->getChild("HostDialog/HostName"));
   _name = static_cast<CEGUI::Editbox*>(_root->getChild("HostDialog/PlayerName"));
@@ -259,14 +277,14 @@ const char* HostDialog::ReadHost(){
 const char* HostDialog::ReadName(){
   return _name->getText().c_str();
 }
-
+*/
 // random c helper
 char* trim(const char* str) {
   char *s = (char*)str;
   while (*s == ' ') s++;
   return s;
 }
-
+/*
 bool HostDialog::NameCaretMoved(const CEGUI::EventArgs& e){
   if (strcmp(ReadName(), "Your Name") == 0) {
     _name->setText("");
@@ -286,8 +304,14 @@ bool HostDialog::HostCaretMoved(const CEGUI::EventArgs& e){
     _host->setText("");
   }
 }
-
+*/
 Gui::Gui(std::string layoutFileName):_root(CEGUI::WindowManager::getSingletonPtr()->loadWindowLayout(layoutFileName)){}
 void Gui::Display(){
   CEGUI::System::getSingleton().setGUISheet(_root);
+}
+std::shared_ptr<char> Gui::getText(CEGUI::Window* element){
+  auto text=element->getText();
+  std::shared_ptr<char> copy(new char[text.length()+1],std::default_delete<char[]>());
+  strcpy(copy.get(),text.c_str());
+  return copy;
 }

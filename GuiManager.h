@@ -6,6 +6,7 @@
 #include <OISMouse.h>
 #include <OgreRoot.h>
 #include <OgreFrameListener.h>
+#include <memory>
 #include "Singleton.h"
 #include "GraphicsManager.h"
 #include "GameState.h"
@@ -21,11 +22,14 @@ class GuiManager:public Singleton<GuiManager>{
     void Initialize(std::string applicationName);
     bool IsExpectingMouse();
     bool IsExpectingKeyboard();
+    bool CreateGame(const CEGUI::EventArgs& e);
     bool HostGame(const CEGUI::EventArgs& e);
     bool JoinGame(const CEGUI::EventArgs& e);
     bool Exit(const CEGUI::EventArgs& e);
     bool Start(const CEGUI::EventArgs& e);
-    bool Connect(const CEGUI::EventArgs& e);
+    bool Connect(const char* host);
+    bool ConnectToNamedHost(const CEGUI::EventArgs& e);
+    bool ConnectToSelectedHost(const CEGUI::EventArgs& e);
     static CEGUI::MouseButton TranslateButton(OIS::MouseButtonID buttonId);
     void Reinitialize();
     bool BackToMainMenu(const CEGUI::EventArgs& e);
@@ -50,6 +54,7 @@ class Gui{
   protected:
     Gui(std::string layoutFileName);
     CEGUI::Window* _root;
+    std::shared_ptr<char> getText(CEGUI::Window* element);
 };
 class Hud:public Gui{
   public:
@@ -84,6 +89,9 @@ class MainMenu:public Gui{
 class JoinGameMenu:public Gui{
   public:
     JoinGameMenu();
+    const char* ReadSelectedHost();
+    const char* ReadNamedHost();
+    const char* ReadName();
   private:
     CEGUI::Editbox* _name;
     CEGUI::ItemListbox* _hosts;
