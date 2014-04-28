@@ -7,6 +7,7 @@
 #include <OgreRoot.h>
 #include <OgreFrameListener.h>
 #include <memory>
+#include <vector>
 #include "Singleton.h"
 #include "GraphicsManager.h"
 #include "GameState.h"
@@ -51,10 +52,13 @@ class Gui{
   public:
     Gui();
     void Display();
+    virtual bool DisplayPrompts(const CEGUI::EventArgs& e);
   protected:
     Gui(std::string layoutFileName);
     CEGUI::Window* _root;
     std::shared_ptr<char> getText(CEGUI::Window* element);
+    void displayPrompts(const CEGUI::EventArgs& e,std::vector<std::pair<CEGUI::Editbox*,const char*>> prompts);
+    void displayPrompt(const CEGUI::EventArgs& e,std::pair<CEGUI::Editbox*,const char*> prompt);
 };
 class Hud:public Gui{
   public:
@@ -92,6 +96,7 @@ class JoinGameMenu:public Gui{
     const char* ReadSelectedHost();
     const char* ReadNamedHost();
     const char* ReadName();
+    bool DisplayPrompts(const CEGUI::EventArgs& e);
   private:
     CEGUI::Editbox* _name;
     CEGUI::ItemListbox* _hosts;
@@ -102,6 +107,7 @@ class JoinGameMenu:public Gui{
 class CreateGameMenu:public Gui{
   public:
     CreateGameMenu();
+    bool DisplayPrompts(const CEGUI::EventArgs& e);
     //const char* ReadHost();
   private:
     CEGUI::Editbox* _name;
@@ -122,19 +128,5 @@ class WaitingPrompt:public Gui{
     void RemoveStart();
   private:
     CEGUI::PushButton* _start;
-};
-class HostDialog: public Gui {
-  public:
-    HostDialog();
-    const char* ReadHost();
-    const char* ReadName();
-    bool NameCaretMoved(const CEGUI::EventArgs& e);
-    bool HostCaretMoved(const CEGUI::EventArgs& e);
-
-  private:
-    CEGUI::Editbox*    _host;
-    CEGUI::Editbox*    _name;
-    CEGUI::PushButton* _connect;
-    CEGUI::PushButton* _back;
 };
 #endif

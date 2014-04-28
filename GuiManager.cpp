@@ -74,6 +74,7 @@ bool GuiManager::IsExpectingKeyboard(){
 bool GuiManager::CreateGame(const CEGUI::EventArgs& e){
   _current=_createGameMenu;
   _current->Display();
+  return false;
 }
 bool GuiManager::HostGame(const CEGUI::EventArgs& e){
   _current=_lobby;
@@ -222,6 +223,16 @@ JoinGameMenu::JoinGameMenu():Gui("JoinGameMenu.layout"){
   
   _hostsJoin->subscribeEvent(CEGUI::PushButton::EventClicked,CEGUI::Event::Subscriber(&GuiManager::ConnectToSelectedHost,GuiManager::instance()));
   _hostJoin->subscribeEvent(CEGUI::PushButton::EventClicked,CEGUI::Event::Subscriber(&GuiManager::ConnectToNamedHost,GuiManager::instance()));
+  _name->subscribeEvent(CEGUI::Editbox::EventCaratMoved,CEGUI::Event::Subscriber(&JoinGameMenu::DisplayPrompts,this));
+  _host->subscribeEvent(CEGUI::Editbox::EventCaratMoved,CEGUI::Event::Subscriber(&JoinGameMenu::DisplayPrompts,this));
+  _name->subscribeEvent(CEGUI::Editbox::EventDeactivated,CEGUI::Event::Subscriber(&JoinGameMenu::DisplayPrompts,this));
+  _host->subscribeEvent(CEGUI::Editbox::EventDeactivated,CEGUI::Event::Subscriber(&JoinGameMenu::DisplayPrompts,this));
+
+  DisplayPrompts(CEGUI::EventArgs{});
+}
+bool JoinGameMenu::DisplayPrompts(const CEGUI::EventArgs& e){
+  displayPrompts(e,std::vector<std::pair<CEGUI::Editbox*,const char*>>{{_name,"Your Name"},{_host,"Server"}});
+  return false;
 }
 const char* JoinGameMenu::ReadNamedHost(){
   return _host->getText().c_str();
@@ -245,6 +256,17 @@ CreateGameMenu::CreateGameMenu():Gui("CreateGameMenu.layout"){
   _gameType->addItem(new CEGUI::ListboxTextItem("Pintos",2));
   _continue=static_cast<CEGUI::PushButton*>(_root->getChild("CreateGameMenu/Continue"));
   _continue->subscribeEvent(CEGUI::PushButton::EventClicked,CEGUI::Event::Subscriber(&GuiManager::HostGame,GuiManager::instance()));
+  _name->subscribeEvent(CEGUI::Editbox::EventCaratMoved,CEGUI::Event::Subscriber(&CreateGameMenu::DisplayPrompts,this));
+  _timeLimit->subscribeEvent(CEGUI::Editbox::EventCaratMoved,CEGUI::Event::Subscriber(&CreateGameMenu::DisplayPrompts,this));
+  _maxPlayers->subscribeEvent(CEGUI::Editbox::EventCaratMoved,CEGUI::Event::Subscriber(&CreateGameMenu::DisplayPrompts,this));
+  _name->subscribeEvent(CEGUI::Editbox::EventDeactivated,CEGUI::Event::Subscriber(&CreateGameMenu::DisplayPrompts,this));
+  _timeLimit->subscribeEvent(CEGUI::Editbox::EventDeactivated,CEGUI::Event::Subscriber(&CreateGameMenu::DisplayPrompts,this));
+  _maxPlayers->subscribeEvent(CEGUI::Editbox::EventDeactivated,CEGUI::Event::Subscriber(&CreateGameMenu::DisplayPrompts,this));
+  DisplayPrompts(CEGUI::EventArgs{});
+}
+bool CreateGameMenu::DisplayPrompts(const CEGUI::EventArgs& e){
+  displayPrompts(e,std::vector<std::pair<CEGUI::Editbox*,const char*>>{{_name,"Your Name"},{_timeLimit,"180"},{_maxPlayers,"2"}});
+  return false;
 }
 Lobby::Lobby():Gui("Lobby.layout"){}
 
@@ -259,52 +281,12 @@ void WaitingPrompt::EnableStart(){
 void WaitingPrompt::RemoveStart(){
   _root->removeChildWindow(_start);
 }
-/*
-HostDialog::HostDialog():Gui("HostDialog.layout"){
-  _host = static_cast<CEGUI::Editbox*>(_root->getChild("HostDialog/HostName"));
-  _name = static_cast<CEGUI::Editbox*>(_root->getChild("HostDialog/PlayerName"));
-  // cegui mispells caret V_V
-  _host->subscribeEvent(CEGUI::Editbox::EventCaratMoved, CEGUI::Event::Subscriber(&HostDialog::HostCaretMoved, this));
-  _name->subscribeEvent(CEGUI::Editbox::EventCaratMoved, CEGUI::Event::Subscriber(&HostDialog::NameCaretMoved, this));
-  _connect = static_cast<CEGUI::PushButton*>(_root->getChild("HostDialog/Connect"));
-  _connect->subscribeEvent(CEGUI::PushButton::EventClicked, CEGUI::Event::Subscriber(&GuiManager::Connect, GuiManager::instance()));
-  _back = static_cast<CEGUI::PushButton*>(_root->getChild("HostDialog/Back"));
-  _back->subscribeEvent(CEGUI::PushButton::EventClicked, CEGUI::Event::Subscriber(&GuiManager::BackToMainMenu, GuiManager::instance()));
-}
-const char* HostDialog::ReadHost(){
-  return _host->getText().c_str();
-}
-const char* HostDialog::ReadName(){
-  return _name->getText().c_str();
-}
-*/
 // random c helper
 char* trim(const char* str) {
   char *s = (char*)str;
   while (*s == ' ') s++;
   return s;
 }
-/*
-bool HostDialog::NameCaretMoved(const CEGUI::EventArgs& e){
-  if (strcmp(ReadName(), "Your Name") == 0) {
-    _name->setText("");
-  }
-
-  if (strcmp(trim(ReadHost()), "") == 0) {
-    _host->setText("Server");
-  }
-}
-
-bool HostDialog::HostCaretMoved(const CEGUI::EventArgs& e){
-  if (strcmp(trim(ReadName()), "") == 0) {
-    _name->setText("Your Name");
-  }
-
-  if (strcmp(ReadHost(), "Server") == 0) {
-    _host->setText("");
-  }
-}
-*/
 Gui::Gui(std::string layoutFileName):_root(CEGUI::WindowManager::getSingletonPtr()->loadWindowLayout(layoutFileName)){}
 void Gui::Display(){
   CEGUI::System::getSingleton().setGUISheet(_root);
@@ -314,4 +296,25 @@ std::shared_ptr<char> Gui::getText(CEGUI::Window* element){
   std::shared_ptr<char> copy(new char[text.length()+1],std::default_delete<char[]>());
   strcpy(copy.get(),text.c_str());
   return copy;
+}
+bool Gui::DisplayPrompts(const CEGUI::EventArgs& e){
+  return false;
+}
+void Gui::displayPrompts(const CEGUI::EventArgs& e,std::vector<std::pair<CEGUI::Editbox*,const char*>> prompts){
+  for(auto i=prompts.cbegin();i!=prompts.cend();++i){
+    displayPrompt(e,*i);
+  }
+}
+void Gui::displayPrompt(const CEGUI::EventArgs& e,std::pair<CEGUI::Editbox*,const char*> prompt){
+  auto box=prompt.first;
+  CEGUI::WindowEventArgs* w=(CEGUI::WindowEventArgs*)(&e);
+  bool isThis{w->window==box};
+  if(dynamic_cast<CEGUI::ActivationEventArgs*>(w)){
+    isThis=false;
+  }
+  if(isThis&&strcmp(trim(box->getText().c_str()),prompt.second)==0){
+    box->setText("");
+  }else if(!isThis&&strcmp(trim(box->getText().c_str()),"")==0){
+    box->setText(prompt.second);
+  }
 }
