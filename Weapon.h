@@ -29,6 +29,10 @@ public:
 	float reload_timer;
 	float shoot_timer;
 
+	float shoot_from_offset;
+
+	float reload_speed;
+
 	int weapon_id;
 
 	double reload_time;
@@ -43,13 +47,15 @@ public:
 	bool is_reloading;
 
 	Ogre::Entity* entity;
-  	Ogre::SceneNode* node;
+  Ogre::SceneNode* node;
   
 	Weapon(PlayerCharacter*, std::string, int, double, 
 			int, int, int, double, float, 
 			float, float, float, float, float, float,
 			float, float, float, PlayerBox*);
+	Weapon(PlayerCharacter*);
 	virtual ~Weapon();
+
 
 	virtual void shoot();
 	virtual void shoot_hook() = 0;
@@ -59,7 +65,6 @@ public:
 
 protected:
 	Transform* _transform;
-
 };
 
 #endif // #ifndef __Weapon_h_

@@ -14,7 +14,7 @@
 
 #include <OgreAnimationState.h>
 
-#define WEAPON_NUM 4
+#define WEAPON_NUM 5
 
 class HitBox;
 class Weapon;
@@ -27,7 +27,12 @@ protected:
 public:
 	uint32_t player_id;
 
+	uint32_t team_id;
+
 	bool is_yourself;
+
+	bool is_pinto;
+	bool in_pinto_form;
 	
 	bool is_dead;
 	bool is_shooting;
@@ -81,12 +86,19 @@ public:
 	double health_regen_rate;
 
 	FPSBoxController* controller;
+
 	Mesh* mesh;
+	Mesh* pinto_mesh;
+
+	PlayerBox* jet_pack;
+
 	Weapon* weapons[WEAPON_NUM];
 	Weapon* current_weapon;
 
 	HitBox* head_box;
 	HitBox* body_box;
+
+	HitBox* pinto_box;
 
 	PlayerBox* jet_pack_shoot_pos1;
 	PlayerBox* jet_pack_shoot_pos2;
@@ -107,6 +119,8 @@ public:
 
 	virtual void update();
 	virtual void changeWeapon(int);
+
+	virtual void changeToPinto();
 
 	Transform* transform;
 	Transform* tr;

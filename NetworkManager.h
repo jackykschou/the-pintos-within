@@ -74,12 +74,10 @@ class NetworkManager : public Singleton<NetworkManager>
 	bool isServer();
 	bool isClient();
 
-	void sendParticle();
 	void sendChat(const char* msg);
 
 	void receiveChat(ChatPacket* packet);
 	void receiveHeartbeat(HeartBeatInfo* info);
-	void receiveParticle(ParticleInfo* info);
 
 	void changeId(uint32_t);
 

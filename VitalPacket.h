@@ -44,6 +44,18 @@ struct WeaponSpawnInfo
   float spawnZ;
 };
 
+struct PlayFireSoundInfo
+{
+  char type;
+  uint32_t player_id;
+};
+
+struct ChangePintoInfo
+{
+  char type;
+  uint32_t player_id;
+};
+
 class VitalPacket
 {
 public:
@@ -57,6 +69,10 @@ public:
   void receiveChangeWeapon(ChangeWeaponInfo* info_p);
   void setSpawnWeapon(uint32_t id, float x, float y, float z);
   void receiveSpawnWeapon(WeaponSpawnInfo* info);
+  void setPlayerFireSound();
+  void receivePlayFireSound(PlayFireSoundInfo* info_p);
+  void setChangePinto();
+  void receiveChangePinto(ChangePintoInfo* info_p);
 };
 
 #endif

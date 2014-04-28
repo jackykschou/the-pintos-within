@@ -99,12 +99,16 @@ void FPSCamera::updateTransformRotation()
 	_transform->rotY = new_q.y;
 	_transform->rotZ = new_q.z;
 
-	Ogre::Vector3 dir = node->_getDerivedOrientation() * Ogre::Vector3::NEGATIVE_UNIT_Z;
+	Ogre::Vector3 dir = node->_getDerivedOrientation() * Ogre::Vector3::NEGATIVE_UNIT_Z; 
 
-	Ogre::Vector3 to = Ogre::Vector3(_transform->posX, _transform->posY, _transform->posZ) + (dir * 70);
+	Ogre::Vector3 to = Ogre::Vector3(_transform->posX, _transform->posY, _transform->posZ) + (dir * 60);
 
 	Ogre::Vector3 cam_dir = camera->getDirection();
-	camera->setPosition(to.x + bobOffsetX, to.y + 35 + bobOffsetY + (-cam_dir.y * 50), to.z + bobOffsetZ);
+
+	if(((PlayerCharacter*)_gameObject)->in_pinto_form)
+		camera->setPosition(to.x + bobOffsetX, to.y + 20 + bobOffsetY + (-cam_dir.y * 70), to.z + bobOffsetZ);
+	else
+		camera->setPosition(to.x + bobOffsetX, to.y + 35 + bobOffsetY + (-cam_dir.y * 70), to.z + bobOffsetZ);
 
 
 	if(evt && node)

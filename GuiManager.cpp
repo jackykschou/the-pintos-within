@@ -30,7 +30,7 @@ void GuiManager::Update(const Ogre::FrameEvent& event){
         Weapon* weapon=player->current_weapon;
         if(weapon!=nullptr){
           hud->UpdateAmmoCount(weapon->current_mag_count);
-          hud->UpdateMagCount(weapon->current_ammo/weapon->max_mag_cap);
+          hud->UpdateMagCount(weapon->current_ammo);
         }
       }
     }//else{Ogre::Root::getSingletonPtr()->getRenderSystem()->clearFrameBuffer(0);}

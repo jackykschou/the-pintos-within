@@ -36,25 +36,25 @@ void WeaponSpawner::spawnWeapon(float x, float y, float z, uint32_t id)
 	if(id == 0)
 	{
 		new WeaponPickUp("PistolPickup", scene, "Pickup.Pistol.mesh",
-		x, y, z, 0, 0, 0, 1,
+		x, y + 20, z, 0, 0, 0, 1,
 		10, 10, 10, 0);
 	}
 	else if(id == 1)
 	{
 		new WeaponPickUp("ShotgunPickup", scene, "Pickup.Shotgun.mesh",
-		x, y, z, 0, 0, 0, 1,
+		x, y + 20, z, 0, 0, 0, 1,
 		10, 10, 10, 1);
 	}
 	else if(id == 2)
 	{
 		new WeaponPickUp("RiflePickup", scene, "Pickup.Rifle.mesh",
-		x, y, z, 0, 0, 0, 1,
+		x, y + 20, z, 0, 0, 0, 1,
 		10, 10, 10, 2);
 	}
 	else
 	{
 		new WeaponPickUp("BFGPickup", scene, "Pickup.BFG.mesh",
-		x, y, z, 0, 0, 0, 1,
+		x, y + 20, z, 0, 0, 0, 1,
 		10, 10, 10, 3);
 	}
 }
@@ -72,21 +72,21 @@ Ogre::Vector3 WeaponSpawner::spawnWeapon()
 	{
 		index = 1;
 		new WeaponPickUp("ShotgunPickup", scene, "Pickup.Shotgun.mesh",
-		position.x, position.y, position.z, 0, 0, 0, 1,
+		position.x, position.y + 20, position.z, 0, 0, 0, 1,
 		10, 10, 10, 1);
 	}
 	else if(random_0_1 < 0.7f)
 	{
 		index = 2;
 		new WeaponPickUp("RiflePickup", scene, "Pickup.Rifle.mesh",
-		position.x, position.y, position.z, 0, 0, 0, 1,
+		position.x, position.y + 20, position.z, 0, 0, 0, 1,
 		10, 10, 10, 2);
 	}
 	else
 	{
 		index = 3;
 		new WeaponPickUp("BFGPickup", scene, "Pickup.BFG.mesh",
-		position.x, position.y, position.z, 0, 0, 0, 1,
+		position.x, position.y + 20, position.z, 0, 0, 0, 1,
 		10, 10, 10, 3);
 	}
 

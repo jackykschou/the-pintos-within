@@ -32,7 +32,7 @@ PlayerPickUp::PlayerPickUp(std::string tag, Scene* scene, std::string mesh_name,
 	float radius = mesh->entity->getBoundingRadius();
 
 	btVector3 inertia(0, 0, 0);
-	float mass = 0.0f;
+	float mass = 100.0f;
 	float biggest_scale = std::max(std::max(scaleX, scaleY), scaleZ);
 	btCollisionShape* collisionShape = new btSphereShape(radius);
 	btRigidBody::btRigidBodyConstructionInfo* info = new btRigidBody::btRigidBodyConstructionInfo(mass ,NULL,collisionShape,inertia);
@@ -52,18 +52,23 @@ PlayerPickUp::PlayerPickUp(std::string tag, Scene* scene, std::string mesh_name,
 						pick_up->collided = true;
 						itself->scene->removeGameObject(itself);
 						delete pick_up;
+						return;
 					}
 
 					if((other->tag) == std::string("Player") && !pick_up->collided && pick_up->pick_debouncer->run(NULL))
 					{
 						PlayerCharacter* player = (PlayerCharacter*)other;
-						if(player->player_id == NetworkManager::instance()->player_id)
+						if(!player->in_pinto_form)
 						{
-							player->changeWeapon(pick_up->weapon_id);
-						} 
+							if(player->player_id == NetworkManager::instance()->player_id)
+							{
+								player->changeWeapon(pick_up->weapon_id);
+							} 
+						}
 						pick_up->collided = true;
 						itself->scene->removeGameObject(itself);
 						delete pick_up;
+						return;
 					}
 				};
 

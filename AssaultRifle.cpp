@@ -8,7 +8,7 @@
 AssaultRifle::AssaultRifle(PlayerCharacter* player_p, std::string mesh_name, float posX, 
 			float posY, float posZ, float rotX, float rotY, float rotZ, float rotW,
 			float scaleX, float scaleY, float scaleZ, PlayerBox* box) : 
-			Weapon(player_p, mesh_name, ASSAULTRIFLE_ID, 3, 1, 48, 3000, 0.1, posX, 
+			Weapon(player_p, mesh_name, 2, 3, 1, 48, 180, 0.1, posX, 
 			posY, posZ, rotX, rotY, rotZ, rotW, scaleX, scaleY, scaleZ, box)
 
 {
@@ -17,6 +17,8 @@ AssaultRifle::AssaultRifle(PlayerCharacter* player_p, std::string mesh_name, flo
         Ogre::Vector3(tran->posX + posX, tran->posY + posY, tran->posZ + posZ)));
     damage = 12;
     shoot_distance = 2000;
+
+    reload_time = reload_animation_state->getLength() * reload_speed;
 }
 
 void AssaultRifle::shoot()
@@ -47,7 +49,7 @@ void AssaultRifle::shoot_hook()
 
     Ogre::Vector3 shoot_vector = shoot_pos->node->convertLocalToWorldPosition(shoot_pos->node->getPosition());
 
-    btVector3 from = btVector3(cam_pos.x, cam_pos.y, cam_pos.z) + (btVector3(cam_dir.x, cam_dir.y, cam_dir.z) * 75);
+    btVector3 from = btVector3(cam_pos.x, cam_pos.y, cam_pos.z) + (btVector3(cam_dir.x, cam_dir.y, cam_dir.z) * shoot_from_offset);
     btVector3 to = btVector3(cam_pos.x, cam_pos.y, cam_pos.z) + (btVector3(cam_dir.x, cam_dir.y, cam_dir.z) * shoot_distance);
 
     btCollisionWorld::ClosestRayResultCallback rayCallback(from, to);
@@ -73,7 +75,6 @@ void AssaultRifle::shoot_hook()
 
                 ParticleManager::instance()->EmitBloodSpurt(Ogre::Vector3(point.x(), point.y(), point.z()), -cam_dir);
                 NetworkManager::instance()->particle->setBlood(point.x(), point.y() , point.z(), -cam_dir.x, -cam_dir.y, -cam_dir.z);
-                NetworkManager::instance()->sendParticle();
             }
         }
         else
@@ -83,7 +84,6 @@ void AssaultRifle::shoot_hook()
             ParticleManager::instance()->EmitDust(Ogre::Vector3(point.x(), point.y(), point.z()), -cam_dir);
 
             NetworkManager::instance()->particle->setDust(point.x(), point.y() , point.z(), -cam_dir.x, -cam_dir.y, -cam_dir.z);
-            NetworkManager::instance()->sendParticle();
         }
     }
 }

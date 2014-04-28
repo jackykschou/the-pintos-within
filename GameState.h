@@ -18,11 +18,13 @@ class GameState : public Singleton<GameState>
   public:
     GameState();
 
-    uint32_t map;
+    uint32_t current_map;
     uint32_t game_mode;
     uint32_t team_mode;
     uint32_t current_state;
     int num_player;
+    int current_max_num_player_map;
+
   	int score;
   	int timeLeft;
   	void reset();

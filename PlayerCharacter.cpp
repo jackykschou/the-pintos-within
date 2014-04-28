@@ -6,6 +6,7 @@
 #include "Blaster.h"
 #include "NetworkManager.h"
 #include "PlayerSpawner.h"
+#include "Melee.h"
 
 PlayerCharacter::PlayerCharacter(bool is_yourself_p, Scene* scene, std::string mesh_name,
 	float posX, float posY, float posZ, float rotX, float rotY, float rotZ, float rotW,
@@ -18,6 +19,9 @@ PlayerCharacter::PlayerCharacter(bool is_yourself_p, Scene* scene, std::string m
 	is_idle = false;
 	is_dead = false;
 
+	in_pinto_form = false;
+	is_pinto = false;
+
 	run_animation_time = 0.0;
 	shoot_animation_time = 0.0;
 	idle_animation_time = 0.0;
@@ -25,7 +29,7 @@ PlayerCharacter::PlayerCharacter(bool is_yourself_p, Scene* scene, std::string m
 	max_health = 100;
 	health = max_health;
 	health_regen = 1.0;
-	health_regen_rate = 1.0;
+	health_regen_rate = 0.3;
 
 	Transform* tran = this->getComponent<Transform>();
 	tr = tran;
@@ -46,15 +50,18 @@ PlayerCharacter::PlayerCharacter(bool is_yourself_p, Scene* scene, std::string m
 
 	mesh = new Mesh(this, mesh_name);
 
+	pinto_mesh = new Mesh(this, "Pinto.mesh");
+	pinto_mesh->node->setVisible(false);
+
 	Ogre::Vector3 box_half_size = mesh->entity->getBoundingBox().getHalfSize();
 
-	shooting_animation_states[PISTOL_ID] = mesh->entity->getAnimationState("Shooting");
-	shooting_animation_states[PISTOL_ID]->setLoop(false);
-	shooting_animation_states[PISTOL_ID]->setWeight(0);
+	shooting_animation_states[0] = mesh->entity->getAnimationState("Shooting");
+	shooting_animation_states[0]->setLoop(false);
+	shooting_animation_states[0]->setWeight(0);
 
-	reload_animation_states[PISTOL_ID] = mesh->entity->getAnimationState("Reloading");
-	reload_animation_states[PISTOL_ID]->setLoop(false);
-	reload_animation_states[PISTOL_ID]->setWeight(0);
+	reload_animation_states[0] = mesh->entity->getAnimationState("Reloading");
+	reload_animation_states[0]->setLoop(false);
+	reload_animation_states[0]->setWeight(0);
 
 	shooting_animation_states[1] = mesh->entity->getAnimationState("Shooting");
 	shooting_animation_states[1]->setLoop(false);
@@ -79,6 +86,14 @@ PlayerCharacter::PlayerCharacter(bool is_yourself_p, Scene* scene, std::string m
 	reload_animation_states[3] = mesh->entity->getAnimationState("Reloading");
 	reload_animation_states[3]->setLoop(false);
 	reload_animation_states[3]->setWeight(0);
+
+	shooting_animation_states[4] = pinto_mesh->entity->getAnimationState("PintoStab");
+	shooting_animation_states[4]->setLoop(false);
+	shooting_animation_states[4]->setWeight(0);
+
+	reload_animation_states[4] = pinto_mesh->entity->getAnimationState("PintoStab");
+	reload_animation_states[4]->setLoop(false);
+	reload_animation_states[4]->setWeight(0);
 
 	running_animation_state = mesh->entity->getAnimationState("Running");
 	running_animation_state->setLoop(true);
@@ -125,7 +140,7 @@ PlayerCharacter::PlayerCharacter(bool is_yourself_p, Scene* scene, std::string m
 	}
 
 	//hard code position
-	Weapon* pistol = new Pistol(this, "Pistol.mesh", 
+	weapons[0] = new Pistol(this, "Pistol.mesh", 
 			0, 0, 0, 
 			0, 0, 0, 1,
 			10, 10, 10, 
@@ -167,7 +182,18 @@ PlayerCharacter::PlayerCharacter(bool is_yourself_p, Scene* scene, std::string m
 
 	weapons[3]->node->setVisible(false);
 
-	PlayerBox* jet_pack = new PlayerBox(this, "Jetpack.mesh",
+	weapons[4] = new Melee(this, "Knife.mesh", 
+			0, 0, 0, 
+			0, 0, 0, 1,
+			5, 5, 5, 
+			new PlayerBox(this, "sphere5.mesh",
+			0, 0, 0, 
+			0, 0, 0, 1,
+			0.049863, 0.049863, 0.049863, COL_NOTHING, COL_NOTHING));
+
+	weapons[4]->node->setVisible(false);
+
+	jet_pack = new PlayerBox(this, "Jetpack.mesh",
 									0, 0, 0,
 										0, 0, 0, 1,
 										1, 1, 1,
@@ -175,13 +201,13 @@ PlayerCharacter::PlayerCharacter(bool is_yourself_p, Scene* scene, std::string m
 
 	//Jet Pack states
 
-	jet_pack_shooting_animation_states[PISTOL_ID] = jet_pack->entity->getAnimationState("Shooting");
-	jet_pack_shooting_animation_states[PISTOL_ID]->setLoop(false);
-	jet_pack_shooting_animation_states[PISTOL_ID]->setWeight(0);
+	jet_pack_shooting_animation_states[0] = jet_pack->entity->getAnimationState("Shooting");
+	jet_pack_shooting_animation_states[0]->setLoop(false);
+	jet_pack_shooting_animation_states[0]->setWeight(0);
 
-	jet_pack_reload_animation_states[PISTOL_ID] = jet_pack->entity->getAnimationState("Reloading");
-	jet_pack_reload_animation_states[PISTOL_ID]->setLoop(false);
-	jet_pack_reload_animation_states[PISTOL_ID]->setWeight(0);
+	jet_pack_reload_animation_states[0] = jet_pack->entity->getAnimationState("Reloading");
+	jet_pack_reload_animation_states[0]->setLoop(false);
+	jet_pack_reload_animation_states[0]->setWeight(0);
 
 	jet_pack_shooting_animation_states[1] = jet_pack->entity->getAnimationState("Shooting");
 	jet_pack_shooting_animation_states[1]->setLoop(false);
@@ -206,6 +232,14 @@ PlayerCharacter::PlayerCharacter(bool is_yourself_p, Scene* scene, std::string m
 	jet_pack_reload_animation_states[3] = jet_pack->entity->getAnimationState("Reloading");
 	jet_pack_reload_animation_states[3]->setLoop(false);
 	jet_pack_reload_animation_states[3]->setWeight(0);
+
+	jet_pack_shooting_animation_states[4] = jet_pack->entity->getAnimationState("Shooting");
+	jet_pack_shooting_animation_states[4]->setLoop(false);
+	jet_pack_shooting_animation_states[4]->setWeight(0);
+
+	jet_pack_reload_animation_states[4] = jet_pack->entity->getAnimationState("Reloading");
+	jet_pack_reload_animation_states[4]->setLoop(false);
+	jet_pack_reload_animation_states[4]->setWeight(0);
 
 	jet_pack_running_animation_state = jet_pack->entity->getAnimationState("Running");
 	jet_pack_running_animation_state->setLoop(true);
@@ -237,21 +271,6 @@ PlayerCharacter::PlayerCharacter(bool is_yourself_p, Scene* scene, std::string m
 										0.049863, 0.049863, 0.049863,
 										COL_NOTHING, COL_NOTHING);
 
-	// <node name="Hitbox.PixelMan.Chest" >
- //        <position y="-0.475911" x="0.000000" z="-0.101981" />
- //        <rotation qw="1.000000" qz="-0.000000" qy="0.000000" qx="0.000000" />
- //        <scale y="2.157996" x="0.824681" z="0.907342" />
- //        <game >
- //          <sensors />
- //          <actuators />
- //        </game>
- //        <entity mass_radius="1.0" ghost="False" velocity_min="0.0" physics_type="STATIC" inertia_tensor="0.4000000059604645" meshFile="Hitbox.mesh" lock_trans_y="False" lock_trans_x="False" lock_trans_z="False" friction_z="1.0" friction_y="1.0" friction_x="1.0" name="Hitbox" velocity_max="0.0" mass="1.0" lock_rot_z="False" actor="False" lock_rot_y="False" damping_trans="0.03999999910593033" lock_rot_x="False" anisotropic_friction="False" damping_rot="0.10000000149011612" />
- //      </node>
- //      <node name="Hitbox.PixelMan.Head" >
- //        <position y="2.120457" x="-0.000000" z="-0.137225" />
- //        <rotation qw="1.000000" qz="-0.000000" qy="0.000000" qx="0.000000" />
- //        <scale y="0.425870" x="0.353341" z="0.350068" />
-
 
 	body_box = new HitBox(this, "Hitbox.mesh",
 							0, -4.75911, -1.01981, 
@@ -261,10 +280,13 @@ PlayerCharacter::PlayerCharacter(bool is_yourself_p, Scene* scene, std::string m
 	head_box = new HitBox(this, "Hitbox2.mesh",
 							0, 20.120457, -1.37225, 
 							0, 0, 0, 1,
-							3.53341, 4.25870, 3.50068, 3.0);
+							3.53341, 4.25870, 3.50068, 1.75);
 
-	weapons[PISTOL_ID] = pistol;
-	current_weapon = pistol;
+	pinto_box = new HitBox(this, "Hitbox3.mesh",
+							0, -6.25807, 2.173395, 
+							0, 0, 0, 1,
+							6.44036, 16.05242, 7.31708, 0.15);
+	pinto_box->Disable();
 
 	is_shooting = false;
 	is_moving = false;
@@ -275,17 +297,22 @@ PlayerCharacter::PlayerCharacter(bool is_yourself_p, Scene* scene, std::string m
 	is_running = false;
 	is_dead = false;
 
-	weapon_running_animation_state = current_weapon->running_animation_state;
-	weapon_idle_animation_state = current_weapon->idle_animation_state;
-	weapon_shooting_animation_state = current_weapon->shooting_animation_state;
-	weapon_reload_animation_state = current_weapon->reload_animation_state;
-	weapon_jumping_animation_state = current_weapon->jumping_animation_state;
-	weapon_die_animation_state = current_weapon->die_animation_state;
+	current_weapon = weapons[0];
+	current_weapon->switchToThisWeapon();
 
-	current_reload_animation_state = reload_animation_states[current_weapon->weapon_id];
-	current_shooting_animation_state = shooting_animation_states[current_weapon->weapon_id];
-	current_jet_pack_reload_animation_state = jet_pack_reload_animation_states[current_weapon->weapon_id];
-	current_jet_pack_shooting_animation_state = jet_pack_shooting_animation_states[current_weapon->weapon_id];
+	weapon_running_animation_state = weapons[0]->running_animation_state;
+	weapon_idle_animation_state = weapons[0]->idle_animation_state;
+	weapon_shooting_animation_state = weapons[0]->shooting_animation_state;
+	weapon_reload_animation_state = weapons[0]->reload_animation_state;
+	weapon_jumping_animation_state = weapons[0]->jumping_animation_state;
+	weapon_die_animation_state = weapons[0]->die_animation_state;
+
+	current_reload_animation_state = reload_animation_states[0];
+	current_shooting_animation_state = shooting_animation_states[0];
+	current_jet_pack_reload_animation_state = jet_pack_reload_animation_states[0];
+	current_jet_pack_shooting_animation_state = jet_pack_shooting_animation_states[0];
+
+	changeToPinto();
 }
 
 PlayerCharacter:: ~PlayerCharacter()
@@ -307,18 +334,6 @@ void PlayerCharacter::update()
 {
 	GameObject::update();
 
-	weapon_running_animation_state = current_weapon->running_animation_state;
-	weapon_idle_animation_state = current_weapon->idle_animation_state;
-	weapon_shooting_animation_state = current_weapon->shooting_animation_state;
-	weapon_reload_animation_state = current_weapon->reload_animation_state;
-	weapon_jumping_animation_state = current_weapon->jumping_animation_state;
-	weapon_die_animation_state = current_weapon->die_animation_state;
-
-	current_reload_animation_state = reload_animation_states[current_weapon->weapon_id];
-	current_shooting_animation_state = shooting_animation_states[current_weapon->weapon_id];
-	current_jet_pack_reload_animation_state = jet_pack_reload_animation_states[current_weapon->weapon_id];
-	current_jet_pack_shooting_animation_state = jet_pack_shooting_animation_states[current_weapon->weapon_id];
-
 	if(is_yourself)
 	{
 		is_shooting = false;
@@ -339,7 +354,7 @@ void PlayerCharacter::update()
 
 		if(is_dead)
 		{
-			//LOG("Playing dead");
+			LOG("ummmmmmmmmmmmmmmmmm");
 
 			current_shooting_animation_state->setWeight(0);
 			current_shooting_animation_state->setEnabled(false);
@@ -451,8 +466,6 @@ void PlayerCharacter::update()
 
 			if(!controller->is_jet_packing && !controller->controller->onGround() && controller->controller->isJumping())
 			{
-				// LOG("Playing jump");
-
 				running_animation_state->setWeight(0);
 				weapon_running_animation_state->setWeight(0);
 				idle_animation_state->setWeight(0);
@@ -494,7 +507,6 @@ void PlayerCharacter::update()
 			if(controller->is_walking && !controller->is_jet_packing && controller->controller->onGround())
 			{
 				is_moving = true;
-				// LOG("Playing walk");
 
 				running_animation_state->setWeight(1);
 				running_animation_state->setEnabled(true);
@@ -516,6 +528,9 @@ void PlayerCharacter::update()
 					walk_sound_debouncer->run();
 				else if(running_animation_state->getTimePosition() > 0.5f && running_animation_state->getTimePosition() < 0.7f)
 					walk_sound_debouncer->run();
+
+				// LOG("moving: " << running_animation_state->getTimePosition()  << "name: "
+				// 	<< running_animation_state->getAnimationName());
 
 				jet_pack_running_animation_state->setWeight(1);
 				jet_pack_running_animation_state->setEnabled(true);
@@ -545,8 +560,6 @@ void PlayerCharacter::update()
 
 			if(current_weapon->is_shooting && !weapon_shooting_animation_state->hasEnded())
 			{
-				// LOG("Playing shoot");
-
 				running_animation_state->setWeight(0.5);
 				weapon_running_animation_state->setWeight(0.5);
 				idle_animation_state->setWeight(0.5);
@@ -582,48 +595,8 @@ void PlayerCharacter::update()
 				weapon_shooting_animation_state->setTimePosition(0);
 			}
 
-			if(current_weapon->is_reloading)
-			{
-				// LOG("Playing reload");
-
-				running_animation_state->setWeight(0.5);
-				weapon_running_animation_state->setWeight(0.5);
-				idle_animation_state->setWeight(0.5);
-				weapon_idle_animation_state->setWeight(0.5);
-
-				is_reloading = true;
-				weapon_reload_animation_state->setWeight(1);
-				weapon_reload_animation_state->setEnabled(true);
-				weapon_reload_animation_state->addTime(GraphicsManager::instance()->getFrameEvent()->timeSinceLastFrame);
-
-				current_jet_pack_reload_animation_state->setWeight(1);
-				current_jet_pack_reload_animation_state->setEnabled(true);
-				current_jet_pack_reload_animation_state->setTimePosition(weapon_reload_animation_state->getTimePosition());
-				
-				current_reload_animation_state->setWeight(1);
-				current_reload_animation_state->setEnabled(true);
-				current_reload_animation_state->setTimePosition(weapon_reload_animation_state->getTimePosition());
-			}
-			else
-			{
-				is_reloading = false;
-				current_reload_animation_state->setWeight(0);
-				current_reload_animation_state->setEnabled(false);
-				current_reload_animation_state->setTimePosition(0);
-
-				current_jet_pack_reload_animation_state->setWeight(0);
-				current_jet_pack_reload_animation_state->setEnabled(false);
-				current_jet_pack_reload_animation_state->setTimePosition(0);
-
-				weapon_reload_animation_state->setWeight(0);
-				weapon_reload_animation_state->setEnabled(false);
-				weapon_reload_animation_state->setTimePosition(0);
-			}
-
 			if((is_jet_packing || !controller->controller->onGround() || (!controller->is_walking && controller->controller->onGround())))
 			{
-				// LOG("Playing idle");
-
 				is_idle = true;
 
 				idle_animation_state->setWeight(1);
@@ -655,6 +628,42 @@ void PlayerCharacter::update()
 				weapon_idle_animation_state->setTimePosition(0);
 			}
 
+			if(current_weapon->is_reloading)
+			{
+				running_animation_state->setWeight(0.5);
+				weapon_running_animation_state->setWeight(0.5);
+				idle_animation_state->setWeight(0.5);
+				weapon_idle_animation_state->setWeight(0.5);
+
+				is_reloading = true;
+				weapon_reload_animation_state->setWeight(1);
+				weapon_reload_animation_state->setEnabled(true);
+				weapon_reload_animation_state->addTime(GraphicsManager::instance()->getFrameEvent()->timeSinceLastFrame * (1.0 / current_weapon->reload_speed));
+
+				current_jet_pack_reload_animation_state->setWeight(1);
+				current_jet_pack_reload_animation_state->setEnabled(true);
+				current_jet_pack_reload_animation_state->setTimePosition(weapon_reload_animation_state->getTimePosition());
+				
+				current_reload_animation_state->setWeight(1);
+				current_reload_animation_state->setEnabled(true);
+				current_reload_animation_state->setTimePosition(weapon_reload_animation_state->getTimePosition());
+			}
+			else
+			{
+				is_reloading = false;
+				current_reload_animation_state->setWeight(0);
+				current_reload_animation_state->setEnabled(false);
+				current_reload_animation_state->setTimePosition(0);
+
+				current_jet_pack_reload_animation_state->setWeight(0);
+				current_jet_pack_reload_animation_state->setEnabled(false);
+				current_jet_pack_reload_animation_state->setTimePosition(0);
+
+				weapon_reload_animation_state->setWeight(0);
+				weapon_reload_animation_state->setEnabled(false);
+				weapon_reload_animation_state->setTimePosition(0);
+			}
+
 			Ogre::Vector3 dir = ((Camera*)(controller->fps_camera))->camera->getDirection();
 		}
 
@@ -667,14 +676,6 @@ void PlayerCharacter::update()
 		die_animation_time = die_animation_state->getTimePosition();
 
 		NetworkManager::instance()->heartbeat->renewPlayerInfo(this);
-
-		// LOG("is_dead " << is_dead);
-		// LOG("is_shooting " << is_shooting);
-		// LOG("is_moving " << is_moving);
-		// LOG("is_idle " << is_idle);
-		// LOG("is_reloading " << is_reloading);
-		// LOG("is_jet_packing " << is_jet_packing);
-		// LOG("is_jumping " << is_jumping);
 
 	}
 	else
@@ -871,20 +872,75 @@ void PlayerCharacter::regen_health()
 
 void PlayerCharacter::changeWeapon(int index)
 {
-	LOG("Change weapon 1");
-	ASSERT((index < WEAPON_NUM) && (index >= 0), "Invalid weapon index")
-
-	current_weapon->node->setVisible(false);
-	current_weapon = weapons[index];
-	current_weapon->switchToThisWeapon();
-	current_weapon->node->setVisible(true);
-
-	LOG("Change weapon 2");
-
-	if(is_yourself)
+	if(!in_pinto_form)
 	{
-		NetworkManager::instance()->vital->setChangeWeapon(index);
-	}
+		current_weapon->node->setVisible(false);
+		current_weapon = weapons[index];
+		current_weapon->switchToThisWeapon();
+		current_weapon->node->setVisible(true);
 
-	LOG("Change weapon 3");
+		weapon_running_animation_state = current_weapon->running_animation_state;
+		weapon_idle_animation_state = current_weapon->idle_animation_state;
+		weapon_shooting_animation_state = current_weapon->shooting_animation_state;
+		weapon_reload_animation_state = current_weapon->reload_animation_state;
+		weapon_jumping_animation_state = current_weapon->jumping_animation_state;
+		weapon_die_animation_state = current_weapon->die_animation_state;
+
+		current_reload_animation_state = reload_animation_states[current_weapon->weapon_id];
+		current_shooting_animation_state = shooting_animation_states[current_weapon->weapon_id];
+		current_jet_pack_reload_animation_state = jet_pack_reload_animation_states[current_weapon->weapon_id];
+		current_jet_pack_shooting_animation_state = jet_pack_shooting_animation_states[current_weapon->weapon_id];
+
+
+		if(is_yourself)
+		{
+			NetworkManager::instance()->vital->setChangeWeapon(index);
+		}
+	}
+}
+
+void PlayerCharacter::changeToPinto()
+{
+	if(!in_pinto_form)
+	{
+		transform->scaleX = 5.0;
+		transform->scaleY = 5.0;
+		transform->scaleZ = 5.0;
+
+		running_animation_state = pinto_mesh->entity->getAnimationState("PintoIdle");
+		running_animation_state->setLoop(true);
+		running_animation_state->setWeight(0);
+
+		idle_animation_state = pinto_mesh->entity->getAnimationState("PintoRun");
+		idle_animation_state->setLoop(true);
+		idle_animation_state->setWeight(0);
+
+		jumping_animation_state = pinto_mesh->entity->getAnimationState("PintoJump");
+		jumping_animation_state->setLoop(false);
+		jumping_animation_state->setWeight(0);
+
+		die_animation_state = pinto_mesh->entity->getAnimationState("PintoDeath");
+		die_animation_state->setLoop(false);
+		die_animation_state->setWeight(0);
+
+		in_pinto_form = true;
+		pinto_mesh->node->setVisible(true);
+		jet_pack->node->setVisible(false);
+		mesh->node->setVisible(false);
+
+		body_box->Disable();
+		head_box->Disable();
+		pinto_box->Enable();
+
+		current_weapon->node->setVisible(false);
+		current_weapon = weapons[4];
+		current_weapon->switchToThisWeapon();
+		current_weapon->node->setVisible(true);
+
+		if(is_yourself)
+		{
+			NetworkManager::instance()->vital->setChangeWeapon(4);
+			NetworkManager::instance()->vital->setChangePinto();
+		}
+	}
 }

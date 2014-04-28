@@ -14,6 +14,8 @@
 
 #define JET_PACK_SPEED 0.5
 
+class PlayerCharacter;
+
 class FPSBoxController : Component
 {
 protected:
@@ -29,6 +31,8 @@ protected:
 	void detectInput();
 
 public:
+	PlayerCharacter* player;
+
 	bool is_yourself;
 
 	double jet_pack_max;

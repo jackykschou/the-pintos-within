@@ -15,7 +15,6 @@ class Rigidbody : public Component, public btCollisionWorld::ContactResultCallba
 {
 	protected:
 		Transform* _transform;
-		btDiscreteDynamicsWorld* dynamics_world;
 		btRigidBody::btRigidBodyConstructionInfo* _rigid_info;
 
 	public:
@@ -37,6 +36,7 @@ class Rigidbody : public Component, public btCollisionWorld::ContactResultCallba
 
 		void (*onCollision)(btVector3, btVector3, GameObject*, GameObject*);
 
+		btDiscreteDynamicsWorld* dynamics_world;
 		btCollisionShape* collisionShape;
 		btDefaultMotionState* motionState;
 		btRigidBody* rigidbody;

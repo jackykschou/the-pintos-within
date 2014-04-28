@@ -26,6 +26,7 @@ public:
 
 	virtual void shoot_hook();
 	virtual void shoot();
+	virtual void switchToThisWeapon();
 
 	Debouncer *charge_sound_debouncer;
 };
