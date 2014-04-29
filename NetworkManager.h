@@ -83,6 +83,7 @@ class NetworkManager : public Singleton<NetworkManager>
 
 	// sends game state to every client
 	void broadcastHeartbeat();
+	// void declareGameOver();
 
 	GameServer* server;
 	GameClient* client;

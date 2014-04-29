@@ -114,7 +114,12 @@ bool GuiManager::IsConsoleVisible() {
   Hud* hud=static_cast<Hud*>(_hud);
   return hud->IsConsoleVisible();
 }
+void GuiManager::ShowGameOver() {
 
+}
+void GuiManager::ToggleDeathScreen(bool visible) {
+  
+}
 CEGUI::MouseButton GuiManager::TranslateButton(OIS::MouseButtonID buttonId){
   switch(buttonId){
     case OIS::MB_Left:

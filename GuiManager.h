@@ -31,6 +31,8 @@ class GuiManager:public Singleton<GuiManager>{
     bool BackToMainMenu(const CEGUI::EventArgs& e);
     void ToggleConsole();
     bool IsConsoleVisible();
+    void ShowGameOver();
+    void ToggleDeathScreen(bool visible);
   private:
     CEGUI::MouseButton convertButton(OIS::MouseButtonID buttonId);
     CEGUI::OgreRenderer* _renderer;

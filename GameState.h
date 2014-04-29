@@ -31,6 +31,8 @@ class GameState : public Singleton<GameState>
   	void update();
 	  void start();
 	  bool isRunning();
+    bool isMoreThanOnePlayerAlive();
+    void checkIfGameOver();
 
     PlayerCharacter* player;
     PlayerSpawner* spawner;
