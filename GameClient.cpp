@@ -261,6 +261,7 @@ void GameClient::processPacket(UDPpacket* packet) {
 			PlayerJoinPacket* p;
 			p = (PlayerJoinPacket*)packetData;
 			if (p->playerId != NetworkManager::instance()->player_id) {
+				GameState::instance()->setPlayerName(p->playerId, p->name);
 				printf("Player %d joined, with name %s\n", p->playerId, p->name);
 			}
 			break;
