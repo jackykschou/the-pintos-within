@@ -81,18 +81,27 @@ void NetworkManager::startClient(const char* host) {
 		LOG("ERROR: CLIENT FAILED TO CONNECT.");
 		return;
 	}
-
-	//GUIManager::instance()->hideGameOverMenu();
-	//GUIManager::instance()->showWaitingMenu();
 }
 
 void NetworkManager::startClientDiscovery() {
-	LOG("Starting client...");
+	if (state == NetworkStateClient) return;
+
+	LOG("Starting client discovery...");
 
 	state = NetworkStateClient;
 
 	client = new GameClient(NULL, GAME_PORT);
 	client->startListeningForAdvertisements();
+}
+
+void NetworkManager::stopClientDiscovery() {
+	if (state != NetworkStateClient) return;
+
+	LOG("Stopping client discovery...");
+
+	client->stopListeningForAdvertisements();
+	delete client;
+	client = NULL;
 }
 
 void NetworkManager::update()

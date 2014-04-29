@@ -68,6 +68,7 @@ class NetworkManager : public Singleton<NetworkManager>
 	void startServer();
 	void startClient(const char* host);
 	void startClientDiscovery();
+	void stopClientDiscovery();
 	void update();
 
 	bool isActive();
