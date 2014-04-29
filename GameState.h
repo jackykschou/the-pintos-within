@@ -18,6 +18,8 @@ class GameState : public Singleton<GameState>
   public:
     GameState();
 
+    uint32_t team_id;
+
     uint32_t current_map;
     uint32_t game_mode;
     uint32_t team_mode;

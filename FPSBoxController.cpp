@@ -153,19 +153,20 @@ void FPSBoxController::detectInput()
 			is_running = true;
 			movement_speed_multiplier = 1.5f;
 		}
-		else if(!controller->onGround() && !is_jet_packing && !controller->isJumping())
+		else if(!controller->onGround() && !is_jet_packing && !controller->isJumping() && !player->in_pinto_form)
 		{
 			movement_speed_multiplier = 0.5f;
 		}
-		else {
+		else 
+		{
 			movement_speed_multiplier = 1.0f;
 		}
 	}
 
-		if(controller->isJumping() && !is_jet_packing)
-		{
-		}
-		else if(!tempDir.isZero()) {
+		// if(controller->isJumping() && !is_jet_packing)
+		// {
+		// }
+		if(!tempDir.isZero()) {
 		    tempDir = tempDir.normalize();
 			currVel += tempDir * speedUp;
 			if (currVel.length() > 1) {

@@ -43,4 +43,6 @@ void GameState::update() {
 		pt::time_duration diff = now - _start;
 		timeLeft = DEFAULT_CLOCK - diff.total_seconds();
 	}
+
+	//check for if game has finished
 }

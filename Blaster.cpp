@@ -109,7 +109,8 @@ void Blaster::shoot_hook()
 
         for(int i = 0; i < GameState::instance()->num_player; ++i)
         {
-            if(GameState::instance()->players[i] != NULL)
+            if(GameState::instance()->players[i] != NULL
+                && ((GameState::instance()->team_mode != TEAM) || (GameState::instance()->players[i]->team_id != GameState::instance()->player->team_id)))
             {
                 Transform* tran = GameState::instance()->players[i]->transform;
                 btVector3 tran_vector = btVector3(tran->posX, tran->posY, tran->posZ);

@@ -46,7 +46,8 @@ void Pistol::shoot_hook()
         if(rayCallback.m_collisionObject->getUserPointer() != NULL)
         {
             HitBox* hit_box = (HitBox*)(rayCallback.m_collisionObject->getUserPointer());
-            if(hit_box->player->player_id != NetworkManager::instance()->player_id)
+            if(hit_box->player->player_id != NetworkManager::instance()->player_id
+                && ((GameState::instance()->team_mode != TEAM) || (hit_box->player->team_id != GameState::instance()->player->team_id)))
             {
                 int damage_sent = hit_box->getDamage(damage);
                 uint32_t enemy_id = hit_box->player->player_id;

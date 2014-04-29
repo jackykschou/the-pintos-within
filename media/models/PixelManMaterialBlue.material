@@ -1,15 +1,15 @@
-// Red Metal genrated by blender2ogre 0.6.0
+// PixelManMaterial genrated by blender2ogre 0.6.0
 
-material Red_Metal 
+material PixelManMaterialBlue
 {
     receive_shadows on 
 
     technique
     {
-        pass Red_Metal
+        pass PixelManMaterialBlue
         {
-            ambient 0.42002370953559875 0.0326576828956604 0.02267271839082241 1.0
-            diffuse 0.3360189726355518 0.026126146705838238 0.018138174982937794 1.0
+            ambient 0.800000011920929 0.800000011920929 0.800000011920929 1.0
+            diffuse 0.6400000190734865 0.6400000190734865 0.6400000190734865 1.0
             specular 0.5 0.5 0.5 1.0 12.5
             emissive 0.0 0.0 0.0 1.0
 
@@ -30,6 +30,13 @@ material Red_Metal
             shading gouraud
             transparent_sorting on
 
+            texture_unit 
+            {
+                texture PixelManTexBlue.png
+                tex_address_mode wrap
+                scale 1.0 1.0
+                colour_op modulate
+            }
         }
     }
 }

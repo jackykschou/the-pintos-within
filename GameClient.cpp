@@ -249,5 +249,10 @@ void GameClient::processPacket(UDPpacket* packet) {
 			ChangePintoInfo* change_pinto_info;
 			change_pinto_info =  (ChangePintoInfo*) packetData;
 			NetworkManager::instance()->vital->receiveChangePinto(change_pinto_info);
+			break;
+		case INCREASE_SCORE:
+			IncreaseScoreInfo* score_info;
+			score_info =  (IncreaseScoreInfo*) packetData;
+			NetworkManager::instance()->vital->receiveIncreaseScore(score_info);
 	}
 }

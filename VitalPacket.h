@@ -19,6 +19,7 @@ struct PlayerRespawnInfo
   float playerX;
   float playerY;
   float playerZ;
+  uint32_t team_id;
 };
 
 struct PlayerDieInfo
@@ -56,12 +57,20 @@ struct ChangePintoInfo
   uint32_t player_id;
 };
 
+struct IncreaseScoreInfo
+{
+  char type;
+  uint32_t receive_player_id;
+  uint32_t receive_team_id;
+  uint32_t amount;
+};
+
 class VitalPacket
 {
 public:
   void setDamage(int damage, uint32_t player_id);
   void receiveDamage(PlayerDamageInfo* info);
-  void setPlayerRespawn(float posX, float posY, float posZ, uint32_t player_id);
+  void setPlayerRespawn(float posX, float posY, float posZ, uint32_t player_id, uint32_t team_id);
   void receivePlayerRespawn(PlayerRespawnInfo* info_p);
   void setPlayerDie();
   void receivePlayerDie(PlayerDieInfo* info_p);
@@ -73,6 +82,8 @@ public:
   void receivePlayFireSound(PlayFireSoundInfo* info_p);
   void setChangePinto();
   void receiveChangePinto(ChangePintoInfo* info_p);
+  void setIncreaseScore(uint32_t player_id, uint32_t amount, uint32_t team_id);
+  void receiveIncreaseScore(IncreaseScoreInfo* info_p);
 };
 
 #endif

@@ -122,6 +122,8 @@ public:
 
 	virtual void changeToPinto();
 
+	void switchToBlueTeam();
+
 	Transform* transform;
 	Transform* tr;
 };

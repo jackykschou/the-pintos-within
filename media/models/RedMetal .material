@@ -1,12 +1,12 @@
 // Red Metal genrated by blender2ogre 0.6.0
 
-material Red_Metal 
+material RedMetal 
 {
     receive_shadows on 
 
     technique
     {
-        pass Red_Metal
+        pass RedMetal
         {
             ambient 0.42002370953559875 0.0326576828956604 0.02267271839082241 1.0
             diffuse 0.3360189726355518 0.026126146705838238 0.018138174982937794 1.0

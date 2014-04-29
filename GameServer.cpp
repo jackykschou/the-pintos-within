@@ -285,6 +285,12 @@ void GameServer::processPacket(UDPpacket* packet) {
 			change_pinto_info =  (ChangePintoInfo*) packetData;
 			NetworkManager::instance()->vital->receiveChangePinto(change_pinto_info);
 			broadcastData(change_pinto_info, sizeof(ChangePintoInfo), true);
+			break;
+		case INCREASE_SCORE:
+			IncreaseScoreInfo* score_info;
+			score_info =  (IncreaseScoreInfo*) packetData;
+			NetworkManager::instance()->vital->receiveIncreaseScore(score_info);
+			broadcastData(score_info, sizeof(IncreaseScoreInfo), true);
 	}
 }
 

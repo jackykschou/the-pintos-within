@@ -24,14 +24,43 @@ void VitalPacket::receiveDamage(PlayerDamageInfo* info_p)
 			GameState::instance()->players[info_p->damaged_player_id] &&
 			!GameState::instance()->players[info_p->damaged_player_id]->is_dead)
 	{
-		GameState::instance()->player->health -= info_p->damage;
-		AudioManager::instance()->playBlootSplat(Ogre::Vector3(GameState::instance()->player->transform->posX,
-												GameState::instance()->player->transform->posY,
-												GameState::instance()->player->transform->posZ));
+		if(GameState::instance()->player->health > 0)
+		{
+			GameState::instance()->player->health -= info_p->damage;
+
+			//set score according to game mode
+			if(GameState::instance()->player->health <= 0)
+			{
+				if(GameState::instance()->team_mode == FFA)
+				{
+					NetworkManager::instance()->vital->setIncreaseScore(info_p->player_id, 1, RED_TEAM);
+				}
+				else if((GameState::instance()->team_mode == TEAM) && (GameState::instance()->game_mode != PINTO))
+				{
+					if(GameState::instance()->player->team_id == RED_TEAM)
+					{
+						NetworkManager::instance()->vital->setIncreaseScore(info_p->player_id, 1, BLUE_TEAM);
+					}
+					else
+					{
+						NetworkManager::instance()->vital->setIncreaseScore(info_p->player_id, 1, RED_TEAM);
+					}
+				}
+				else
+				{
+					//Pinto mode, not confirmed how to do scoring
+
+				}
+			}
+
+			AudioManager::instance()->playBlootSplat(Ogre::Vector3(GameState::instance()->player->transform->posX,
+													GameState::instance()->player->transform->posY,
+													GameState::instance()->player->transform->posZ));
+		}
 	}
 }
 
-void VitalPacket::setPlayerRespawn(float posX, float posY, float posZ, uint32_t player_id)
+void VitalPacket::setPlayerRespawn(float posX, float posY, float posZ, uint32_t player_id, uint32_t team_id)
 {
 	PlayerRespawnInfo info;
 	info.type = PLAYER_RESPAWN;
@@ -40,6 +69,7 @@ void VitalPacket::setPlayerRespawn(float posX, float posY, float posZ, uint32_t 
 	info.playerX = posX;
 	info.playerY = posY;
 	info.playerZ = posZ;
+	info.team_id = team_id;
 	NetworkManager::instance()->send(&info, sizeof(PlayerRespawnInfo), true);
 }
 
@@ -55,7 +85,7 @@ void VitalPacket::receivePlayerRespawn(PlayerRespawnInfo* info_p)
 		GameState::instance()->players[info_p->player_respawn_id] = NULL;
 	}
 
-	GameState::instance()->spawner->spawnPlayer(info_p->playerX, info_p->playerY, info_p->playerZ, info_p->player_respawn_id);
+	GameState::instance()->spawner->spawnPlayer(info_p->playerX, info_p->playerY, info_p->playerZ, info_p->player_respawn_id, info_p->team_id);
 }
 
 void VitalPacket::setPlayerDie()
@@ -80,8 +110,13 @@ void VitalPacket::receivePlayerDie(PlayerDieInfo* info_p)
 
 	if(NetworkManager::instance()->isServer())
 	{
-		Ogre::Vector3 pos = GameState::instance()->spawner->spawnPlayer(info_p->player_id);
-		NetworkManager::instance()->vital->setPlayerRespawn(pos.x, pos.y, pos.z, info_p->player_id);
+		//Respawn player for pinto mode?
+
+		if(GameState::instance()->game_mode == DEATHMATCH)
+		{
+			Ogre::Vector3 pos = GameState::instance()->spawner->spawnPlayer(info_p->player_id);
+			NetworkManager::instance()->vital->setPlayerRespawn(pos.x, pos.y, pos.z, info_p->player_id, NetworkManager::instance()->player_team_id_map[info_p->player_id]);
+		}
 	}
 }
 
@@ -165,5 +200,29 @@ void VitalPacket::receiveChangePinto(ChangePintoInfo* info_p)
 		GameState::instance()->players[info_p->player_id]->changeToPinto();
 	}
 
+}
+
+void VitalPacket::setIncreaseScore(uint32_t player_id, uint32_t amount, uint32_t team_id)
+{
+	IncreaseScoreInfo info;
+	info.type = INCREASE_SCORE;
+	info.receive_player_id = player_id;
+	info.amount = amount;
+	info.receive_team_id = team_id;
+
+	NetworkManager::instance()->send(&info, sizeof(IncreaseScoreInfo), true);
+}
+
+void VitalPacket::receiveIncreaseScore(IncreaseScoreInfo* info_p)
+{
+	if((info_p->receive_team_id == GameState::instance()->team_id) && 
+		(GameState::instance()->team_mode == TEAM))
+	{
+		GameState::instance()->score += info_p->amount;
+	}
+	else if(info_p->receive_player_id == NetworkManager::instance()->player_id)
+	{
+		GameState::instance()->score += info_p->amount;
+	}
 }
 

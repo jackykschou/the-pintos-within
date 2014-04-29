@@ -659,7 +659,7 @@
                 <face v2="95" v3="67" v1="121"/>
             </faces>
         </submesh>
-        <submesh material="Red Metal" operationtype="triangle_list" use32bitindexes="False" usesharedvertices="true">
+        <submesh material="RedMetal" operationtype="triangle_list" use32bitindexes="False" usesharedvertices="true">
             <faces count="82">
                 <face v2="1" v3="2" v1="0"/>
                 <face v2="2" v3="3" v1="0"/>
@@ -749,7 +749,7 @@
     <submeshnames>
         <submesh index="0" name="Metal">
         </submesh>
-        <submesh index="1" name="Red Metal">
+        <submesh index="1" name="RedMetal">
         </submesh>
     </submeshnames>
 </mesh>

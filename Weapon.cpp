@@ -162,7 +162,10 @@ void Weapon::switchToThisWeapon()
 	is_shooting = false;
 	is_reloading = false;
 	shooting_animation_state->setTimePosition(0);
-	reload_animation_state->setTimePosition(0);
+
+	if(reload_animation_state != NULL)
+		reload_animation_state->setTimePosition(0);
+	
 	current_mag_count = max_mag_cap;
 	current_ammo = max_ammo;
 }

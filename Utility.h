@@ -57,6 +57,7 @@ enum collisiontypes {
 #define BLASTER_EXPLODE 14
 #define PLAY_FIRE_SOUND 15
 #define CHANGE_PINTO 16
+#define INCREASE_SCORE 17
 
 #define WALL "Wall"
 #define FLOORGRASS "FloorGrass"
@@ -97,5 +98,10 @@ enum collisiontypes {
 #define ASSAULTRIFLE_ID 2
 #define BLASTER_ID 3
 #define MELEE_ID 4
+
+//team id
+#define RED_TEAM 0
+#define BLUE_TEAM 1
+#define PINTO_TEAM 1
 
 #endif // #ifndef __Utility_h_

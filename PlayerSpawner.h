@@ -14,10 +14,12 @@ public:
 	virtual ~PlayerSpawner();
 
 	std::vector<Ogre::Vector3> positions;
+	std::vector<Ogre::Vector3> red_positions;
+	std::vector<Ogre::Vector3> blue_positions;
 
 	void startGame();
-	void addSpawnPoint(Ogre::Vector3);
-	void spawnPlayer(float, float, float, uint32_t);
+	void addSpawnPoint(Ogre::Vector3, uint32_t);
+	void spawnPlayer(float, float, float, uint32_t, uint32_t);
 	Ogre::Vector3 spawnPlayer(uint32_t);
 
 	virtual void update();
