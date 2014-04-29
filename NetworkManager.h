@@ -32,7 +32,7 @@ struct PlayerNumInfo
 struct ServerAdvertisement
 {
 	char magic[5];
-	char name[256];
+	char name[256]; // the hostname
 	char description[256];
 };
 
@@ -41,6 +41,11 @@ struct ChatPacket
 	char type;
 	char playerId;
 	char message[256];
+};
+
+struct PlayerJoinedPacket
+{
+
 };
 
 enum NetworkManagerState 
@@ -66,6 +71,7 @@ class NetworkManager : public Singleton<NetworkManager>
 	NetworkManagerState state;
 
 	void startServer();
+	void stopServer();
 	void startClient(const char* host);
 	void startClientDiscovery();
 	void stopClientDiscovery();

@@ -72,6 +72,7 @@ bool GuiManager::IsExpectingKeyboard(){
   return _current==_joinGameMenu||_current==_createGameMenu||_current==_lobby||(_current==_hud&&hud->IsConsoleVisible());
 }
 bool GuiManager::CreateGame(const CEGUI::EventArgs& e){
+  NetworkManager::instance()->stopServer(); // just in case
   _current=_createGameMenu;
   _current->Display();
   return false;
@@ -268,8 +269,16 @@ bool CreateGameMenu::DisplayPrompts(const CEGUI::EventArgs& e){
   displayPrompts(e,std::vector<std::pair<CEGUI::Editbox*,const char*>>{{_name,"Your Name"},{_timeLimit,"180"},{_maxPlayers,"2"}});
   return false;
 }
-Lobby::Lobby():Gui("Lobby.layout"){}
 
+Lobby::Lobby():Gui("Lobby.layout"){
+  _back  = static_cast<CEGUI::PushButton*>(_root->getChild("Lobby/Back"));
+  _back->subscribeEvent(CEGUI::PushButton::EventClicked,CEGUI::Event::Subscriber(&GuiManager::CreateGame,GuiManager::instance()));
+  _start = static_cast<CEGUI::PushButton*>(_root->getChild("Lobby/Start"));
+  _start->subscribeEvent(CEGUI::PushButton::EventClicked,CEGUI::Event::Subscriber(&Lobby::StartClicked,this));
+}
+bool Lobby::StartClicked(const CEGUI::EventArgs& e){
+  return false;
+}
 WaitingPrompt::WaitingPrompt():Gui("WaitingPrompt.layout"){
   _start=static_cast<CEGUI::PushButton*>(_root->getChild("WaitingPrompt/Start"));
   _start->subscribeEvent(CEGUI::PushButton::EventClicked,CEGUI::Event::Subscriber(&GuiManager::Start,GuiManager::instance()));

@@ -120,6 +120,10 @@ class CreateGameMenu:public Gui{
 class Lobby:public Gui{
   public:
     Lobby();
+    bool StartClicked(const CEGUI::EventArgs& e);
+  private:
+    CEGUI::PushButton* _back;
+    CEGUI::PushButton* _start;
 };
 class WaitingPrompt:public Gui{
   public:

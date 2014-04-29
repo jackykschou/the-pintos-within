@@ -24,6 +24,10 @@ GameServer::GameServer(int port)
 }
 
 GameServer::~GameServer() {
+	if (_socket) {
+		SDLNet_UDP_Close(_socket);
+		_socket = NULL;
+	}
 	SDLNet_FreePacket(_tmpSendPacket);
 	SDLNet_FreePacket(_tmpRecvPacket);
 	delete _ackBuffer;
