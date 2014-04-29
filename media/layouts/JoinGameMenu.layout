@@ -15,14 +15,8 @@
       <Property Name="Text" Value="connect to a host:" />
       <Property Name="UnifiedAreaRect" Value="{{0.25,0},{0.1933,0},{0.75,0},{0.2533,0}}" />
     </Window>
-    <Window Type="TaharezLook/ItemListbox" Name="JoinGameMenu/Hosts" >
+    <Window Type="TaharezLook/Listbox" Name="JoinGameMenu/Hosts" >
       <Property Name="UnifiedAreaRect" Value="{{0.25,0},{0.2778,0},{0.75,0},{0.6378,0}}" />
-        <Window Type="TaharezLook/ListboxItem" >
-          <Property Name="Text" Value="Game 1" />
-        </Window>
-        <Window Type="TaharezLook/ListboxItem" >
-          <Property Name="Text" Value="Game 2" />
-        </Window>
     </Window>
     <Window Type="TaharezLook/Button" Name="JoinGameMenu/HostsJoin" >
       <Property Name="Text" Value="Continue" />

@@ -1,5 +1,6 @@
 #include "GuiManager.h"
 #include "ChatManager.h"
+#include "Utility.h"
 
 GuiManager::GuiManager():_isDisplayed{false}{}
 GuiManager::~GuiManager(){
@@ -33,7 +34,9 @@ void GuiManager::Update(const Ogre::FrameEvent& event){
           hud->UpdateMagCount(weapon->current_ammo);
         }
       }
-    }//else{Ogre::Root::getSingletonPtr()->getRenderSystem()->clearFrameBuffer(0);}
+    }else if(_current==_joinGameMenu){
+      static_cast<JoinGameMenu*>(_joinGameMenu)->UpdateGames();
+    }
     hud->UpdateConsole();
   }else{
     _isDisplayed=true;
@@ -79,14 +82,17 @@ bool GuiManager::CreateGame(const CEGUI::EventArgs& e){
 bool GuiManager::HostGame(const CEGUI::EventArgs& e){
   _current=_lobby;
   _current->Display();
+  GameState::instance()->current_state=LOBBY_AS_HOST;
   LOG("STARTING IN SERVER MODE");
   NetworkManager::instance()->startServer();
   return false;
 }
 bool GuiManager::JoinGame(const CEGUI::EventArgs& e){
-  static_cast<WaitingPrompt*>(_waitingPrompt)->RemoveStart();
+  //static_cast<WaitingPrompt*>(_waitingPrompt)->RemoveStart();
   _current=_joinGameMenu;
+  GameState::instance()->current_state=CLIENT_MENU;
   _current->Display();
+  NetworkManager::instance()->startClientDiscovery();
   return false;
 }
 bool GuiManager::Exit(const CEGUI::EventArgs& e){
@@ -94,11 +100,12 @@ bool GuiManager::Exit(const CEGUI::EventArgs& e){
   return false;
 }
 bool GuiManager::Start(const CEGUI::EventArgs& e){
-  _current=_hud;
+  _current=_waitingPrompt;
   _current->Display();
   CEGUI::MouseCursor::getSingletonPtr()->hide();
   LOG("STARTING GAME.");
   GameState::instance()->start();
+  GameState::instance()->current_state=LOADING;
   Hud* hud=static_cast<Hud*>(_hud);
   return false;
 }
@@ -110,13 +117,15 @@ bool GuiManager::ConnectToSelectedHost(const CEGUI::EventArgs& e){
 }
 bool GuiManager::Connect(const char* host){
   LOG("STARTING IN CLIENT MODE");
+  //NetworkManager::instance()->stopClientDiscovery();
   NetworkManager::instance()->startClient(host);
+  GameState::instance()->current_state=LOBBY_AS_CLIENT;
   _current=_lobby;
   _current->Display();
   return false;
 }
 void GuiManager::EnableStart(){
-  static_cast<WaitingPrompt*>(_waitingPrompt)->EnableStart();
+  static_cast<Lobby*>(_lobby)->EnableStart();
 }
 bool GuiManager::BackToMainMenu(const CEGUI::EventArgs& e){
   _current=_mainMenu;
@@ -214,19 +223,27 @@ MainMenu::MainMenu():Gui("MainMenu.layout"){
 }
 JoinGameMenu::JoinGameMenu():Gui("JoinGameMenu.layout"){
   _name=static_cast<CEGUI::Editbox*>(_root->getChild("JoinGameMenu/Name"));
-  _hosts=static_cast<CEGUI::ItemListbox*>(_root->getChild("JoinGameMenu/Hosts"));
+  _hosts=static_cast<CEGUI::Listbox*>(_root->getChild("JoinGameMenu/Hosts"));
   _hostsJoin=static_cast<CEGUI::PushButton*>(_root->getChild("JoinGameMenu/HostsJoin"));
   _host=static_cast<CEGUI::Editbox*>(_root->getChild("JoinGameMenu/Host"));
   _hostJoin=static_cast<CEGUI::PushButton*>(_root->getChild("JoinGameMenu/HostJoin"));
 
-  _hosts->setMultiSelectEnabled(false);
-  
+  _hosts->setMultiselectEnabled(false);
+
   _hostsJoin->subscribeEvent(CEGUI::PushButton::EventClicked,CEGUI::Event::Subscriber(&GuiManager::ConnectToSelectedHost,GuiManager::instance()));
   _hostJoin->subscribeEvent(CEGUI::PushButton::EventClicked,CEGUI::Event::Subscriber(&GuiManager::ConnectToNamedHost,GuiManager::instance()));
   _name->subscribeEvent(CEGUI::Editbox::EventCaratMoved,CEGUI::Event::Subscriber(&JoinGameMenu::DisplayPrompts,this));
   _host->subscribeEvent(CEGUI::Editbox::EventCaratMoved,CEGUI::Event::Subscriber(&JoinGameMenu::DisplayPrompts,this));
   _name->subscribeEvent(CEGUI::Editbox::EventDeactivated,CEGUI::Event::Subscriber(&JoinGameMenu::DisplayPrompts,this));
   _host->subscribeEvent(CEGUI::Editbox::EventDeactivated,CEGUI::Event::Subscriber(&JoinGameMenu::DisplayPrompts,this));
+
+  _hosts->subscribeEvent(CEGUI::Listbox::EventMouseClick,CEGUI::Event::Subscriber([_hosts](const CEGUI::EventArgs& e){
+  CEGUI::MouseEventArgs* a=(CEGUI::MouseEventArgs*)(&e);
+    //_hosts->setItemSelectState(_hosts->getItemAtPoint(a->position),true);
+    auto item=_hosts->getItemAtPoint(a->position);
+    item->setSelected(true);
+    return false;
+  }));
 
   DisplayPrompts(CEGUI::EventArgs{});
 }
@@ -242,6 +259,19 @@ const char* JoinGameMenu::ReadSelectedHost(){
 }
 const char* JoinGameMenu::ReadName(){
   return _name->getText().c_str();
+}
+void JoinGameMenu::UpdateGames(){
+  _hosts->resetList();
+  //FF4444AA
+  CEGUI::colour c{0.267f,0.267f,0.664f};
+  auto games=GameState::instance()->games;
+  for(auto i=games.cbegin();i!=games.cend();++i){
+    auto entry=new CEGUI::ListboxTextItem(((*i).first+" ["+(*i).second.first+"]"));
+    entry->setUserData((void*)(&(*i)));
+    entry->setSelectionColours(c);
+    entry->setSelectionBrushImage("TaharezLook","ListboxSelectionBrush");
+    _hosts->addItem(entry);
+  }
 }
 CreateGameMenu::CreateGameMenu():Gui("CreateGameMenu.layout"){
   _name=static_cast<CEGUI::Editbox*>(_root->getChild("CreateGameMenu/Name"));
@@ -268,19 +298,25 @@ bool CreateGameMenu::DisplayPrompts(const CEGUI::EventArgs& e){
   displayPrompts(e,std::vector<std::pair<CEGUI::Editbox*,const char*>>{{_name,"Your Name"},{_timeLimit,"180"},{_maxPlayers,"2"}});
   return false;
 }
-Lobby::Lobby():Gui("Lobby.layout"){}
-
-WaitingPrompt::WaitingPrompt():Gui("WaitingPrompt.layout"){
-  _start=static_cast<CEGUI::PushButton*>(_root->getChild("WaitingPrompt/Start"));
+Lobby::Lobby():Gui("Lobby.layout"){
+  _start=static_cast<CEGUI::PushButton*>(_root->getChild("Lobby/Start"));
   _start->subscribeEvent(CEGUI::PushButton::EventClicked,CEGUI::Event::Subscriber(&GuiManager::Start,GuiManager::instance()));
+  DisableStart();
+}
+void Lobby::DisableStart(){
   _start->disable();
 }
-void WaitingPrompt::EnableStart(){
+void Lobby::EnableStart(){
   _start->enable();
 }
-void WaitingPrompt::RemoveStart(){
-  _root->removeChildWindow(_start);
+void Lobby::RemoveStart(){
+  _start->hide();
 }
+void Lobby::AddStart(){
+  _start->show();
+}
+
+WaitingPrompt::WaitingPrompt():Gui("WaitingPrompt.layout"){}
 // random c helper
 char* trim(const char* str) {
   char *s = (char*)str;

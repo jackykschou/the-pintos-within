@@ -38,9 +38,22 @@ bool GameState::isRunning() {
 }
 
 void GameState::update() {
+	clear_old_games();
 	if (!(timeLeft < 1 || !_running)) {
 		pt::ptime now = pt::second_clock::local_time();
 		pt::time_duration diff = now - _start;
 		timeLeft = DEFAULT_CLOCK - diff.total_seconds();
+	}
+}
+
+void GameState::clear_old_games(){
+	pt::ptime now=pt::second_clock::local_time();
+	auto i=games.begin();
+	while(i!=games.end()){
+		if((now-(*i).second.second).total_seconds()>4){
+			games.erase(i++);
+		}else{
+			++i;
+		}
 	}
 }

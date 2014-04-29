@@ -156,6 +156,7 @@ void GameClient::consumeDiscoveryPackets() {
 		ServerAdvertisement* ad;
 		ad = (ServerAdvertisement*)packetData;
 		printf("RECEIVED SERVER DISCOVERY PACKET\n%s\n%s\n", ad->name, ad->description);
+		GameState::instance()->games[ad->name]=std::make_pair(ad->description,boost::posix_time::second_clock::local_time());
 	}
 }
 

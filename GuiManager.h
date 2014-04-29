@@ -97,9 +97,10 @@ class JoinGameMenu:public Gui{
     const char* ReadNamedHost();
     const char* ReadName();
     bool DisplayPrompts(const CEGUI::EventArgs& e);
+    void UpdateGames();
   private:
     CEGUI::Editbox* _name;
-    CEGUI::ItemListbox* _hosts;
+    CEGUI::Listbox* _hosts;
     CEGUI::PushButton* _hostsJoin;
     CEGUI::Editbox* _host;
     CEGUI::PushButton* _hostJoin;
@@ -120,13 +121,15 @@ class CreateGameMenu:public Gui{
 class Lobby:public Gui{
   public:
     Lobby();
+    void EnableStart();
+    void DisableStart();
+    void AddStart();
+    void RemoveStart();
+  private:
+    CEGUI::PushButton* _start;
 };
 class WaitingPrompt:public Gui{
   public:
     WaitingPrompt();
-    void EnableStart();
-    void RemoveStart();
-  private:
-    CEGUI::PushButton* _start;
 };
 #endif
