@@ -1,11 +1,10 @@
 #include "GameClient.h"
 #include "GameState.h"
-
 #include "NetworkManager.h"
-
 #include "HeartbeatPacket.h"
 #include "VitalPacket.h"
 #include "ParticlePacket.h"
+#include "GuiManager.h"
 
 GameClient::GameClient(const char* host, int port) {
 	// copy the string into a new chunk of memory :)
@@ -110,8 +109,14 @@ int GameClient::joinGame() {
 	printf("Sending join game request...");
 
 	state = GameClientRunning;
-	char x = JOINGAME;
-	sendData(&x, 1, true);
+
+	JoinRequestPacket request;
+	request.type = JOINGAME;
+	std::string name = GuiManager::instance()->GetName();
+	LOG("MY NAME IS "<<name);
+	strncpy(request.name, name.c_str(), sizeof(request.name));
+
+	sendData(&request, sizeof(JoinRequestPacket), true);
 
 	return 0;
 }
@@ -251,5 +256,13 @@ void GameClient::processPacket(UDPpacket* packet) {
 			ChangePintoInfo* change_pinto_info;
 			change_pinto_info =  (ChangePintoInfo*) packetData;
 			NetworkManager::instance()->vital->receiveChangePinto(change_pinto_info);
+			break;
+		case PLAYER_JOIN:
+			PlayerJoinPacket* p;
+			p = (PlayerJoinPacket*)packetData;
+			if (p->playerId != NetworkManager::instance()->player_id) {
+				printf("Player %d joined, with name %s\n", p->playerId, p->name);
+			}
+			break;
 	}
 }

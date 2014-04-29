@@ -165,30 +165,6 @@ void GameServer::consumePackets() {
 	}
 }
 
-
-// when a client joins, we need to ACK back that it succeeded
-void GameServer::handleJoinPacket(UDPpacket *packet) {
-	IPaddress ip;
-
-	printf("CLIENT %x %d JOINED\n", packet->address.host, packet->address.port);
-
-	_clients.push_back(packet->address);
-	int id = _clients.size();
-	GameState::instance()->num_player = (GameState::instance()->num_player + 1);
-
-	memcpy(&ip, &(packet->address), sizeof(IPaddress));
-
-	PlayerIdInfo info;
-	info.type = ASSIGNPLAYERID;
-	info.player_id = id;
-
-	char x = ASSIGNPLAYERID;
-	sendDataToClient(&info, sizeof(PlayerIdInfo), &ip, true);
-
-	LOG("Assigning player id: " << id);
-        GuiManager::instance()->EnableStart();
-}
-
 // sends a UDP broadcast to clients in the same NAT subnet
 // that we are running a LAN game here.
 void GameServer::sendAdvertisement() {
@@ -223,7 +199,7 @@ void GameServer::processPacket(UDPpacket* packet) {
 	switch (packetType) {
 		case JOINGAME:
 			// JOIN request adds a character to the game
-			handleJoinPacket(packet);
+			handleJoinPacket(packet, packetData);
 			break;
 		case HEARTBEATPACK:
 			HeartBeatInfo* hinfo;
@@ -289,7 +265,61 @@ void GameServer::processPacket(UDPpacket* packet) {
 			change_pinto_info =  (ChangePintoInfo*) packetData;
 			NetworkManager::instance()->vital->receiveChangePinto(change_pinto_info);
 			broadcastData(change_pinto_info, sizeof(ChangePintoInfo), true);
+			break;
 	}
 }
 
+// when a client joins, we need to ACK back that it succeeded
+void GameServer::handleJoinPacket(UDPpacket *packet, void* data) {
+	IPaddress ip;
 
+	printf("CLIENT %x %d JOINED\n", packet->address.host, packet->address.port);
+
+	JoinRequestPacket* join;
+	join = (JoinRequestPacket*)data;
+	LOG("PLAYER'S NAME IS " << join->name);
+
+	_clients.push_back(packet->address);
+	int id = _clients.size();
+	GameState::instance()->num_player++;
+
+	int len = strlen(join->name);
+	if (len > 14) len = 14;
+	char c = '1';
+	while (GameState::instance()->nameIsTaken(join->name)) {
+		LOG("NAME IS TAKEN!!!!");
+		join->name[len] = c++;
+		join->name[len+1] = '\0';
+		LOG("NEW NAME= " << join->name);
+	}
+
+	GameState::instance()->setPlayerName(id, std::string(join->name));
+
+	memcpy(&ip, &(packet->address), sizeof(IPaddress));
+
+	PlayerIdInfo info;
+	info.type = ASSIGNPLAYERID;
+	info.player_id = id;
+
+	char x = ASSIGNPLAYERID;
+	sendDataToClient(&info, sizeof(PlayerIdInfo), &ip, true);
+
+	// send a PlayerJoinPacket to the new client for every other player
+	for (int i = 0; i < id; i++) {
+		PlayerJoinPacket p;
+		p.type = PLAYER_JOIN;
+		p.playerId = i;
+		strncpy(p.name, GameState::instance()->getPlayerName(i).c_str(), 16);
+		sendDataToClient(&p, sizeof(PlayerJoinPacket), &ip, true);
+	}
+
+	// broadcasts a PlayerJoinPacket to the other clients about the new client
+	PlayerJoinPacket p;
+	p.type = PLAYER_JOIN;
+	p.playerId = id;
+	strncpy(p.name, join->name, 16);
+	broadcastData(&p, sizeof(PlayerJoinPacket), true);
+
+	LOG("Assigning player id: " << id);
+        GuiManager::instance()->EnableStart();
+}

@@ -57,6 +57,7 @@ enum collisiontypes {
 #define BLASTER_EXPLODE 14
 #define PLAY_FIRE_SOUND 15
 #define CHANGE_PINTO 16
+#define PLAYER_JOIN 17
 
 #define WALL "Wall"
 #define FLOORGRASS "FloorGrass"

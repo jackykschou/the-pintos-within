@@ -15,14 +15,14 @@ void GameState::reset() {
 	timeLeft = DEFAULT_CLOCK;
 	_start = pt::second_clock::local_time();
 	_running = false;
+	for (int i = 0; i < MAX_PLAYER; i++) {
+		players[i] = NULL;
+	}
 }
 
 void GameState::start() {
 	reset();
 	_running = true;
-    //GUIManager::instance()->hideGameOverMenu();
-	// AudioManager::instance()->playStartSound();
-	//GUIManager::instance()->hideWaitingMenu();
   if(NetworkManager::instance()->isServer())
   {
   	PlayerNumInfo info;
@@ -31,6 +31,14 @@ void GameState::start() {
   	NetworkManager::instance()->send(&info, sizeof(PlayerNumInfo), true);
   }
   spawner->startGame();
+}
+
+void GameState::setPlayerName(int player, std::string name) {
+	_playerNames[player] = name; 
+}
+
+std::string GameState::getPlayerName(int player) {
+	return _playerNames[player];
 }
 
 bool GameState::isRunning() {
@@ -56,4 +64,13 @@ void GameState::clear_old_games(){
 			++i;
 		}
 	}
+}
+
+bool GameState::nameIsTaken(char* name) {
+	for (int i = 0; i < MAX_PLAYER; i++) {
+		if (strcmp(name, getPlayerName(i).c_str()) == 0) {
+			return true;
+		}
+	}
+	return false;
 }
