@@ -5,11 +5,11 @@
     <Property Name="InheritsAlpha" Value="False" />
     <Property Name="UnifiedAreaRect" Value="{{0,0},{0,0},{1,0},{1,0}}" />
     <Window Type="TaharezLook/StaticText" Name="Lobby/LobbyTitle" >
-      <Property Name="Text" Value="your name:" />
+      <Property Name="Text" Value="" />
       <Property Name="UnifiedAreaRect" Value="{{0.0367,0},{0.0367,0},{0.9633,0},{0.0967,0}}" />
     </Window>
     <Window Type="TaharezLook/StaticText" Name="Lobby/GameDescription" >
-      <Property Name="Text" Value="your name:" />
+      <Property Name="Text" Value="" />
       <Property Name="UnifiedAreaRect" Value="{{0.0367,0},{0.1333,0},{0.9633,0},{0.1933,0}}" />
     </Window>
     <Window Type="TaharezLook/ItemListbox" Name="Lobby/Players" >
