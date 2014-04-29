@@ -44,6 +44,9 @@ public:
   // advertise ourselves as a game server over UDP broadcast
   void sendAdvertisement();
 
+  // clean up the resources and close the socket
+  void cleanup();
+
 private:
   // the socket that is bound
   UDPsocket _socket;

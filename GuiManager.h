@@ -126,6 +126,7 @@ class Lobby:public Gui{
     void AddStart();
     void RemoveStart();
   private:
+    CEGUI::PushButton* _back;
     CEGUI::PushButton* _start;
 };
 class WaitingPrompt:public Gui{

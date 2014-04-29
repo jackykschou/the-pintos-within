@@ -75,6 +75,7 @@ void GameClient::startListeningForAdvertisements() {
 
 void GameClient::stopListeningForAdvertisements() {
 	state = GameClientReady;
+	if (_discoverySocket) SDLNet_UDP_Close(_discoverySocket);
 	_discoverySocket = NULL;
 }
 

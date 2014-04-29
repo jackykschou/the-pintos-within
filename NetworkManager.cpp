@@ -58,6 +58,8 @@ void NetworkManager::receiveHeartbeat(HeartBeatInfo* info)
 }
 
 void NetworkManager::startServer() {
+	if (state == NetworkStateServer) stopServer();
+
 	LOG("Starting server...");
 	
 	state = NetworkStateServer;
@@ -67,8 +69,15 @@ void NetworkManager::startServer() {
 		LOG("ERROR: SERVER FAILED TO START.");
 		return;
 	}
+}
 
-	//GUIManager::instance()->showGameOverMenu();
+void NetworkManager::stopServer() {
+	if (state == NetworkStateServer) {
+		// kill the old server
+		delete server;
+		server = NULL;
+		state = NetworkStateReady;
+	}
 }
 
 void NetworkManager::startClient(const char* host) {
@@ -81,18 +90,27 @@ void NetworkManager::startClient(const char* host) {
 		LOG("ERROR: CLIENT FAILED TO CONNECT.");
 		return;
 	}
-
-	//GUIManager::instance()->hideGameOverMenu();
-	//GUIManager::instance()->showWaitingMenu();
 }
 
 void NetworkManager::startClientDiscovery() {
-	LOG("Starting client...");
+	if (state == NetworkStateClient) return;
+
+	LOG("Starting client discovery...");
 
 	state = NetworkStateClient;
 
 	client = new GameClient(NULL, GAME_PORT);
 	client->startListeningForAdvertisements();
+}
+
+void NetworkManager::stopClientDiscovery() {
+	if (state != NetworkStateClient) return;
+
+	LOG("Stopping client discovery...");
+
+	client->stopListeningForAdvertisements();
+	delete client;
+	client = NULL;
 }
 
 void NetworkManager::update()
