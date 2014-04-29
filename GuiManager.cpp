@@ -76,6 +76,7 @@ bool GuiManager::IsExpectingKeyboard(){
 }
 bool GuiManager::CreateGame(const CEGUI::EventArgs& e){
   NetworkManager::instance()->stopServer(); // just in case
+  GameState::instance()->current_state=HOST_MENU;
   _current=_createGameMenu;
   _current->Display();
   return false;
@@ -90,8 +91,8 @@ bool GuiManager::HostGame(const CEGUI::EventArgs& e){
 }
 bool GuiManager::JoinGame(const CEGUI::EventArgs& e){
   //static_cast<WaitingPrompt*>(_waitingPrompt)->RemoveStart();
-  _current=_joinGameMenu;
   GameState::instance()->current_state=CLIENT_MENU;
+  _current=_joinGameMenu;
   _current->Display();
   NetworkManager::instance()->startClientDiscovery();
   return false;
@@ -99,6 +100,13 @@ bool GuiManager::JoinGame(const CEGUI::EventArgs& e){
 bool GuiManager::Exit(const CEGUI::EventArgs& e){
   GraphicsManager::instance()->stopRendering();
   return false;
+}
+bool GuiManager::Back(const CEGUI::EventArgs& e){
+  if(GameState::instance()->current_state==LOBBY_AS_HOST){
+    return CreateGame(e);
+  }else{
+    return JoinGame(e);
+  }
 }
 bool GuiManager::Start(const CEGUI::EventArgs& e){
   _current=_waitingPrompt;
@@ -119,8 +127,8 @@ bool GuiManager::ConnectToSelectedHost(const CEGUI::EventArgs& e){
 bool GuiManager::Connect(const char* host){
   LOG("STARTING IN CLIENT MODE");
   //NetworkManager::instance()->stopClientDiscovery();
-  NetworkManager::instance()->startClient(host);
   GameState::instance()->current_state=LOBBY_AS_CLIENT;
+  NetworkManager::instance()->startClient(host);
   _current=_lobby;
   _current->Display();
   return false;
@@ -240,9 +248,11 @@ JoinGameMenu::JoinGameMenu():Gui("JoinGameMenu.layout"){
 
   _hosts->subscribeEvent(CEGUI::Listbox::EventMouseClick,CEGUI::Event::Subscriber([_hosts](const CEGUI::EventArgs& e){
   CEGUI::MouseEventArgs* a=(CEGUI::MouseEventArgs*)(&e);
-    //_hosts->setItemSelectState(_hosts->getItemAtPoint(a->position),true);
     auto item=_hosts->getItemAtPoint(a->position);
-    item->setSelected(true);
+    if(item){
+      _hosts->setItemSelectState(_hosts->getItemAtPoint(a->position),true);
+      item->setSelected(true);
+    }
     return false;
   }));
 
@@ -267,7 +277,8 @@ void JoinGameMenu::UpdateGames(){
   CEGUI::colour c{0.267f,0.267f,0.664f};
   auto games=GameState::instance()->games;
   for(auto i=games.cbegin();i!=games.cend();++i){
-    auto entry=new CEGUI::ListboxTextItem(((*i).first+" ["+(*i).second.first+"]"));
+    auto label=(*i).first+" \\["+(*i).second.first+"]";
+    auto entry=new CEGUI::ListboxTextItem(label);
     entry->setUserData((void*)(&(*i)));
     entry->setSelectionColours(c);
     entry->setSelectionBrushImage("TaharezLook","ListboxSelectionBrush");
@@ -301,7 +312,7 @@ bool CreateGameMenu::DisplayPrompts(const CEGUI::EventArgs& e){
 }
 Lobby::Lobby():Gui("Lobby.layout"){
   _back  = static_cast<CEGUI::PushButton*>(_root->getChild("Lobby/Back"));
-  _back->subscribeEvent(CEGUI::PushButton::EventClicked,CEGUI::Event::Subscriber(&GuiManager::CreateGame,GuiManager::instance()));
+  _back->subscribeEvent(CEGUI::PushButton::EventClicked,CEGUI::Event::Subscriber(&GuiManager::Back,GuiManager::instance()));
   _start=static_cast<CEGUI::PushButton*>(_root->getChild("Lobby/Start"));
   _start->subscribeEvent(CEGUI::PushButton::EventClicked,CEGUI::Event::Subscriber(&GuiManager::Start,GuiManager::instance()));
   DisableStart();

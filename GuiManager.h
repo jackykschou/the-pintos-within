@@ -28,6 +28,7 @@ class GuiManager:public Singleton<GuiManager>{
     bool JoinGame(const CEGUI::EventArgs& e);
     bool Exit(const CEGUI::EventArgs& e);
     bool Start(const CEGUI::EventArgs& e);
+    bool Back(const CEGUI::EventArgs& e);
     bool Connect(const char* host);
     bool ConnectToNamedHost(const CEGUI::EventArgs& e);
     bool ConnectToSelectedHost(const CEGUI::EventArgs& e);
