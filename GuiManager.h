@@ -128,9 +128,11 @@ class Lobby:public Gui{
     void DisableStart();
     void AddStart();
     void RemoveStart();
+    void UpdatePlayers();
   private:
     CEGUI::PushButton* _back;
     CEGUI::PushButton* _start;
+    CEGUI::Listbox* _players;
 };
 class WaitingPrompt:public Gui{
   public:

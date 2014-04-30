@@ -19,6 +19,7 @@ void GuiManager::Update(const Ogre::FrameEvent& event){
       if(_current!=_hud){
         _current=_hud;
         _current->Display();
+        GameState::instance()->current_state=IN_GAME;
         CEGUI::MouseCursor::getSingletonPtr()->hide();
       }
       PlayerCharacter* player=GameState::instance()->player;
@@ -36,6 +37,8 @@ void GuiManager::Update(const Ogre::FrameEvent& event){
       }
     }else if(_current==_joinGameMenu){
       static_cast<JoinGameMenu*>(_joinGameMenu)->UpdateGames();
+    }else if(_current==_lobby){
+      static_cast<Lobby*>(_lobby)->UpdatePlayers();
     }
     hud->UpdateConsole();
   }else{
@@ -281,16 +284,13 @@ const char* JoinGameMenu::ReadName(){
 }
 void JoinGameMenu::UpdateGames(){
   _hosts->resetList();
-  //FF4444AA
   CEGUI::colour c{0.267f,0.267f,0.664f,1.0f};
   auto games=GameState::instance()->games;
   for(auto i=games.cbegin();i!=games.cend();++i){
     auto label=(*i).first+" \\["+(*i).second.first+"]";
     auto entry=new CEGUI::ListboxTextItem(label);
-    //entry->setUserData((void*)(&(*i)));
     entry->setUserData((void*)(&((*i).first)));
     entry->setSelectionColours(c);
-//    entry->setTextColours(CEGUI::colour(0,0,0,1));
     entry->setSelectionBrushImage("TaharezLook","ListboxSelectionBrush");
     _hosts->addItem(entry);
   }
@@ -325,6 +325,7 @@ const char* CreateGameMenu::ReadName() {
 }
 
 Lobby::Lobby():Gui("Lobby.layout"){
+  _players=static_cast<CEGUI::Listbox*>(_root->getChild("Lobby/Players"));
   _back  = static_cast<CEGUI::PushButton*>(_root->getChild("Lobby/Back"));
   _back->subscribeEvent(CEGUI::PushButton::EventClicked,CEGUI::Event::Subscriber(&GuiManager::Back,GuiManager::instance()));
   _start=static_cast<CEGUI::PushButton*>(_root->getChild("Lobby/Start"));
@@ -342,6 +343,19 @@ void Lobby::RemoveStart(){
 }
 void Lobby::AddStart(){
   _start->show();
+}
+void Lobby::UpdatePlayers(){
+  _players->resetList();
+  CEGUI::colour c{0.267f,0.267f,0.664f,1.0f};
+  auto gameState=GameState::instance();
+  int numberOfPlayers=gameState->num_player;
+  for(int i=0;i!=numberOfPlayers;++i){
+    auto label=gameState->getPlayerName(i);
+    auto entry=new CEGUI::ListboxTextItem(label);
+    entry->setSelectionColours(c);
+    entry->setSelectionBrushImage("TaharezLook","ListboxSelectionBrush");
+    _players->addItem(entry);
+  }
 }
 
 WaitingPrompt::WaitingPrompt():Gui("WaitingPrompt.layout"){}
