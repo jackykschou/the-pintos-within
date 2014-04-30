@@ -19,8 +19,8 @@ public:
 
 	void startGame();
 	void addSpawnPoint(Ogre::Vector3, uint32_t);
-	void spawnPlayer(float, float, float, uint32_t, uint32_t);
-	Ogre::Vector3 spawnPlayer(uint32_t);
+	void spawnPlayer(float, float, float, uint32_t, uint32_t, uint32_t, bool);
+	Ogre::Vector3 spawnPlayer(uint32_t, bool);
 
 	virtual void update();
 };

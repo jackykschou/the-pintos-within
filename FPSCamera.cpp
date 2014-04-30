@@ -20,7 +20,7 @@ FPSCamera::FPSCamera(GameObject* gameObject, std::string name, double height_off
 
 	camera->setPosition(_transform->posX, _transform->posY, _transform->posZ);
 	camera->setOrientation(Ogre::Quaternion(_transform->rotW, _transform->rotX, _transform->rotY, _transform->rotZ));
-	camera->setNearClipDistance(45.0f);
+	camera->setNearClipDistance(50.0f);
 
 	camera->yaw(-Ogre::Degree(180));
 }

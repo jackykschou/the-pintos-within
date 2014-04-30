@@ -27,6 +27,9 @@ class GameState : public Singleton<GameState>
     int num_player;
     int current_max_num_player_map;
 
+    bool carrying_pinto_seed;
+    bool player_pinto_seeds[MAX_PLAYER];
+
   	int score;
   	int timeLeft;
   	void reset();

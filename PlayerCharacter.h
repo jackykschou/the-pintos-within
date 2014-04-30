@@ -31,7 +31,6 @@ public:
 
 	bool is_yourself;
 
-	bool is_pinto;
 	bool in_pinto_form;
 	
 	bool is_dead;
@@ -42,6 +41,7 @@ public:
 	bool is_reloading;
 	bool is_jet_packing;
 	bool is_jumping;
+	bool is_invisible;
 
 	float run_animation_time;
 	float shoot_animation_time;
@@ -66,8 +66,18 @@ public:
 	Ogre::AnimationState *jet_pack_jumping_animation_state;
 	Ogre::AnimationState *jet_pack_die_animation_state;
 
+	Ogre::AnimationState *hair_running_animation_state;
+	Ogre::AnimationState *hair_idle_animation_state;
+	Ogre::AnimationState *hair_shooting_animation_states[WEAPON_NUM];
+	Ogre::AnimationState *hair_reload_animation_states[WEAPON_NUM];
+	Ogre::AnimationState *hair_jumping_animation_state;
+	Ogre::AnimationState *hair_die_animation_state;
+
 	Ogre::AnimationState *current_jet_pack_reload_animation_state;
 	Ogre::AnimationState *current_jet_pack_shooting_animation_state;
+
+	Ogre::AnimationState *current_hair_reload_animation_state;
+	Ogre::AnimationState *current_hair_shooting_animation_state;
 
 	Ogre::AnimationState *current_reload_animation_state;
 	Ogre::AnimationState *current_shooting_animation_state;
@@ -91,6 +101,7 @@ public:
 	Mesh* pinto_mesh;
 
 	PlayerBox* jet_pack;
+	PlayerBox* hair;
 
 	Weapon* weapons[WEAPON_NUM];
 	Weapon* current_weapon;
@@ -113,7 +124,7 @@ public:
 
 	PlayerCharacter(bool, Scene*, std::string,
 	float, float, float, float, float, float, float,
-	float, float, float, uint32_t);
+	float, float, float, uint32_t, uint32_t, bool);
 
 	virtual ~PlayerCharacter();
 

@@ -36,6 +36,7 @@ class AudioManager : public Singleton<AudioManager> {
     void playBlootSplat(Ogre::Vector3 v);
     void playBlasterCharge(Ogre::Vector3 v, uint32_t sound_volume = DEFAULT_CHUNK_VOLUME);
     void playOutOfAmmo(Ogre::Vector3 v);
+    void playPickWeapon(Ogre::Vector3 v);
 
   private:
   	std::vector<Mix_Chunk*> _loadedFiles;
@@ -51,6 +52,7 @@ class AudioManager : public Singleton<AudioManager> {
     AudioFile _blood_splats[3];
     AudioFile _blaster_charge;
     AudioFile _out_of_ammo;
+    AudioFile _pick_weapon;
 };
 
 #endif

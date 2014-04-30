@@ -62,6 +62,7 @@ PlayerPickUp::PlayerPickUp(std::string tag, Scene* scene, std::string mesh_name,
 						{
 							if(player->player_id == NetworkManager::instance()->player_id)
 							{
+								AudioManager::instance()->playPickWeapon(Ogre::Vector3(v1.x(), v1.y(), v1.z()));
 								player->changeWeapon(pick_up->weapon_id);
 							} 
 						}

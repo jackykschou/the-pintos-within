@@ -10,8 +10,10 @@
 
 PlayerCharacter::PlayerCharacter(bool is_yourself_p, Scene* scene, std::string mesh_name,
 	float posX, float posY, float posZ, float rotX, float rotY, float rotZ, float rotW,
-	float scaleX, float scaleY, float scaleZ, uint32_t player_id_p) : GameObject("Player", scene)
+	float scaleX, float scaleY, float scaleZ, uint32_t player_id_p, uint32_t version, bool is_pinto) : GameObject("Player", scene)
 {
+	is_invisible = false;
+
 	team_id = RED_TEAM;
 	GameState::instance()->team_id = RED_TEAM;
 
@@ -23,7 +25,6 @@ PlayerCharacter::PlayerCharacter(bool is_yourself_p, Scene* scene, std::string m
 	is_dead = false;
 
 	in_pinto_form = false;
-	is_pinto = false;
 
 	run_animation_time = 0.0;
 	shoot_animation_time = 0.0;
@@ -51,7 +52,7 @@ PlayerCharacter::PlayerCharacter(bool is_yourself_p, Scene* scene, std::string m
 	tran->scaleY = scaleY;
 	tran->scaleZ = scaleZ;
 
-	mesh = new Mesh(this, mesh_name);
+	mesh = new Mesh(this, "PixelMan.mesh");
 
 	pinto_mesh = new Mesh(this, "Pinto.mesh");
 	pinto_mesh->node->setVisible(false);
@@ -190,7 +191,7 @@ PlayerCharacter::PlayerCharacter(bool is_yourself_p, Scene* scene, std::string m
 			0, 0, 0, 1,
 			5, 5, 5, 
 			new PlayerBox(this, "sphere5.mesh",
-			0, 0, 0, 
+			-0.550735 * 5 - 15, 1.624599 * 5, 1.731446 * 5 + 15, 
 			0, 0, 0, 1,
 			0.049863, 0.049863, 0.049863, COL_NOTHING, COL_NOTHING));
 
@@ -201,6 +202,95 @@ PlayerCharacter::PlayerCharacter(bool is_yourself_p, Scene* scene, std::string m
 										0, 0, 0, 1,
 										1, 1, 1,
 										COL_NOTHING, COL_NOTHING);
+
+	std::string hair_name;
+
+	if(version == 0)
+	{
+		hair_name = "PixelMan.002.mesh";
+	}
+	else if(version == 1)
+	{
+		hair_name = "PixelMan.003.mesh";
+	}
+	else if(version == 2)
+	{
+		hair_name = "PixelMan.004.mesh";
+	}
+	else if(version == 3)
+	{
+		hair_name = "PixelMan.005.mesh";
+	}
+	else
+	{
+		hair_name = "PixelMan.006.mesh";
+	}
+
+	jet_pack->node->setVisible(true);
+
+	hair = new PlayerBox(this, hair_name,
+							0, 0, 0,
+							0, 0, 0, 1,
+							10, 10, 10,
+							COL_NOTHING, COL_NOTHING);
+	hair->node->setVisible(true);
+
+	//hair states
+	hair_shooting_animation_states[0] = hair->entity->getAnimationState("Shooting");
+	hair_shooting_animation_states[0]->setLoop(false);
+	hair_shooting_animation_states[0]->setWeight(0);
+
+	hair_reload_animation_states[0] = hair->entity->getAnimationState("Reloading");
+	hair_reload_animation_states[0]->setLoop(false);
+	hair_reload_animation_states[0]->setWeight(0);
+
+	hair_shooting_animation_states[1] = hair->entity->getAnimationState("Shooting");
+	hair_shooting_animation_states[1]->setLoop(false);
+	hair_shooting_animation_states[1]->setWeight(0);
+
+	hair_reload_animation_states[1] = hair->entity->getAnimationState("Reloading");
+	hair_reload_animation_states[1]->setLoop(false);
+	hair_reload_animation_states[1]->setWeight(0);
+
+	hair_shooting_animation_states[2] = hair->entity->getAnimationState("Shooting");
+	hair_shooting_animation_states[2]->setLoop(false);
+	hair_shooting_animation_states[2]->setWeight(0);
+
+	hair_reload_animation_states[2] = hair->entity->getAnimationState("Reloading");
+	hair_reload_animation_states[2]->setLoop(false);
+	hair_reload_animation_states[2]->setWeight(0);
+
+	hair_shooting_animation_states[3] = hair->entity->getAnimationState("Shooting");
+	hair_shooting_animation_states[3]->setLoop(false);
+	hair_shooting_animation_states[3]->setWeight(0);
+
+	hair_reload_animation_states[3] = hair->entity->getAnimationState("Reloading");
+	hair_reload_animation_states[3]->setLoop(false);
+	hair_reload_animation_states[3]->setWeight(0);
+
+	hair_shooting_animation_states[4] = hair->entity->getAnimationState("Shooting");
+	hair_shooting_animation_states[4]->setLoop(false);
+	hair_shooting_animation_states[4]->setWeight(0);
+
+	hair_reload_animation_states[4] = hair->entity->getAnimationState("Reloading");
+	hair_reload_animation_states[4]->setLoop(false);
+	hair_reload_animation_states[4]->setWeight(0);
+
+	hair_running_animation_state = hair->entity->getAnimationState("Running");
+	hair_running_animation_state->setLoop(true);
+	hair_running_animation_state->setWeight(0);
+
+	hair_idle_animation_state = hair->entity->getAnimationState("Idle");
+	hair_idle_animation_state->setLoop(true);
+	hair_idle_animation_state->setWeight(0);
+
+	hair_jumping_animation_state = hair->entity->getAnimationState("Jump");
+	hair_jumping_animation_state->setLoop(false);
+	hair_jumping_animation_state->setWeight(0);
+
+	hair_die_animation_state = hair->entity->getAnimationState("Death");
+	hair_die_animation_state->setLoop(false);
+	hair_die_animation_state->setWeight(0);
 
 	//Jet Pack states
 
@@ -260,8 +350,6 @@ PlayerCharacter::PlayerCharacter(bool is_yourself_p, Scene* scene, std::string m
 	jet_pack_die_animation_state->setLoop(false);
 	jet_pack_die_animation_state->setWeight(0);
 
-	jet_pack->node->setVisible(true);
-
 	jet_pack_shoot_pos1 = new PlayerBox(this, "Hitbox.003.mesh",
 										0.2, 0.609656, -0.792315,
 										0, 0, 0, 1,
@@ -285,10 +373,16 @@ PlayerCharacter::PlayerCharacter(bool is_yourself_p, Scene* scene, std::string m
 							0, 0, 0, 1,
 							3.53341, 4.25870, 3.50068, 1.75);
 
+	float pinto_damange_reduction_percentage = (1 / (float)GameState::instance()->num_player);
+	if(pinto_damange_reduction_percentage < 0.2)
+	{
+		pinto_damange_reduction_percentage = 0.2;
+	}
+
 	pinto_box = new HitBox(this, "Hitbox3.mesh",
 							0, -6.25807, 2.173395, 
 							0, 0, 0, 1,
-							6.44036, 16.05242, 7.31708, 0.15);
+							6.44036, 16.05242, 7.31708, pinto_damange_reduction_percentage);
 	pinto_box->Disable();
 
 	is_shooting = false;
@@ -314,8 +408,13 @@ PlayerCharacter::PlayerCharacter(bool is_yourself_p, Scene* scene, std::string m
 	current_shooting_animation_state = shooting_animation_states[0];
 	current_jet_pack_reload_animation_state = jet_pack_reload_animation_states[0];
 	current_jet_pack_shooting_animation_state = jet_pack_shooting_animation_states[0];
+	current_hair_reload_animation_state = hair_reload_animation_states[0];
+	current_hair_shooting_animation_state = hair_shooting_animation_states[0];
 
-	changeToPinto();
+	if(is_pinto)
+	{
+		changeToPinto();
+	}
 }
 
 PlayerCharacter:: ~PlayerCharacter()
@@ -323,11 +422,11 @@ PlayerCharacter:: ~PlayerCharacter()
 	if(is_yourself)
 	{
 		NetworkManager::instance()->vital->setPlayerDie();
-		GameState::instance()->players[NetworkManager::instance()->player_id] = NULL;
 		GameState::instance()->player = NULL;
 		scene->removeGameObject((GameObject*)this);
 		scene->main_camera = NULL;
 	}
+	GameState::instance()->players[player_id] = NULL;
 
 	delete health_regen_debouncer;
 	delete walk_sound_debouncer;
@@ -352,6 +451,25 @@ void PlayerCharacter::update()
 			is_dead = true;
 			controller->can_move = false;
 			health = 0;
+
+			uint random_pinto_index;
+			do
+			{
+				random_pinto_index = RAND_RANGE(0, GameState::instance()->num_player);
+			}while(random_pinto_index == player_id);
+
+			if(GameState::instance()->players[random_pinto_index] == NULL
+				|| (GameState::instance()->players[random_pinto_index]->is_dead))
+			{
+				GameState::instance()->player_pinto_seeds[random_pinto_index] = true;
+			}
+			else
+			{
+				GameState::instance()->players[random_pinto_index]->changeToPinto();
+			}
+
+			NetworkManager::instance()->vital->setChangePinto(random_pinto_index);
+
 			AudioManager::instance()->playDeath(Ogre::Vector3(transform->posX, transform->posY, transform->posZ));
 		}
 
@@ -365,6 +483,10 @@ void PlayerCharacter::update()
 			current_jet_pack_shooting_animation_state->setEnabled(false);
 			current_jet_pack_shooting_animation_state->setTimePosition(0);
 
+			current_hair_shooting_animation_state->setWeight(0);
+			current_hair_shooting_animation_state->setEnabled(false);
+			current_hair_shooting_animation_state->setTimePosition(0);
+
 			current_reload_animation_state->setWeight(0);
 			current_reload_animation_state->setEnabled(false);
 			current_reload_animation_state->setTimePosition(0);
@@ -372,6 +494,10 @@ void PlayerCharacter::update()
 			current_jet_pack_reload_animation_state->setWeight(0);
 			current_jet_pack_reload_animation_state->setEnabled(false);
 			current_jet_pack_reload_animation_state->setTimePosition(0);
+
+			current_hair_reload_animation_state->setWeight(0);
+			current_hair_reload_animation_state->setEnabled(false);
+			current_hair_reload_animation_state->setTimePosition(0);
 
 			weapon_shooting_animation_state->setWeight(0);
 			weapon_shooting_animation_state->setEnabled(false);
@@ -389,6 +515,10 @@ void PlayerCharacter::update()
 			jet_pack_idle_animation_state->setEnabled(false);
 			jet_pack_idle_animation_state->setTimePosition(0);
 
+			hair_idle_animation_state->setWeight(0);
+			hair_idle_animation_state->setEnabled(false);
+			hair_idle_animation_state->setTimePosition(0);
+
 			weapon_idle_animation_state->setWeight(0);
 			weapon_idle_animation_state->setEnabled(false);
 			weapon_idle_animation_state->setTimePosition(0);
@@ -401,6 +531,10 @@ void PlayerCharacter::update()
 			jet_pack_die_animation_state->setEnabled(true);
 			jet_pack_die_animation_state->setTimePosition(die_animation_state->getTimePosition());
 
+			hair_die_animation_state->setWeight(1);
+			hair_die_animation_state->setEnabled(true);
+			hair_die_animation_state->setTimePosition(die_animation_state->getTimePosition());
+
 			weapon_die_animation_state->setWeight(1);
 			weapon_die_animation_state->setEnabled(true);
 			weapon_die_animation_state->setTimePosition(die_animation_state->getTimePosition());
@@ -408,6 +542,10 @@ void PlayerCharacter::update()
 			running_animation_state->setWeight(0);
 			running_animation_state->setEnabled(false);
 			running_animation_state->setTimePosition(0);
+
+			hair_running_animation_state->setWeight(0);
+			hair_running_animation_state->setEnabled(false);
+			hair_running_animation_state->setTimePosition(0);
 
 			jet_pack_running_animation_state->setWeight(0);
 			jet_pack_running_animation_state->setEnabled(false);
@@ -430,6 +568,8 @@ void PlayerCharacter::update()
 			die_animation_state->setEnabled(false);
 			jet_pack_die_animation_state->setWeight(0);
 			jet_pack_die_animation_state->setEnabled(false);
+			hair_die_animation_state->setWeight(0);
+			hair_die_animation_state->setEnabled(false);
 			weapon_die_animation_state->setWeight(0);
 			weapon_die_animation_state->setEnabled(false);
 
@@ -474,6 +614,8 @@ void PlayerCharacter::update()
 
 				jet_pack_idle_animation_state->setWeight(0);
 				jet_pack_running_animation_state->setWeight(0);
+				hair_idle_animation_state->setWeight(0);
+				hair_running_animation_state->setWeight(0);
 
 				is_jumping = true;
 				jumping_animation_state->setWeight(1);
@@ -483,6 +625,10 @@ void PlayerCharacter::update()
 				jet_pack_jumping_animation_state->setWeight(1);
 				jet_pack_jumping_animation_state->setEnabled(true);
 				jet_pack_jumping_animation_state->setTimePosition(jumping_animation_state->getTimePosition());
+
+				hair_jumping_animation_state->setWeight(1);
+				hair_jumping_animation_state->setEnabled(true);
+				hair_jumping_animation_state->setTimePosition(jumping_animation_state->getTimePosition());
 
 				weapon_jumping_animation_state->setWeight(1);
 				weapon_jumping_animation_state->setEnabled(true);
@@ -500,6 +646,10 @@ void PlayerCharacter::update()
 				jet_pack_jumping_animation_state->setEnabled(false);
 				jet_pack_jumping_animation_state->setTimePosition(0);
 
+				hair_jumping_animation_state->setWeight(0);
+				hair_jumping_animation_state->setEnabled(false);
+				hair_jumping_animation_state->setTimePosition(0);
+
 				weapon_jumping_animation_state->setWeight(0);
 				weapon_jumping_animation_state->setEnabled(false);
 				weapon_jumping_animation_state->setTimePosition(0);
@@ -514,6 +664,9 @@ void PlayerCharacter::update()
 
 				jet_pack_running_animation_state->setWeight(1);
 				jet_pack_running_animation_state->setEnabled(true);
+
+				hair_running_animation_state->setWeight(1);
+				hair_running_animation_state->setEnabled(true);
 
 				if(controller->is_running)
 				{
@@ -534,6 +687,10 @@ void PlayerCharacter::update()
 				jet_pack_running_animation_state->setEnabled(true);
 				jet_pack_running_animation_state->setTimePosition(running_animation_state->getTimePosition());
 
+				hair_running_animation_state->setWeight(1);
+				hair_running_animation_state->setEnabled(true);
+				hair_running_animation_state->setTimePosition(running_animation_state->getTimePosition());
+
 				weapon_running_animation_state->setWeight(1);
 				weapon_running_animation_state->setEnabled(true);
 				weapon_running_animation_state->setTimePosition(running_animation_state->getTimePosition());
@@ -550,6 +707,10 @@ void PlayerCharacter::update()
 				jet_pack_running_animation_state->setEnabled(false);
 				jet_pack_running_animation_state->setTimePosition(0);
 
+				hair_running_animation_state->setWeight(0);
+				hair_running_animation_state->setEnabled(false);
+				hair_running_animation_state->setTimePosition(0);
+
 				weapon_running_animation_state->setWeight(0);
 				weapon_running_animation_state->setEnabled(false);
 				weapon_running_animation_state->setTimePosition(0);
@@ -558,18 +719,68 @@ void PlayerCharacter::update()
 
 			if(current_weapon->is_shooting && !weapon_shooting_animation_state->hasEnded())
 			{
-				running_animation_state->setWeight(0);
-				running_animation_state->setEnabled(false);
-				weapon_running_animation_state->setWeight(0);
-				weapon_running_animation_state->setEnabled(false);
-				idle_animation_state->setWeight(0);
-				idle_animation_state->setEnabled(false);
-				weapon_idle_animation_state->setWeight(0);
-				weapon_idle_animation_state->setEnabled(false);
-				weapon_jumping_animation_state->setWeight(0);
-				weapon_jumping_animation_state->setEnabled(false);
-				weapon_die_animation_state->setWeight(0);
-				weapon_die_animation_state->setEnabled(false);
+				if(in_pinto_form)
+				{
+					running_animation_state->setWeight(0);
+					running_animation_state->setEnabled(false);
+					weapon_running_animation_state->setWeight(0);
+					weapon_running_animation_state->setEnabled(false);
+					idle_animation_state->setWeight(0);
+					idle_animation_state->setEnabled(false);
+					weapon_idle_animation_state->setWeight(0);
+					weapon_idle_animation_state->setEnabled(false);
+					weapon_jumping_animation_state->setWeight(0);
+					weapon_jumping_animation_state->setEnabled(false);
+					weapon_die_animation_state->setWeight(0);
+					weapon_die_animation_state->setEnabled(false);
+					jet_pack_idle_animation_state->setWeight(0);
+					jet_pack_idle_animation_state->setEnabled(false);
+					hair_idle_animation_state->setWeight(0);
+					hair_idle_animation_state->setEnabled(false);
+					jet_pack_running_animation_state->setWeight(0);
+					jet_pack_running_animation_state->setEnabled(false);
+					hair_running_animation_state->setWeight(0);
+					hair_running_animation_state->setEnabled(false);
+					jet_pack_jumping_animation_state->setWeight(0);
+					jet_pack_jumping_animation_state->setEnabled(false);
+					hair_jumping_animation_state->setWeight(0);
+					hair_jumping_animation_state->setEnabled(false);
+					die_animation_state->setWeight(0);
+					die_animation_state->setEnabled(false);
+					jumping_animation_state->setWeight(0);
+					jumping_animation_state->setEnabled(false);
+				}
+				else
+				{
+					running_animation_state->setWeight(0.5);
+					running_animation_state->setEnabled(false);
+					weapon_running_animation_state->setWeight(0.5);
+					weapon_running_animation_state->setEnabled(false);
+					idle_animation_state->setWeight(0.5);
+					idle_animation_state->setEnabled(false);
+					weapon_idle_animation_state->setWeight(0.5);
+					weapon_idle_animation_state->setEnabled(false);
+					weapon_jumping_animation_state->setWeight(0.5);
+					weapon_jumping_animation_state->setEnabled(false);
+					weapon_die_animation_state->setWeight(0.5);
+					weapon_die_animation_state->setEnabled(false);
+					jet_pack_idle_animation_state->setWeight(0.5);
+					jet_pack_idle_animation_state->setEnabled(false);
+					hair_idle_animation_state->setWeight(0.5);
+					hair_idle_animation_state->setEnabled(false);
+					jet_pack_running_animation_state->setWeight(0.5);
+					jet_pack_running_animation_state->setEnabled(false);
+					hair_running_animation_state->setWeight(0.5);
+					hair_running_animation_state->setEnabled(false);
+					jet_pack_jumping_animation_state->setWeight(0.5);
+					jet_pack_jumping_animation_state->setEnabled(false);
+					hair_jumping_animation_state->setWeight(0.5);
+					hair_jumping_animation_state->setEnabled(false);
+					die_animation_state->setWeight(0.5);
+					die_animation_state->setEnabled(false);
+					jumping_animation_state->setWeight(0.5);
+					jumping_animation_state->setEnabled(false);
+				}
 
 				is_shooting = true;
 				weapon_shooting_animation_state->setWeight(1);
@@ -579,6 +790,10 @@ void PlayerCharacter::update()
 				current_jet_pack_shooting_animation_state->setWeight(1);
 				current_jet_pack_shooting_animation_state->setEnabled(true);
 				current_jet_pack_shooting_animation_state->setTimePosition(weapon_shooting_animation_state->getTimePosition());
+
+				current_hair_shooting_animation_state->setWeight(1);
+				current_hair_shooting_animation_state->setEnabled(true);
+				current_hair_shooting_animation_state->setTimePosition(weapon_shooting_animation_state->getTimePosition());
 
 				current_shooting_animation_state->setWeight(1);
 				current_shooting_animation_state->setEnabled(true);
@@ -595,6 +810,10 @@ void PlayerCharacter::update()
 				current_jet_pack_shooting_animation_state->setWeight(0);
 				current_jet_pack_shooting_animation_state->setEnabled(false);
 				current_jet_pack_shooting_animation_state->setTimePosition(0);
+
+				current_hair_shooting_animation_state->setWeight(0);
+				current_hair_shooting_animation_state->setEnabled(false);
+				current_hair_shooting_animation_state->setTimePosition(0);
 
 				weapon_shooting_animation_state->setWeight(0);
 				weapon_shooting_animation_state->setEnabled(false);
@@ -614,6 +833,10 @@ void PlayerCharacter::update()
 				jet_pack_idle_animation_state->setEnabled(true);
 				jet_pack_idle_animation_state->setTimePosition(idle_animation_state->getTimePosition());
 
+				hair_idle_animation_state->setWeight(1);
+				hair_idle_animation_state->setEnabled(true);
+				hair_idle_animation_state->setTimePosition(idle_animation_state->getTimePosition());
+
 				weapon_idle_animation_state->setWeight(1);
 				weapon_idle_animation_state->setEnabled(true);
 				weapon_idle_animation_state->setTimePosition(idle_animation_state->getTimePosition());
@@ -630,6 +853,10 @@ void PlayerCharacter::update()
 				jet_pack_idle_animation_state->setEnabled(false);
 				jet_pack_idle_animation_state->setTimePosition(0);
 
+				hair_idle_animation_state->setWeight(0);
+				hair_idle_animation_state->setEnabled(false);
+				hair_idle_animation_state->setTimePosition(0);
+
 				weapon_idle_animation_state->setWeight(0);
 				weapon_idle_animation_state->setEnabled(false);
 				weapon_idle_animation_state->setTimePosition(0);
@@ -641,6 +868,10 @@ void PlayerCharacter::update()
 				weapon_running_animation_state->setWeight(0.5);
 				idle_animation_state->setWeight(0.5);
 				weapon_idle_animation_state->setWeight(0.5);
+				hair_idle_animation_state->setWeight(0.5);
+				jet_pack_idle_animation_state->setWeight(0.5);
+				hair_running_animation_state->setWeight(0.5);
+				jet_pack_running_animation_state->setWeight(0.5);
 
 				is_reloading = true;
 				weapon_reload_animation_state->setWeight(1);
@@ -650,6 +881,10 @@ void PlayerCharacter::update()
 				current_jet_pack_reload_animation_state->setWeight(1);
 				current_jet_pack_reload_animation_state->setEnabled(true);
 				current_jet_pack_reload_animation_state->setTimePosition(weapon_reload_animation_state->getTimePosition());
+
+				current_hair_reload_animation_state->setWeight(1);
+				current_hair_reload_animation_state->setEnabled(true);
+				current_hair_reload_animation_state->setTimePosition(weapon_reload_animation_state->getTimePosition());
 				
 				current_reload_animation_state->setWeight(1);
 				current_reload_animation_state->setEnabled(true);
@@ -665,6 +900,10 @@ void PlayerCharacter::update()
 				current_jet_pack_reload_animation_state->setWeight(0);
 				current_jet_pack_reload_animation_state->setEnabled(false);
 				current_jet_pack_reload_animation_state->setTimePosition(0);
+
+				current_hair_reload_animation_state->setWeight(0);
+				current_hair_reload_animation_state->setEnabled(false);
+				current_hair_reload_animation_state->setTimePosition(0);
 
 				weapon_reload_animation_state->setWeight(0);
 				weapon_reload_animation_state->setEnabled(false);
@@ -682,7 +921,6 @@ void PlayerCharacter::update()
 		die_animation_time = die_animation_state->getTimePosition();
 
 		NetworkManager::instance()->heartbeat->renewPlayerInfo(this);
-
 	}
 	else
 	{
@@ -694,23 +932,38 @@ void PlayerCharacter::update()
 			weapon_die_animation_state->setWeight(1);
 			jet_pack_die_animation_state->setEnabled(true);
 			jet_pack_die_animation_state->setWeight(1);
+			hair_die_animation_state->setEnabled(true);
+			hair_die_animation_state->setWeight(1);
 
 			die_animation_state->setTimePosition(die_animation_time);
 			weapon_die_animation_state->setTimePosition(die_animation_time);
 			jet_pack_die_animation_state->setTimePosition(die_animation_time);
+			hair_die_animation_state->setTimePosition(die_animation_time);
 		}
 		else
 		{
+			if(in_pinto_form && is_invisible)
+			{
+				pinto_mesh->node->setVisible(false);
+			}
+			else if(in_pinto_form)
+			{
+				pinto_mesh->node->setVisible(true);
+			}
+
 			die_animation_state->setEnabled(false);
 			die_animation_state->setWeight(0);
 			weapon_die_animation_state->setEnabled(false);
 			weapon_die_animation_state->setWeight(0);
 			jet_pack_die_animation_state->setEnabled(false);
 			jet_pack_die_animation_state->setWeight(0);
+			hair_die_animation_state->setEnabled(false);
+			hair_die_animation_state->setWeight(0);
 
 			die_animation_state->setTimePosition(0);
 			weapon_die_animation_state->setTimePosition(0);
 			jet_pack_die_animation_state->setTimePosition(0);
+			hair_die_animation_state->setTimePosition(0);
 
 			if(is_jet_packing)
 			{
@@ -726,10 +979,13 @@ void PlayerCharacter::update()
 				weapon_running_animation_state->setWeight(1);
 				jet_pack_running_animation_state->setEnabled(true);
 				jet_pack_running_animation_state->setWeight(1);
+				hair_running_animation_state->setEnabled(true);
+				hair_running_animation_state->setWeight(1);
 
 				running_animation_state->addTime(GraphicsManager::instance()->getFrameEvent()->timeSinceLastFrame);
 				weapon_running_animation_state->addTime(GraphicsManager::instance()->getFrameEvent()->timeSinceLastFrame);
 				jet_pack_running_animation_state->addTime(GraphicsManager::instance()->getFrameEvent()->timeSinceLastFrame);
+				hair_running_animation_state->addTime(GraphicsManager::instance()->getFrameEvent()->timeSinceLastFrame);
 			}
 			else
 			{
@@ -739,20 +995,39 @@ void PlayerCharacter::update()
 				weapon_running_animation_state->setWeight(0);
 				jet_pack_running_animation_state->setEnabled(false);
 				jet_pack_running_animation_state->setWeight(0);
+				hair_running_animation_state->setEnabled(false);
+				hair_running_animation_state->setWeight(0);
 
 				running_animation_state->setTimePosition(0);
 				weapon_running_animation_state->setTimePosition(0);
 				jet_pack_running_animation_state->setTimePosition(0);
+				hair_running_animation_state->setTimePosition(0);
 			}
 
 			if(is_shooting)
 			{
-				running_animation_state->setWeight(0.5);
-				weapon_running_animation_state->setWeight(0.5);
-				idle_animation_state->setWeight(0.5);
-				weapon_idle_animation_state->setWeight(0.5);
-				jet_pack_idle_animation_state->setWeight(0.5);
-				jet_pack_running_animation_state->setWeight(0.5);
+				if(in_pinto_form)
+				{
+					running_animation_state->setWeight(0);
+					weapon_running_animation_state->setWeight(0);
+					idle_animation_state->setWeight(0);
+					weapon_idle_animation_state->setWeight(0);
+					jet_pack_idle_animation_state->setWeight(0);
+					jet_pack_running_animation_state->setWeight(0);
+					hair_idle_animation_state->setWeight(0);
+					hair_running_animation_state->setWeight(0);
+				}
+				else
+				{
+					running_animation_state->setWeight(0.5);
+					weapon_running_animation_state->setWeight(0.5);
+					idle_animation_state->setWeight(0.5);
+					weapon_idle_animation_state->setWeight(0.5);
+					jet_pack_idle_animation_state->setWeight(0.5);
+					jet_pack_running_animation_state->setWeight(0.5);
+					hair_idle_animation_state->setWeight(0.5);
+					hair_running_animation_state->setWeight(0.5);
+				}
 
 				current_shooting_animation_state->setEnabled(true);
 				current_shooting_animation_state->setWeight(1);
@@ -760,10 +1035,13 @@ void PlayerCharacter::update()
 				weapon_shooting_animation_state->setWeight(1);
 				current_jet_pack_shooting_animation_state->setEnabled(true);
 				current_jet_pack_shooting_animation_state->setWeight(1);
+				current_hair_shooting_animation_state->setEnabled(true);
+				current_hair_shooting_animation_state->setWeight(1);
 
 				current_shooting_animation_state->setTimePosition(shoot_animation_time);
 				weapon_shooting_animation_state->setTimePosition(shoot_animation_time);
 				current_jet_pack_shooting_animation_state->setTimePosition(shoot_animation_time);
+				current_hair_shooting_animation_state->setTimePosition(shoot_animation_time);
 			}
 			else
 			{
@@ -773,6 +1051,8 @@ void PlayerCharacter::update()
 				weapon_shooting_animation_state->setWeight(0);
 				current_jet_pack_shooting_animation_state->setEnabled(false);
 				current_jet_pack_shooting_animation_state->setWeight(0);
+				current_hair_shooting_animation_state->setEnabled(false);
+				current_hair_shooting_animation_state->setWeight(0);
 			}
 
 			if(is_idle)
@@ -783,10 +1063,13 @@ void PlayerCharacter::update()
 				weapon_idle_animation_state->setWeight(1);
 				jet_pack_idle_animation_state->setEnabled(true);
 				jet_pack_idle_animation_state->setWeight(1);
+				hair_idle_animation_state->setEnabled(true);
+				hair_idle_animation_state->setWeight(1);
 
 				idle_animation_state->setTimePosition(idle_animation_time);
 				weapon_idle_animation_state->setTimePosition(idle_animation_time);
 				jet_pack_idle_animation_state->setTimePosition(idle_animation_time);
+				hair_idle_animation_state->setTimePosition(idle_animation_time);
 			}
 			else
 			{
@@ -796,10 +1079,13 @@ void PlayerCharacter::update()
 				weapon_idle_animation_state->setWeight(0);
 				jet_pack_idle_animation_state->setEnabled(false);
 				jet_pack_idle_animation_state->setWeight(0);
+				hair_idle_animation_state->setEnabled(false);
+				hair_idle_animation_state->setWeight(0);
 
 				idle_animation_state->setTimePosition(0);
 				weapon_idle_animation_state->setTimePosition(0);
 				jet_pack_idle_animation_state->setTimePosition(0);
+				hair_idle_animation_state->setTimePosition(0);
 			}
 
 			if(is_reloading)
@@ -810,6 +1096,8 @@ void PlayerCharacter::update()
 				weapon_idle_animation_state->setWeight(0.5);
 				jet_pack_idle_animation_state->setWeight(0.5);
 				jet_pack_running_animation_state->setWeight(0.5);
+				hair_idle_animation_state->setWeight(0.5);
+				hair_running_animation_state->setWeight(0.5);
 
 				current_reload_animation_state->setEnabled(true);
 				current_reload_animation_state->setWeight(1);
@@ -817,10 +1105,13 @@ void PlayerCharacter::update()
 				weapon_reload_animation_state->setWeight(1);
 				current_jet_pack_reload_animation_state->setEnabled(true);
 				current_jet_pack_reload_animation_state->setWeight(1);
+				current_hair_reload_animation_state->setEnabled(true);
+				current_hair_reload_animation_state->setWeight(1);
 
 				current_reload_animation_state->setTimePosition(reload_animation_time);
 				weapon_reload_animation_state->setTimePosition(reload_animation_time);
 				current_jet_pack_reload_animation_state->setTimePosition(reload_animation_time);
+				current_hair_reload_animation_state->setTimePosition(reload_animation_time);
 			}
 			else
 			{
@@ -830,6 +1121,8 @@ void PlayerCharacter::update()
 				weapon_reload_animation_state->setWeight(0);
 				current_jet_pack_reload_animation_state->setEnabled(false);
 				current_jet_pack_reload_animation_state->setWeight(0);
+				current_hair_reload_animation_state->setEnabled(false);
+				current_hair_reload_animation_state->setWeight(0);
 			}
 
 			if(is_jumping)
@@ -840,6 +1133,8 @@ void PlayerCharacter::update()
 				weapon_idle_animation_state->setWeight(0);
 				jet_pack_idle_animation_state->setWeight(0);
 				jet_pack_running_animation_state->setWeight(0);
+				hair_idle_animation_state->setWeight(0);
+				hair_running_animation_state->setWeight(0);
 
 				jumping_animation_state->setEnabled(true);
 				jumping_animation_state->setWeight(1);
@@ -852,6 +1147,10 @@ void PlayerCharacter::update()
 				jet_pack_jumping_animation_state->setEnabled(true);
 				jet_pack_jumping_animation_state->setWeight(1);
 				jet_pack_jumping_animation_state->setTimePosition(jump_animation_time);
+
+				hair_jumping_animation_state->setEnabled(true);
+				hair_jumping_animation_state->setWeight(1);
+				hair_jumping_animation_state->setTimePosition(jump_animation_time);
 			}
 			else
 			{
@@ -863,6 +1162,9 @@ void PlayerCharacter::update()
 
 				jet_pack_jumping_animation_state->setEnabled(false);
 				jet_pack_jumping_animation_state->setWeight(0);
+
+				hair_jumping_animation_state->setEnabled(false);
+				hair_jumping_animation_state->setWeight(0);
 			}
 		}
 	}
@@ -912,6 +1214,8 @@ void PlayerCharacter::changeToPinto()
 {
 	if(!in_pinto_form)
 	{
+		health = 100;
+
 		transform->scaleX = 5.0;
 		transform->scaleY = 5.0;
 		transform->scaleZ = 5.0;
@@ -945,6 +1249,7 @@ void PlayerCharacter::changeToPinto()
 		in_pinto_form = true;
 		pinto_mesh->node->setVisible(true);
 		jet_pack->node->setVisible(false);
+		hair->node->setVisible(false);
 		mesh->node->setVisible(false);
 
 		body_box->Disable();
@@ -954,20 +1259,19 @@ void PlayerCharacter::changeToPinto()
 		current_weapon->node->setVisible(false);
 		current_weapon = weapons[4];
 		current_weapon->is_shooting = false;
-		current_weapon->is_reloading = false;
 		current_weapon->node->setVisible(true);
 
 		team_id = PINTO_TEAM;
 		GameState::instance()->team_id = PINTO_TEAM;
 
-		controller->base_movement_speed += 0.5f;
+		controller->base_movement_speed += 0.3f;
 		controller->controller->m_jumpSpeed += 80;
 
 		if(is_yourself)
 		{
-			NetworkManager::instance()->vital->setChangeWeapon(4);
-			NetworkManager::instance()->vital->setChangePinto();
+			GameState::instance()->carrying_pinto_seed = false;
 		}
+		GameState::instance()->player_pinto_seeds[player_id] = false;
 	}
 }
 

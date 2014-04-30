@@ -67,7 +67,7 @@ class NetworkManager : public Singleton<NetworkManager>
 	uint32_t player_id;
 	uint32_t team_id;
 
-	uint32_t player_team_id_map[15];
+	uint32_t player_team_id_map[MAX_PLAYER];
 
   	NetworkManager();
   	~NetworkManager();

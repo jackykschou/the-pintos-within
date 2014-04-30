@@ -8,6 +8,7 @@ struct PlayerDamageInfo
   char type;
   uint32_t player_id;
   uint32_t damage;
+  uint32_t damage_dealer_id;
   uint32_t damaged_player_id;
 };
 
@@ -15,10 +16,12 @@ struct PlayerRespawnInfo
 {
   char type;
   uint32_t player_id;
+  uint32_t version;
   uint32_t player_respawn_id;
   float playerX;
   float playerY;
   float playerZ;
+  uint32_t is_pinto;
   uint32_t team_id;
 };
 
@@ -55,6 +58,7 @@ struct ChangePintoInfo
 {
   char type;
   uint32_t player_id;
+  uint32_t to_pinto_player_id;
 };
 
 struct IncreaseScoreInfo
@@ -70,7 +74,7 @@ class VitalPacket
 public:
   void setDamage(int damage, uint32_t player_id);
   void receiveDamage(PlayerDamageInfo* info);
-  void setPlayerRespawn(float posX, float posY, float posZ, uint32_t player_id, uint32_t team_id);
+  void setPlayerRespawn(float posX, float posY, float posZ, uint32_t player_id, uint32_t team_id, uint32_t version, bool);
   void receivePlayerRespawn(PlayerRespawnInfo* info_p);
   void setPlayerDie();
   void receivePlayerDie(PlayerDieInfo* info_p);
@@ -80,7 +84,7 @@ public:
   void receiveSpawnWeapon(WeaponSpawnInfo* info);
   void setPlayerFireSound();
   void receivePlayFireSound(PlayFireSoundInfo* info_p);
-  void setChangePinto();
+  void setChangePinto(uint32_t);
   void receiveChangePinto(ChangePintoInfo* info_p);
   void setIncreaseScore(uint32_t player_id, uint32_t amount, uint32_t team_id);
   void receiveIncreaseScore(IncreaseScoreInfo* info_p);

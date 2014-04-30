@@ -72,10 +72,11 @@ void AudioManager::initialize() {
 
 	_blood_splats[0] = AudioManager::instance()->loadAudioFile("media/sounds/BloodSplat1.wav");
 	_blood_splats[1] = AudioManager::instance()->loadAudioFile("media/sounds/BloodSplat2.wav");
-	_blood_splats[2] = AudioManager::instance()->loadAudioFile("media/sounds/BloodSplat3.wav");
+	_blood_splats[2] = AudioManager::instance()->loadAudioFile("media/sounds/BloodSplat2.wav");
 
 	_blaster_charge = AudioManager::instance()->loadAudioFile("media/sounds/BlasterCharge.wav");
 	_out_of_ammo = AudioManager::instance()->loadAudioFile("media/sounds/OutOfAmmo.wav");
+	_pick_weapon = AudioManager::instance()->loadAudioFile("media/sounds/PickWeapon.wav");
 }
 
 // returns an audioFileKey that references the loaded resource
@@ -178,4 +179,9 @@ void AudioManager::playBlasterCharge(Ogre::Vector3 v, uint32_t sound_volume)
 void AudioManager::playOutOfAmmo(Ogre::Vector3 v)
 {
 	play3DSound(_out_of_ammo, 0, v);
+}
+
+void AudioManager::playPickWeapon(Ogre::Vector3 v)
+{
+	play3DSound(_pick_weapon, 0, v);
 }
