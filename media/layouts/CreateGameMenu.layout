@@ -26,13 +26,21 @@
     <Window Type="TaharezLook/Combobox" Name="CreateGameMenu/GameType" >
       <Property Name="UnifiedAreaRect" Value="{{0.25,0},{0.47,0},{0.75,0},{0.67,0}}" />
     </Window>
-    <Window Type="TaharezLook/StaticText" Name="CreateGameMenu/TimeLimitLabel" >
-      <Property Name="Text" Value="time limit (minutes):" />
+    <Window Type="TaharezLook/StaticText" Name="CreateGameMenu/MapLabel" >
+      <Property Name="Text" Value="map:" />
       <Property Name="UnifiedAreaRect" Value="{{0.25,0},{0.5583,0},{0.75,0},{0.6183,0}}" />
     </Window>
-    <Window Type="TaharezLook/Editbox" Name="CreateGameMenu/TimeLimit" >
+    <Window Type="TaharezLook/Combobox" Name="CreateGameMenu/Map" >
       <Property Name="UnifiedAreaRect" Value="{{0.25,0},{0.6466,0},{0.75,0},{0.7066,0}}" />
     </Window>
+    <Window Type="TaharezLook/StaticText" Name="CreateGameMenu/TimeLimitLabel" >
+      <Property Name="Text" Value="time limit (minutes):" />
+      <Property Name="UnifiedAreaRect" Value="{{0.25,0},{0.735,0},{0.75,0},{0.795,0}}" />
+    </Window>
+    <Window Type="TaharezLook/Editbox" Name="CreateGameMenu/TimeLimit" >
+      <Property Name="UnifiedAreaRect" Value="{{0.25,0},{0.8233,0},{0.75,0},{0.8833,0}}" />
+    </Window>
+    <!--
     <Window Type="TaharezLook/StaticText" Name="CreateGameMenu/MaxPlayersLabel" >
       <Property Name="Text" Value="max players:" />
       <Property Name="UnifiedAreaRect" Value="{{0.25,0},{0.735,0},{0.75,0},{0.795,0}}" />
@@ -40,6 +48,7 @@
     <Window Type="TaharezLook/Editbox" Name="CreateGameMenu/MaxPlayers" >
       <Property Name="UnifiedAreaRect" Value="{{0.25,0},{0.8233,0},{0.75,0},{0.8833,0}}" />
     </Window>
+    -->
     <Window Type="TaharezLook/Button" Name="CreateGameMenu/Continue" >
       <Property Name="Text" Value="Continue" />
       <Property Name="UnifiedAreaRect" Value="{{0.525,0},{0.9116,0},{0.75,0},{0.9716,0}}" />

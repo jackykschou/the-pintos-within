@@ -298,26 +298,44 @@ void JoinGameMenu::UpdateGames(){
 CreateGameMenu::CreateGameMenu():Gui("CreateGameMenu.layout"){
   _name=static_cast<CEGUI::Editbox*>(_root->getChild("CreateGameMenu/Name"));
   _timeLimit=static_cast<CEGUI::Editbox*>(_root->getChild("CreateGameMenu/TimeLimit"));
-  _maxPlayers=static_cast<CEGUI::Editbox*>(_root->getChild("CreateGameMenu/MaxPlayers"));
+  //_maxPlayers=static_cast<CEGUI::Editbox*>(_root->getChild("CreateGameMenu/MaxPlayers"));
   _teamOrganization=static_cast<CEGUI::Combobox*>(_root->getChild("CreateGameMenu/TeamOrganization"));
   _teamOrganization->addItem(new CEGUI::ListboxTextItem("Free-for-All",0));
   _teamOrganization->addItem(new CEGUI::ListboxTextItem("Team",1));
   _gameType=static_cast<CEGUI::Combobox*>(_root->getChild("CreateGameMenu/GameType"));
-  _gameType->addItem(new CEGUI::ListboxTextItem("Death Match",0));
-  _gameType->addItem(new CEGUI::ListboxTextItem("Hardcore",1));
-  _gameType->addItem(new CEGUI::ListboxTextItem("Pintos",2));
+  _gameType->addItem(new CEGUI::ListboxTextItem("Elimination",0));
+  _gameType->addItem(new CEGUI::ListboxTextItem("Death Match",1));
+  _gameType->addItem(new CEGUI::ListboxTextItem("Pinto",2));
+  _map=static_cast<CEGUI::Combobox*>(_root->getChild("CreateGameMenu/Map"));
+  _map->addItem(new CEGUI::ListboxTextItem("The Gauntlet",0));
+  _map->addItem(new CEGUI::ListboxTextItem("Dust Two",1));
+  _teamOrganization->setItemSelectState((size_t)0,true);
+  _gameType->setItemSelectState((size_t)1,true);
+  _map->setItemSelectState((size_t)0,true);
   _continue=static_cast<CEGUI::PushButton*>(_root->getChild("CreateGameMenu/Continue"));
+  _gameType->subscribeEvent(CEGUI::Combobox::EventListSelectionAccepted,CEGUI::Event::Subscriber([this](const CEGUI::EventArgs& e){
+    CEGUI::WindowEventArgs* w=(CEGUI::WindowEventArgs*)(&e);
+    auto box=(CEGUI::Combobox*)(w->window);
+    auto selectedItem=box->getSelectedItem();
+    if(selectedItem&&box->getItemIndex(selectedItem)==2){
+      _teamOrganization->setItemSelectState((size_t)1,true);
+      _teamOrganization->disable();
+    }else{
+      _teamOrganization->enable();
+    }
+    return false;
+  }));
   _continue->subscribeEvent(CEGUI::PushButton::EventClicked,CEGUI::Event::Subscriber(&GuiManager::HostGame,GuiManager::instance()));
   _name->subscribeEvent(CEGUI::Editbox::EventCaratMoved,CEGUI::Event::Subscriber(&CreateGameMenu::DisplayPrompts,this));
   _timeLimit->subscribeEvent(CEGUI::Editbox::EventCaratMoved,CEGUI::Event::Subscriber(&CreateGameMenu::DisplayPrompts,this));
-  _maxPlayers->subscribeEvent(CEGUI::Editbox::EventCaratMoved,CEGUI::Event::Subscriber(&CreateGameMenu::DisplayPrompts,this));
+  //_maxPlayers->subscribeEvent(CEGUI::Editbox::EventCaratMoved,CEGUI::Event::Subscriber(&CreateGameMenu::DisplayPrompts,this));
   _name->subscribeEvent(CEGUI::Editbox::EventDeactivated,CEGUI::Event::Subscriber(&CreateGameMenu::DisplayPrompts,this));
   _timeLimit->subscribeEvent(CEGUI::Editbox::EventDeactivated,CEGUI::Event::Subscriber(&CreateGameMenu::DisplayPrompts,this));
-  _maxPlayers->subscribeEvent(CEGUI::Editbox::EventDeactivated,CEGUI::Event::Subscriber(&CreateGameMenu::DisplayPrompts,this));
+  //_maxPlayers->subscribeEvent(CEGUI::Editbox::EventDeactivated,CEGUI::Event::Subscriber(&CreateGameMenu::DisplayPrompts,this));
   DisplayPrompts(CEGUI::EventArgs{});
 }
 bool CreateGameMenu::DisplayPrompts(const CEGUI::EventArgs& e){
-  displayPrompts(e,std::vector<std::pair<CEGUI::Editbox*,const char*>>{{_name,"Your Name"},{_timeLimit,"180"},{_maxPlayers,"2"}});
+  displayPrompts(e,std::vector<std::pair<CEGUI::Editbox*,const char*>>{{_name,"Your Name"},{_timeLimit,"3"}/*,{_maxPlayers,"2"}*/});
   return false;
 }
 const char* CreateGameMenu::ReadName() {

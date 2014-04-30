@@ -119,6 +119,7 @@ class CreateGameMenu:public Gui{
     CEGUI::Editbox* _maxPlayers;
     CEGUI::Combobox* _teamOrganization;
     CEGUI::Combobox* _gameType;
+    CEGUI::Combobox* _map;
     CEGUI::PushButton* _continue;
 };
 class Lobby:public Gui{

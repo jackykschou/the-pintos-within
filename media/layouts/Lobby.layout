@@ -5,7 +5,7 @@
     <Property Name="InheritsAlpha" Value="False" />
     <Property Name="UnifiedAreaRect" Value="{{0,0},{0,0},{1,0},{1,0}}" />
     <Window Type="TaharezLook/StaticText" Name="Lobby/LobbyTitle" >
-      <Property Name="Text" Value="" />
+      <Property Name="Text" Value="lobby" />
       <Property Name="UnifiedAreaRect" Value="{{0.0367,0},{0.0367,0},{0.9633,0},{0.0967,0}}" />
     </Window>
     <Window Type="TaharezLook/StaticText" Name="Lobby/GameDescription" >
