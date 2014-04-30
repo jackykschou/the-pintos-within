@@ -85,6 +85,11 @@ bool GuiManager::CreateGame(const CEGUI::EventArgs& e){
   return false;
 }
 bool GuiManager::HostGame(const CEGUI::EventArgs& e){
+  auto gameState=GameState::instance();
+  auto cgm=static_cast<CreateGameMenu*>(_createGameMenu);
+  gameState->team_mode=cgm->ReadTeamOrganization()+1;
+  gameState->game_mode=cgm->ReadGameType()+1;
+  gameState->current_map=cgm->ReadMap()+1;
   _current=_lobby;
   _current->Display();
   GameState::instance()->current_state=LOBBY_AS_HOST;
@@ -333,6 +338,22 @@ CreateGameMenu::CreateGameMenu():Gui("CreateGameMenu.layout"){
   _timeLimit->subscribeEvent(CEGUI::Editbox::EventDeactivated,CEGUI::Event::Subscriber(&CreateGameMenu::DisplayPrompts,this));
   //_maxPlayers->subscribeEvent(CEGUI::Editbox::EventDeactivated,CEGUI::Event::Subscriber(&CreateGameMenu::DisplayPrompts,this));
   DisplayPrompts(CEGUI::EventArgs{});
+}
+int CreateGameMenu::ReadTeamOrganization(){
+  auto i=readComboBox(_teamOrganization);
+  return i!=-1?i:0;
+}
+int CreateGameMenu::ReadGameType(){
+  auto i=readComboBox(_gameType);
+  return i!=-1?i:1;
+}
+int CreateGameMenu::ReadMap(){
+  auto i=readComboBox(_map);
+  return i!=-1?i:0;
+}
+int CreateGameMenu::readComboBox(CEGUI::Combobox* box){
+  auto selectedItem=box->getSelectedItem();
+  return selectedItem?(int)box->getItemIndex(selectedItem):-1;
 }
 bool CreateGameMenu::DisplayPrompts(const CEGUI::EventArgs& e){
   displayPrompts(e,std::vector<std::pair<CEGUI::Editbox*,const char*>>{{_name,"Your Name"},{_timeLimit,"3"}/*,{_maxPlayers,"2"}*/});

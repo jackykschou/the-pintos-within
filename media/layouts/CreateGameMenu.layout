@@ -31,7 +31,7 @@
       <Property Name="UnifiedAreaRect" Value="{{0.25,0},{0.5583,0},{0.75,0},{0.6183,0}}" />
     </Window>
     <Window Type="TaharezLook/Combobox" Name="CreateGameMenu/Map" >
-      <Property Name="UnifiedAreaRect" Value="{{0.25,0},{0.6466,0},{0.75,0},{0.7066,0}}" />
+      <Property Name="UnifiedAreaRect" Value="{{0.25,0},{0.6466,0},{0.75,0},{0.8466,0}}" />
     </Window>
     <Window Type="TaharezLook/StaticText" Name="CreateGameMenu/TimeLimitLabel" >
       <Property Name="Text" Value="time limit (minutes):" />

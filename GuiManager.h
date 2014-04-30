@@ -112,7 +112,9 @@ class CreateGameMenu:public Gui{
     CreateGameMenu();
     bool DisplayPrompts(const CEGUI::EventArgs& e);
     const char* ReadName();
-    //const char* ReadHost();
+    int ReadTeamOrganization();
+    int ReadGameType();
+    int ReadMap();
   private:
     CEGUI::Editbox* _name;
     CEGUI::Editbox* _timeLimit;
@@ -121,6 +123,7 @@ class CreateGameMenu:public Gui{
     CEGUI::Combobox* _gameType;
     CEGUI::Combobox* _map;
     CEGUI::PushButton* _continue;
+    int readComboBox(CEGUI::Combobox* box);
 };
 class Lobby:public Gui{
   public:
