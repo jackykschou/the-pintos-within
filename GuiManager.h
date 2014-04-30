@@ -102,7 +102,7 @@ class JoinGameMenu:public Gui{
   private:
     CEGUI::Editbox* _name;
     CEGUI::Listbox* _hosts;
-    CEGUI::PushButton* _hostsJoin;
+    //CEGUI::PushButton* _hostsJoin;
     CEGUI::Editbox* _host;
     CEGUI::PushButton* _hostJoin;
 };

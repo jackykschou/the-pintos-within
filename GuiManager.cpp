@@ -233,25 +233,24 @@ MainMenu::MainMenu():Gui("MainMenu.layout"){
 JoinGameMenu::JoinGameMenu():Gui("JoinGameMenu.layout"){
   _name=static_cast<CEGUI::Editbox*>(_root->getChild("JoinGameMenu/Name"));
   _hosts=static_cast<CEGUI::Listbox*>(_root->getChild("JoinGameMenu/Hosts"));
-  _hostsJoin=static_cast<CEGUI::PushButton*>(_root->getChild("JoinGameMenu/HostsJoin"));
+  //_hostsJoin=static_cast<CEGUI::PushButton*>(_root->getChild("JoinGameMenu/HostsJoin"));
   _host=static_cast<CEGUI::Editbox*>(_root->getChild("JoinGameMenu/Host"));
   _hostJoin=static_cast<CEGUI::PushButton*>(_root->getChild("JoinGameMenu/HostJoin"));
 
   _hosts->setMultiselectEnabled(false);
 
-  _hostsJoin->subscribeEvent(CEGUI::PushButton::EventClicked,CEGUI::Event::Subscriber(&GuiManager::ConnectToSelectedHost,GuiManager::instance()));
+  //_hostsJoin->subscribeEvent(CEGUI::PushButton::EventClicked,CEGUI::Event::Subscriber(&GuiManager::ConnectToSelectedHost,GuiManager::instance()));
   _hostJoin->subscribeEvent(CEGUI::PushButton::EventClicked,CEGUI::Event::Subscriber(&GuiManager::ConnectToNamedHost,GuiManager::instance()));
   _name->subscribeEvent(CEGUI::Editbox::EventCaratMoved,CEGUI::Event::Subscriber(&JoinGameMenu::DisplayPrompts,this));
   _host->subscribeEvent(CEGUI::Editbox::EventCaratMoved,CEGUI::Event::Subscriber(&JoinGameMenu::DisplayPrompts,this));
   _name->subscribeEvent(CEGUI::Editbox::EventDeactivated,CEGUI::Event::Subscriber(&JoinGameMenu::DisplayPrompts,this));
   _host->subscribeEvent(CEGUI::Editbox::EventDeactivated,CEGUI::Event::Subscriber(&JoinGameMenu::DisplayPrompts,this));
 
-  _hosts->subscribeEvent(CEGUI::Listbox::EventMouseClick,CEGUI::Event::Subscriber([_hosts](const CEGUI::EventArgs& e){
+  _hosts->subscribeEvent(CEGUI::Listbox::EventMouseClick,CEGUI::Event::Subscriber([this](const CEGUI::EventArgs& e){
   CEGUI::MouseEventArgs* a=(CEGUI::MouseEventArgs*)(&e);
     auto item=_hosts->getItemAtPoint(a->position);
     if(item){
-      _hosts->setItemSelectState(_hosts->getItemAtPoint(a->position),true);
-      item->setSelected(true);
+      _host->setText(*((std::string*)item->getUserData()));
     }
     return false;
   }));
@@ -274,13 +273,15 @@ const char* JoinGameMenu::ReadName(){
 void JoinGameMenu::UpdateGames(){
   _hosts->resetList();
   //FF4444AA
-  CEGUI::colour c{0.267f,0.267f,0.664f};
+  CEGUI::colour c{0.267f,0.267f,0.664f,1.0f};
   auto games=GameState::instance()->games;
   for(auto i=games.cbegin();i!=games.cend();++i){
     auto label=(*i).first+" \\["+(*i).second.first+"]";
     auto entry=new CEGUI::ListboxTextItem(label);
-    entry->setUserData((void*)(&(*i)));
+    //entry->setUserData((void*)(&(*i)));
+    entry->setUserData((void*)(&((*i).first)));
     entry->setSelectionColours(c);
+//    entry->setTextColours(CEGUI::colour(0,0,0,1));
     entry->setSelectionBrushImage("TaharezLook","ListboxSelectionBrush");
     _hosts->addItem(entry);
   }

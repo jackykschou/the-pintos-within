@@ -18,6 +18,7 @@
     <Window Type="TaharezLook/Listbox" Name="JoinGameMenu/Hosts" >
       <Property Name="UnifiedAreaRect" Value="{{0.25,0},{0.2778,0},{0.75,0},{0.6378,0}}" />
     </Window>
+    <!--
     <Window Type="TaharezLook/Button" Name="JoinGameMenu/HostsJoin" >
       <Property Name="Text" Value="Continue" />
       <Property Name="UnifiedAreaRect" Value="{{0.525,0},{0.6622,0},{0.75,0},{0.7222,0}}" />
@@ -26,6 +27,7 @@
       <Property Name="Text" Value="manual connect:" />
       <Property Name="UnifiedAreaRect" Value="{{0.25,0},{0.7467,0},{0.75,0},{0.8067,0}}" />
     </Window>
+    -->
     <Window Type="TaharezLook/Editbox" Name="JoinGameMenu/Host" >
       <Property Name="UnifiedAreaRect" Value="{{0.25,0},{0.8311,0},{0.75,0},{0.8911,0}}" />
     </Window>
