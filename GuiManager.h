@@ -37,6 +37,7 @@ class GuiManager:public Singleton<GuiManager>{
     bool BackToMainMenu(const CEGUI::EventArgs& e);
     void ToggleConsole();
     bool IsConsoleVisible();
+    std::string GetName();
   private:
     CEGUI::MouseButton convertButton(OIS::MouseButtonID buttonId);
     CEGUI::OgreRenderer* _renderer;
@@ -110,6 +111,7 @@ class CreateGameMenu:public Gui{
   public:
     CreateGameMenu();
     bool DisplayPrompts(const CEGUI::EventArgs& e);
+    const char* ReadName();
     //const char* ReadHost();
   private:
     CEGUI::Editbox* _name;

@@ -32,6 +32,7 @@ class GameState : public Singleton<GameState>
   	void update();
 	  void start();
 	  bool isRunning();
+    bool nameIsTaken(char* name);
 
     PlayerCharacter* player;
     PlayerSpawner* spawner;
@@ -42,7 +43,12 @@ class GameState : public Singleton<GameState>
 
     void broadcastHeartbeat();
 
+    void setPlayerName(int player, std::string name);
+    std::string getPlayerName(int player);
+
   private:
+
+    std::string _playerNames[MAX_PLAYER];
   	boost::posix_time::ptime _start;
   	bool _running;
   	void clear_old_games();

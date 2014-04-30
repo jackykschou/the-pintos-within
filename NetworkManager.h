@@ -43,9 +43,17 @@ struct ChatPacket
 	char message[256];
 };
 
-struct PlayerJoinedPacket
+struct PlayerJoinPacket
 {
+	char type;
+	char playerId;
+	char name[16];
+};
 
+struct JoinRequestPacket
+{
+	char type;
+	char name[16];
 };
 
 enum NetworkManagerState 

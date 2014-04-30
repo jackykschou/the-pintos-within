@@ -34,9 +34,8 @@ void NetworkManager::receiveChat(ChatPacket* packet)
 	if (packet->playerId == player_id)
 		return;
 
-	char name[24];
-	sprintf(name, "Player %d", packet->playerId);
-	ChatManager::instance()->addMessage(name, packet->message);
+	std::string name = GameState::instance()->getPlayerName(packet->playerId);
+	ChatManager::instance()->addMessage(name.c_str(), packet->message);
 }
 
 void NetworkManager::sendChat(const char* msg)
@@ -177,8 +176,6 @@ void NetworkManager::send(void* data, int size, bool ack)
 void NetworkManager::changeId(uint32_t id)
 {
 	player_id = id;
-
 	heartbeat->info.player_id = id;
+	GameState::instance()->setPlayerName(id, GuiManager::instance()->GetName());
 }
-
-

@@ -149,6 +149,15 @@ bool GuiManager::IsConsoleVisible() {
   Hud* hud=static_cast<Hud*>(_hud);
   return hud->IsConsoleVisible();
 }
+std::string GuiManager::GetName() {
+  if (NetworkManager::instance()->isClient()) {
+    JoinGameMenu* jgm=static_cast<JoinGameMenu*>(_joinGameMenu);
+    return std::string(jgm->ReadName());
+  } else {
+    CreateGameMenu* cgm=static_cast<CreateGameMenu*>(_createGameMenu);
+    return std::string(cgm->ReadName());
+  }
+}
 
 CEGUI::MouseButton GuiManager::TranslateButton(OIS::MouseButtonID buttonId){
   switch(buttonId){
@@ -311,6 +320,10 @@ bool CreateGameMenu::DisplayPrompts(const CEGUI::EventArgs& e){
   displayPrompts(e,std::vector<std::pair<CEGUI::Editbox*,const char*>>{{_name,"Your Name"},{_timeLimit,"180"},{_maxPlayers,"2"}});
   return false;
 }
+const char* CreateGameMenu::ReadName() {
+  return _name->getText().c_str();
+}
+
 Lobby::Lobby():Gui("Lobby.layout"){
   _back  = static_cast<CEGUI::PushButton*>(_root->getChild("Lobby/Back"));
   _back->subscribeEvent(CEGUI::PushButton::EventClicked,CEGUI::Event::Subscriber(&GuiManager::Back,GuiManager::instance()));

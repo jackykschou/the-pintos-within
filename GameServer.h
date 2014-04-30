@@ -73,7 +73,7 @@ private:
   void processPacket(UDPpacket* packet);
 
   // handles saving client and sending ACK
-  void handleJoinPacket(UDPpacket* packet);
+  void handleJoinPacket(UDPpacket* packet, void* data);
 
   // sends a single packet back to a single client
   void sendPacketToClient(UDPpacket* packet, IPaddress* ip);
