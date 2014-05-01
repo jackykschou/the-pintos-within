@@ -121,14 +121,17 @@ bool GuiManager::Back(const CEGUI::EventArgs& e){
     return JoinGame(e);
   }
 }
-bool GuiManager::Start(const CEGUI::EventArgs& e){
-  _current=_waitingPrompt;
-  _current->Display();
+void GuiManager::Start() {
+  if (NetworkManager::instance()->isServer()) {
+    NetworkManager::instance()->server->broadcastGameStart();
+  }
+
   CEGUI::MouseCursor::getSingletonPtr()->hide();
-  LOG("STARTING GAME.");
   GameState::instance()->start();
   GameState::instance()->current_state=LOADING;
-  Hud* hud=static_cast<Hud*>(_hud);
+}
+bool GuiManager::Start(const CEGUI::EventArgs& e){
+  Start();
   return false;
 }
 bool GuiManager::ConnectToNamedHost(const CEGUI::EventArgs& e){

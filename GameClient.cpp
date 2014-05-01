@@ -181,8 +181,19 @@ void GameClient::processPacket(UDPpacket* packet) {
 		return;
 	} else if (ackHeader->ackRequired) {
 		// fire off the ACK!
-		sendData((void*)"A", 2, false, ackHeader->id, true);
-		LOG("ACK REPLIED BY CLIENT.");
+		if (GameState::instance()->isRunning()) {
+			sendData((void*)"A", 2, false, ackHeader->id, true);
+			LOG("ACK REPLIED BY CLIENT.");
+		}
+	}
+
+	if (!GameState::instance()->isRunning()) {
+		if (!(packetType == GAMESTART ||
+			  packetType == ASSIGNPLAYERID ||
+			  packetType == CHATPACK ||
+			  packetType == PLAYER_JOIN)) {
+			return;
+		}
 	}
 
 	switch (packetType) 
@@ -191,6 +202,12 @@ void GameClient::processPacket(UDPpacket* packet) {
 			PlayerNumInfo* ninfo;
 			ninfo = (PlayerNumInfo*) packetData;
 			GameState::instance()->num_player = ninfo->num_player;
+			break;
+		case GAMESTART:
+			LOG("WE BE STARTIN YO!");
+			if (!GameState::instance()->isRunning()) {
+		    	GuiManager::instance()->Start();
+			}
 			break;
 		case ASSIGNPLAYERID:
 			PlayerIdInfo* pinfo;
@@ -201,11 +218,6 @@ void GameClient::processPacket(UDPpacket* packet) {
 			HeartBeatInfo* hinfo;
 			hinfo =  (HeartBeatInfo*) packetData;
 			NetworkManager::instance()->receiveHeartbeat(hinfo);
-			if (!GameState::instance()->isRunning()) {
-				LOG("STARTING GAME.");
-		        	GameState::instance()->reset();
-	           		GameState::instance()->start();
-	        	}
 			break;
 		case CHATPACK:
 			ChatPacket* chat;

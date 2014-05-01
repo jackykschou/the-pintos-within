@@ -21,6 +21,7 @@ class GuiManager:public Singleton<GuiManager>{
     void EnableStart();
     void Update(const Ogre::FrameEvent& event);
     void Initialize(std::string applicationName);
+    void Start();
     bool IsExpectingMouse();
     bool IsExpectingKeyboard();
     bool CreateGame(const CEGUI::EventArgs& e);
