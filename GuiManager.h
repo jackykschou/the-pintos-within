@@ -133,10 +133,17 @@ class Lobby:public Gui{
     void AddStart();
     void RemoveStart();
     void UpdatePlayers();
+    void SetConsoleText(std::string str);
+    void UpdateConsole();
+    bool ChatSubmitted(const CEGUI::EventArgs& e);
   private:
+    CEGUI::MultiLineEditbox* _chatBuffer;
+    CEGUI::Editbox* _chatInput;
     CEGUI::PushButton* _back;
     CEGUI::PushButton* _start;
+    CEGUI::PushButton* _chatSend;
     CEGUI::Listbox* _players;
+    int _chatBufferSize;
 };
 class WaitingPrompt:public Gui{
   public:

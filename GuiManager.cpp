@@ -13,7 +13,6 @@ GuiManager::~GuiManager(){
   CEGUI::OgreRenderer::destroySystem();
 }
 void GuiManager::Update(const Ogre::FrameEvent& event){
-  Hud* hud=static_cast<Hud*>(_hud);
   if(_isDisplayed){
     if(_current==_hud||GameState::instance()->isRunning()){
       if(_current!=_hud){
@@ -22,6 +21,7 @@ void GuiManager::Update(const Ogre::FrameEvent& event){
         GameState::instance()->current_state=IN_GAME;
         CEGUI::MouseCursor::getSingletonPtr()->hide();
       }
+      Hud* hud=static_cast<Hud*>(_hud);
       PlayerCharacter* player=GameState::instance()->player;
       if(player!=nullptr){
         hud->UpdateHealth(0.01f*player->health>=0?0.01f*player->health:0.0f);
@@ -35,12 +35,14 @@ void GuiManager::Update(const Ogre::FrameEvent& event){
           hud->UpdateMagCount(weapon->current_ammo);
         }
       }
+      hud->UpdateConsole();
     }else if(_current==_joinGameMenu){
       static_cast<JoinGameMenu*>(_joinGameMenu)->UpdateGames();
     }else if(_current==_lobby){
-      static_cast<Lobby*>(_lobby)->UpdatePlayers();
+      auto lobby=static_cast<Lobby*>(_lobby);
+      lobby->UpdatePlayers();
+      lobby->UpdateConsole();
     }
-    hud->UpdateConsole();
   }else{
     _isDisplayed=true;
     _current->Display();
@@ -363,12 +365,17 @@ const char* CreateGameMenu::ReadName() {
   return _name->getText().c_str();
 }
 
-Lobby::Lobby():Gui("Lobby.layout"){
+Lobby::Lobby():Gui("Lobby.layout"),_chatBufferSize{0}{
   _players=static_cast<CEGUI::Listbox*>(_root->getChild("Lobby/Players"));
-  _back  = static_cast<CEGUI::PushButton*>(_root->getChild("Lobby/Back"));
-  _back->subscribeEvent(CEGUI::PushButton::EventClicked,CEGUI::Event::Subscriber(&GuiManager::Back,GuiManager::instance()));
+  _chatBuffer=static_cast<CEGUI::MultiLineEditbox*>(_root->getChild("Lobby/ChatBuffer"));
+  _chatInput=static_cast<CEGUI::Editbox*>(_root->getChild("Lobby/ChatInput"));
+  _chatSend=static_cast<CEGUI::PushButton*>(_root->getChild("Lobby/ChatSend"));
+  _back=static_cast<CEGUI::PushButton*>(_root->getChild("Lobby/Back"));
   _start=static_cast<CEGUI::PushButton*>(_root->getChild("Lobby/Start"));
+  _back->subscribeEvent(CEGUI::PushButton::EventClicked,CEGUI::Event::Subscriber(&GuiManager::Back,GuiManager::instance()));
   _start->subscribeEvent(CEGUI::PushButton::EventClicked,CEGUI::Event::Subscriber(&GuiManager::Start,GuiManager::instance()));
+  _chatInput->subscribeEvent(CEGUI::Editbox::EventTextAccepted,CEGUI::Event::Subscriber(&Lobby::ChatSubmitted,this));
+  _chatSend->subscribeEvent(CEGUI::PushButton::EventClicked,CEGUI::Event::Subscriber(&Lobby::ChatSubmitted,this));
   DisableStart();
 }
 void Lobby::DisableStart(){
@@ -395,6 +402,25 @@ void Lobby::UpdatePlayers(){
     entry->setSelectionBrushImage("TaharezLook","ListboxSelectionBrush");
     _players->addItem(entry);
   }
+}
+void Lobby::SetConsoleText(std::string str) {
+  _chatBuffer->setText(str.c_str());
+}
+void Lobby::UpdateConsole() {
+  if (_chatBufferSize!=ChatManager::instance()->size()) {
+    _chatBufferSize=ChatManager::instance()->size();
+    SetConsoleText(ChatManager::instance()->getTextForConsole().c_str());
+    CEGUI::Scrollbar* scroller = _chatBuffer->getVertScrollbar();
+    float offset = scroller->getDocumentSize() + 100;
+    scroller->setScrollPosition(std::max(offset, 0.0f));
+  }
+}
+bool Lobby::ChatSubmitted(const CEGUI::EventArgs& e) {
+  if (strlen(_chatInput->getText().c_str()) == 0) return false;
+  NetworkManager::instance()->sendChat(_chatInput->getText().c_str());
+  ChatManager::instance()->addMessage("you", _chatInput->getText().c_str());
+  _chatInput->setText("");
+  return false;
 }
 
 WaitingPrompt::WaitingPrompt():Gui("WaitingPrompt.layout"){}
