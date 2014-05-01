@@ -37,7 +37,7 @@ enum collisiontypes {
 #define CHARACTER_COLLIDER_WITH (COL_STATIC | COL_CHARACTER | COL_PICKUP)
 #define BALL_COLLIDER_WITH (COL_STATIC | COL_CHARACTER | COL_BALL)
 #define COL_BULLET_COLLIDER_WITH (COL_STATIC | COL_HIT_BOX | COL_BULLET)
-#define COL_PICKUP_COLLIDER_WIH (COL_STATIC | COL_CHARACTER | COL_PICKUP)
+#define COL_PICKUP_COLLIDER_WIH (COL_STATIC)
 #define COL_HIT_BOX_COLLIDER_WITH (COL_BULLET)
 
 #define HEARTBEATPACK 1
@@ -57,7 +57,10 @@ enum collisiontypes {
 #define BLASTER_EXPLODE 14
 #define PLAY_FIRE_SOUND 15
 #define CHANGE_PINTO 16
-#define PLAYER_JOIN 17
+#define INCREASE_SCORE 17
+#define TIME_LEFT 18
+#define GAMESTART 19
+#define PLAYER_JOIN 20
 
 #define WALL "Wall"
 #define FLOORGRASS "FloorGrass"
@@ -98,5 +101,10 @@ enum collisiontypes {
 #define ASSAULTRIFLE_ID 2
 #define BLASTER_ID 3
 #define MELEE_ID 4
+
+//team id
+#define RED_TEAM 0
+#define BLUE_TEAM 1
+#define PINTO_TEAM 1
 
 #endif // #ifndef __Utility_h_

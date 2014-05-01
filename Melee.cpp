@@ -25,7 +25,7 @@ Melee::Melee(PlayerCharacter* player_p, std::string mesh_name, float posX,
     weapon_id = 4;
     shoot_cost = 0;
     reload_time = 1;
-    cooldown = 0.4;
+    cooldown = 0.2;
     reload_timer = 0;
     shoot_timer = 0;
 
@@ -67,12 +67,7 @@ Melee::Melee(PlayerCharacter* player_p, std::string mesh_name, float posX,
     idle_animation_state->setEnabled(false);
     idle_animation_state->setWeight(0);
 
-    reload_animation_state = entity->getAnimationState("PintoStab");
-    reload_animation_state->setLoop(false);
-    reload_animation_state->setEnabled(false);
-    reload_animation_state->setWeight(0);
-
-    reload_time = reload_animation_state->getLength() * reload_speed;
+    reload_animation_state = NULL;
 
     jumping_animation_state = entity->getAnimationState("PintoJump");
     jumping_animation_state->setLoop(false);
@@ -89,20 +84,23 @@ Melee::Melee(PlayerCharacter* player_p, std::string mesh_name, float posX,
     node->setPosition(player->mesh->node->convertWorldToLocalPosition(
         Ogre::Vector3(tran->posX + posX, tran->posY + posY, tran->posZ + posZ)));
     
-    damage = 30;
-    damage_radius = 150;
+    damage = 30 + (GameState::instance()->num_player * 2);
+    damage_radius = 17;
 
     shooting_animation_state->setTimePosition(0);
-    reload_animation_state->setTimePosition(0);
+
+    reload_speed = 1.0;
+    reload_time = 1.0;
 }
 
 void Melee::shoot_hook()
 {
-    btVector3 point = btVector3(node->_getDerivedPosition().x, node->_getDerivedPosition().y, node->_getDerivedPosition().z);
-
+    btVector3 point = btVector3(shoot_pos->node->_getDerivedPosition().x, shoot_pos->node->_getDerivedPosition().y, shoot_pos->node->_getDerivedPosition().z);
     for(int i = 0; i < GameState::instance()->num_player; ++i)
     {
-        if(GameState::instance()->players[i] != NULL && GameState::instance()->players[i] != GameState::instance()->player)
+        if(GameState::instance()->players[i] != NULL && GameState::instance()->players[i] != GameState::instance()->player
+            && ((GameState::instance()->team_mode != TEAM) || (GameState::instance()->players[i]->team_id != GameState::instance()->player->team_id)
+                || (GameState::instance()->game_mode == PINTO)))
         {
             Transform* tran = GameState::instance()->players[i]->transform;
             btVector3 tran_vector = btVector3(tran->posX, tran->posY, tran->posZ);

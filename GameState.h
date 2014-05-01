@@ -19,6 +19,8 @@ class GameState : public Singleton<GameState>
   public:
     GameState();
 
+    uint32_t team_id;
+
     uint32_t current_map;
     uint32_t game_mode;
     uint32_t team_mode;
@@ -26,8 +28,12 @@ class GameState : public Singleton<GameState>
     int num_player;
     int current_max_num_player_map;
 
+    bool carrying_pinto_seed;
+    bool player_pinto_seeds[MAX_PLAYER];
+
   	int score;
   	int timeLeft;
+    int num_player_left_elimination;
   	void reset();
   	void update();
 	  void start();

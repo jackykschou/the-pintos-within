@@ -150,8 +150,9 @@ void Weapon::update()
 			if(reload_timer >= reload_time) 
 			{
 				is_reloading = false;
-				current_ammo = (current_ammo >= max_mag_cap) ? (current_ammo - (max_mag_cap - current_mag_count)) : 0;
+				int temp_current_mag_count = current_mag_count;
 				current_mag_count = (current_ammo >= max_mag_cap) ? max_mag_cap : current_ammo;
+				current_ammo = (current_ammo >= max_mag_cap) ? (current_ammo - (max_mag_cap - temp_current_mag_count)) : 0;
 			}
 		}
 	}
@@ -162,7 +163,10 @@ void Weapon::switchToThisWeapon()
 	is_shooting = false;
 	is_reloading = false;
 	shooting_animation_state->setTimePosition(0);
-	reload_animation_state->setTimePosition(0);
+
+	if(reload_animation_state != NULL)
+		reload_animation_state->setTimePosition(0);
+	
 	current_mag_count = max_mag_cap;
 	current_ammo = max_ammo;
 }

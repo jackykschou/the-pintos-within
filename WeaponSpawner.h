@@ -17,6 +17,8 @@ public:
 	uint32_t current_weapon_count;
 
 	std::vector<Ogre::Vector3> positions;
+	std::set<int> positions_with_weapons;
+
 	Debouncer* spawn_debouncer;
 
 	WeaponSpawner(std::string, Scene*);
@@ -24,8 +26,8 @@ public:
 
 	void startGame();
 	void addSpawnPoint(Ogre::Vector3);
-	void spawnWeapon(float, float, float, uint32_t);
-	Ogre::Vector3 spawnWeapon();
+	void spawnWeapon(float, float, float, uint32_t, int);
+	void spawnWeapon();
 	Ogre::Vector3 spawnPlayer(uint32_t);
 
 	virtual void update();

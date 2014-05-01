@@ -43,6 +43,12 @@ struct ChatPacket
 	char message[256];
 };
 
+struct TeamIdPacket
+{
+	char type;
+	char teamId;
+};
+
 struct PlayerJoinPacket
 {
 	char type;
@@ -72,6 +78,9 @@ class NetworkManager : public Singleton<NetworkManager>
 	ParticlePacket*  particle;
 
 	uint32_t player_id;
+	uint32_t team_id;
+
+	uint32_t player_team_id_map[MAX_PLAYER];
 
   	NetworkManager();
   	~NetworkManager();

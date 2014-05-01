@@ -16,7 +16,8 @@ NetworkManager::NetworkManager()
 	_lastHeartbeat = NULL;
 
 
-	if (SDLNet_Init() < 0) {
+	if (SDLNet_Init() < 0) 
+	{
 		fprintf(stderr, "SDLNet_Init: %s\n", SDLNet_GetError());
 	}
 }

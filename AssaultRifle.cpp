@@ -8,14 +8,14 @@
 AssaultRifle::AssaultRifle(PlayerCharacter* player_p, std::string mesh_name, float posX, 
 			float posY, float posZ, float rotX, float rotY, float rotZ, float rotW,
 			float scaleX, float scaleY, float scaleZ, PlayerBox* box) : 
-			Weapon(player_p, mesh_name, 2, 3, 1, 48, 180, 0.1, posX, 
+			Weapon(player_p, mesh_name, 2, 3, 1, 48, 180, 0.15, posX, 
 			posY, posZ, rotX, rotY, rotZ, rotW, scaleX, scaleY, scaleZ, box)
 
 {
     Transform* tran = ((GameObject*)player_p)->getComponent<Transform>();
     node->setPosition(player->mesh->node->convertWorldToLocalPosition(
         Ogre::Vector3(tran->posX + posX, tran->posY + posY, tran->posZ + posZ)));
-    damage = 12;
+    damage = 13;
     shoot_distance = 2000;
 
     reload_time = reload_animation_state->getLength() * reload_speed;
@@ -65,8 +65,10 @@ void AssaultRifle::shoot_hook()
         if(rayCallback.m_collisionObject->getUserPointer() != NULL)
         {
             HitBox* hit_box = (HitBox*)(rayCallback.m_collisionObject->getUserPointer());
-            LOG("hitted player id: " << hit_box->player->player_id << "killer id: " << NetworkManager::instance()->player_id);
-            if(hit_box->player->player_id != NetworkManager::instance()->player_id)
+
+            if(hit_box->player->player_id != NetworkManager::instance()->player_id
+                && ((GameState::instance()->team_mode != TEAM) || (hit_box->player->team_id != GameState::instance()->player->team_id)
+                    || (GameState::instance()->game_mode == PINTO)))
             {
                 int damage_sent = hit_box->getDamage(damage);
                 uint32_t enemy_id = hit_box->player->player_id;

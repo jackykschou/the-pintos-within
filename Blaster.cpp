@@ -16,13 +16,13 @@ Blaster::Blaster(PlayerCharacter* player_p, std::string mesh_name, float posX,
     node->setPosition(player->mesh->node->convertWorldToLocalPosition(
         Ogre::Vector3(tran->posX + posX, tran->posY + posY, tran->posZ + posZ)));
 
-    damage = 80;
+    damage = 100;
     shoot_distance = 2000;
 
     is_charging = false;
     charge_scale = 0;
     charge_rate = 0.004f;
-    blast_radius = 300;
+    blast_radius = 250;
     max_ammot_cost = 25;
 
     charge_sound_debouncer = new Debouncer(0.3 * 1000, [this]()
@@ -109,13 +109,17 @@ void Blaster::shoot_hook()
 
         for(int i = 0; i < GameState::instance()->num_player; ++i)
         {
-            if(GameState::instance()->players[i] != NULL)
+            if(GameState::instance()->players[i] != NULL
+                && ((GameState::instance()->team_mode != TEAM) || (GameState::instance()->players[i]->team_id != GameState::instance()->player->team_id)
+                    || (GameState::instance()->game_mode == PINTO)))
             {
                 Transform* tran = GameState::instance()->players[i]->transform;
                 btVector3 tran_vector = btVector3(tran->posX, tran->posY, tran->posZ);
                 if(tran_vector.distance(point) <= radius)
                 {
                     uint32_t enemy_id = GameState::instance()->players[i]->player_id;
+                    if(GameState::instance()->players[i]->in_pinto_form)
+                        damage_sent *= (1 / (float)GameState::instance()->num_player);
                     NetworkManager::instance()->vital->setDamage(damage_sent, enemy_id);
                 }
             }

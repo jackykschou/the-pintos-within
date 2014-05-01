@@ -103,17 +103,29 @@ void FPSBoxController::detectInput()
 				is_walking = true;
 		}
 
+		if(jet_pack_current >= 2000 && InputManager::instance()->isMouseRightClicked() && player->in_pinto_form)
+		{
+			jet_pack_current = 0;
+			player->pinto_mesh->node->setVisible(false);
+			player->is_invisible = true;
+		}
+		else if(player->in_pinto_form && jet_pack_current > 1200)
+		{
+			player->pinto_mesh->node->setVisible(true);
+			player->is_invisible = false;
+		}
+
 		if(jet_pack_current < 100)
 		{
 			is_jet_started = false;
 			jet_pack_current = ((jet_pack_current + 5) >= jet_pack_max) ? (jet_pack_max) : (jet_pack_current + 5);
 			movement_speed_multiplier = 1.0f;
 		}
-		else if(jet_pack_current >= 100 && InputManager::instance()->isMouseRightClicked())
+		else if(jet_pack_current >= 100 && InputManager::instance()->isMouseRightClicked() && !player->in_pinto_form)
 		{
 			is_jet_started = true;
 		}
-		else if(InputManager::instance()->isMouseRightDown() && is_jet_started)
+		else if(InputManager::instance()->isMouseRightDown() && is_jet_started && !player->in_pinto_form)
 		{
 			jet_pack_current -= 20;
 			is_jet_packing = true;
@@ -122,7 +134,11 @@ void FPSBoxController::detectInput()
 		}
 		else
 		{
-			jet_pack_current = ((jet_pack_current + 5) >= jet_pack_max) ? (jet_pack_max) : (jet_pack_current + 5);
+			if(!player->in_pinto_form)
+				jet_pack_current = ((jet_pack_current + 5) >= jet_pack_max) ? (jet_pack_max) : (jet_pack_current + 5);
+			else
+				jet_pack_current = ((jet_pack_current + 2) >= jet_pack_max) ? (jet_pack_max) : (jet_pack_current + 2);
+
 			movement_speed_multiplier = 1.0f;
 		}
 
@@ -153,19 +169,17 @@ void FPSBoxController::detectInput()
 			is_running = true;
 			movement_speed_multiplier = 1.5f;
 		}
-		else if(!controller->onGround() && !is_jet_packing && !controller->isJumping())
+		else if(!controller->onGround() && !is_jet_packing && !controller->isJumping() && !player->in_pinto_form)
 		{
 			movement_speed_multiplier = 0.5f;
 		}
-		else {
+		else 
+		{
 			movement_speed_multiplier = 1.0f;
 		}
 	}
 
-		if(controller->isJumping() && !is_jet_packing)
-		{
-		}
-		else if(!tempDir.isZero()) {
+		if(!tempDir.isZero()) {
 		    tempDir = tempDir.normalize();
 			currVel += tempDir * speedUp;
 			if (currVel.length() > 1) {

@@ -3,9 +3,9 @@
 #include "Debouncer.h"
 #include "WeaponPickUp.h"
 
-WeaponSpawner::WeaponSpawner(std::string tag, Scene* s) : GameObject(tag, s), positions()
+WeaponSpawner::WeaponSpawner(std::string tag, Scene* s) : GameObject(tag, s), positions(), positions_with_weapons()
 {
-	float spawn_rate = 3.0f;
+	float spawn_rate = 5.0f;
 
 	current_weapon_count = 0;
 
@@ -31,38 +31,49 @@ void WeaponSpawner::addSpawnPoint(Ogre::Vector3 point)
 	positions.push_back(point);
 }
 
-void WeaponSpawner::spawnWeapon(float x, float y, float z, uint32_t id)
+void WeaponSpawner::spawnWeapon(float x, float y, float z, uint32_t id, int pick_up_id)
 {
 	if(id == 0)
 	{
 		new WeaponPickUp("PistolPickup", scene, "Pickup.Pistol.mesh",
 		x, y + 20, z, 0, 0, 0, 1,
-		10, 10, 10, 0);
+		10, 10, 10, 0, pick_up_id);
 	}
 	else if(id == 1)
 	{
 		new WeaponPickUp("ShotgunPickup", scene, "Pickup.Shotgun.mesh",
 		x, y + 20, z, 0, 0, 0, 1,
-		10, 10, 10, 1);
+		10, 10, 10, 1, pick_up_id);
 	}
 	else if(id == 2)
 	{
 		new WeaponPickUp("RiflePickup", scene, "Pickup.Rifle.mesh",
 		x, y + 20, z, 0, 0, 0, 1,
-		10, 10, 10, 2);
+		10, 10, 10, 2, pick_up_id);
 	}
 	else
 	{
 		new WeaponPickUp("BFGPickup", scene, "Pickup.BFG.mesh",
 		x, y + 20, z, 0, 0, 0, 1,
-		10, 10, 10, 3);
+		10, 10, 10, 3, pick_up_id);
 	}
 }
 
-Ogre::Vector3 WeaponSpawner::spawnWeapon()
+void WeaponSpawner::spawnWeapon()
 {
-	Ogre::Vector3 position = positions[RAND_RANGE(0, positions.size())];
-	
+	if(positions_with_weapons.size() == positions.size())
+		return;
+
+	int position_index;
+	do
+	{
+		position_index = RAND_RANGE(0, positions.size());
+	}while(positions_with_weapons.find(position_index) != positions_with_weapons.end());
+
+	Ogre::Vector3 position = positions[position_index];
+
+	positions_with_weapons.insert(position_index);
+
 	bool self = false;
 
 	float random_0_1 = RAND;
@@ -73,26 +84,24 @@ Ogre::Vector3 WeaponSpawner::spawnWeapon()
 		index = 1;
 		new WeaponPickUp("ShotgunPickup", scene, "Pickup.Shotgun.mesh",
 		position.x, position.y + 20, position.z, 0, 0, 0, 1,
-		10, 10, 10, 1);
+		10, 10, 10, 1, position_index);
 	}
 	else if(random_0_1 < 0.7f)
 	{
 		index = 2;
 		new WeaponPickUp("RiflePickup", scene, "Pickup.Rifle.mesh",
 		position.x, position.y + 20, position.z, 0, 0, 0, 1,
-		10, 10, 10, 2);
+		10, 10, 10, 2, position_index);
 	}
 	else
 	{
 		index = 3;
 		new WeaponPickUp("BFGPickup", scene, "Pickup.BFG.mesh",
 		position.x, position.y + 20, position.z, 0, 0, 0, 1,
-		10, 10, 10, 3);
+		10, 10, 10, 3, position_index);
 	}
 
-	NetworkManager::instance()->vital->setSpawnWeapon(index, position.x, position.y, position.z);
-
-	return position;
+	NetworkManager::instance()->vital->setSpawnWeapon(index, position.x, position.y, position.z, position_index);
 }
 
 void WeaponSpawner::update()

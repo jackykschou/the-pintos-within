@@ -1,6 +1,6 @@
 #include "ShotGun.h"
 
-#define SHOOT_NUM 8
+#define SHOOT_NUM 10
 
 // Weapon::Weapon(PlayerCharacter* player_p, std::string mesh_name, int id_p, double reload_time_p, 
 //     int shoot_cost_p, int max_mag_cap_p, int max_ammo_p, double cooldown_p, float posX, 
@@ -10,7 +10,7 @@
 ShotGun::ShotGun(PlayerCharacter* player_p, std::string mesh_name, float posX, 
 			float posY, float posZ, float rotX, float rotY, float rotZ, float rotW,
 			float scaleX, float scaleY, float scaleZ, PlayerBox* box) : 
-			Weapon(player_p, mesh_name, 1, 3, 1, 1, 40, 0.4, posX, 
+			Weapon(player_p, mesh_name, 1, 3, 1, 1, 40, 0.6, posX, 
 			posY, posZ, rotX, rotY, rotZ, rotW, scaleX, scaleY, scaleZ, box)
 
 {
@@ -20,7 +20,7 @@ ShotGun::ShotGun(PlayerCharacter* player_p, std::string mesh_name, float posX,
     damage = 12;
     shoot_distance = 2000;
 
-    reload_speed = 0.2f;
+    reload_speed = 0.3f;
 
     reload_time = reload_animation_state->getLength() * reload_speed;
 }
@@ -56,7 +56,9 @@ void ShotGun::shoot_hook()
             if(rayCallback.m_collisionObject->getUserPointer() != NULL)
             {
                 HitBox* hit_box = (HitBox*)(rayCallback.m_collisionObject->getUserPointer());
-                if(hit_box->player->player_id != NetworkManager::instance()->player_id)
+                if(hit_box->player->player_id != NetworkManager::instance()->player_id
+                    && ((GameState::instance()->team_mode != TEAM) || (hit_box->player->team_id != GameState::instance()->player->team_id)
+                        || (GameState::instance()->game_mode == PINTO)))
                 {
                     int damage_sent = hit_box->getDamage(damage);
                     uint32_t enemy_id = hit_box->player->player_id;
