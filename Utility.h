@@ -60,6 +60,7 @@ enum collisiontypes {
 #define INCREASE_SCORE 17
 #define TIME_LEFT 18
 #define GAMESTART 19
+#define PLAYER_JOIN 20
 
 #define WALL "Wall"
 #define FLOORGRASS "FloorGrass"

@@ -1,11 +1,10 @@
 #include "GameClient.h"
 #include "GameState.h"
-
 #include "NetworkManager.h"
-
 #include "HeartbeatPacket.h"
 #include "VitalPacket.h"
 #include "ParticlePacket.h"
+#include "GuiManager.h"
 
 GameClient::GameClient(const char* host, int port) {
 	// copy the string into a new chunk of memory :)
@@ -75,6 +74,7 @@ void GameClient::startListeningForAdvertisements() {
 
 void GameClient::stopListeningForAdvertisements() {
 	state = GameClientReady;
+	if (_discoverySocket) SDLNet_UDP_Close(_discoverySocket);
 	_discoverySocket = NULL;
 }
 
@@ -109,8 +109,14 @@ int GameClient::joinGame() {
 	printf("Sending join game request...");
 
 	state = GameClientRunning;
-	char x = JOINGAME;
-	sendData(&x, 1, true);
+
+	JoinRequestPacket request;
+	request.type = JOINGAME;
+	std::string name = GuiManager::instance()->GetName();
+	LOG("MY NAME IS "<<name);
+	strncpy(request.name, name.c_str(), sizeof(request.name));
+
+	sendData(&request, sizeof(JoinRequestPacket), true);
 
 	return 0;
 }
@@ -156,6 +162,7 @@ void GameClient::consumeDiscoveryPackets() {
 		ServerAdvertisement* ad;
 		ad = (ServerAdvertisement*)packetData;
 		printf("RECEIVED SERVER DISCOVERY PACKET\n%s\n%s\n", ad->name, ad->description);
+		GameState::instance()->games[ad->name]=std::make_pair(ad->description,boost::posix_time::second_clock::local_time());
 	}
 }
 
@@ -259,6 +266,14 @@ void GameClient::processPacket(UDPpacket* packet) {
 			TimeLeftInfo* time_info;
 			time_info =  (TimeLeftInfo*) packetData;
 			NetworkManager::instance()->vital->receiveTimeLeft(time_info);
+		case PLAYER_JOIN:
+			PlayerJoinPacket* p;
+			p = (PlayerJoinPacket*)packetData;
+			if (p->playerId != NetworkManager::instance()->player_id) {
+				printf("Player %d joined, with name %s\n", p->playerId, p->name);
+			}
+			GameState::instance()->setPlayerName(p->playerId, p->name);
+			++GameState::instance()->num_player;
 			break;
 	}
 }
