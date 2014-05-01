@@ -14,11 +14,12 @@ GuiManager::~GuiManager(){
 }
 void GuiManager::Update(const Ogre::FrameEvent& event){
   if(_isDisplayed){
-    if(_current==_hud||GameState::instance()->isRunning()){
+    auto gameState=GameState::instance();
+    if(_current==_hud||gameState->isRunning()){
       if(_current!=_hud){
         _current=_hud;
         _current->Display();
-        GameState::instance()->current_state=IN_GAME;
+        gameState->current_state=IN_GAME;
         CEGUI::MouseCursor::getSingletonPtr()->hide();
       }
       Hud* hud=static_cast<Hud*>(_hud);
@@ -36,6 +37,8 @@ void GuiManager::Update(const Ogre::FrameEvent& event){
           hud->UpdateMagCount(weapon->current_ammo);
           hud->UpdateWeaponName(weapon->weapon_id);
         }
+        hud->UpdateScore(gameState->score,gameState->game_mode,gameState->team_mode);
+        hud->UpdateTimeRemaining(gameState->timeLeft);
       }
       hud->UpdateConsole();
     }else if(_current==_joinGameMenu){
@@ -191,6 +194,8 @@ Hud::Hud():Gui("Hud.layout"){
   _ammoCount=_root->getChild("Hud/AmmoCount");
   _magCount=_root->getChild("Hud/MagCount");
   _weaponName=_root->getChild("Hud/WeaponName");
+  _score=_root->getChild("Hud/Score");
+  _timeRemaining=_root->getChild("Hud/TimeRemaining");
   _console=_root->getChild("Hud/Console");
   _consoleInput = static_cast<CEGUI::Editbox*>(_console->getChild("Hud/ConsoleInput"));
   _consoleText  = static_cast<CEGUI::MultiLineEditbox*>(_console->getChild("Hud/ConsoleText"));
@@ -214,25 +219,34 @@ void Hud::UpdateMagCount(int magCount){
   _magCount->setText(std::to_string(magCount));
 }
 void Hud::UpdateWeaponName(int weaponId){
-  std::string weaponName{""};
+  std::string weaponName{};
   switch(weaponId){
     case PISTOL_ID:
-      weaponName+="Pistol";
+      weaponName="Pistol";
       break;
     case SHOTGUN_ID:
-      weaponName+="Shotgun";
+      weaponName="Shotgun";
       break;
     case ASSAULTRIFLE_ID:
-      weaponName+="Assault Rifle";
+      weaponName="Assault Rifle";
       break;
     case BLASTER_ID:
-      weaponName+="Blaster";
+      weaponName="Blaster";
       break;
     case MELEE_ID:
-      weaponName+="Pinto";
+      weaponName="Pinto";
       break;
   }
   _weaponName->setText(weaponName.c_str());
+}
+void Hud::UpdateScore(int score,uint32_t gameMode,uint32_t teamMode){
+  std::string scoreText{};
+  if(teamMode==TEAM&&gameMode!=PINTO){scoreText+="Team ";}
+  scoreText+="Score: "+std::to_string(score);
+  _score->setText(scoreText.c_str());
+}
+void Hud::UpdateTimeRemaining(int timeRemaining){
+  _timeRemaining->setText(std::to_string(timeRemaining).c_str());
 }
 bool Hud::ChatSubmitted(const CEGUI::EventArgs& e) {
   if (strlen(_consoleInput->getText().c_str()) == 0) return false;

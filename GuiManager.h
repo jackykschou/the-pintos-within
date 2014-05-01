@@ -70,6 +70,8 @@ class Hud:public Gui{
     void UpdateAmmoCount(int ammoCount);
     void UpdateMagCount(int magCount);
     void UpdateWeaponName(int weaponId);
+    void UpdateScore(int score,uint32_t gameMode,uint32_t teamMode);
+    void UpdateTimeRemaining(int timeRemaining);
     void ToggleConsole();
     bool IsConsoleVisible();
     void SetConsoleText(std::string str);
@@ -82,6 +84,8 @@ class Hud:public Gui{
     CEGUI::Window* _magCount;
     CEGUI::Window* _console;
     CEGUI::Window* _weaponName;
+    CEGUI::Window* _score;
+    CEGUI::Window* _timeRemaining;
     CEGUI::Editbox* _consoleInput;
     CEGUI::MultiLineEditbox* _consoleText;
     int _consoleSize;
