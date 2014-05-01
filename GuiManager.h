@@ -69,6 +69,7 @@ class Hud:public Gui{
     void UpdateFuel(float percentFuel);
     void UpdateAmmoCount(int ammoCount);
     void UpdateMagCount(int magCount);
+    void UpdateWeaponName(int weaponId);
     void ToggleConsole();
     bool IsConsoleVisible();
     void SetConsoleText(std::string str);
@@ -80,6 +81,7 @@ class Hud:public Gui{
     CEGUI::Window* _ammoCount;
     CEGUI::Window* _magCount;
     CEGUI::Window* _console;
+    CEGUI::Window* _weaponName;
     CEGUI::Editbox* _consoleInput;
     CEGUI::MultiLineEditbox* _consoleText;
     int _consoleSize;
@@ -136,6 +138,7 @@ class Lobby:public Gui{
     void SetConsoleText(std::string str);
     void UpdateConsole();
     bool ChatSubmitted(const CEGUI::EventArgs& e);
+    void UpdateGameDescription();
   private:
     CEGUI::MultiLineEditbox* _chatBuffer;
     CEGUI::Editbox* _chatInput;
@@ -143,6 +146,7 @@ class Lobby:public Gui{
     CEGUI::PushButton* _start;
     CEGUI::PushButton* _chatSend;
     CEGUI::Listbox* _players;
+    CEGUI::Window* _gameDescription;
     int _chatBufferSize;
 };
 class WaitingPrompt:public Gui{

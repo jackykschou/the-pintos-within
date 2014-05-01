@@ -24,7 +24,8 @@ void GuiManager::Update(const Ogre::FrameEvent& event){
       Hud* hud=static_cast<Hud*>(_hud);
       PlayerCharacter* player=GameState::instance()->player;
       if(player!=nullptr){
-        hud->UpdateHealth(0.01f*player->health>=0?0.01f*player->health:0.0f);
+        float healthPercent=((float)player->health)/((float)player->max_health);
+        hud->UpdateHealth(healthPercent>=0?healthPercent:0.0f);
         FPSBoxController* controller=player->controller;
         if(controller!=nullptr){
           hud->UpdateFuel(controller->jet_pack_current/controller->jet_pack_max);
@@ -33,6 +34,7 @@ void GuiManager::Update(const Ogre::FrameEvent& event){
         if(weapon!=nullptr){
           hud->UpdateAmmoCount(weapon->current_mag_count);
           hud->UpdateMagCount(weapon->current_ammo);
+          hud->UpdateWeaponName(weapon->weapon_id);
         }
       }
       hud->UpdateConsole();
@@ -42,6 +44,7 @@ void GuiManager::Update(const Ogre::FrameEvent& event){
       auto lobby=static_cast<Lobby*>(_lobby);
       lobby->UpdatePlayers();
       lobby->UpdateConsole();
+      lobby->UpdateGameDescription();
     }
   }else{
     _isDisplayed=true;
@@ -187,6 +190,7 @@ Hud::Hud():Gui("Hud.layout"){
   _fuelBar=static_cast<CEGUI::ProgressBar*>(_root->getChild("Hud/FuelBar"));
   _ammoCount=_root->getChild("Hud/AmmoCount");
   _magCount=_root->getChild("Hud/MagCount");
+  _weaponName=_root->getChild("Hud/WeaponName");
   _console=_root->getChild("Hud/Console");
   _consoleInput = static_cast<CEGUI::Editbox*>(_console->getChild("Hud/ConsoleInput"));
   _consoleText  = static_cast<CEGUI::MultiLineEditbox*>(_console->getChild("Hud/ConsoleText"));
@@ -208,6 +212,27 @@ void Hud::UpdateAmmoCount(int ammoCount){
 }
 void Hud::UpdateMagCount(int magCount){
   _magCount->setText(std::to_string(magCount));
+}
+void Hud::UpdateWeaponName(int weaponId){
+  std::string weaponName{""};
+  switch(weaponId){
+    case PISTOL_ID:
+      weaponName+="Pistol";
+      break;
+    case SHOTGUN_ID:
+      weaponName+="Shotgun";
+      break;
+    case ASSAULTRIFLE_ID:
+      weaponName+="Assault Rifle";
+      break;
+    case BLASTER_ID:
+      weaponName+="Blaster";
+      break;
+    case MELEE_ID:
+      weaponName+="Pinto";
+      break;
+  }
+  _weaponName->setText(weaponName.c_str());
 }
 bool Hud::ChatSubmitted(const CEGUI::EventArgs& e) {
   if (strlen(_consoleInput->getText().c_str()) == 0) return false;
@@ -372,6 +397,7 @@ Lobby::Lobby():Gui("Lobby.layout"),_chatBufferSize{0}{
   _chatSend=static_cast<CEGUI::PushButton*>(_root->getChild("Lobby/ChatSend"));
   _back=static_cast<CEGUI::PushButton*>(_root->getChild("Lobby/Back"));
   _start=static_cast<CEGUI::PushButton*>(_root->getChild("Lobby/Start"));
+  _gameDescription=static_cast<CEGUI::Window*>(_root->getChild("Lobby/GameDescription"));
   _back->subscribeEvent(CEGUI::PushButton::EventClicked,CEGUI::Event::Subscriber(&GuiManager::Back,GuiManager::instance()));
   _start->subscribeEvent(CEGUI::PushButton::EventClicked,CEGUI::Event::Subscriber(&GuiManager::Start,GuiManager::instance()));
   _chatInput->subscribeEvent(CEGUI::Editbox::EventTextAccepted,CEGUI::Event::Subscriber(&Lobby::ChatSubmitted,this));
@@ -421,6 +447,38 @@ bool Lobby::ChatSubmitted(const CEGUI::EventArgs& e) {
   ChatManager::instance()->addMessage("you", _chatInput->getText().c_str());
   _chatInput->setText("");
   return false;
+}
+void Lobby::UpdateGameDescription(){
+  std::string description{};
+  auto gameState=GameState::instance();
+  switch(gameState->current_map){
+    case THEGAUNTLET:
+      description+="The Gauntlet / ";
+      break;
+    case DUSTTWO:
+      description+="Dust Two / ";
+      break;
+  }
+  switch(gameState->game_mode){
+    case ELIMINATION:
+      description+="Elimination / ";
+      break;
+    case DEATHMATCH:
+      description+="Death Match / ";
+      break;
+    case PINTO:
+      description+="Pinto / ";
+      break;
+  }
+  switch(gameState->team_mode){
+    case FFA:
+      description+="Free-for-All";
+      break;
+    case TEAM:
+      description+="Team";
+      break;
+  }
+  _gameDescription->setText(description.c_str());
 }
 
 WaitingPrompt::WaitingPrompt():Gui("WaitingPrompt.layout"){}
