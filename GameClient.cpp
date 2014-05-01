@@ -1,11 +1,10 @@
 #include "GameClient.h"
 #include "GameState.h"
-
 #include "NetworkManager.h"
-
 #include "HeartbeatPacket.h"
 #include "VitalPacket.h"
 #include "ParticlePacket.h"
+#include "GuiManager.h"
 
 GameClient::GameClient(const char* host, int port) {
 	// copy the string into a new chunk of memory :)
@@ -75,6 +74,7 @@ void GameClient::startListeningForAdvertisements() {
 
 void GameClient::stopListeningForAdvertisements() {
 	state = GameClientReady;
+	if (_discoverySocket) SDLNet_UDP_Close(_discoverySocket);
 	_discoverySocket = NULL;
 }
 
@@ -109,8 +109,14 @@ int GameClient::joinGame() {
 	printf("Sending join game request...");
 
 	state = GameClientRunning;
-	char x = JOINGAME;
-	sendData(&x, 1, true);
+
+	JoinRequestPacket request;
+	request.type = JOINGAME;
+	std::string name = GuiManager::instance()->GetName();
+	LOG("MY NAME IS "<<name);
+	strncpy(request.name, name.c_str(), sizeof(request.name));
+
+	sendData(&request, sizeof(JoinRequestPacket), true);
 
 	return 0;
 }
@@ -156,6 +162,7 @@ void GameClient::consumeDiscoveryPackets() {
 		ServerAdvertisement* ad;
 		ad = (ServerAdvertisement*)packetData;
 		printf("RECEIVED SERVER DISCOVERY PACKET\n%s\n%s\n", ad->name, ad->description);
+		GameState::instance()->games[ad->name]=std::make_pair(ad->description,boost::posix_time::second_clock::local_time());
 	}
 }
 
@@ -174,8 +181,19 @@ void GameClient::processPacket(UDPpacket* packet) {
 		return;
 	} else if (ackHeader->ackRequired) {
 		// fire off the ACK!
-		sendData((void*)"A", 2, false, ackHeader->id, true);
-		LOG("ACK REPLIED BY CLIENT.");
+		if (GameState::instance()->isRunning()) {
+			sendData((void*)"A", 2, false, ackHeader->id, true);
+			LOG("ACK REPLIED BY CLIENT.");
+		}
+	}
+
+	if (!GameState::instance()->isRunning()) {
+		if (!(packetType == GAMESTART ||
+			  packetType == ASSIGNPLAYERID ||
+			  packetType == CHATPACK ||
+			  packetType == PLAYER_JOIN)) {
+			return;
+		}
 	}
 
 	switch (packetType) 
@@ -184,6 +202,12 @@ void GameClient::processPacket(UDPpacket* packet) {
 			PlayerNumInfo* ninfo;
 			ninfo = (PlayerNumInfo*) packetData;
 			GameState::instance()->num_player = ninfo->num_player;
+			break;
+		case GAMESTART:
+			LOG("WE BE STARTIN YO!");
+			if (!GameState::instance()->isRunning()) {
+		    	GuiManager::instance()->Start();
+			}
 			break;
 		case ASSIGNPLAYERID:
 			PlayerIdInfo* pinfo;
@@ -194,11 +218,6 @@ void GameClient::processPacket(UDPpacket* packet) {
 			HeartBeatInfo* hinfo;
 			hinfo =  (HeartBeatInfo*) packetData;
 			NetworkManager::instance()->receiveHeartbeat(hinfo);
-			if (!GameState::instance()->isRunning()) {
-				LOG("STARTING GAME.");
-		        	GameState::instance()->reset();
-	           		GameState::instance()->start();
-	        	}
 			break;
 		case CHATPACK:
 			ChatPacket* chat;
@@ -249,5 +268,24 @@ void GameClient::processPacket(UDPpacket* packet) {
 			ChangePintoInfo* change_pinto_info;
 			change_pinto_info =  (ChangePintoInfo*) packetData;
 			NetworkManager::instance()->vital->receiveChangePinto(change_pinto_info);
+			break;
+		case INCREASE_SCORE:
+			IncreaseScoreInfo* score_info;
+			score_info =  (IncreaseScoreInfo*) packetData;
+			NetworkManager::instance()->vital->receiveIncreaseScore(score_info);
+			break;
+		case TIME_LEFT:
+			TimeLeftInfo* time_info;
+			time_info =  (TimeLeftInfo*) packetData;
+			NetworkManager::instance()->vital->receiveTimeLeft(time_info);
+		case PLAYER_JOIN:
+			PlayerJoinPacket* p;
+			p = (PlayerJoinPacket*)packetData;
+			if (p->playerId != NetworkManager::instance()->player_id) {
+				printf("Player %d joined, with name %s\n", p->playerId, p->name);
+			}
+			GameState::instance()->setPlayerName(p->playerId, p->name);
+			++GameState::instance()->num_player;
+			break;
 	}
 }

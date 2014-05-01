@@ -10,6 +10,7 @@
 #define RELOADING 16
 #define JETPACKING 32
 #define JUMPING 64
+#define INVISIBLE 128
 
 class PlayerCharacter;
 

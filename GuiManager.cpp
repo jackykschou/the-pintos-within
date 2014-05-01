@@ -1,26 +1,31 @@
 #include "GuiManager.h"
 #include "ChatManager.h"
+#include "Utility.h"
 
 GuiManager::GuiManager():_isDisplayed{false}{}
 GuiManager::~GuiManager(){
   delete _hud;
   delete _mainMenu;
+  delete _joinGameMenu;
+  delete _createGameMenu;
+  delete _lobby;
   delete _waitingPrompt;
-  delete _hostDialog;
   CEGUI::OgreRenderer::destroySystem();
 }
 void GuiManager::Update(const Ogre::FrameEvent& event){
-  Hud* hud=static_cast<Hud*>(_hud);
   if(_isDisplayed){
     if(_current==_hud||GameState::instance()->isRunning()){
       if(_current!=_hud){
         _current=_hud;
         _current->Display();
+        GameState::instance()->current_state=IN_GAME;
         CEGUI::MouseCursor::getSingletonPtr()->hide();
       }
+      Hud* hud=static_cast<Hud*>(_hud);
       PlayerCharacter* player=GameState::instance()->player;
       if(player!=nullptr){
-        hud->UpdateHealth(0.01f*player->health>=0?0.01f*player->health:0.0f);
+        float healthPercent=((float)player->health)/((float)player->max_health);
+        hud->UpdateHealth(healthPercent>=0?healthPercent:0.0f);
         FPSBoxController* controller=player->controller;
         if(controller!=nullptr){
           hud->UpdateFuel(controller->jet_pack_current/controller->jet_pack_max);
@@ -29,10 +34,18 @@ void GuiManager::Update(const Ogre::FrameEvent& event){
         if(weapon!=nullptr){
           hud->UpdateAmmoCount(weapon->current_mag_count);
           hud->UpdateMagCount(weapon->current_ammo);
+          hud->UpdateWeaponName(weapon->weapon_id);
         }
       }
-    }//else{Ogre::Root::getSingletonPtr()->getRenderSystem()->clearFrameBuffer(0);}
-    hud->UpdateConsole();
+      hud->UpdateConsole();
+    }else if(_current==_joinGameMenu){
+      static_cast<JoinGameMenu*>(_joinGameMenu)->UpdateGames();
+    }else if(_current==_lobby){
+      auto lobby=static_cast<Lobby*>(_lobby);
+      lobby->UpdatePlayers();
+      lobby->UpdateConsole();
+      lobby->UpdateGameDescription();
+    }
   }else{
     _isDisplayed=true;
     _current->Display();
@@ -46,15 +59,19 @@ void GuiManager::Initialize(std::string applicationName){
 
   _hud=new Hud;
   _mainMenu=new MainMenu;
+  _joinGameMenu=new JoinGameMenu;
+  _createGameMenu=new CreateGameMenu;
+  _lobby=new Lobby;
   _waitingPrompt=new WaitingPrompt;
-  _hostDialog=new HostDialog;
   _current=_mainMenu;
 }
 void GuiManager::Reinitialize(){
   delete _hud;
   delete _mainMenu;
+  delete _joinGameMenu;
+  delete _createGameMenu;
+  delete _lobby;
   delete _waitingPrompt;
-  delete _hostDialog;
   CEGUI::OgreRenderer::destroySystem();
   Initialize("");
 }
@@ -63,43 +80,77 @@ bool GuiManager::IsExpectingMouse(){
 }
 bool GuiManager::IsExpectingKeyboard(){
   Hud* hud=static_cast<Hud*>(_hud);
-  return _current==_hostDialog || hud->IsConsoleVisible();
+  return _current==_joinGameMenu||_current==_createGameMenu||_current==_lobby||(_current==_hud&&hud->IsConsoleVisible());
+}
+bool GuiManager::CreateGame(const CEGUI::EventArgs& e){
+  NetworkManager::instance()->stopServer(); // just in case
+  GameState::instance()->current_state=HOST_MENU;
+  _current=_createGameMenu;
+  _current->Display();
+  return false;
 }
 bool GuiManager::HostGame(const CEGUI::EventArgs& e){
-  _current=_waitingPrompt;
+  auto gameState=GameState::instance();
+  auto cgm=static_cast<CreateGameMenu*>(_createGameMenu);
+  gameState->team_mode=cgm->ReadTeamOrganization()+1;
+  gameState->game_mode=cgm->ReadGameType()+1;
+  gameState->current_map=cgm->ReadMap()+1;
+  _current=_lobby;
   _current->Display();
+  GameState::instance()->current_state=LOBBY_AS_HOST;
   LOG("STARTING IN SERVER MODE");
   NetworkManager::instance()->startServer();
   return false;
 }
 bool GuiManager::JoinGame(const CEGUI::EventArgs& e){
-  static_cast<WaitingPrompt*>(_waitingPrompt)->RemoveStart();
-  _current=_hostDialog;
+  //static_cast<WaitingPrompt*>(_waitingPrompt)->RemoveStart();
+  GameState::instance()->current_state=CLIENT_MENU;
+  _current=_joinGameMenu;
   _current->Display();
+  NetworkManager::instance()->startClientDiscovery();
   return false;
 }
 bool GuiManager::Exit(const CEGUI::EventArgs& e){
   GraphicsManager::instance()->stopRendering();
   return false;
 }
-bool GuiManager::Start(const CEGUI::EventArgs& e){
-  _current=_hud;
-  _current->Display();
+bool GuiManager::Back(const CEGUI::EventArgs& e){
+  if(GameState::instance()->current_state==LOBBY_AS_HOST){
+    return CreateGame(e);
+  }else{
+    return JoinGame(e);
+  }
+}
+void GuiManager::Start() {
+  if (NetworkManager::instance()->isServer()) {
+    NetworkManager::instance()->server->broadcastGameStart();
+  }
+
   CEGUI::MouseCursor::getSingletonPtr()->hide();
-  LOG("STARTING GAME.");
   GameState::instance()->start();
-  Hud* hud=static_cast<Hud*>(_hud);
+  GameState::instance()->current_state=LOADING;
+}
+bool GuiManager::Start(const CEGUI::EventArgs& e){
+  Start();
   return false;
 }
-bool GuiManager::Connect(const CEGUI::EventArgs& e){
+bool GuiManager::ConnectToNamedHost(const CEGUI::EventArgs& e){
+  Connect(static_cast<JoinGameMenu*>(_joinGameMenu)->ReadNamedHost());
+}
+bool GuiManager::ConnectToSelectedHost(const CEGUI::EventArgs& e){
+  Connect(static_cast<JoinGameMenu*>(_joinGameMenu)->ReadSelectedHost());
+}
+bool GuiManager::Connect(const char* host){
   LOG("STARTING IN CLIENT MODE");
-  NetworkManager::instance()->startClient(static_cast<HostDialog*>(_hostDialog)->ReadHost());
-  _current=_waitingPrompt;
+  //NetworkManager::instance()->stopClientDiscovery();
+  GameState::instance()->current_state=LOBBY_AS_CLIENT;
+  NetworkManager::instance()->startClient(host);
+  _current=_lobby;
   _current->Display();
   return false;
 }
 void GuiManager::EnableStart(){
-  static_cast<WaitingPrompt*>(_waitingPrompt)->EnableStart();
+  static_cast<Lobby*>(_lobby)->EnableStart();
 }
 bool GuiManager::BackToMainMenu(const CEGUI::EventArgs& e){
   _current=_mainMenu;
@@ -113,6 +164,15 @@ void GuiManager::ToggleConsole() {
 bool GuiManager::IsConsoleVisible() {
   Hud* hud=static_cast<Hud*>(_hud);
   return hud->IsConsoleVisible();
+}
+std::string GuiManager::GetName() {
+  if (NetworkManager::instance()->isClient()) {
+    JoinGameMenu* jgm=static_cast<JoinGameMenu*>(_joinGameMenu);
+    return std::string(jgm->ReadName());
+  } else {
+    CreateGameMenu* cgm=static_cast<CreateGameMenu*>(_createGameMenu);
+    return std::string(cgm->ReadName());
+  }
 }
 
 CEGUI::MouseButton GuiManager::TranslateButton(OIS::MouseButtonID buttonId){
@@ -133,6 +193,7 @@ Hud::Hud():Gui("Hud.layout"){
   _fuelBar=static_cast<CEGUI::ProgressBar*>(_root->getChild("Hud/FuelBar"));
   _ammoCount=_root->getChild("Hud/AmmoCount");
   _magCount=_root->getChild("Hud/MagCount");
+  _weaponName=_root->getChild("Hud/WeaponName");
   _console=_root->getChild("Hud/Console");
   _consoleInput = static_cast<CEGUI::Editbox*>(_console->getChild("Hud/ConsoleInput"));
   _consoleText  = static_cast<CEGUI::MultiLineEditbox*>(_console->getChild("Hud/ConsoleText"));
@@ -154,6 +215,27 @@ void Hud::UpdateAmmoCount(int ammoCount){
 }
 void Hud::UpdateMagCount(int magCount){
   _magCount->setText(std::to_string(magCount));
+}
+void Hud::UpdateWeaponName(int weaponId){
+  std::string weaponName{""};
+  switch(weaponId){
+    case PISTOL_ID:
+      weaponName+="Pistol";
+      break;
+    case SHOTGUN_ID:
+      weaponName+="Shotgun";
+      break;
+    case ASSAULTRIFLE_ID:
+      weaponName+="Assault Rifle";
+      break;
+    case BLASTER_ID:
+      weaponName+="Blaster";
+      break;
+    case MELEE_ID:
+      weaponName+="Pinto";
+      break;
+  }
+  _weaponName->setText(weaponName.c_str());
 }
 bool Hud::ChatSubmitted(const CEGUI::EventArgs& e) {
   if (strlen(_consoleInput->getText().c_str()) == 0) return false;
@@ -191,72 +273,252 @@ MainMenu::MainMenu():Gui("MainMenu.layout"){
   _joinGame=static_cast<CEGUI::PushButton*>(_root->getChild("MainMenu/JoinGame"));
   _exit=static_cast<CEGUI::PushButton*>(_root->getChild("MainMenu/Exit"));
 
-  _hostGame->subscribeEvent(CEGUI::PushButton::EventClicked,CEGUI::Event::Subscriber(&GuiManager::HostGame,GuiManager::instance()));
+  _hostGame->subscribeEvent(CEGUI::PushButton::EventClicked,CEGUI::Event::Subscriber(&GuiManager::CreateGame,GuiManager::instance()));
   _joinGame->subscribeEvent(CEGUI::PushButton::EventClicked,CEGUI::Event::Subscriber(&GuiManager::JoinGame,GuiManager::instance()));
   _exit->subscribeEvent(CEGUI::PushButton::EventClicked,CEGUI::Event::Subscriber(&GuiManager::Exit,GuiManager::instance()));
 }
+JoinGameMenu::JoinGameMenu():Gui("JoinGameMenu.layout"){
+  _name=static_cast<CEGUI::Editbox*>(_root->getChild("JoinGameMenu/Name"));
+  _hosts=static_cast<CEGUI::Listbox*>(_root->getChild("JoinGameMenu/Hosts"));
+  //_hostsJoin=static_cast<CEGUI::PushButton*>(_root->getChild("JoinGameMenu/HostsJoin"));
+  _host=static_cast<CEGUI::Editbox*>(_root->getChild("JoinGameMenu/Host"));
+  _hostJoin=static_cast<CEGUI::PushButton*>(_root->getChild("JoinGameMenu/HostJoin"));
 
+  _hosts->setMultiselectEnabled(false);
 
-WaitingPrompt::WaitingPrompt():Gui("WaitingPrompt.layout"){
-  _start=static_cast<CEGUI::PushButton*>(_root->getChild("WaitingPrompt/Start"));
-  _start->subscribeEvent(CEGUI::PushButton::EventClicked,CEGUI::Event::Subscriber(&GuiManager::Start,GuiManager::instance()));
-  _start->disable();
+  //_hostsJoin->subscribeEvent(CEGUI::PushButton::EventClicked,CEGUI::Event::Subscriber(&GuiManager::ConnectToSelectedHost,GuiManager::instance()));
+  _hostJoin->subscribeEvent(CEGUI::PushButton::EventClicked,CEGUI::Event::Subscriber(&GuiManager::ConnectToNamedHost,GuiManager::instance()));
+  _name->subscribeEvent(CEGUI::Editbox::EventCaratMoved,CEGUI::Event::Subscriber(&JoinGameMenu::DisplayPrompts,this));
+  _host->subscribeEvent(CEGUI::Editbox::EventCaratMoved,CEGUI::Event::Subscriber(&JoinGameMenu::DisplayPrompts,this));
+  _name->subscribeEvent(CEGUI::Editbox::EventDeactivated,CEGUI::Event::Subscriber(&JoinGameMenu::DisplayPrompts,this));
+  _host->subscribeEvent(CEGUI::Editbox::EventDeactivated,CEGUI::Event::Subscriber(&JoinGameMenu::DisplayPrompts,this));
+
+  _hosts->subscribeEvent(CEGUI::Listbox::EventMouseClick,CEGUI::Event::Subscriber([this](const CEGUI::EventArgs& e){
+  CEGUI::MouseEventArgs* a=(CEGUI::MouseEventArgs*)(&e);
+    auto item=_hosts->getItemAtPoint(a->position);
+    if(item){
+      _host->setText(*((std::string*)item->getUserData()));
+    }
+    return false;
+  }));
+
+  DisplayPrompts(CEGUI::EventArgs{});
 }
-void WaitingPrompt::EnableStart(){
-  _start->enable();
+bool JoinGameMenu::DisplayPrompts(const CEGUI::EventArgs& e){
+  displayPrompts(e,std::vector<std::pair<CEGUI::Editbox*,const char*>>{{_name,"Your Name"},{_host,"Server"}});
+  return false;
 }
-void WaitingPrompt::RemoveStart(){
-  _root->removeChildWindow(_start);
-}
-
-
-
-HostDialog::HostDialog():Gui("HostDialog.layout"){
-  _host = static_cast<CEGUI::Editbox*>(_root->getChild("HostDialog/HostName"));
-  _name = static_cast<CEGUI::Editbox*>(_root->getChild("HostDialog/PlayerName"));
-  // cegui mispells caret V_V
-  _host->subscribeEvent(CEGUI::Editbox::EventCaratMoved, CEGUI::Event::Subscriber(&HostDialog::HostCaretMoved, this));
-  _name->subscribeEvent(CEGUI::Editbox::EventCaratMoved, CEGUI::Event::Subscriber(&HostDialog::NameCaretMoved, this));
-  _connect = static_cast<CEGUI::PushButton*>(_root->getChild("HostDialog/Connect"));
-  _connect->subscribeEvent(CEGUI::PushButton::EventClicked, CEGUI::Event::Subscriber(&GuiManager::Connect, GuiManager::instance()));
-  _back = static_cast<CEGUI::PushButton*>(_root->getChild("HostDialog/Back"));
-  _back->subscribeEvent(CEGUI::PushButton::EventClicked, CEGUI::Event::Subscriber(&GuiManager::BackToMainMenu, GuiManager::instance()));
-}
-const char* HostDialog::ReadHost(){
+const char* JoinGameMenu::ReadNamedHost(){
   return _host->getText().c_str();
 }
-const char* HostDialog::ReadName(){
+const char* JoinGameMenu::ReadSelectedHost(){
+  return _hosts->getSelectedCount()>0?_hosts->getFirstSelectedItem()->getText().c_str():nullptr;
+}
+const char* JoinGameMenu::ReadName(){
+  return _name->getText().c_str();
+}
+void JoinGameMenu::UpdateGames(){
+  _hosts->resetList();
+  CEGUI::colour c{0.267f,0.267f,0.664f,1.0f};
+  auto games=GameState::instance()->games;
+  for(auto i=games.cbegin();i!=games.cend();++i){
+    auto label=(*i).first+" \\["+(*i).second.first+"]";
+    auto entry=new CEGUI::ListboxTextItem(label);
+    entry->setUserData((void*)(&((*i).first)));
+    entry->setSelectionColours(c);
+    entry->setSelectionBrushImage("TaharezLook","ListboxSelectionBrush");
+    _hosts->addItem(entry);
+  }
+}
+CreateGameMenu::CreateGameMenu():Gui("CreateGameMenu.layout"){
+  _name=static_cast<CEGUI::Editbox*>(_root->getChild("CreateGameMenu/Name"));
+  _timeLimit=static_cast<CEGUI::Editbox*>(_root->getChild("CreateGameMenu/TimeLimit"));
+  //_maxPlayers=static_cast<CEGUI::Editbox*>(_root->getChild("CreateGameMenu/MaxPlayers"));
+  _teamOrganization=static_cast<CEGUI::Combobox*>(_root->getChild("CreateGameMenu/TeamOrganization"));
+  _teamOrganization->addItem(new CEGUI::ListboxTextItem("Free-for-All",0));
+  _teamOrganization->addItem(new CEGUI::ListboxTextItem("Team",1));
+  _gameType=static_cast<CEGUI::Combobox*>(_root->getChild("CreateGameMenu/GameType"));
+  _gameType->addItem(new CEGUI::ListboxTextItem("Elimination",0));
+  _gameType->addItem(new CEGUI::ListboxTextItem("Death Match",1));
+  _gameType->addItem(new CEGUI::ListboxTextItem("Pinto",2));
+  _map=static_cast<CEGUI::Combobox*>(_root->getChild("CreateGameMenu/Map"));
+  _map->addItem(new CEGUI::ListboxTextItem("The Gauntlet",0));
+  _map->addItem(new CEGUI::ListboxTextItem("Dust Two",1));
+  _teamOrganization->setItemSelectState((size_t)0,true);
+  _gameType->setItemSelectState((size_t)1,true);
+  _map->setItemSelectState((size_t)0,true);
+  _continue=static_cast<CEGUI::PushButton*>(_root->getChild("CreateGameMenu/Continue"));
+  _gameType->subscribeEvent(CEGUI::Combobox::EventListSelectionAccepted,CEGUI::Event::Subscriber([this](const CEGUI::EventArgs& e){
+    CEGUI::WindowEventArgs* w=(CEGUI::WindowEventArgs*)(&e);
+    auto box=(CEGUI::Combobox*)(w->window);
+    auto selectedItem=box->getSelectedItem();
+    if(selectedItem&&box->getItemIndex(selectedItem)==2){
+      _teamOrganization->setItemSelectState((size_t)1,true);
+      _teamOrganization->disable();
+    }else{
+      _teamOrganization->enable();
+    }
+    return false;
+  }));
+  _continue->subscribeEvent(CEGUI::PushButton::EventClicked,CEGUI::Event::Subscriber(&GuiManager::HostGame,GuiManager::instance()));
+  _name->subscribeEvent(CEGUI::Editbox::EventCaratMoved,CEGUI::Event::Subscriber(&CreateGameMenu::DisplayPrompts,this));
+  _timeLimit->subscribeEvent(CEGUI::Editbox::EventCaratMoved,CEGUI::Event::Subscriber(&CreateGameMenu::DisplayPrompts,this));
+  //_maxPlayers->subscribeEvent(CEGUI::Editbox::EventCaratMoved,CEGUI::Event::Subscriber(&CreateGameMenu::DisplayPrompts,this));
+  _name->subscribeEvent(CEGUI::Editbox::EventDeactivated,CEGUI::Event::Subscriber(&CreateGameMenu::DisplayPrompts,this));
+  _timeLimit->subscribeEvent(CEGUI::Editbox::EventDeactivated,CEGUI::Event::Subscriber(&CreateGameMenu::DisplayPrompts,this));
+  //_maxPlayers->subscribeEvent(CEGUI::Editbox::EventDeactivated,CEGUI::Event::Subscriber(&CreateGameMenu::DisplayPrompts,this));
+  DisplayPrompts(CEGUI::EventArgs{});
+}
+int CreateGameMenu::ReadTeamOrganization(){
+  auto i=readComboBox(_teamOrganization);
+  return i!=-1?i:0;
+}
+int CreateGameMenu::ReadGameType(){
+  auto i=readComboBox(_gameType);
+  return i!=-1?i:1;
+}
+int CreateGameMenu::ReadMap(){
+  auto i=readComboBox(_map);
+  return i!=-1?i:0;
+}
+int CreateGameMenu::readComboBox(CEGUI::Combobox* box){
+  auto selectedItem=box->getSelectedItem();
+  return selectedItem?(int)box->getItemIndex(selectedItem):-1;
+}
+bool CreateGameMenu::DisplayPrompts(const CEGUI::EventArgs& e){
+  displayPrompts(e,std::vector<std::pair<CEGUI::Editbox*,const char*>>{{_name,"Your Name"},{_timeLimit,"3"}/*,{_maxPlayers,"2"}*/});
+  return false;
+}
+const char* CreateGameMenu::ReadName() {
   return _name->getText().c_str();
 }
 
+Lobby::Lobby():Gui("Lobby.layout"),_chatBufferSize{0}{
+  _players=static_cast<CEGUI::Listbox*>(_root->getChild("Lobby/Players"));
+  _chatBuffer=static_cast<CEGUI::MultiLineEditbox*>(_root->getChild("Lobby/ChatBuffer"));
+  _chatInput=static_cast<CEGUI::Editbox*>(_root->getChild("Lobby/ChatInput"));
+  _chatSend=static_cast<CEGUI::PushButton*>(_root->getChild("Lobby/ChatSend"));
+  _back=static_cast<CEGUI::PushButton*>(_root->getChild("Lobby/Back"));
+  _start=static_cast<CEGUI::PushButton*>(_root->getChild("Lobby/Start"));
+  _gameDescription=static_cast<CEGUI::Window*>(_root->getChild("Lobby/GameDescription"));
+  _back->subscribeEvent(CEGUI::PushButton::EventClicked,CEGUI::Event::Subscriber(&GuiManager::Back,GuiManager::instance()));
+  _start->subscribeEvent(CEGUI::PushButton::EventClicked,CEGUI::Event::Subscriber(&GuiManager::Start,GuiManager::instance()));
+  _chatInput->subscribeEvent(CEGUI::Editbox::EventTextAccepted,CEGUI::Event::Subscriber(&Lobby::ChatSubmitted,this));
+  _chatSend->subscribeEvent(CEGUI::PushButton::EventClicked,CEGUI::Event::Subscriber(&Lobby::ChatSubmitted,this));
+  DisableStart();
+}
+void Lobby::DisableStart(){
+  _start->disable();
+}
+void Lobby::EnableStart(){
+  _start->enable();
+}
+void Lobby::RemoveStart(){
+  _start->hide();
+}
+void Lobby::AddStart(){
+  _start->show();
+}
+void Lobby::UpdatePlayers(){
+  _players->resetList();
+  CEGUI::colour c{0.267f,0.267f,0.664f,1.0f};
+  auto gameState=GameState::instance();
+  int numberOfPlayers=gameState->num_player;
+  for(int i=0;i!=numberOfPlayers;++i){
+    auto label=gameState->getPlayerName(i);
+    auto entry=new CEGUI::ListboxTextItem(label);
+    entry->setSelectionColours(c);
+    entry->setSelectionBrushImage("TaharezLook","ListboxSelectionBrush");
+    _players->addItem(entry);
+  }
+}
+void Lobby::SetConsoleText(std::string str) {
+  _chatBuffer->setText(str.c_str());
+}
+void Lobby::UpdateConsole() {
+  if (_chatBufferSize!=ChatManager::instance()->size()) {
+    _chatBufferSize=ChatManager::instance()->size();
+    SetConsoleText(ChatManager::instance()->getTextForConsole().c_str());
+    CEGUI::Scrollbar* scroller = _chatBuffer->getVertScrollbar();
+    float offset = scroller->getDocumentSize() + 100;
+    scroller->setScrollPosition(std::max(offset, 0.0f));
+  }
+}
+bool Lobby::ChatSubmitted(const CEGUI::EventArgs& e) {
+  if (strlen(_chatInput->getText().c_str()) == 0) return false;
+  NetworkManager::instance()->sendChat(_chatInput->getText().c_str());
+  ChatManager::instance()->addMessage("you", _chatInput->getText().c_str());
+  _chatInput->setText("");
+  return false;
+}
+void Lobby::UpdateGameDescription(){
+  std::string description{};
+  auto gameState=GameState::instance();
+  switch(gameState->current_map){
+    case THEGAUNTLET:
+      description+="The Gauntlet / ";
+      break;
+    case DUSTTWO:
+      description+="Dust Two / ";
+      break;
+  }
+  switch(gameState->game_mode){
+    case ELIMINATION:
+      description+="Elimination / ";
+      break;
+    case DEATHMATCH:
+      description+="Death Match / ";
+      break;
+    case PINTO:
+      description+="Pinto / ";
+      break;
+  }
+  switch(gameState->team_mode){
+    case FFA:
+      description+="Free-for-All";
+      break;
+    case TEAM:
+      description+="Team";
+      break;
+  }
+  _gameDescription->setText(description.c_str());
+}
+
+WaitingPrompt::WaitingPrompt():Gui("WaitingPrompt.layout"){}
 // random c helper
 char* trim(const char* str) {
   char *s = (char*)str;
   while (*s == ' ') s++;
   return s;
 }
-
-bool HostDialog::NameCaretMoved(const CEGUI::EventArgs& e){
-  if (strcmp(ReadName(), "Your Name") == 0) {
-    _name->setText("");
-  }
-
-  if (strcmp(trim(ReadHost()), "") == 0) {
-    _host->setText("Server");
-  }
-}
-
-bool HostDialog::HostCaretMoved(const CEGUI::EventArgs& e){
-  if (strcmp(trim(ReadName()), "") == 0) {
-    _name->setText("Your Name");
-  }
-
-  if (strcmp(ReadHost(), "Server") == 0) {
-    _host->setText("");
-  }
-}
-
 Gui::Gui(std::string layoutFileName):_root(CEGUI::WindowManager::getSingletonPtr()->loadWindowLayout(layoutFileName)){}
 void Gui::Display(){
   CEGUI::System::getSingleton().setGUISheet(_root);
+}
+std::shared_ptr<char> Gui::getText(CEGUI::Window* element){
+  auto text=element->getText();
+  std::shared_ptr<char> copy(new char[text.length()+1],std::default_delete<char[]>());
+  strcpy(copy.get(),text.c_str());
+  return copy;
+}
+bool Gui::DisplayPrompts(const CEGUI::EventArgs& e){
+  return false;
+}
+void Gui::displayPrompts(const CEGUI::EventArgs& e,std::vector<std::pair<CEGUI::Editbox*,const char*>> prompts){
+  for(auto i=prompts.cbegin();i!=prompts.cend();++i){
+    displayPrompt(e,*i);
+  }
+}
+void Gui::displayPrompt(const CEGUI::EventArgs& e,std::pair<CEGUI::Editbox*,const char*> prompt){
+  auto box=prompt.first;
+  CEGUI::WindowEventArgs* w=(CEGUI::WindowEventArgs*)(&e);
+  bool isThis{w->window==box};
+  if(dynamic_cast<CEGUI::ActivationEventArgs*>(w)){
+    isThis=false;
+  }
+  if(isThis&&strcmp(trim(box->getText().c_str()),prompt.second)==0){
+    box->setText("");
+  }else if(!isThis&&strcmp(trim(box->getText().c_str()),"")==0){
+    box->setText(prompt.second);
+  }
 }

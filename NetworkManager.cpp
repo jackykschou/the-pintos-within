@@ -16,7 +16,8 @@ NetworkManager::NetworkManager()
 	_lastHeartbeat = NULL;
 
 
-	if (SDLNet_Init() < 0) {
+	if (SDLNet_Init() < 0) 
+	{
 		fprintf(stderr, "SDLNet_Init: %s\n", SDLNet_GetError());
 	}
 }
@@ -34,9 +35,8 @@ void NetworkManager::receiveChat(ChatPacket* packet)
 	if (packet->playerId == player_id)
 		return;
 
-	char name[24];
-	sprintf(name, "Player %d", packet->playerId);
-	ChatManager::instance()->addMessage(name, packet->message);
+	std::string name = GameState::instance()->getPlayerName(packet->playerId);
+	ChatManager::instance()->addMessage(name.c_str(), packet->message);
 }
 
 void NetworkManager::sendChat(const char* msg)
@@ -58,6 +58,8 @@ void NetworkManager::receiveHeartbeat(HeartBeatInfo* info)
 }
 
 void NetworkManager::startServer() {
+	if (state == NetworkStateServer) stopServer();
+
 	LOG("Starting server...");
 	
 	state = NetworkStateServer;
@@ -67,8 +69,15 @@ void NetworkManager::startServer() {
 		LOG("ERROR: SERVER FAILED TO START.");
 		return;
 	}
+}
 
-	//GUIManager::instance()->showGameOverMenu();
+void NetworkManager::stopServer() {
+	if (state == NetworkStateServer) {
+		// kill the old server
+		delete server;
+		server = NULL;
+		state = NetworkStateReady;
+	}
 }
 
 void NetworkManager::startClient(const char* host) {
@@ -81,18 +90,27 @@ void NetworkManager::startClient(const char* host) {
 		LOG("ERROR: CLIENT FAILED TO CONNECT.");
 		return;
 	}
-
-	//GUIManager::instance()->hideGameOverMenu();
-	//GUIManager::instance()->showWaitingMenu();
 }
 
 void NetworkManager::startClientDiscovery() {
-	LOG("Starting client...");
+	if (state == NetworkStateClient) return;
+
+	LOG("Starting client discovery...");
 
 	state = NetworkStateClient;
 
 	client = new GameClient(NULL, GAME_PORT);
 	client->startListeningForAdvertisements();
+}
+
+void NetworkManager::stopClientDiscovery() {
+	if (state != NetworkStateClient) return;
+
+	LOG("Stopping client discovery...");
+
+	client->stopListeningForAdvertisements();
+	delete client;
+	client = NULL;
 }
 
 void NetworkManager::update()
@@ -159,8 +177,6 @@ void NetworkManager::send(void* data, int size, bool ack)
 void NetworkManager::changeId(uint32_t id)
 {
 	player_id = id;
-
 	heartbeat->info.player_id = id;
+	GameState::instance()->setPlayerName(id, GuiManager::instance()->GetName());
 }
-
-

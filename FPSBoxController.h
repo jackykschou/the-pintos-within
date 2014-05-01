@@ -19,8 +19,6 @@ class PlayerCharacter;
 class FPSBoxController : Component
 {
 protected:
-	double base_movement_speed;
-
 	Transform* _transform;
 	btConvexShape* _collisionShape;
 	btDiscreteDynamicsWorld* dynamics_world;
@@ -31,6 +29,8 @@ protected:
 	void detectInput();
 
 public:
+	double base_movement_speed;
+
 	PlayerCharacter* player;
 
 	bool is_yourself;

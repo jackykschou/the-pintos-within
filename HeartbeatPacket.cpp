@@ -46,6 +46,7 @@ void HeartbeatPacket::renewPlayerInfo(PlayerCharacter* player)
 	info.flags |= player->is_reloading ? RELOADING : 0;
 	info.flags |= player->is_jet_packing ? JETPACKING : 0;
 	info.flags |= player->is_jumping ? JUMPING : 0;
+	info.flags |= player->is_invisible ? INVISIBLE : 0;
 
 	info.velocityX = player->controller->controller->m_walkDirection.getX();
 	info.velocityY = player->controller->controller->m_walkDirection.getY();
@@ -89,6 +90,7 @@ void HeartbeatPacket::updatePlayer(HeartBeatInfo* info_p, PlayerCharacter* playe
 	player->is_reloading	= ((info_p->flags & RELOADING) == RELOADING) ? true : false;
 	player->is_jet_packing	= ((info_p->flags & JETPACKING) == JETPACKING) ? true : false;
 	player->is_jumping 		= ((info_p->flags & JUMPING) == JUMPING) ? true : false;
+	player->is_invisible 	= ((info_p->flags & INVISIBLE) == INVISIBLE) ? true : false;
 
 	player->run_animation_time		= info_p->run_animation_time;
 	player->shoot_animation_time	= info_p->shoot_animation_time;
