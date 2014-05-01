@@ -2,7 +2,7 @@
 #include "ChatManager.h"
 #include "Utility.h"
 
-GuiManager::GuiManager():_isDisplayed{false}{}
+GuiManager::GuiManager():_isDisplayed{false},_isInitialized{false}{}
 GuiManager::~GuiManager(){
   delete _hud;
   delete _mainMenu;
@@ -56,6 +56,7 @@ void GuiManager::Update(const Ogre::FrameEvent& event){
   CEGUI::System::getSingleton().injectTimePulse(event.timeSinceLastFrame);
 }
 void GuiManager::Initialize(std::string applicationName){
+  _isInitialized=true;
   _renderer=&CEGUI::OgreRenderer::bootstrapSystem();
   CEGUI::SchemeManager::getSingleton().create( "TaharezLook.scheme" );
   CEGUI::System::getSingletonPtr()->setDefaultMouseCursor("TaharezLook","MouseArrow");
@@ -69,14 +70,43 @@ void GuiManager::Initialize(std::string applicationName){
   _current=_mainMenu;
 }
 void GuiManager::Reinitialize(){
-  delete _hud;
-  delete _mainMenu;
-  delete _joinGameMenu;
-  delete _createGameMenu;
-  delete _lobby;
-  delete _waitingPrompt;
-  CEGUI::OgreRenderer::destroySystem();
-  Initialize("");
+  if(_isInitialized){
+    delete _hud;
+    delete _mainMenu;
+    delete _joinGameMenu;
+    delete _createGameMenu;
+    delete _lobby;
+    delete _waitingPrompt;
+    CEGUI::OgreRenderer::destroySystem();
+    _isDisplayed=false;
+    Initialize("");
+    switch(GameState::instance()->current_state){
+      case MAIN_MENU:
+        _current=_mainMenu;
+        break;
+      case HOST_MENU:
+        _current=_createGameMenu;
+        break;
+      case CLIENT_MENU:
+        _current=_joinGameMenu;
+        break;
+      case LOBBY_AS_HOST:
+        _current=_lobby;
+        if(GameState::instance()->num_player>0){
+          EnableStart();
+        }
+        break;
+      case LOBBY_AS_CLIENT:
+        _current=_lobby;
+        break;
+      case LOADING:
+        _current=_waitingPrompt;
+        break;
+      case IN_GAME:
+        _current=_hud;
+        break;
+    }
+  }
 }
 bool GuiManager::IsExpectingMouse(){
   return _current!=_hud;

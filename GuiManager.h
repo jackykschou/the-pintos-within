@@ -42,6 +42,7 @@ class GuiManager:public Singleton<GuiManager>{
     CEGUI::MouseButton convertButton(OIS::MouseButtonID buttonId);
     CEGUI::OgreRenderer* _renderer;
     bool _isDisplayed;
+    bool _isInitialized;
     Gui* _hud;
     Gui* _mainMenu;
     Gui* _joinGameMenu;
