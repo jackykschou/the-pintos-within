@@ -46,6 +46,7 @@ struct WeaponSpawnInfo
   float spawnX;
   float spawnY;
   float spawnZ;
+  uint32_t pick_up_id;
 };
 
 struct PlayFireSoundInfo
@@ -69,6 +70,13 @@ struct IncreaseScoreInfo
   uint32_t amount;
 };
 
+struct TimeLeftInfo
+{
+  char type;
+  uint32_t player_id;
+  uint32_t time_left;
+};
+
 class VitalPacket
 {
 public:
@@ -80,7 +88,7 @@ public:
   void receivePlayerDie(PlayerDieInfo* info_p);
   void setChangeWeapon(uint32_t index);
   void receiveChangeWeapon(ChangeWeaponInfo* info_p);
-  void setSpawnWeapon(uint32_t id, float x, float y, float z);
+  void setSpawnWeapon(uint32_t id, float x, float y, float z, int);
   void receiveSpawnWeapon(WeaponSpawnInfo* info);
   void setPlayerFireSound();
   void receivePlayFireSound(PlayFireSoundInfo* info_p);
@@ -88,6 +96,8 @@ public:
   void receiveChangePinto(ChangePintoInfo* info_p);
   void setIncreaseScore(uint32_t player_id, uint32_t amount, uint32_t team_id);
   void receiveIncreaseScore(IncreaseScoreInfo* info_p);
+  void setTimeLeft(uint32_t);
+  void receiveTimeLeft(TimeLeftInfo*);
 };
 
 #endif

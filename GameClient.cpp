@@ -254,5 +254,11 @@ void GameClient::processPacket(UDPpacket* packet) {
 			IncreaseScoreInfo* score_info;
 			score_info =  (IncreaseScoreInfo*) packetData;
 			NetworkManager::instance()->vital->receiveIncreaseScore(score_info);
+			break;
+		case TIME_LEFT:
+			TimeLeftInfo* time_info;
+			time_info =  (TimeLeftInfo*) packetData;
+			NetworkManager::instance()->vital->receiveTimeLeft(time_info);
+			break;
 	}
 }

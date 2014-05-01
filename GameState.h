@@ -32,6 +32,7 @@ class GameState : public Singleton<GameState>
 
   	int score;
   	int timeLeft;
+    int num_player_left_elimination;
   	void reset();
   	void update();
 	  void start();

@@ -427,6 +427,7 @@ PlayerCharacter:: ~PlayerCharacter()
 		scene->main_camera = NULL;
 	}
 	GameState::instance()->players[player_id] = NULL;
+	--GameState::instance()->num_player_left_elimination;
 
 	delete health_regen_debouncer;
 	delete walk_sound_debouncer;
@@ -452,23 +453,25 @@ void PlayerCharacter::update()
 			controller->can_move = false;
 			health = 0;
 
-			uint random_pinto_index;
-			do
+			if(transform->posY <= -150 && in_pinto_form)
 			{
-				random_pinto_index = RAND_RANGE(0, GameState::instance()->num_player);
-			}while(random_pinto_index == player_id);
+				uint random_pinto_index;
+				do
+				{
+					random_pinto_index = RAND_RANGE(0, GameState::instance()->num_player);
+				}while(random_pinto_index == player_id);
 
-			if(GameState::instance()->players[random_pinto_index] == NULL
-				|| (GameState::instance()->players[random_pinto_index]->is_dead))
-			{
-				GameState::instance()->player_pinto_seeds[random_pinto_index] = true;
+				if(GameState::instance()->players[random_pinto_index] == NULL
+					|| (GameState::instance()->players[random_pinto_index]->is_dead))
+				{
+					GameState::instance()->player_pinto_seeds[random_pinto_index] = true;
+				}
+				else
+				{
+					GameState::instance()->players[random_pinto_index]->changeToPinto();
+				}
+				NetworkManager::instance()->vital->setChangePinto(random_pinto_index);
 			}
-			else
-			{
-				GameState::instance()->players[random_pinto_index]->changeToPinto();
-			}
-
-			NetworkManager::instance()->vital->setChangePinto(random_pinto_index);
 
 			AudioManager::instance()->playDeath(Ogre::Vector3(transform->posX, transform->posY, transform->posZ));
 		}

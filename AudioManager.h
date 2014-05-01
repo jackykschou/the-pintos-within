@@ -10,7 +10,9 @@
 #define AUDIO_BUFFERS 1024
 
 #define WEAPON_SIZE 5
-#define SOUNDS_NUM_PER_WEAPON 5
+#define SOUNDS_NUM_PER_WEAPON 15
+#define SOUNDS_NUM_BULLET 24
+#define SOUNDS_NUM_BLOOD 24
 
 #define DEFAULT_CHUNK_VOLUME 128
 
@@ -39,17 +41,21 @@ class AudioManager : public Singleton<AudioManager> {
     void playPickWeapon(Ogre::Vector3 v);
 
   private:
+    int current_fire;
+    int current_dust;
+    int current_blood;
+
   	std::vector<Mix_Chunk*> _loadedFiles;
   	AudioFile _donks[4];
   	AudioFile _startSound;
     AudioFile _ballzSound;
     AudioFile _rifleFire[WEAPON_SIZE][SOUNDS_NUM_PER_WEAPON];
-    AudioFile _bulletDirtCollision[7];
+    AudioFile _bulletDirtCollision[SOUNDS_NUM_BULLET];
     AudioFile _death;
     AudioFile _footstep[7];
     AudioFile _jetpack;
     AudioFile _reloads[WEAPON_SIZE];
-    AudioFile _blood_splats[3];
+    AudioFile _blood_splats[SOUNDS_NUM_BLOOD];
     AudioFile _blaster_charge;
     AudioFile _out_of_ammo;
     AudioFile _pick_weapon;

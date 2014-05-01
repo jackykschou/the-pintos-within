@@ -156,7 +156,7 @@ void VitalPacket::receiveChangeWeapon(ChangeWeaponInfo* info_p)
 		GameState::instance()->players[info_p->player_id]->changeWeapon(info_p->weapon_index);
 }
 
-void VitalPacket::setSpawnWeapon(uint32_t id, float x, float y, float z)
+void VitalPacket::setSpawnWeapon(uint32_t id, float x, float y, float z, int pick_up_id)
 {
 	WeaponSpawnInfo info;
 	info.type = WEAPON_SPAWN;
@@ -165,6 +165,7 @@ void VitalPacket::setSpawnWeapon(uint32_t id, float x, float y, float z)
 	info.spawnX = x;
  	info.spawnY = y;
   	info.spawnZ = z;
+  	info.pick_up_id = pick_up_id;
 	NetworkManager::instance()->send(&info, sizeof(WeaponSpawnInfo), true);
 }
 
@@ -173,7 +174,7 @@ void VitalPacket::receiveSpawnWeapon(WeaponSpawnInfo* info)
 	if (info->player_id == NetworkManager::instance()->player_id)
 		return;
 	
-	GameState::instance()->weapon_spawner->spawnWeapon(info->spawnX, info->spawnY, info->spawnZ, info->weapon_id);
+	GameState::instance()->weapon_spawner->spawnWeapon(info->spawnX, info->spawnY, info->spawnZ, info->weapon_id, info->pick_up_id);
 }
 
 void VitalPacket::setPlayerFireSound()
@@ -247,5 +248,23 @@ void VitalPacket::receiveIncreaseScore(IncreaseScoreInfo* info_p)
 	{
 		GameState::instance()->score += info_p->amount;
 	}
+}
+
+void VitalPacket::setTimeLeft(uint32_t time_left)
+{
+	TimeLeftInfo info;
+	info.type = TIME_LEFT;
+	info.player_id = NetworkManager::instance()->player_id;
+	info.time_left = GameState::instance()->timeLeft;
+
+	NetworkManager::instance()->send(&info, sizeof(TimeLeftInfo), true);
+}
+
+void VitalPacket::receiveTimeLeft(TimeLeftInfo* info_p)
+{
+	if (info_p->player_id == NetworkManager::instance()->player_id)
+		return;
+
+	GameState::instance()->timeLeft = info_p->time_left;
 }
 

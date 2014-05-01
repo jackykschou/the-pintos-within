@@ -13,7 +13,7 @@ class WeaponPickUp : public PlayerPickUp
 	public:
 		WeaponPickUp(std::string tag, Scene* scene, std::string mesh_name,
 			float posX, float posY, float posZ, float rotX, float rotY, float rotZ, float rotW,
-			float scaleX, float scaleY, float scaleZ, uint32_t);
+			float scaleX, float scaleY, float scaleZ, uint32_t, int);
 
 		uint32_t weapon_id;
 
