@@ -83,9 +83,6 @@ private:
   void putDataIntoPacket(UDPpacket *p, void *data, int len,
                          IPaddress* a, bool ack, AckId id=-1, bool isResponse=false);
 
-  // broadcasts a single cstring (data->"\x00") to a bunch of clients
-  void broadcastString(const char* data, bool ack);
-
   // a temporarily allocated packet for sending on the wire
   UDPpacket* _tmpSendPacket;
 

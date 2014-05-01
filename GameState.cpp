@@ -57,33 +57,34 @@ bool GameState::isRunning() {
 
 void GameState::update() 
 {
-	if (!(timeLeft < 1 || !_running) && NetworkManager::instance()->isServer() && (GameState::instance()->game_mode != ELIMINATION))
-	{
-		pt::ptime now = pt::second_clock::local_time();
-		pt::time_duration diff = now - _start;
-
-		int before = timeLeft;
-		timeLeft = DEFAULT_CLOCK - diff.total_seconds();
-
-		if(before != timeLeft)
+	if (NetworkManager::instance()->isServer()) {
+		if (!(timeLeft < 1 || !_running) && (GameState::instance()->game_mode != ELIMINATION))
 		{
-			NetworkManager::instance()->vital->setTimeLeft(timeLeft);
+			pt::ptime now = pt::second_clock::local_time();
+			pt::time_duration diff = now - _start;
+
+			int before = timeLeft;
+			timeLeft = DEFAULT_CLOCK - diff.total_seconds();
+
+			if(before != timeLeft)
+			{
+				NetworkManager::instance()->vital->setTimeLeft(timeLeft);
+			}
 		}
-	}
-	else if(timeLeft < 1 && _running && (GameState::instance()->game_mode != ELIMINATION))
-	{
-		//display end game message
-		//hang for some time
-		//send message to end the game to return to main menu
-	}
-	else if(_running && GameState::instance()->game_mode == ELIMINATION && NetworkManager::instance()->isServer())
-	{
-		if(num_player_left_elimination <= 1)
+		else if(timeLeft < 1 && _running && (GameState::instance()->game_mode != ELIMINATION))
 		{
 			//display end game message
 			//hang for some time
 			//send message to end the game to return to main menu
 		}
+		else if(_running && GameState::instance()->game_mode == ELIMINATION)
+		{
+			if(num_player_left_elimination <= 1)
+			{
+				//display end game message
+				//hang for some time
+				//send message to end the game to return to main menu
+			}
+		}
 	}
-
 }

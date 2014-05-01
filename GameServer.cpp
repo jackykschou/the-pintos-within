@@ -130,11 +130,6 @@ void GameServer::broadcastData(void* data, int len, bool ack) {
 	}
 }
 
-// broadcasts a single cstring (data->"\x00") to a bunch of clients
-void GameServer::broadcastString(const char* data, bool ack) {
-	broadcastData((void*)data, strlen(data)+1, ack);
-}
-
 void GameServer::resendExpiredAcks() {
 	std::map<AckId, Ack*>::iterator iter;
 	for (iter = _ackBuffer->buffer.begin(); iter != _ackBuffer->buffer.end();) {
@@ -194,6 +189,11 @@ void GameServer::sendAdvertisement() {
 	strncpy(ad.name, _hostname, 256);
 	strncpy(ad.description, "JOES COOL GAME", 256);
 	sendDataToClient(&ad, sizeof(ServerAdvertisement), &_udpBroadcastAddress, false);
+}
+
+void GameServer::broadcastGameStart() {
+	char c = GAMESTART;
+	broadcastData(&c, 1, true);
 }
 
 // This is the "meat" of the packet processing logic in GameServer
