@@ -100,7 +100,6 @@ Weapon::~Weapon()
 void Weapon::shoot()
 {
 	Ogre::Vector3 curPos = Ogre::Vector3(player->tr->posX, player->tr->posY, player->tr->posZ);
-	// LOG("Can I shoot? " << ((player->current_weapon == this) && current_mag_count >= shoot_cost && !is_reloading && !player->is_dead));
 	if((player->current_weapon == this) && InputManager::instance()->isMouseLeftClicked() && !is_reloading && !player->is_dead)
 	{
 		if(current_mag_count >= shoot_cost && (shoot_timer <= 0))

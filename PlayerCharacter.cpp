@@ -1218,6 +1218,7 @@ void PlayerCharacter::changeToPinto()
 	if(!in_pinto_form)
 	{
 		health = 100;
+		health_regen = 0;
 
 		transform->scaleX = 5.0;
 		transform->scaleY = 5.0;

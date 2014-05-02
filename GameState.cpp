@@ -15,7 +15,8 @@ GameState::GameState()
 	_running = false;
 }
 
-void GameState::reset() {
+void GameState::reset() 
+{
 	score = 0;
 	timeLeft = DEFAULT_CLOCK;
 	_start = pt::second_clock::local_time();

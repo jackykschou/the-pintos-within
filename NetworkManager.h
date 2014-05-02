@@ -62,6 +62,14 @@ struct JoinRequestPacket
 	char name[16];
 };
 
+struct GameStartPacket
+{
+	char type;
+	uint32_t game_mode;
+	uint32_t team_mode;
+	uint32_t current_map;
+};
+
 enum NetworkManagerState 
 {
 	NetworkStateReady,

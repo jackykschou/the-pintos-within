@@ -6,11 +6,11 @@
 #include "Singleton.h"
 #include "AudioManager.h"
 
+#define DEFAULT_CLOCK 120
+
 class PlayerSpawner;
 class PlayerCharacter;
 class WeaponSpawner;
-
-#define DEFAULT_CLOCK 60 * 2 // 2 minutes
 
 class PlayerCharacter;
 

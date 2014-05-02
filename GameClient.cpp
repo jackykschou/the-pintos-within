@@ -204,6 +204,11 @@ void GameClient::processPacket(UDPpacket* packet) {
 			GameState::instance()->num_player = ninfo->num_player;
 			break;
 		case GAMESTART:
+			GameStartPacket* start_packet;
+			start_packet = (GameStartPacket*) packetData;
+			GameState::instance()->game_mode = start_packet->game_mode;
+			GameState::instance()->team_mode = start_packet->team_mode;
+			GameState::instance()->current_map = start_packet->current_map;
 			LOG("WE BE STARTIN YO!");
 			if (!GameState::instance()->isRunning()) {
 		    	GuiManager::instance()->Start();

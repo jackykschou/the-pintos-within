@@ -171,9 +171,14 @@ void GameServer::sendAdvertisement() {
 	sendDataToClient(&ad, sizeof(ServerAdvertisement), &_udpBroadcastAddress, false);
 }
 
-void GameServer::broadcastGameStart() {
-	char c = GAMESTART;
-	broadcastData(&c, 1, true);
+void GameServer::broadcastGameStart() 
+{
+	GameStartPacket start_packet;
+	start_packet.type = GAMESTART;
+	start_packet.game_mode = GameState::instance()->game_mode;
+	start_packet.team_mode = GameState::instance()->team_mode;
+	start_packet.current_map = GameState::instance()->current_map;
+	broadcastData(&start_packet, sizeof(GameStartPacket), true);
 }
 
 // This is the "meat" of the packet processing logic in GameServer
