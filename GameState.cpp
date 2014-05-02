@@ -7,8 +7,6 @@ namespace pt = boost::posix_time;
 
 GameState::GameState()
 {
-	memset(&players, 0, sizeof(PlayerCharacter*) * MAX_PLAYER);
-	memset(&player_pinto_seeds, 0, sizeof(bool) * MAX_PLAYER);
 	score = 0;
 	timeLeft = DEFAULT_CLOCK;
 	_start = pt::second_clock::local_time();
@@ -20,9 +18,7 @@ void GameState::reset() {
 	timeLeft = DEFAULT_CLOCK;
 	_start = pt::second_clock::local_time();
 	_running = false;
-	for (int i = 0; i < MAX_PLAYER; i++) {
-		players[i] = NULL;
-	}
+	players.clear();
 }
 
 void GameState::start() 
@@ -48,14 +44,6 @@ void GameState::start()
 	carrying_pinto_seed = false;
 
 	spawner->startGame();
-}
-
-void GameState::setPlayerName(int player, std::string name) {
-	_playerNames[player] = name; 
-}
-
-std::string GameState::getPlayerName(int player) {
-	return _playerNames[player];
 }
 
 bool GameState::isRunning() {
@@ -109,10 +97,21 @@ void GameState::clear_old_games(){
 }
 
 bool GameState::nameIsTaken(char* name) {
-	for (int i = 0; i < MAX_PLAYER; i++) {
+	for(std::map<int,bool>::iterator iter = GameState::instance()->playerConnections.begin(); iter != GameState::instance()->playerConnections.end(); ++iter)
+    {
+        int i = iter->first;
 		if (strcmp(name, getPlayerName(i).c_str()) == 0) {
 			return true;
 		}
 	}
 	return false;
+}
+
+void GameState::setPlayerName(int id, std::string name) {
+	playerConnections[id] = true;
+	playerNames[id] = name;
+}
+
+std::string GameState::getPlayerName(int id) {
+	return playerNames[id];
 }

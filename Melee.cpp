@@ -96,8 +96,10 @@ Melee::Melee(PlayerCharacter* player_p, std::string mesh_name, float posX,
 void Melee::shoot_hook()
 {
     btVector3 point = btVector3(shoot_pos->node->_getDerivedPosition().x, shoot_pos->node->_getDerivedPosition().y, shoot_pos->node->_getDerivedPosition().z);
-    for(int i = 0; i < GameState::instance()->num_player; ++i)
+    for(std::map<int,bool>::iterator iter = GameState::instance()->playerConnections.begin();
+        iter != GameState::instance()->playerConnections.end(); ++iter)
     {
+        int i = iter->first;
         if(GameState::instance()->players[i] != NULL && GameState::instance()->players[i] != GameState::instance()->player
             && ((GameState::instance()->team_mode != TEAM) || (GameState::instance()->players[i]->team_id != GameState::instance()->player->team_id)
                 || (GameState::instance()->game_mode == PINTO)))

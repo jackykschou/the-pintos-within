@@ -63,28 +63,29 @@ void PlayerPickUp::update()
 
 	GameObject::update();
 
-	for(int i = 0; i < GameState::instance()->num_player; ++i)
+	for(std::map<int,bool>::iterator iter = GameState::instance()->playerConnections.begin(); iter != GameState::instance()->playerConnections.end(); ++iter)
     {
-            if(GameState::instance()->players[i] != NULL && !collided)
+        int i = iter->first;
+        if(GameState::instance()->players[i] != NULL && !collided)
+        {
+            Transform* tran = GameState::instance()->players[i]->transform;
+            btVector3 tran_vector = btVector3(tran->posX, tran->posY, tran->posZ);
+            btVector3 point = ((Rigidbody*)rigidbody)->rigidbody->getCenterOfMassTransform().getOrigin();
+            if(tran_vector.distance(point) <= pick_radius && pick_debouncer->run(NULL))
             {
-                Transform* tran = GameState::instance()->players[i]->transform;
-                btVector3 tran_vector = btVector3(tran->posX, tran->posY, tran->posZ);
-                btVector3 point = ((Rigidbody*)rigidbody)->rigidbody->getCenterOfMassTransform().getOrigin();
-                if(tran_vector.distance(point) <= pick_radius && pick_debouncer->run(NULL))
-                {
-                    if(!GameState::instance()->players[i]->in_pinto_form)
+                if(!GameState::instance()->players[i]->in_pinto_form)
+				{
+					if(GameState::instance()->players[i]->player_id == NetworkManager::instance()->player_id)
 					{
-						if(GameState::instance()->players[i]->player_id == NetworkManager::instance()->player_id)
-						{
-							onPicked(GameState::instance()->players[i]);
-						} 
-					}
-					collided = true;
-					scene->removeGameObject(this);
-					delete this;
-					return;
-                }
+						onPicked(GameState::instance()->players[i]);
+					} 
+				}
+				collided = true;
+				scene->removeGameObject(this);
+				delete this;
+				return;
             }
+        }
      }
 }
 
