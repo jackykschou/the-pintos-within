@@ -459,7 +459,7 @@ void PlayerCharacter::update()
 				do
 				{
 					random_pinto_index = RAND_RANGE(0, GameState::instance()->num_player);
-				}while(random_pinto_index == player_id);
+				}while(random_pinto_index == NetworkManager::instance()->player_id);
 
 				if(GameState::instance()->players[random_pinto_index] == NULL
 					|| (GameState::instance()->players[random_pinto_index]->is_dead))
