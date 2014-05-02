@@ -21,6 +21,12 @@ GameServer::GameServer(int port)
 			NetworkManager::instance()->server->sendAdvertisement();
 		}
 	});
+	// every 3 seconds
+	_pingDebouncer = new Debouncer(PING_INTERVAL, []() {
+		char c = PING;
+		NetworkManager::instance()->server->broadcastData(&c, 1, false);
+		NetworkManager::instance()->server->bootInactivePlayers();
+	});
 }
 
 GameServer::~GameServer() {
@@ -32,6 +38,7 @@ GameServer::~GameServer() {
 	SDLNet_FreePacket(_tmpRecvPacket);
 	delete _ackBuffer;
 	delete _multicastDebouncer;
+	delete _pingDebouncer;
 	if (_hostname) free(_hostname);
 }
 
@@ -74,6 +81,7 @@ void GameServer::update()
 {
 	consumePackets();
 	_multicastDebouncer->run();
+	_pingDebouncer->run();
 }
 
 // sends a single packet to a single client
@@ -181,6 +189,40 @@ void GameServer::broadcastGameStart()
 	broadcastData(&start_packet, sizeof(GameStartPacket), true);
 }
 
+void GameServer::bootInactivePlayers() {
+	pt::ptime now = pt::second_clock::local_time();
+	for(std::map<int,bool>::iterator iter = GameState::instance()->playerConnections.begin();
+            iter != GameState::instance()->playerConnections.end(); ++iter)
+        {
+        int i = iter->first; // the server always be active yo
+        if (i == 0) continue;
+        pt::time_duration diff = now - _lastReceived[i];
+        if (diff.total_seconds() > CLIENT_TIMEOUT) {
+        	LOG("CLIENT " << i << " TIMED OUT... DISCONNECTING THIS CLIENT");
+
+        	// if player alive, send out player DIE
+        	PlayerDieInfo die_info;
+        	die_info.type = PLAYER_DIE;
+        	die_info.player_id = i;
+        	broadcastData(&die_info, sizeof(PlayerDieInfo), true);
+
+        	PlayerDisconnectPacket p;
+        	p.type = PLAYER_DISCONNECT;
+        	p.playerId = i;
+        	broadcastData(&p, sizeof(PlayerDisconnectPacket), true);
+
+        	if(GameState::instance()->players[i] != NULL)
+			{
+				((GameObject*)(GameState::instance()->players[i]))->scene->removeGameObject((GameObject*)GameState::instance()->players[i]);
+				delete GameState::instance()->players[i];
+				GameState::instance()->players[i] = NULL;
+			}
+
+			GameState::instance()->removePlayer(i);
+        }
+	}
+}
+
 // This is the "meat" of the packet processing logic in GameServer
 // Requests are dished out based on their first byte
 void GameServer::processPacket(UDPpacket* packet) {
@@ -276,6 +318,13 @@ void GameServer::processPacket(UDPpacket* packet) {
 			score_info =  (IncreaseScoreInfo*) packetData;
 			NetworkManager::instance()->vital->receiveIncreaseScore(score_info);
 			broadcastData(score_info, sizeof(IncreaseScoreInfo), true);
+			break;
+		case PING:
+			LOG("RECEIVED PING");
+			PingPacket *p;
+			p = (PingPacket*) packetData;
+			_lastReceived[p->playerId] = boost::posix_time::second_clock::local_time();
+			break;
 	}
 }
 
@@ -292,6 +341,8 @@ void GameServer::handleJoinPacket(UDPpacket *packet, void* data) {
 	_clients.push_back(packet->address);
 	int id = _clients.size();
 	GameState::instance()->num_player++;
+
+	_lastReceived[id] = boost::posix_time::second_clock::local_time();
 
 	int len = strlen(join->name);
 	if (len > 14) len = 14;

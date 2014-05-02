@@ -54,6 +54,7 @@ class GameState : public Singleton<GameState>
 
     void setPlayerName(int id, std::string name);
     std::string getPlayerName(int id);
+    void removePlayer(int id);
 
   private:
 

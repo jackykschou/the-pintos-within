@@ -191,7 +191,8 @@ void GameClient::processPacket(UDPpacket* packet) {
 		if (!(packetType == GAMESTART ||
 			  packetType == ASSIGNPLAYERID ||
 			  packetType == CHATPACK ||
-			  packetType == PLAYER_JOIN)) {
+			  packetType == PLAYER_JOIN ||
+			  packetType == PING)) {
 			return;
 		}
 	}
@@ -283,6 +284,7 @@ void GameClient::processPacket(UDPpacket* packet) {
 			TimeLeftInfo* time_info;
 			time_info =  (TimeLeftInfo*) packetData;
 			NetworkManager::instance()->vital->receiveTimeLeft(time_info);
+			break;
 		case PLAYER_JOIN:
 			PlayerJoinPacket* p;
 			p = (PlayerJoinPacket*)packetData;
@@ -291,6 +293,17 @@ void GameClient::processPacket(UDPpacket* packet) {
 			}
 			GameState::instance()->setPlayerName(p->playerId, p->name);
 			++GameState::instance()->num_player;
+			break;
+		case PING:
+			PingPacket ping;
+			ping.type = PING;
+			ping.playerId = NetworkManager::instance()->player_id;
+			sendData(&ping, sizeof(PingPacket), false);
+			break;
+		case PLAYER_DISCONNECT:
+			PlayerDisconnectPacket* disconnect;
+			disconnect = (PlayerDisconnectPacket*)packetData;
+			GameState::instance()->removePlayer(disconnect->playerId);
 			break;
 	}
 }

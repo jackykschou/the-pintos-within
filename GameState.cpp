@@ -115,3 +115,12 @@ void GameState::setPlayerName(int id, std::string name) {
 std::string GameState::getPlayerName(int id) {
 	return playerNames[id];
 }
+
+void GameState::removePlayer(int id) {
+	playerConnections.erase(id);
+	playerNames.erase(id);
+
+	PlayerCharacter* pc = players[id];
+	players.erase(id);
+
+}

@@ -44,6 +44,9 @@ public:
   // advertise ourselves as a game server over UDP broadcast
   void sendAdvertisement();
 
+  // boots any players that are inactive
+  void bootInactivePlayers();
+
   // clean up the resources and close the socket
   void cleanup();
 
@@ -60,11 +63,17 @@ private:
   // Used to delay calls to multicast advertisement to once per minute
   Debouncer *_multicastDebouncer;
 
+  // Used to delay calls to multicast advertisement to once per minute
+  Debouncer *_pingDebouncer;
+
   // The local hostname, used for server advertisement
   char* _hostname;
 
   // list of connected clients (addresses)
   std::vector<IPaddress> _clients;
+
+  // map of player ID to last received ping message
+  std::map<int, boost::posix_time::ptime> _lastReceived;
 
   // nom nom all the packets off the wire
   void consumePackets();

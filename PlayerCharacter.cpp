@@ -459,7 +459,14 @@ void PlayerCharacter::update()
 				do
 				{
 					random_pinto_index = RAND_RANGE(0, GameState::instance()->num_player);
-				}while(random_pinto_index == NetworkManager::instance()->player_id);
+
+					int loop = 0;
+					for(std::map<int,bool>::iterator iter = GameState::instance()->playerConnections.begin();
+			            iter != GameState::instance()->playerConnections.end(); ++iter) {
+						if (loop == random_pinto_index) { random_pinto_index = iter->first; break; }
+						loop++;
+					}
+				}while(random_pinto_index == player_id);
 
 				if(GameState::instance()->players[random_pinto_index] == NULL
 					|| (GameState::instance()->players[random_pinto_index]->is_dead))

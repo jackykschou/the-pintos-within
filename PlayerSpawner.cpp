@@ -52,6 +52,12 @@ void PlayerSpawner::startGame()
 			if(GameState::instance()->game_mode == PINTO)
 			{
 				pinto_index = RAND_RANGE(0, GameState::instance()->num_player);
+				int loop = 0;
+				for(std::map<int,bool>::iterator iter = GameState::instance()->playerConnections.begin();
+		            iter != GameState::instance()->playerConnections.end(); ++iter) {
+					if (loop == pinto_index) { pinto_index = iter->first; break; }
+					loop++;
+				}
 			}
 
 			std::vector<Ogre::Vector3> spawned_positions;

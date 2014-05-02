@@ -61,6 +61,12 @@ enum collisiontypes {
 #define TIME_LEFT 18
 #define GAMESTART 19
 #define PLAYER_JOIN 20
+#define PLAYER_DISCONNECT 21
+#define PING 22
+
+// network stuff
+#define PING_INTERVAL 2000
+#define CLIENT_TIMEOUT 8
 
 #define WALL "Wall"
 #define FLOORGRASS "FloorGrass"

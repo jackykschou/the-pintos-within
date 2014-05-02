@@ -70,6 +70,18 @@ struct GameStartPacket
 	uint32_t current_map;
 };
 
+struct PlayerDisconnectPacket
+{
+	char type;
+	char playerId;
+};
+
+struct PingPacket
+{
+	char type;
+	char playerId;
+};
+
 enum NetworkManagerState 
 {
 	NetworkStateReady,
