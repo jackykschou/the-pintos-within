@@ -1,6 +1,7 @@
 #ifndef __GameState_h_
 #define __GameState_h_
 
+#include <map>
 #include "common.h"
 #include "Singleton.h"
 #include "AudioManager.h"
@@ -37,17 +38,26 @@ class GameState : public Singleton<GameState>
   	void update();
 	  void start();
 	  bool isRunning();
+    bool nameIsTaken(char* name);
 
     PlayerCharacter* player;
     PlayerSpawner* spawner;
     WeaponSpawner* weapon_spawner;
     PlayerCharacter* players[MAX_PLAYER];
 
+    std::map<std::string,std::pair<std::string,boost::posix_time::ptime>> games;
+
     void broadcastHeartbeat();
 
+    void setPlayerName(int player, std::string name);
+    std::string getPlayerName(int player);
+
   private:
+
+    std::string _playerNames[MAX_PLAYER];
   	boost::posix_time::ptime _start;
   	bool _running;
+  	void clear_old_games();
 };
 
 #endif // __GameState_h_

@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<GUILayout >
+  <Window Type="TaharezLook/FrameWindow" Name="Lobby" >
+    <Property Name="InheritsAlpha" Value="False" />
+    <Property Name="UnifiedAreaRect" Value="{{0,0},{0,0},{1,0},{1,0}}" />
+    <Window Type="TaharezLook/StaticText" Name="Lobby/LobbyTitle" >
+      <Property Name="Text" Value="lobby" />
+      <Property Name="UnifiedAreaRect" Value="{{0.0367,0},{0.0367,0},{0.9633,0},{0.0967,0}}" />
+    </Window>
+    <Window Type="TaharezLook/StaticText" Name="Lobby/GameDescription" >
+      <Property Name="Text" Value="" />
+      <Property Name="UnifiedAreaRect" Value="{{0.0367,0},{0.1333,0},{0.9633,0},{0.1933,0}}" />
+    </Window>
+    <Window Type="TaharezLook/Listbox" Name="Lobby/Players" >
+      <Property Name="UnifiedAreaRect" Value="{{0.0367,0},{0.23,0},{0.2592,0},{0.8667,0}}" />
+        <!--
+        <Window Type="TaharezLook/ListboxItem" >
+          <Property Name="Text" Value="Game 1" />
+        </Window>
+        <Window Type="TaharezLook/ListboxItem" >
+          <Property Name="Text" Value="Game 2" />
+        </Window>
+        -->
+    </Window>
+    <Window Type="TaharezLook/MultiLineEditbox" Name="Lobby/ChatBuffer">
+      <Property Name="Text" Value=""/>
+      <Property Name="MaxTextLength" Value="255"/>
+      <Property Name="ReadOnly" Value="True" />
+      <Property Name="FrameEnabled" Value="False" />
+      <Property Name="UnifiedAreaRect" Value="{{0.2958,0},{0.23,0},{0.9633,0},{0.77,0}}" />
+      <Property Name="SizingBorderThickness" Value="1.0" />
+    </Window>
+    <Window Type="TaharezLook/Editbox" Name="Lobby/ChatInput">
+      <Property Name="FrameEnabled" Value="False" />
+      <Property Name="UnifiedAreaRect" Value="{{0.2958,0},{0.8067,0},{0.7016,0},{0.8667,0}}" />
+      <Property Name="SizingBorderThickness" Value="1.0" />
+    </Window>
+    <Window Type="TaharezLook/Button" Name="Lobby/ChatSend" >
+      <Property Name="Text" Value="Send" />
+      <Property Name="UnifiedAreaRect" Value="{{0.7383,0},{0.8067,0},{0.9633,0},{0.8667,0}}" />
+    </Window>
+    <Window Type="TaharezLook/Button" Name="Lobby/Start" >
+      <Property Name="Text" Value="Start" />
+      <Property Name="UnifiedAreaRect" Value="{{0.4766,0},{0.9033,0},{0.7016,0},{0.9633,0}}" />
+    </Window>
+    <Window Type="TaharezLook/Button" Name="Lobby/Back" >
+      <Property Name="Text" Value="Back" />
+      <Property Name="UnifiedAreaRect" Value="{{0.7383,0},{0.9033,0},{0.9633,0},{0.9633,0}}" />
+    </Window>
+  </Window>
+</GUILayout>

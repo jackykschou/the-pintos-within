@@ -44,6 +44,9 @@ public:
   // advertise ourselves as a game server over UDP broadcast
   void sendAdvertisement();
 
+  // clean up the resources and close the socket
+  void cleanup();
+
 private:
   // the socket that is bound
   UDPsocket _socket;
@@ -70,7 +73,7 @@ private:
   void processPacket(UDPpacket* packet);
 
   // handles saving client and sending ACK
-  void handleJoinPacket(UDPpacket* packet);
+  void handleJoinPacket(UDPpacket* packet, void* data);
 
   // sends a single packet back to a single client
   void sendPacketToClient(UDPpacket* packet, IPaddress* ip);
@@ -82,9 +85,6 @@ private:
   // the request to the ack buffer if necessary.
   void putDataIntoPacket(UDPpacket *p, void *data, int len,
                          IPaddress* a, bool ack, AckId id=-1, bool isResponse=false);
-
-  // broadcasts a single cstring (data->"\x00") to a bunch of clients
-  void broadcastString(const char* data, bool ack);
 
   // a temporarily allocated packet for sending on the wire
   UDPpacket* _tmpSendPacket;

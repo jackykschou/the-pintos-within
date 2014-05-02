@@ -24,6 +24,10 @@ GameServer::GameServer(int port)
 }
 
 GameServer::~GameServer() {
+	if (_socket) {
+		SDLNet_UDP_Close(_socket);
+		_socket = NULL;
+	}
 	SDLNet_FreePacket(_tmpSendPacket);
 	SDLNet_FreePacket(_tmpRecvPacket);
 	delete _ackBuffer;
@@ -130,11 +134,6 @@ void GameServer::broadcastData(void* data, int len, bool ack) {
 	}
 }
 
-// broadcasts a single cstring (data->"\x00") to a bunch of clients
-void GameServer::broadcastString(const char* data, bool ack) {
-	broadcastData((void*)data, strlen(data)+1, ack);
-}
-
 void GameServer::resendExpiredAcks() {
 	std::map<AckId, Ack*>::iterator iter;
 	for (iter = _ackBuffer->buffer.begin(); iter != _ackBuffer->buffer.end();) {
@@ -161,30 +160,6 @@ void GameServer::consumePackets() {
 	}
 }
 
-
-// when a client joins, we need to ACK back that it succeeded
-void GameServer::handleJoinPacket(UDPpacket *packet) {
-	IPaddress ip;
-
-	printf("CLIENT %x %d JOINED\n", packet->address.host, packet->address.port);
-
-	_clients.push_back(packet->address);
-	int id = _clients.size();
-	GameState::instance()->num_player = (GameState::instance()->num_player + 1);
-
-	memcpy(&ip, &(packet->address), sizeof(IPaddress));
-
-	PlayerIdInfo info;
-	info.type = ASSIGNPLAYERID;
-	info.player_id = id;
-
-	char x = ASSIGNPLAYERID;
-	sendDataToClient(&info, sizeof(PlayerIdInfo), &ip, true);
-
-	LOG("Assigning player id: " << id);
-        GuiManager::instance()->EnableStart();
-}
-
 // sends a UDP broadcast to clients in the same NAT subnet
 // that we are running a LAN game here.
 void GameServer::sendAdvertisement() {
@@ -194,6 +169,11 @@ void GameServer::sendAdvertisement() {
 	strncpy(ad.name, _hostname, 256);
 	strncpy(ad.description, "JOES COOL GAME", 256);
 	sendDataToClient(&ad, sizeof(ServerAdvertisement), &_udpBroadcastAddress, false);
+}
+
+void GameServer::broadcastGameStart() {
+	char c = GAMESTART;
+	broadcastData(&c, 1, true);
 }
 
 // This is the "meat" of the packet processing logic in GameServer
@@ -219,7 +199,7 @@ void GameServer::processPacket(UDPpacket* packet) {
 	switch (packetType) {
 		case JOINGAME:
 			// JOIN request adds a character to the game
-			handleJoinPacket(packet);
+			handleJoinPacket(packet, packetData);
 			break;
 		case HEARTBEATPACK:
 			HeartBeatInfo* hinfo;
@@ -294,4 +274,57 @@ void GameServer::processPacket(UDPpacket* packet) {
 	}
 }
 
+// when a client joins, we need to ACK back that it succeeded
+void GameServer::handleJoinPacket(UDPpacket *packet, void* data) {
+	IPaddress ip;
 
+	printf("CLIENT %x %d JOINED\n", packet->address.host, packet->address.port);
+
+	JoinRequestPacket* join;
+	join = (JoinRequestPacket*)data;
+	LOG("PLAYER'S NAME IS " << join->name);
+
+	_clients.push_back(packet->address);
+	int id = _clients.size();
+	GameState::instance()->num_player++;
+
+	int len = strlen(join->name);
+	if (len > 14) len = 14;
+	char c = '1';
+	while (GameState::instance()->nameIsTaken(join->name)) {
+		LOG("NAME IS TAKEN!!!!");
+		join->name[len] = c++;
+		join->name[len+1] = '\0';
+		LOG("NEW NAME= " << join->name);
+	}
+
+	GameState::instance()->setPlayerName(id, std::string(join->name));
+
+	memcpy(&ip, &(packet->address), sizeof(IPaddress));
+
+	PlayerIdInfo info;
+	info.type = ASSIGNPLAYERID;
+	info.player_id = id;
+
+	char x = ASSIGNPLAYERID;
+	sendDataToClient(&info, sizeof(PlayerIdInfo), &ip, true);
+
+	// send a PlayerJoinPacket to the new client for every other player
+	for (int i = 0; i < id; i++) {
+		PlayerJoinPacket p;
+		p.type = PLAYER_JOIN;
+		p.playerId = i;
+		strncpy(p.name, GameState::instance()->getPlayerName(i).c_str(), 16);
+		sendDataToClient(&p, sizeof(PlayerJoinPacket), &ip, true);
+	}
+
+	// broadcasts a PlayerJoinPacket to the other clients about the new client
+	PlayerJoinPacket p;
+	p.type = PLAYER_JOIN;
+	p.playerId = id;
+	strncpy(p.name, join->name, 16);
+	broadcastData(&p, sizeof(PlayerJoinPacket), true);
+
+	LOG("Assigning player id: " << id);
+        GuiManager::instance()->EnableStart();
+}
