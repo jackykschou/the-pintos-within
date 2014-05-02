@@ -49,6 +49,9 @@ void GuiManager::Update(const Ogre::FrameEvent& event){
       lobby->UpdatePlayers();
       lobby->UpdateConsole();
       lobby->UpdateGameDescription();
+      if(gameState->playerNames.size()==0){
+        lobby->DisableStart();
+      }
     }
   }else{
     _isDisplayed=true;
@@ -93,7 +96,7 @@ void GuiManager::Reinitialize(){
         break;
       case LOBBY_AS_HOST:
         _current=_lobby;
-        if(GameState::instance()->num_player>0){
+        if(GameState::instance()->playerNames.size()>0){
           EnableStart();
         }
         break;
@@ -477,9 +480,9 @@ void Lobby::UpdatePlayers(){
   _players->resetList();
   CEGUI::colour c{0.267f,0.267f,0.664f,1.0f};
   auto gameState=GameState::instance();
-  int numberOfPlayers=gameState->num_player;
-  for(int i=0;i!=numberOfPlayers;++i){
-    auto label=gameState->getPlayerName(i);
+  auto playerNames=gameState->playerNames;
+  for(auto i=playerNames.cbegin();i!=playerNames.cend();++i){
+    auto label=(*i).second;
     auto entry=new CEGUI::ListboxTextItem(label);
     entry->setSelectionColours(c);
     entry->setSelectionBrushImage("TaharezLook","ListboxSelectionBrush");
