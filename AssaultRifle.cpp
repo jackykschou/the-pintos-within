@@ -8,14 +8,14 @@
 AssaultRifle::AssaultRifle(PlayerCharacter* player_p, std::string mesh_name, float posX, 
 			float posY, float posZ, float rotX, float rotY, float rotZ, float rotW,
 			float scaleX, float scaleY, float scaleZ, PlayerBox* box) : 
-			Weapon(player_p, mesh_name, 2, 3, 1, 48, 180, 0.15, posX, 
+			Weapon(player_p, mesh_name, 2, 3, 1, 48, 240, 0.1, posX, 
 			posY, posZ, rotX, rotY, rotZ, rotW, scaleX, scaleY, scaleZ, box)
 
 {
     Transform* tran = ((GameObject*)player_p)->getComponent<Transform>();
     node->setPosition(player->mesh->node->convertWorldToLocalPosition(
         Ogre::Vector3(tran->posX + posX, tran->posY + posY, tran->posZ + posZ)));
-    damage = 13;
+    damage = 8;
     shoot_distance = 2000;
 
     reload_time = reload_animation_state->getLength() * reload_speed;

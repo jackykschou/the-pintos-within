@@ -939,7 +939,7 @@ void DotSceneLoader::createSceneObject(uint32_t scene_type, rapidxml::xml_node<>
 
         if(node_name.find(PLAYERSPAWNER) != std::string::npos)
         {
-            GameState::instance()->spawner->addSpawnPoint(Ogre::Vector3(position.x, position.y, position.z), 0);
+            GameState::instance()->spawner->addFreeSpawnPoint(Ogre::Vector3(position.x, position.y, position.z));
         }
 
         if(node_name.find(WEAPONSPAWNER) != std::string::npos)
