@@ -43,6 +43,7 @@ class GuiManager:public Singleton<GuiManager>{
     CEGUI::MouseButton convertButton(OIS::MouseButtonID buttonId);
     CEGUI::OgreRenderer* _renderer;
     bool _isDisplayed;
+    bool _isInitialized;
     Gui* _hud;
     Gui* _mainMenu;
     Gui* _joinGameMenu;
@@ -71,6 +72,8 @@ class Hud:public Gui{
     void UpdateAmmoCount(int ammoCount);
     void UpdateMagCount(int magCount);
     void UpdateWeaponName(int weaponId);
+    void UpdateScore(int score,uint32_t gameMode,uint32_t teamMode);
+    void UpdateTimeRemaining(int timeRemaining);
     void ToggleConsole();
     bool IsConsoleVisible();
     void SetConsoleText(std::string str);
@@ -83,6 +86,8 @@ class Hud:public Gui{
     CEGUI::Window* _magCount;
     CEGUI::Window* _console;
     CEGUI::Window* _weaponName;
+    CEGUI::Window* _score;
+    CEGUI::Window* _timeRemaining;
     CEGUI::Editbox* _consoleInput;
     CEGUI::MultiLineEditbox* _consoleText;
     int _consoleSize;
@@ -118,6 +123,7 @@ class CreateGameMenu:public Gui{
     int ReadTeamOrganization();
     int ReadGameType();
     int ReadMap();
+    float ReadTimeLimit();
   private:
     CEGUI::Editbox* _name;
     CEGUI::Editbox* _timeLimit;

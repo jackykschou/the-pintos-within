@@ -1,8 +1,9 @@
+#include <sstream>
 #include "GuiManager.h"
 #include "ChatManager.h"
 #include "Utility.h"
 
-GuiManager::GuiManager():_isDisplayed{false}{}
+GuiManager::GuiManager():_isDisplayed{false},_isInitialized{false}{}
 GuiManager::~GuiManager(){
   delete _hud;
   delete _mainMenu;
@@ -14,11 +15,12 @@ GuiManager::~GuiManager(){
 }
 void GuiManager::Update(const Ogre::FrameEvent& event){
   if(_isDisplayed){
-    if(_current==_hud||GameState::instance()->isRunning()){
+    auto gameState=GameState::instance();
+    if(_current==_hud||gameState->isRunning()){
       if(_current!=_hud){
         _current=_hud;
         _current->Display();
-        GameState::instance()->current_state=IN_GAME;
+        gameState->current_state=IN_GAME;
         CEGUI::MouseCursor::getSingletonPtr()->hide();
       }
       Hud* hud=static_cast<Hud*>(_hud);
@@ -37,6 +39,8 @@ void GuiManager::Update(const Ogre::FrameEvent& event){
           hud->UpdateWeaponName(weapon->weapon_id);
         }
       }
+      hud->UpdateScore(gameState->score,gameState->game_mode,gameState->team_mode);
+      hud->UpdateTimeRemaining(gameState->timeLeft);
       hud->UpdateConsole();
     }else if(_current==_joinGameMenu){
       static_cast<JoinGameMenu*>(_joinGameMenu)->UpdateGames();
@@ -53,6 +57,7 @@ void GuiManager::Update(const Ogre::FrameEvent& event){
   CEGUI::System::getSingleton().injectTimePulse(event.timeSinceLastFrame);
 }
 void GuiManager::Initialize(std::string applicationName){
+  _isInitialized=true;
   _renderer=&CEGUI::OgreRenderer::bootstrapSystem();
   CEGUI::SchemeManager::getSingleton().create( "TaharezLook.scheme" );
   CEGUI::System::getSingletonPtr()->setDefaultMouseCursor("TaharezLook","MouseArrow");
@@ -66,14 +71,43 @@ void GuiManager::Initialize(std::string applicationName){
   _current=_mainMenu;
 }
 void GuiManager::Reinitialize(){
-  delete _hud;
-  delete _mainMenu;
-  delete _joinGameMenu;
-  delete _createGameMenu;
-  delete _lobby;
-  delete _waitingPrompt;
-  CEGUI::OgreRenderer::destroySystem();
-  Initialize("");
+  if(_isInitialized){
+    delete _hud;
+    delete _mainMenu;
+    delete _joinGameMenu;
+    delete _createGameMenu;
+    delete _lobby;
+    delete _waitingPrompt;
+    CEGUI::OgreRenderer::destroySystem();
+    _isDisplayed=false;
+    Initialize("");
+    switch(GameState::instance()->current_state){
+      case MAIN_MENU:
+        _current=_mainMenu;
+        break;
+      case HOST_MENU:
+        _current=_createGameMenu;
+        break;
+      case CLIENT_MENU:
+        _current=_joinGameMenu;
+        break;
+      case LOBBY_AS_HOST:
+        _current=_lobby;
+        if(GameState::instance()->num_player>0){
+          EnableStart();
+        }
+        break;
+      case LOBBY_AS_CLIENT:
+        _current=_lobby;
+        break;
+      case LOADING:
+        _current=_waitingPrompt;
+        break;
+      case IN_GAME:
+        _current=_hud;
+        break;
+    }
+  }
 }
 bool GuiManager::IsExpectingMouse(){
   return _current!=_hud;
@@ -95,6 +129,9 @@ bool GuiManager::HostGame(const CEGUI::EventArgs& e){
   gameState->team_mode=cgm->ReadTeamOrganization()+1;
   gameState->game_mode=cgm->ReadGameType()+1;
   gameState->current_map=cgm->ReadMap()+1;
+  int t{cgm->ReadTimeLimit()*60};
+  gameState->originalTime=t;
+  gameState->timeLeft=t;
   _current=_lobby;
   _current->Display();
   GameState::instance()->current_state=LOBBY_AS_HOST;
@@ -194,6 +231,8 @@ Hud::Hud():Gui("Hud.layout"){
   _ammoCount=_root->getChild("Hud/AmmoCount");
   _magCount=_root->getChild("Hud/MagCount");
   _weaponName=_root->getChild("Hud/WeaponName");
+  _score=_root->getChild("Hud/Score");
+  _timeRemaining=_root->getChild("Hud/TimeRemaining");
   _console=_root->getChild("Hud/Console");
   _consoleInput = static_cast<CEGUI::Editbox*>(_console->getChild("Hud/ConsoleInput"));
   _consoleText  = static_cast<CEGUI::MultiLineEditbox*>(_console->getChild("Hud/ConsoleText"));
@@ -217,25 +256,34 @@ void Hud::UpdateMagCount(int magCount){
   _magCount->setText(std::to_string(magCount));
 }
 void Hud::UpdateWeaponName(int weaponId){
-  std::string weaponName{""};
+  std::string weaponName{};
   switch(weaponId){
     case PISTOL_ID:
-      weaponName+="Pistol";
+      weaponName="Pistol";
       break;
     case SHOTGUN_ID:
-      weaponName+="Shotgun";
+      weaponName="Shotgun";
       break;
     case ASSAULTRIFLE_ID:
-      weaponName+="Assault Rifle";
+      weaponName="Assault Rifle";
       break;
     case BLASTER_ID:
-      weaponName+="Blaster";
+      weaponName="Blaster";
       break;
     case MELEE_ID:
-      weaponName+="Pinto";
+      weaponName="Pinto";
       break;
   }
   _weaponName->setText(weaponName.c_str());
+}
+void Hud::UpdateScore(int score,uint32_t gameMode,uint32_t teamMode){
+  std::string scoreText{};
+  if(teamMode==TEAM&&gameMode!=PINTO){scoreText+="Team ";}
+  scoreText+="Score: "+std::to_string(score);
+  _score->setText(scoreText.c_str());
+}
+void Hud::UpdateTimeRemaining(int timeRemaining){
+  _timeRemaining->setText(std::to_string(timeRemaining).c_str());
 }
 bool Hud::ChatSubmitted(const CEGUI::EventArgs& e) {
   if (strlen(_consoleInput->getText().c_str()) == 0) return false;
@@ -381,12 +429,18 @@ int CreateGameMenu::ReadMap(){
   auto i=readComboBox(_map);
   return i!=-1?i:0;
 }
+float CreateGameMenu::ReadTimeLimit(){
+  std::stringstream timeLimit{std::string{_timeLimit->getText().c_str()}};
+  float tl;
+  timeLimit>>tl;
+  return tl;
+}
 int CreateGameMenu::readComboBox(CEGUI::Combobox* box){
   auto selectedItem=box->getSelectedItem();
   return selectedItem?(int)box->getItemIndex(selectedItem):-1;
 }
 bool CreateGameMenu::DisplayPrompts(const CEGUI::EventArgs& e){
-  displayPrompts(e,std::vector<std::pair<CEGUI::Editbox*,const char*>>{{_name,"Your Name"},{_timeLimit,"3"}/*,{_maxPlayers,"2"}*/});
+  displayPrompts(e,std::vector<std::pair<CEGUI::Editbox*,const char*>>{{_name,"Your Name"},{_timeLimit,std::to_string(DEFAULT_CLOCK).c_str()}/*,{_maxPlayers,"2"}*/});
   return false;
 }
 const char* CreateGameMenu::ReadName() {

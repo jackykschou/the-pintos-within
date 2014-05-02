@@ -315,7 +315,9 @@ void GameServer::handleJoinPacket(UDPpacket *packet, void* data) {
 	sendDataToClient(&info, sizeof(PlayerIdInfo), &ip, true);
 
 	// send a PlayerJoinPacket to the new client for every other player
-	for (int i = 0; i < id; i++) {
+	for(std::map<int,bool>::iterator iter = GameState::instance()->playerConnections.begin();
+		iter != GameState::instance()->playerConnections.end(); ++iter) {
+		int i = iter->first;
 		PlayerJoinPacket p;
 		p.type = PLAYER_JOIN;
 		p.playerId = i;

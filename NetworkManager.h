@@ -88,7 +88,7 @@ class NetworkManager : public Singleton<NetworkManager>
 	uint32_t player_id;
 	uint32_t team_id;
 
-	uint32_t player_team_id_map[MAX_PLAYER];
+	std::map<int, uint32_t> player_team_id_map;
 
   	NetworkManager();
   	~NetworkManager();

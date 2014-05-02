@@ -220,6 +220,7 @@ void InputManager::windowResized(Ogre::RenderWindow* rw)
 	const OIS::MouseState &ms = _mMouse->getMouseState();
 	ms.width = width;
 	ms.height = height;
+	GuiManager::instance()->Reinitialize();
 }
 
 void InputManager::windowClosed(Ogre::RenderWindow* rw) 

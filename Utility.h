@@ -81,7 +81,6 @@ enum collisiontypes {
 #define LOADING 6
 #define IN_GAME 7
 
-#define MAX_PLAYER 15
 
 //game_mode
 #define ELIMINATION 1

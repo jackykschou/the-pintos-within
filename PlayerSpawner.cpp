@@ -17,8 +17,12 @@ void PlayerSpawner::startGame()
 	{
 		if(GameState::instance()->team_mode == TEAM && GameState::instance()->game_mode != PINTO)
 		{
-			for(int i = 0; i < GameState::instance()->num_player; ++i)
-			{	
+			std::vector<Ogre::Vector3> spawned_positions_blue;
+			std::vector<Ogre::Vector3> spawned_positions_red;
+			for(std::map<int,bool>::iterator iter = GameState::instance()->playerConnections.begin();
+				iter != GameState::instance()->playerConnections.end(); ++iter)
+		    {
+		        int i = iter->first;	
 				uint32_t version = RAND_RANGE(0, 5);
 				float rand_x = RAND_RANGE(0, SPAWN_RAND_RADIUS_MAX) - 50;
 				float rand_z = RAND_RANGE(0, SPAWN_RAND_RADIUS_MAX) - 50;
