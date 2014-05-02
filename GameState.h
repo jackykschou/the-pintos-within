@@ -27,9 +27,7 @@ class GameState : public Singleton<GameState>
     uint32_t current_state;
     int num_player;
     int current_max_num_player_map;
-
     bool carrying_pinto_seed;
-    bool player_pinto_seeds[MAX_PLAYER];
 
   	int score;
   	int timeLeft;
@@ -44,18 +42,21 @@ class GameState : public Singleton<GameState>
     PlayerCharacter* player;
     PlayerSpawner* spawner;
     WeaponSpawner* weapon_spawner;
-    PlayerCharacter* players[MAX_PLAYER];
+
+    std::map<int, bool> player_pinto_seeds;
+    std::map<int, std::string> playerNames;
+    std::map<int, bool> playerConnections;
+    std::map<int, PlayerCharacter*> players;
 
     std::map<std::string,std::pair<std::string,boost::posix_time::ptime>> games;
 
     void broadcastHeartbeat();
 
-    void setPlayerName(int player, std::string name);
-    std::string getPlayerName(int player);
+    void setPlayerName(int id, std::string name);
+    std::string getPlayerName(int id);
 
   private:
 
-    std::string _playerNames[MAX_PLAYER];
   	boost::posix_time::ptime _start;
   	bool _running;
   	void clear_old_games();

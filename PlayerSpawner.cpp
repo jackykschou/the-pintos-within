@@ -18,8 +18,10 @@ void PlayerSpawner::startGame()
 		{
 			std::vector<Ogre::Vector3> spawned_positions_blue;
 			std::vector<Ogre::Vector3> spawned_positions_red;
-			for(int i = 0; i < GameState::instance()->num_player; ++i)
-			{	
+			for(std::map<int,bool>::iterator iter = GameState::instance()->playerConnections.begin();
+				iter != GameState::instance()->playerConnections.end(); ++iter)
+		    {
+		        int i = iter->first;	
 				uint32_t version = RAND_RANGE(0, 5);
 				Ogre::Vector3 position;
 				if(NetworkManager::instance()->player_team_id_map[i] == RED_TEAM)
