@@ -123,6 +123,7 @@ class CreateGameMenu:public Gui{
     int ReadTeamOrganization();
     int ReadGameType();
     int ReadMap();
+    float ReadTimeLimit();
   private:
     CEGUI::Editbox* _name;
     CEGUI::Editbox* _timeLimit;

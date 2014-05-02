@@ -10,7 +10,7 @@ class PlayerSpawner;
 class PlayerCharacter;
 class WeaponSpawner;
 
-#define DEFAULT_CLOCK 60 * 2 // 2 minutes
+#define DEFAULT_CLOCK 2 // 2 minutes
 
 class PlayerCharacter;
 
@@ -33,6 +33,7 @@ class GameState : public Singleton<GameState>
 
   	int score;
   	int timeLeft;
+        int originalTime;
     int num_player_left_elimination;
   	void reset();
   	void update();

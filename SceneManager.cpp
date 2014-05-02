@@ -23,8 +23,8 @@ void SceneManager::changeCurrentScene(uint32_t scene_type)
 
 	current_scene = new Scene(std::string("New Scene") + scene_id_stream.str());
 
-	GameState::instance()->team_mode = FFA;
-	GameState::instance()->game_mode = ELIMINATION;
+	//GameState::instance()->team_mode = FFA;
+	//GameState::instance()->game_mode = ELIMINATION;
 
 	if(scene_type == THEGAUNTLET)
 		scene_loader.parseDotScene(scene_type, current_scene, "TheGauntlet.scene", Ogre::ResourceGroupManager::DEFAULT_RESOURCE_GROUP_NAME, current_scene->manager);

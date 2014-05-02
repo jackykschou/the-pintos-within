@@ -1,3 +1,4 @@
+#include <sstream>
 #include "GuiManager.h"
 #include "ChatManager.h"
 #include "Utility.h"
@@ -37,9 +38,9 @@ void GuiManager::Update(const Ogre::FrameEvent& event){
           hud->UpdateMagCount(weapon->current_ammo);
           hud->UpdateWeaponName(weapon->weapon_id);
         }
-        hud->UpdateScore(gameState->score,gameState->game_mode,gameState->team_mode);
-        hud->UpdateTimeRemaining(gameState->timeLeft);
       }
+      hud->UpdateScore(gameState->score,gameState->game_mode,gameState->team_mode);
+      hud->UpdateTimeRemaining(gameState->timeLeft);
       hud->UpdateConsole();
     }else if(_current==_joinGameMenu){
       static_cast<JoinGameMenu*>(_joinGameMenu)->UpdateGames();
@@ -128,6 +129,9 @@ bool GuiManager::HostGame(const CEGUI::EventArgs& e){
   gameState->team_mode=cgm->ReadTeamOrganization()+1;
   gameState->game_mode=cgm->ReadGameType()+1;
   gameState->current_map=cgm->ReadMap()+1;
+  int t{cgm->ReadTimeLimit()*60};
+  gameState->originalTime=t;
+  gameState->timeLeft=t;
   _current=_lobby;
   _current->Display();
   GameState::instance()->current_state=LOBBY_AS_HOST;
@@ -425,12 +429,18 @@ int CreateGameMenu::ReadMap(){
   auto i=readComboBox(_map);
   return i!=-1?i:0;
 }
+float CreateGameMenu::ReadTimeLimit(){
+  std::stringstream timeLimit{std::string{_timeLimit->getText().c_str()}};
+  float tl;
+  timeLimit>>tl;
+  return tl;
+}
 int CreateGameMenu::readComboBox(CEGUI::Combobox* box){
   auto selectedItem=box->getSelectedItem();
   return selectedItem?(int)box->getItemIndex(selectedItem):-1;
 }
 bool CreateGameMenu::DisplayPrompts(const CEGUI::EventArgs& e){
-  displayPrompts(e,std::vector<std::pair<CEGUI::Editbox*,const char*>>{{_name,"Your Name"},{_timeLimit,"3"}/*,{_maxPlayers,"2"}*/});
+  displayPrompts(e,std::vector<std::pair<CEGUI::Editbox*,const char*>>{{_name,"Your Name"},{_timeLimit,std::to_string(DEFAULT_CLOCK).c_str()}/*,{_maxPlayers,"2"}*/});
   return false;
 }
 const char* CreateGameMenu::ReadName() {

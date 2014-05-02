@@ -10,14 +10,13 @@ GameState::GameState()
 	memset(&players, 0, sizeof(PlayerCharacter*) * MAX_PLAYER);
 	memset(&player_pinto_seeds, 0, sizeof(bool) * MAX_PLAYER);
 	score = 0;
-	timeLeft = DEFAULT_CLOCK;
 	_start = pt::second_clock::local_time();
 	_running = false;
 }
 
 void GameState::reset() {
 	score = 0;
-	timeLeft = DEFAULT_CLOCK;
+	timeLeft = originalTime;
 	_start = pt::second_clock::local_time();
 	_running = false;
 	for (int i = 0; i < MAX_PLAYER; i++) {
@@ -71,7 +70,7 @@ void GameState::update()
 			pt::time_duration diff = now - _start;
 
 			int before = timeLeft;
-			timeLeft = DEFAULT_CLOCK - diff.total_seconds();
+			timeLeft = originalTime - diff.total_seconds();
 
 			if(before != timeLeft)
 			{
