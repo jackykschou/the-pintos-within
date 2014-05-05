@@ -16,15 +16,20 @@ GuiManager::~GuiManager(){
 void GuiManager::Update(const Ogre::FrameEvent& event){
   if(_isDisplayed){
     auto gameState=GameState::instance();
+    if(gameState->current_state==MAIN_MENU&&_current!=_mainMenu){
+      _current=_mainMenu;
+      _isDisplayed=false;
+    }
     if(_current==_hud||gameState->isRunning()){
       if(_current!=_hud){
+        HideMessage();
         _current=_hud;
         _current->Display();
         gameState->current_state=IN_GAME;
-        CEGUI::MouseCursor::getSingletonPtr()->hide();
       }
+      CEGUI::MouseCursor::getSingletonPtr()->hide();
       Hud* hud=static_cast<Hud*>(_hud);
-      PlayerCharacter* player=GameState::instance()->player;
+      PlayerCharacter* player=gameState->player;
       if(player!=nullptr){
         float healthPercent=((float)player->health)/((float)player->max_health);
         hud->UpdateHealth(healthPercent>=0?healthPercent:0.0f);
@@ -214,6 +219,12 @@ std::string GuiManager::GetName() {
     return std::string(cgm->ReadName());
   }
 }
+void GuiManager::DisplayMessage(std::string message){
+  static_cast<Hud*>(_hud)->DisplayMessage(message);
+}
+void GuiManager::HideMessage(){
+  static_cast<Hud*>(_hud)->HideMessage();
+}
 
 CEGUI::MouseButton GuiManager::TranslateButton(OIS::MouseButtonID buttonId){
   switch(buttonId){
@@ -237,6 +248,7 @@ Hud::Hud():Gui("Hud.layout"){
   _score=_root->getChild("Hud/Score");
   _timeRemaining=_root->getChild("Hud/TimeRemaining");
   _console=_root->getChild("Hud/Console");
+  _message=_root->getChild("Hud/Message");
   _consoleInput = static_cast<CEGUI::Editbox*>(_console->getChild("Hud/ConsoleInput"));
   _consoleText  = static_cast<CEGUI::MultiLineEditbox*>(_console->getChild("Hud/ConsoleText"));
   _consoleInput->subscribeEvent(
@@ -317,6 +329,14 @@ void Hud::UpdateConsole() {
     float offset = scroller->getDocumentSize() + 100;
     scroller->setScrollPosition(std::max(offset, 0.0f));
   }
+}
+void Hud::DisplayMessage(std::string message){
+  _message->setText(message.c_str());
+  _message->show();
+}
+void Hud::HideMessage(){
+  _message->setText("");
+  _message->hide();
 }
 
 MainMenu::MainMenu():Gui("MainMenu.layout"){
