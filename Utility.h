@@ -65,8 +65,8 @@ enum collisiontypes {
 #define PING 22
 
 // network stuff
-#define PING_INTERVAL 2000
-#define CLIENT_TIMEOUT 8
+#define PING_INTERVAL 1000
+#define CLIENT_TIMEOUT 5
 
 #define WALL "Wall"
 #define FLOORGRASS "FloorGrass"

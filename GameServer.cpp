@@ -204,8 +204,8 @@ void GameServer::bootInactivePlayers() {
         	PlayerDieInfo die_info;
         	die_info.type = PLAYER_DIE;
         	die_info.player_id = i;
-        	broadcastData(&die_info, sizeof(PlayerDieInfo), true);
-
+        	NetworkManager::instance()->vital->receivePlayerDie(&die_info);
+        	
         	PlayerDisconnectPacket p;
         	p.type = PLAYER_DISCONNECT;
         	p.playerId = i;

@@ -68,6 +68,7 @@ void GameClient::startListeningForAdvertisements() {
 	state = GameClientDiscovering;
 	if (!(_discoverySocket = SDLNet_UDP_Open(DISCOVERY_PORT))) {
 		fprintf(stderr, "SDLNet_UDP_Open: %s\n", SDLNet_GetError());
+		_discoverySocket = NULL;
 		return;
 	}
 }
@@ -154,7 +155,7 @@ void GameClient::resendExpiredAcks() {
 }
 
 void GameClient::consumeDiscoveryPackets() {
-	if (state != GameClientDiscovering) {
+	if (state != GameClientDiscovering || _discoverySocket == NULL) {
 		return;
 	}
 	while (SDLNet_UDP_Recv(_discoverySocket, _tmpRecvPacket)) {
@@ -303,6 +304,11 @@ void GameClient::processPacket(UDPpacket* packet) {
 		case PLAYER_DISCONNECT:
 			PlayerDisconnectPacket* disconnect;
 			disconnect = (PlayerDisconnectPacket*)packetData;
+			LOG("PLAYER DISCONNECTED! " << disconnect->playerId);
+			PlayerDieInfo die;
+			die.type = PLAYER_DIE;
+			die.player_id = disconnect->playerId;
+			NetworkManager::instance()->vital->receivePlayerDie(&die);
 			GameState::instance()->removePlayer(disconnect->playerId);
 			break;
 	}
