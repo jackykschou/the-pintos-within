@@ -22,7 +22,6 @@ void GuiManager::Update(const Ogre::FrameEvent& event){
     }
     if(_current==_hud||gameState->isRunning()){
       if(_current!=_hud){
-        HideMessage();
         _current=_hud;
         _current->Display();
         gameState->current_state=IN_GAME;
@@ -59,6 +58,7 @@ void GuiManager::Update(const Ogre::FrameEvent& event){
       }
     }
   }else{
+    HideMessage();
     _isDisplayed=true;
     _current->Display();
   }
