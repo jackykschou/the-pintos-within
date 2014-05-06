@@ -230,6 +230,7 @@ CEGUI::MouseButton GuiManager::TranslateButton(OIS::MouseButtonID buttonId){
 }
 
 Hud::Hud():Gui("Hud.layout"){
+  _root->hide();
   _healthBar=static_cast<CEGUI::ProgressBar*>(_root->getChild("Hud/HealthBar"));
   _fuelBar=static_cast<CEGUI::ProgressBar*>(_root->getChild("Hud/FuelBar"));
   _ammoCount=_root->getChild("Hud/AmmoCount");
