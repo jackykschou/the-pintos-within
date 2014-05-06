@@ -1,4 +1,4 @@
 <?xml version="1.0" ?>
-<Imageset Name="BallsLook" Imagefile="Crosshairs.tga">
+<Imageset Name="BallsLook" Imagefile="Crosshairs.tga" NativeHorzRes="16" NativeVertRes="16" AutoScaled="false">
 	<Image Name="Crosshairs" XPos="0" YPos="0" Width="16" Height="16" />
 </Imageset>

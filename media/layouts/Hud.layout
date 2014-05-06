@@ -83,6 +83,19 @@
       <Property Name="UnifiedAreaRect" Value="{{0.025,0},{0.025,0},{0.0875,0},{0.0875,0}}" />
       <Property Name="BackgroundEnabled" Value="True" />
     </Window>
-    
+    <Window Type="TaharezLook/StaticText" Name="Hud/Message" >
+      <Property Name="HorzFormatting" Value="HorzCentred" />
+      <Property Name="VertFormatting" Value="VertCentred" />
+      <Property Name="FrameEnabled" Value="False" />
+      <Property Name="UnifiedAreaRect" Value="{{0.25,0},{0.2,0},{0.75,0},{0.4,0}}" />
+      <Property Name="BackgroundEnabled" Value="True" />
+    </Window>
+    <Window Type="TaharezLook/StaticImage" Name="Hud/Crosshairs" >
+      <Property Name="Image" Value="set:BallsLook image:Crosshairs" />
+      <Property Name="FrameEnabled" Value="False" />
+      <Property Name="UnifiedMaxSize" Value="{{0,16},{0,16}}" />
+      <Property Name="UnifiedAreaRect" Value="{{0.5,-8},{0.5,-8},{1,0},{1,0}}" />
+      <Property Name="BackgroundEnabled" Value="False" />
+    </Window>
   </Window>
 </GUILayout>

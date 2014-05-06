@@ -39,6 +39,8 @@ class GuiManager:public Singleton<GuiManager>{
     void ToggleConsole();
     bool IsConsoleVisible();
     std::string GetName();
+    void DisplayMessage(std::string message);
+    void HideMessage();
   private:
     CEGUI::MouseButton convertButton(OIS::MouseButtonID buttonId);
     CEGUI::OgreRenderer* _renderer;
@@ -79,6 +81,8 @@ class Hud:public Gui{
     void SetConsoleText(std::string str);
     void UpdateConsole();
     bool ChatSubmitted(const CEGUI::EventArgs& e);
+    void DisplayMessage(std::string message);
+    void HideMessage();
   private:
     CEGUI::ProgressBar* _healthBar;
     CEGUI::ProgressBar* _fuelBar;
@@ -88,6 +92,7 @@ class Hud:public Gui{
     CEGUI::Window* _weaponName;
     CEGUI::Window* _score;
     CEGUI::Window* _timeRemaining;
+    CEGUI::Window* _message;
     CEGUI::Editbox* _consoleInput;
     CEGUI::MultiLineEditbox* _consoleText;
     int _consoleSize;
