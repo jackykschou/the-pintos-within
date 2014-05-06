@@ -201,15 +201,19 @@ void GameServer::bootInactivePlayers() {
         	LOG("CLIENT " << i << " TIMED OUT... DISCONNECTING THIS CLIENT");
 
         	// if player alive, send out player DIE
-        	PlayerDieInfo die_info;
-        	die_info.type = PLAYER_DIE;
-        	die_info.player_id = i;
-        	NetworkManager::instance()->vital->receivePlayerDie(&die_info);
-        	
+        	if (GameState::instance()->isRunning()) {
+	        	PlayerDieInfo die_info;
+	        	die_info.type = PLAYER_DIE;
+	        	die_info.player_id = i;
+	        	NetworkManager::instance()->vital->receivePlayerDie(&die_info);
+        	}
+
         	PlayerDisconnectPacket p;
         	p.type = PLAYER_DISCONNECT;
         	p.playerId = i;
         	broadcastData(&p, sizeof(PlayerDisconnectPacket), true);
+
+			GameState::instance()->removePlayer(i);
 
         	if(GameState::instance()->players[i] != NULL)
 			{
@@ -217,8 +221,6 @@ void GameServer::bootInactivePlayers() {
 				delete GameState::instance()->players[i];
 				GameState::instance()->players[i] = NULL;
 			}
-
-			GameState::instance()->removePlayer(i);
         }
 	}
 }
@@ -320,7 +322,6 @@ void GameServer::processPacket(UDPpacket* packet) {
 			broadcastData(score_info, sizeof(IncreaseScoreInfo), true);
 			break;
 		case PING:
-			LOG("RECEIVED PING");
 			PingPacket *p;
 			p = (PingPacket*) packetData;
 			_lastReceived[p->playerId] = boost::posix_time::second_clock::local_time();
@@ -372,7 +373,8 @@ void GameServer::handleJoinPacket(UDPpacket *packet, void* data) {
 		PlayerJoinPacket p;
 		p.type = PLAYER_JOIN;
 		p.playerId = i;
-		strncpy(p.name, GameState::instance()->getPlayerName(i).c_str(), 16);
+		strncpy(p.name, GameState::instance()->getPlayerName(i).c_str(), PLAYER_NAME_MAX_LEN);
+		p.name[PLAYER_NAME_MAX_LEN-1] = '\0';
 		sendDataToClient(&p, sizeof(PlayerJoinPacket), &ip, true);
 	}
 
@@ -380,7 +382,8 @@ void GameServer::handleJoinPacket(UDPpacket *packet, void* data) {
 	PlayerJoinPacket p;
 	p.type = PLAYER_JOIN;
 	p.playerId = id;
-	strncpy(p.name, join->name, 16);
+	strncpy(p.name, join->name, PLAYER_NAME_MAX_LEN);
+	p.name[PLAYER_NAME_MAX_LEN-1] = '\0';
 	broadcastData(&p, sizeof(PlayerJoinPacket), true);
 
 	LOG("Assigning player id: " << id);

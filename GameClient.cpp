@@ -193,7 +193,8 @@ void GameClient::processPacket(UDPpacket* packet) {
 			  packetType == ASSIGNPLAYERID ||
 			  packetType == CHATPACK ||
 			  packetType == PLAYER_JOIN ||
-			  packetType == PING)) {
+			  packetType == PING ||
+			  packetType == PLAYER_DISCONNECT)) {
 			return;
 		}
 	}
@@ -304,12 +305,20 @@ void GameClient::processPacket(UDPpacket* packet) {
 		case PLAYER_DISCONNECT:
 			PlayerDisconnectPacket* disconnect;
 			disconnect = (PlayerDisconnectPacket*)packetData;
-			LOG("PLAYER DISCONNECTED! " << disconnect->playerId);
 			PlayerDieInfo die;
 			die.type = PLAYER_DIE;
 			die.player_id = disconnect->playerId;
 			NetworkManager::instance()->vital->receivePlayerDie(&die);
 			GameState::instance()->removePlayer(disconnect->playerId);
+			LOG("REMOVED PALYER "<<disconnect->playerId);
+			break;
+		case GAME_OVER:
+			GameOverPacket* gameOver;
+			gameOver = (GameOverPacket*)packetData;
+
+			GameState::instance()->stop();
+			//GuiManager::instance()->showGameOver(gameOver->message);
+			LOG("SHOWING GAME OVER MESSAGE "<<gameOver->message);
 			break;
 	}
 }

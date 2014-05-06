@@ -53,13 +53,13 @@ struct PlayerJoinPacket
 {
 	char type;
 	char playerId;
-	char name[16];
+	char name[PLAYER_NAME_MAX_LEN];
 };
 
 struct JoinRequestPacket
 {
 	char type;
-	char name[16];
+	char name[PLAYER_NAME_MAX_LEN];
 };
 
 struct GameStartPacket
@@ -80,6 +80,12 @@ struct PingPacket
 {
 	char type;
 	char playerId;
+};
+
+struct GameOverPacket
+{
+	char type;
+	char message[GAME_OVER_MSG_MAX_LEN];
 };
 
 enum NetworkManagerState 
@@ -110,6 +116,7 @@ class NetworkManager : public Singleton<NetworkManager>
 	void startServer();
 	void stopServer();
 	void startClient(const char* host);
+	void stopClient();
 	void startClientDiscovery();
 	void stopClientDiscovery();
 	void update();
@@ -127,6 +134,7 @@ class NetworkManager : public Singleton<NetworkManager>
 
 	// sends game state to every client
 	void broadcastHeartbeat();
+	void sendGameOverPacket(std::string message);
 
 	GameServer* server;
 	GameClient* client;

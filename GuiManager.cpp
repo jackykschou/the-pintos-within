@@ -156,8 +156,11 @@ bool GuiManager::Exit(const CEGUI::EventArgs& e){
 }
 bool GuiManager::Back(const CEGUI::EventArgs& e){
   if(GameState::instance()->current_state==LOBBY_AS_HOST){
+    NetworkManager::instance()->stopServer();
     return CreateGame(e);
   }else{
+    NetworkManager::instance()->stopClient();
+    NetworkManager::instance()->startClientDiscovery();
     return JoinGame(e);
   }
 }
@@ -181,8 +184,7 @@ bool GuiManager::ConnectToSelectedHost(const CEGUI::EventArgs& e){
   Connect(static_cast<JoinGameMenu*>(_joinGameMenu)->ReadSelectedHost());
 }
 bool GuiManager::Connect(const char* host){
-  LOG("STARTING IN CLIENT MODE");
-  //NetworkManager::instance()->stopClientDiscovery();
+  NetworkManager::instance()->stopClientDiscovery();
   GameState::instance()->current_state=LOBBY_AS_CLIENT;
   NetworkManager::instance()->startClient(host);
   _current=_lobby;

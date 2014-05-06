@@ -53,6 +53,9 @@ bool GameState::isRunning() {
 void GameState::update() 
 {
 	if (NetworkManager::instance()->isServer()) {
+		std::string msg;
+		bool gameOver = false;
+
 		if (!(timeLeft < 1 || !_running) && (GameState::instance()->game_mode != ELIMINATION))
 		{
 			pt::ptime now = pt::second_clock::local_time();
@@ -71,6 +74,8 @@ void GameState::update()
 			//display end game message
 			//hang for some time
 			//send message to end the game to return to main menu
+			msg = "This game is over";
+			gameOver = true;
 		}
 		else if(_running && GameState::instance()->game_mode == ELIMINATION)
 		{
@@ -79,7 +84,15 @@ void GameState::update()
 				//display end game message
 				//hang for some time
 				//send message to end the game to return to main menu
+				msg = "This game is over 2";
+				gameOver = true;
 			}
+		}
+
+		if (gameOver) {
+			NetworkManager::instance()->sendGameOverPacket(msg);
+			GameState::instance()->stop();
+			LOG("SHOWING GAME OVER MESSAGE "<<msg);
 		}
 	}
 }
@@ -119,8 +132,10 @@ std::string GameState::getPlayerName(int id) {
 void GameState::removePlayer(int id) {
 	playerConnections.erase(id);
 	playerNames.erase(id);
+	if (players[id]) delete players[id];
+	players[id] = NULL;
+}
 
-	PlayerCharacter* pc = players[id];
-	players.erase(id);
-
+void GameState::stop() {
+	_running = false;
 }

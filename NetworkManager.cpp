@@ -59,6 +59,7 @@ void NetworkManager::receiveHeartbeat(HeartBeatInfo* info)
 
 void NetworkManager::startServer() {
 	if (state == NetworkStateServer) stopServer();
+	if (state == NetworkStateClient) stopClient();
 
 	LOG("Starting server...");
 	
@@ -80,7 +81,20 @@ void NetworkManager::stopServer() {
 	}
 }
 
+void NetworkManager::sendGameOverPacket(std::string message) {
+	if (state == NetworkStateServer) {
+		GameOverPacket p;
+		p.type = GAME_OVER;
+		strncpy(p.message, message.c_str(), GAME_OVER_MSG_MAX_LEN);
+		p.message[GAME_OVER_MSG_MAX_LEN-1] = '\0';
+		send(&p, sizeof(GameOverPacket), true);
+	}
+}
+
 void NetworkManager::startClient(const char* host) {
+	if (state == NetworkStateServer) stopServer();
+	if (state == NetworkStateClient) stopClient();
+
 	LOG("Starting client...");
 
 	state = NetworkStateClient;
@@ -89,6 +103,15 @@ void NetworkManager::startClient(const char* host) {
 	if (client->connect() < 0) {
 		LOG("ERROR: CLIENT FAILED TO CONNECT.");
 		return;
+	}
+}
+
+void NetworkManager::stopClient() {
+	if (state == NetworkStateClient) {
+		// kill the old client
+		delete client;
+		client = NULL;
+		state = NetworkStateReady;
 	}
 }
 
