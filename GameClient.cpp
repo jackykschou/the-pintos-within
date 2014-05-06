@@ -219,6 +219,7 @@ void GameClient::processPacket(UDPpacket* packet) {
 			PlayerIdInfo* pinfo;
 			pinfo = (PlayerIdInfo*) packetData;
 			NetworkManager::instance()->changeId(pinfo->player_id);
+			GameState::instance()->current_map = pinfo->current_map;
 			break;
 		case HEARTBEATPACK:
 			HeartBeatInfo* hinfo;
@@ -305,5 +306,9 @@ void GameClient::processPacket(UDPpacket* packet) {
 			disconnect = (PlayerDisconnectPacket*)packetData;
 			GameState::instance()->removePlayer(disconnect->playerId);
 			break;
+		case HAIR_CHANGE:
+			ChangeHairInfo *hair;
+			hair =  (ChangeHairInfo*) packetData;
+			NetworkManager::instance()->vital->receiveChangeHair(hair);
 	}
 }

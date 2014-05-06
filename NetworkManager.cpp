@@ -50,7 +50,7 @@ void NetworkManager::sendChat(const char* msg)
 
 void NetworkManager::receiveHeartbeat(HeartBeatInfo* info)
 {
-	if (info->player_id == player_id)
+	if (info->player_id == player_id || !GameState::instance()->isRunning())
 		return;
 
 	if(GameState::instance()->players[info->player_id])

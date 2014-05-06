@@ -2,15 +2,32 @@
 #include "GameState.h"
 #include "PlayerCharacter.h"
 
-void AudioManager::initialize() {
+void musicDone();
+
+void AudioManager::initialize() 
+{
+   in_pinto = false;
+
 	SDL_Init(SDL_INIT_AUDIO);
 	if (Mix_OpenAudio(AUDIO_RATE, AUDIO_FORMAT, AUDIO_CHANNELS, AUDIO_BUFFERS)) {
 	    throw("Unable to open audio channel.");
 	}
 
+	current_music = NULL;
+	pinto_music = Mix_LoadMUS("media/sounds/Pinto.wav");
+	normal_music[0] = Mix_LoadMUS("media/sounds/Music1.wav");
+	normal_music[1] = Mix_LoadMUS("media/sounds/Music2.wav");
+	normal_music[2] = Mix_LoadMUS("media/sounds/Music3.wav");
+	normal_music[3] = Mix_LoadMUS("media/sounds/Music4.wav");
+	normal_music[4] = Mix_LoadMUS("media/sounds/Music5.wav");
+	normal_music[5] = Mix_LoadMUS("media/sounds/Music6.wav");
+
 	current_fire = 0;
 	current_dust = 0;
 	current_blood = 0;
+
+	Mix_HookMusicFinished(musicDone);
+	Mix_VolumeMusic(50);
 
 	_donks[0] = AudioManager::instance()->loadAudioFile("media/sounds/Donk1.wav");
 	_donks[1] = AudioManager::instance()->loadAudioFile("media/sounds/Donk2.wav");
@@ -247,6 +264,10 @@ void AudioManager::initialize() {
 	_blaster_charge = AudioManager::instance()->loadAudioFile("media/sounds/BlasterCharge.wav");
 	_out_of_ammo = AudioManager::instance()->loadAudioFile("media/sounds/OutOfAmmo.wav");
 	_pick_weapon = AudioManager::instance()->loadAudioFile("media/sounds/PickWeapon.wav");
+
+	_pinto_spawn = AudioManager::instance()->loadAudioFile("media/sounds/PintoSpawn.wav");
+	_pinto_die = AudioManager::instance()->loadAudioFile("media/sounds/PintoDie.wav");
+	_change_hair = AudioManager::instance()->loadAudioFile("media/sounds/ChangeHair.wav");
 }
 
 // returns an audioFileKey that references the loaded resource
@@ -370,4 +391,58 @@ void AudioManager::playOutOfAmmo(Ogre::Vector3 v)
 void AudioManager::playPickWeapon(Ogre::Vector3 v)
 {
 	play3DSound(_pick_weapon, 0, v);
+}
+
+void AudioManager::playPintoSpawn(Ogre::Vector3 v)
+{
+	play3DSound(_pinto_spawn, 0, v);
+}
+
+void AudioManager::playHairChange(Ogre::Vector3 v)
+{
+	play3DSound(_change_hair, 0, v);
+}
+
+void AudioManager::playPintoDie(Ogre::Vector3 v)
+{
+	play3DSound(_pinto_die, 0, v);
+}
+
+void musicDone()
+{
+	if(AudioManager::instance()->in_pinto)
+	{
+		Mix_HaltMusic();
+		AudioManager::instance()->current_music = AudioManager::instance()->pinto_music;
+		Mix_PlayMusic(AudioManager::instance()->current_music, 0);
+	}
+	else
+	{
+		Mix_HaltMusic();
+		AudioManager::instance()->current_music =  AudioManager::instance()->normal_music[RAND_RANGE(0, MUSIC_NUM)];
+		Mix_PlayMusic(AudioManager::instance()->current_music, 0);
+	}
+}
+void AudioManager::startMusic()
+{
+	current_music = normal_music[RAND_RANGE(0, MUSIC_NUM)];
+	Mix_PlayMusic(current_music, 0);
+}
+void AudioManager::stopMusic()
+{
+	Mix_HaltMusic();
+}
+void AudioManager::stopPinto()
+{
+	in_pinto = false;
+	Mix_HaltMusic();
+	current_music =  normal_music[RAND_RANGE(0, MUSIC_NUM)];
+	Mix_PlayMusic(current_music, 0);
+}
+void AudioManager::startPinto()
+{
+	in_pinto = true;
+	Mix_HaltMusic();
+	current_music = pinto_music;
+	Mix_PlayMusic(current_music, 0);
 }

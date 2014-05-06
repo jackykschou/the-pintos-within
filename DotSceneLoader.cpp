@@ -891,7 +891,7 @@ void DotSceneLoader::processUserDataReference(rapidxml::xml_node<>* XMLNode, Ogr
 
 void DotSceneLoader::createSceneObject(uint32_t scene_type, rapidxml::xml_node<>* XMLNode, std::string node_name)
 {
-    if(scene_type == THEGAUNTLET)
+    if(scene_type == THEGAUNTLET || scene_type == DUSTTWO)
     {
         Ogre::Vector3 position;
         Ogre::Quaternion rotation;
@@ -937,7 +937,17 @@ void DotSceneLoader::createSceneObject(uint32_t scene_type, rapidxml::xml_node<>
             processLight(pElement, mSceneMgr->getRootSceneNode());
         }
 
-        if(node_name.find(PLAYERSPAWNER) != std::string::npos)
+        if(node_name.find(PLAYERREDSPAWNER) != std::string::npos)
+        {
+            GameState::instance()->spawner->addRedSpawnPoint(Ogre::Vector3(position.x, position.y, position.z));
+        }
+
+        if(node_name.find(PLAYERBLUESPAWNER) != std::string::npos)
+        {
+            GameState::instance()->spawner->addBlueSpawnPoint(Ogre::Vector3(position.x, position.y, position.z));
+        }
+
+        if(node_name.find(PLAYERFREESPAWNER) != std::string::npos)
         {
             GameState::instance()->spawner->addFreeSpawnPoint(Ogre::Vector3(position.x, position.y, position.z));
         }
@@ -998,6 +1008,20 @@ void DotSceneLoader::createSceneObject(uint32_t scene_type, rapidxml::xml_node<>
             pElement = XMLNode->first_node("indexBuffer");
 
             Block* block = new Block(_scene, "FloorTiled.mesh",
+                position.x, position.y, position.z,
+                rotation.x, rotation.y, rotation.z, rotation.w,
+                scale.x, scale.y, scale.z);
+        }
+
+        if(node_name.find(FLOORSAND) != std::string::npos)
+        {
+            Ogre::String meshFile = getAttrib(XMLNode, "meshFile");
+            Ogre::String materialFile = getAttrib(XMLNode, "materialFile");
+            
+            pElement = XMLNode->first_node("vertexBuffer");
+            pElement = XMLNode->first_node("indexBuffer");
+
+            Block* block = new Block(_scene, "FloorSand.mesh",
                 position.x, position.y, position.z,
                 rotation.x, rotation.y, rotation.z, rotation.w,
                 scale.x, scale.y, scale.z);

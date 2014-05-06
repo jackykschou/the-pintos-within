@@ -38,6 +38,13 @@ struct ChangeWeaponInfo
   uint32_t weapon_index;
 };
 
+struct ChangeHairInfo
+{
+  char type;
+  uint32_t player_id;
+  uint32_t hair_index;
+};
+
 struct WeaponSpawnInfo
 {
   char type;
@@ -47,6 +54,7 @@ struct WeaponSpawnInfo
   float spawnY;
   float spawnZ;
   uint32_t pick_up_id;
+  uint32_t pick_up_type;
 };
 
 struct PlayFireSoundInfo
@@ -88,7 +96,7 @@ public:
   void receivePlayerDie(PlayerDieInfo* info_p);
   void setChangeWeapon(uint32_t index);
   void receiveChangeWeapon(ChangeWeaponInfo* info_p);
-  void setSpawnWeapon(uint32_t id, float x, float y, float z, int);
+  void setSpawnWeapon(uint32_t id, float x, float y, float z, int, int);
   void receiveSpawnWeapon(WeaponSpawnInfo* info);
   void setPlayerFireSound();
   void receivePlayFireSound(PlayFireSoundInfo* info_p);
@@ -98,6 +106,8 @@ public:
   void receiveIncreaseScore(IncreaseScoreInfo* info_p);
   void setTimeLeft(uint32_t);
   void receiveTimeLeft(TimeLeftInfo*);
+  void setChangeHair(uint32_t index);
+  void receiveChangeHair(ChangeHairInfo* info_p);
 };
 
 #endif

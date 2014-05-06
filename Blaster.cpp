@@ -22,7 +22,7 @@ Blaster::Blaster(PlayerCharacter* player_p, std::string mesh_name, float posX,
     is_charging = false;
     charge_scale = 0;
     charge_rate = 0.004f;
-    blast_radius = 250;
+    blast_radius = 180;
     max_ammot_cost = 25;
 
     charge_sound_debouncer = new Debouncer(0.3 * 1000, [this]()

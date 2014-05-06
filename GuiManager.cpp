@@ -162,7 +162,8 @@ bool GuiManager::Back(const CEGUI::EventArgs& e){
   }
 }
 void GuiManager::Start() {
-  if (NetworkManager::instance()->isServer()) {
+  if (NetworkManager::instance()->isServer()) 
+  {
     NetworkManager::instance()->server->broadcastGameStart();
   }
 

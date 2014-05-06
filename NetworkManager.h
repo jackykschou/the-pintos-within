@@ -21,6 +21,7 @@ struct PlayerIdInfo
 {
 	char type;
 	uint32_t player_id;
+	uint32_t current_map;
 };
 
 struct PlayerNumInfo

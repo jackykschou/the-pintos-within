@@ -56,6 +56,8 @@ public:
 	float jet_speedUp;
 	float jet_bonus_speed;
 
+	int jet_cost;
+
 	btVector3 currVel;
 	btVector3 jetVel;
 

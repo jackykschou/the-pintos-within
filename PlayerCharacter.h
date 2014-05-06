@@ -15,9 +15,11 @@
 #include <OgreAnimationState.h>
 
 #define WEAPON_NUM 5
+#define HAIR_NUM 5
 
 class HitBox;
 class Weapon;
+class Hair;
 
 class PlayerCharacter : GameObject
 {
@@ -68,8 +70,8 @@ public:
 
 	Ogre::AnimationState *hair_running_animation_state;
 	Ogre::AnimationState *hair_idle_animation_state;
-	Ogre::AnimationState *hair_shooting_animation_states[WEAPON_NUM];
-	Ogre::AnimationState *hair_reload_animation_states[WEAPON_NUM];
+	Ogre::AnimationState *hair_shooting_animation_state;
+	Ogre::AnimationState *hair_reload_animation_state;
 	Ogre::AnimationState *hair_jumping_animation_state;
 	Ogre::AnimationState *hair_die_animation_state;
 
@@ -101,10 +103,12 @@ public:
 	Mesh* pinto_mesh;
 
 	PlayerBox* jet_pack;
-	PlayerBox* hair;
 
 	Weapon* weapons[WEAPON_NUM];
 	Weapon* current_weapon;
+
+	Hair* hairs[HAIR_NUM];
+	Hair* current_hair;
 
 	HitBox* head_box;
 	HitBox* body_box;
@@ -130,8 +134,10 @@ public:
 
 	virtual void update();
 	virtual void changeWeapon(int);
+	virtual void changeHair(int);
 
 	virtual void changeToPinto();
+	void setToOriginalStatus();
 
 	void switchToBlueTeam();
 

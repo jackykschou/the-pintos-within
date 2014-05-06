@@ -2,6 +2,7 @@
 #include "PlayerSpawner.h"
 #include "PlayerCharacter.h"
 #include "NetworkManager.h"
+#include "SceneManager.h"
 
 namespace pt = boost::posix_time;
 
@@ -19,6 +20,8 @@ void GameState::reset()
 	_start = pt::second_clock::local_time();
 	_running = false;
 	players.clear();
+
+	AudioManager::instance()->stopMusic();
 }
 
 void GameState::start() 
@@ -37,11 +40,11 @@ void GameState::start()
 		NetworkManager::instance()->send(&info, sizeof(PlayerNumInfo), true);
 	}
 
-
-	SceneManager::instance()->changeCurrentScene(THEGAUNTLET);
-	// SceneManager::instance()->changeCurrentScene(GameState::instance()->current_map);
+	SceneManager::instance()->changeCurrentScene(GameState::instance()->current_map);
 
 	carrying_pinto_seed = false;
+
+	AudioManager::instance()->startMusic();
 
 	spawner->startGame();
 }
@@ -85,6 +88,7 @@ void GameState::update()
 }
 
 void GameState::clear_old_games(){
+
 	pt::ptime now=pt::second_clock::local_time();
 	auto i=games.begin();
 	while(i!=games.end()){
@@ -94,6 +98,17 @@ void GameState::clear_old_games(){
 			++i;
 		}
 	}
+
+
+	//????????????????????
+	GameState::instance()->current_state = MAIN_MENU;
+
+	if(SceneManager::instance()->current_scene != NULL)
+	{
+		delete (SceneManager::instance()->current_scene);
+		SceneManager::instance()->current_scene = NULL;
+	}
+	//??????????????????????
 }
 
 bool GameState::nameIsTaken(char* name) {

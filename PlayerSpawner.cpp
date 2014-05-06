@@ -17,6 +17,23 @@ void PlayerSpawner::startGame()
 	{
 		if(GameState::instance()->team_mode == TEAM && GameState::instance()->game_mode != PINTO)
 		{
+			uint32_t prev_team = BLUE_TEAM;
+			for(std::map<int,bool>::iterator iter = GameState::instance()->playerConnections.begin();
+            iter != GameState::instance()->playerConnections.end(); ++iter)
+			{
+				int i = iter->first;
+				if(prev_team == BLUE_TEAM)
+				{
+					NetworkManager::instance()->player_team_id_map[i] = RED_TEAM;
+					prev_team = RED_TEAM;
+				}
+				else
+				{
+					NetworkManager::instance()->player_team_id_map[i] = BLUE_TEAM;
+					prev_team = BLUE_TEAM;
+				}
+			}
+
 			std::vector<Ogre::Vector3> spawned_positions_blue;
 			std::vector<Ogre::Vector3> spawned_positions_red;
 			for(std::map<int,bool>::iterator iter = GameState::instance()->playerConnections.begin();
@@ -110,7 +127,7 @@ void PlayerSpawner::spawnPlayer(float x, float y, float z, uint32_t player_id, u
 		self = true;
 
 	PlayerCharacter *player = new PlayerCharacter(self, scene, "PixelMan.mesh",
-            x, y, z,
+            x, y + 5, z,
             0, 0, 0, 1,
             10, 10, 10,
             player_id, version, is_pinto);
@@ -163,12 +180,12 @@ Ogre::Vector3 PlayerSpawner::spawnPlayer(uint32_t player_id, bool is_pinto)
 	uint32_t version = RAND_RANGE(0, 5);
 
 	PlayerCharacter *player = new PlayerCharacter(self, scene, "PixelMan.mesh",
-            position.x, position.y, position.z,
+            position.x, position.y + 5, position.z,
             0, 0, 0, 1,
             10, 10, 10,
             player_id, version, is_pinto);
 
-	player->team_id = NetworkManager::instance()->player_team_id_map[NetworkManager::instance()->player_id];
+	player->team_id = NetworkManager::instance()->player_team_id_map[player_id];
 	if(player->team_id == BLUE_TEAM)
 	{
 		player->switchToBlueTeam();
