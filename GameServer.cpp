@@ -193,7 +193,7 @@ void GameServer::bootInactivePlayers() {
 	pt::ptime now = pt::second_clock::local_time();
 	for(std::map<int,bool>::iterator iter = GameState::instance()->playerConnections.begin();
             iter != GameState::instance()->playerConnections.end(); ++iter)
-        {
+      {
         int i = iter->first; // the server always be active yo
         if (i == 0) continue;
         pt::time_duration diff = now - _lastReceived[i];
@@ -326,6 +326,11 @@ void GameServer::processPacket(UDPpacket* packet) {
 			p = (PingPacket*) packetData;
 			_lastReceived[p->playerId] = boost::posix_time::second_clock::local_time();
 			break;
+		case HAIR_CHANGE:
+			ChangeHairInfo *hair;
+			hair =  (ChangeHairInfo*) packetData;
+			NetworkManager::instance()->vital->receiveChangeHair(hair);
+			broadcastData(hair, sizeof(ChangeHairInfo), true);
 	}
 }
 
@@ -362,6 +367,7 @@ void GameServer::handleJoinPacket(UDPpacket *packet, void* data) {
 	PlayerIdInfo info;
 	info.type = ASSIGNPLAYERID;
 	info.player_id = id;
+	info.current_map = GameState::instance()->current_map;
 
 	char x = ASSIGNPLAYERID;
 	sendDataToClient(&info, sizeof(PlayerIdInfo), &ip, true);

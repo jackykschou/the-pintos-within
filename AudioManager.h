@@ -13,6 +13,7 @@
 #define SOUNDS_NUM_PER_WEAPON 15
 #define SOUNDS_NUM_BULLET 24
 #define SOUNDS_NUM_BLOOD 24
+#define MUSIC_NUM 6
 
 #define DEFAULT_CHUNK_VOLUME 128
 
@@ -39,6 +40,20 @@ class AudioManager : public Singleton<AudioManager> {
     void playBlasterCharge(Ogre::Vector3 v, uint32_t sound_volume = DEFAULT_CHUNK_VOLUME);
     void playOutOfAmmo(Ogre::Vector3 v);
     void playPickWeapon(Ogre::Vector3 v);
+    void playPintoSpawn(Ogre::Vector3 v);
+    void playHairChange(Ogre::Vector3 v);
+    void playPintoDie(Ogre::Vector3 v);
+
+    bool in_pinto;
+
+    Mix_Music *current_music;
+    Mix_Music *pinto_music;
+    Mix_Music *normal_music[MUSIC_NUM];
+
+    void startMusic();
+    void stopMusic();
+    void stopPinto();
+    void startPinto();
 
   private:
     int current_fire;
@@ -59,6 +74,9 @@ class AudioManager : public Singleton<AudioManager> {
     AudioFile _blaster_charge;
     AudioFile _out_of_ammo;
     AudioFile _pick_weapon;
+    AudioFile _pinto_spawn;
+    AudioFile _pinto_die;
+    AudioFile _change_hair;
 };
 
 #endif

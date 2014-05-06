@@ -44,5 +44,7 @@
 #include "PlayerPickUp.h"
 #include "WeaponSpawner.h"
 #include "Melee.h"
+#include "Hair.h"
+#include "HairPickUp.h"
 
 #endif // #ifndef __TheEngine_h_

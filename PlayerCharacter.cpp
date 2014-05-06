@@ -7,6 +7,7 @@
 #include "NetworkManager.h"
 #include "PlayerSpawner.h"
 #include "Melee.h"
+#include "Hair.h"
 
 PlayerCharacter::PlayerCharacter(bool is_yourself_p, Scene* scene, std::string mesh_name,
 	float posX, float posY, float posZ, float rotX, float rotY, float rotZ, float rotW,
@@ -203,92 +204,55 @@ PlayerCharacter::PlayerCharacter(bool is_yourself_p, Scene* scene, std::string m
 										1, 1, 1,
 										COL_NOTHING, COL_NOTHING);
 
-	std::string hair_name;
+	hairs[NORMAL_HAIR_ID] = new Hair(this, "PixelMan.002.mesh", NORMAL_HAIR_ID, 0, 
+			0, 0, 0, 0, 0, 1,
+			10, 10, 10);
+	hairs[NORMAL_HAIR_ID]->node->setVisible(true);
 
-	if(version == 0)
-	{
-		hair_name = "PixelMan.002.mesh";
-	}
-	else if(version == 1)
-	{
-		hair_name = "PixelMan.003.mesh";
-	}
-	else if(version == 2)
-	{
-		hair_name = "PixelMan.004.mesh";
-	}
-	else if(version == 3)
-	{
-		hair_name = "PixelMan.005.mesh";
-	}
-	else
-	{
-		hair_name = "PixelMan.006.mesh";
-	}
+	hairs[JOE_HAIR_ID] = new Hair(this, "PixelMan.006.mesh", JOE_HAIR_ID, 0, 
+			0, 0, 0, 0, 0, 1,
+			10, 10, 10); 
+	hairs[JOE_HAIR_ID]->node->setVisible(false);
 
-	jet_pack->node->setVisible(true);
+	hairs[MIKE_HAIR_ID] = new Hair(this, "PixelMan.003.mesh", MIKE_HAIR_ID, 0, 
+			0, 0, 0, 0, 0, 1,
+			10, 10, 10);
+	hairs[MIKE_HAIR_ID]->node->setVisible(false);
 
-	hair = new PlayerBox(this, hair_name,
-							0, 0, 0,
-							0, 0, 0, 1,
-							10, 10, 10,
-							COL_NOTHING, COL_NOTHING);
-	hair->node->setVisible(true);
+	hairs[KEEGAN_HAIR_ID] = new Hair(this, "PixelMan.005.mesh", KEEGAN_HAIR_ID, 0, 
+			0, 0, 0, 0, 0, 1,
+			10, 10, 10);
+	hairs[KEEGAN_HAIR_ID]->node->setVisible(false);
+
+	hairs[JACKY_HAIR_ID] = new Hair(this, "PixelMan.004.mesh", JACKY_HAIR_ID, 0, 
+			0, 0, 0, 0, 0, 1,
+			10, 10, 10);
+	hairs[JACKY_HAIR_ID]->node->setVisible(false);
+
+	current_hair = hairs[NORMAL_HAIR_ID];
 
 	//hair states
-	hair_shooting_animation_states[0] = hair->entity->getAnimationState("Shooting");
-	hair_shooting_animation_states[0]->setLoop(false);
-	hair_shooting_animation_states[0]->setWeight(0);
+	hair_shooting_animation_state = hairs[0]->shooting_animation_state;
+	hair_shooting_animation_state->setLoop(false);
+	hair_shooting_animation_state->setWeight(0);
 
-	hair_reload_animation_states[0] = hair->entity->getAnimationState("Reloading");
-	hair_reload_animation_states[0]->setLoop(false);
-	hair_reload_animation_states[0]->setWeight(0);
+	hair_reload_animation_state = hairs[0]->reload_animation_state;
+	hair_reload_animation_state->setLoop(false);
+	hair_reload_animation_state->setWeight(0);
 
-	hair_shooting_animation_states[1] = hair->entity->getAnimationState("Shooting");
-	hair_shooting_animation_states[1]->setLoop(false);
-	hair_shooting_animation_states[1]->setWeight(0);
-
-	hair_reload_animation_states[1] = hair->entity->getAnimationState("Reloading");
-	hair_reload_animation_states[1]->setLoop(false);
-	hair_reload_animation_states[1]->setWeight(0);
-
-	hair_shooting_animation_states[2] = hair->entity->getAnimationState("Shooting");
-	hair_shooting_animation_states[2]->setLoop(false);
-	hair_shooting_animation_states[2]->setWeight(0);
-
-	hair_reload_animation_states[2] = hair->entity->getAnimationState("Reloading");
-	hair_reload_animation_states[2]->setLoop(false);
-	hair_reload_animation_states[2]->setWeight(0);
-
-	hair_shooting_animation_states[3] = hair->entity->getAnimationState("Shooting");
-	hair_shooting_animation_states[3]->setLoop(false);
-	hair_shooting_animation_states[3]->setWeight(0);
-
-	hair_reload_animation_states[3] = hair->entity->getAnimationState("Reloading");
-	hair_reload_animation_states[3]->setLoop(false);
-	hair_reload_animation_states[3]->setWeight(0);
-
-	hair_shooting_animation_states[4] = hair->entity->getAnimationState("Shooting");
-	hair_shooting_animation_states[4]->setLoop(false);
-	hair_shooting_animation_states[4]->setWeight(0);
-
-	hair_reload_animation_states[4] = hair->entity->getAnimationState("Reloading");
-	hair_reload_animation_states[4]->setLoop(false);
-	hair_reload_animation_states[4]->setWeight(0);
-
-	hair_running_animation_state = hair->entity->getAnimationState("Running");
+	hair_running_animation_state = hairs[0]->running_animation_state;
 	hair_running_animation_state->setLoop(true);
 	hair_running_animation_state->setWeight(0);
 
-	hair_idle_animation_state = hair->entity->getAnimationState("Idle");
+	hair_idle_animation_state = hairs[0]->idle_animation_state;
 	hair_idle_animation_state->setLoop(true);
 	hair_idle_animation_state->setWeight(0);
 
-	hair_jumping_animation_state = hair->entity->getAnimationState("Jump");
+	hair_jumping_animation_state = hairs[0]->jumping_animation_state;
 	hair_jumping_animation_state->setLoop(false);
 	hair_jumping_animation_state->setWeight(0);
 
-	hair_die_animation_state = hair->entity->getAnimationState("Death");
+	hair_die_animation_state = hairs[0]->die_animation_state;
 	hair_die_animation_state->setLoop(false);
 	hair_die_animation_state->setWeight(0);
 
@@ -374,9 +338,9 @@ PlayerCharacter::PlayerCharacter(bool is_yourself_p, Scene* scene, std::string m
 							3.53341, 4.25870, 3.50068, 1.75);
 
 	float pinto_damange_reduction_percentage = (1 / (float)GameState::instance()->num_player);
-	if(pinto_damange_reduction_percentage < 0.2)
+	if(pinto_damange_reduction_percentage < 0.25)
 	{
-		pinto_damange_reduction_percentage = 0.2;
+		pinto_damange_reduction_percentage = 0.25;
 	}
 
 	pinto_box = new HitBox(this, "Hitbox3.mesh",
@@ -408,8 +372,8 @@ PlayerCharacter::PlayerCharacter(bool is_yourself_p, Scene* scene, std::string m
 	current_shooting_animation_state = shooting_animation_states[0];
 	current_jet_pack_reload_animation_state = jet_pack_reload_animation_states[0];
 	current_jet_pack_shooting_animation_state = jet_pack_shooting_animation_states[0];
-	current_hair_reload_animation_state = hair_reload_animation_states[0];
-	current_hair_shooting_animation_state = hair_shooting_animation_states[0];
+	current_hair_reload_animation_state = hair_reload_animation_state;
+	current_hair_shooting_animation_state = hair_shooting_animation_state;
 
 	if(is_pinto)
 	{
@@ -453,6 +417,11 @@ void PlayerCharacter::update()
 			controller->can_move = false;
 			health = 0;
 
+			if(in_pinto_form)
+			{
+				AudioManager::instance()->stopPinto();
+			}
+
 			if(transform->posY <= -150 && in_pinto_form)
 			{
 				uint random_pinto_index;
@@ -480,7 +449,10 @@ void PlayerCharacter::update()
 				NetworkManager::instance()->vital->setChangePinto(random_pinto_index);
 			}
 
-			AudioManager::instance()->playDeath(Ogre::Vector3(transform->posX, transform->posY, transform->posZ));
+			if(in_pinto_form)
+				AudioManager::instance()->playPintoDie(Ogre::Vector3(transform->posX, transform->posY, transform->posZ));
+			else
+				AudioManager::instance()->playDeath(Ogre::Vector3(transform->posX, transform->posY, transform->posZ));
 		}
 
 		if(is_dead)
@@ -1224,6 +1196,8 @@ void PlayerCharacter::changeToPinto()
 {
 	if(!in_pinto_form)
 	{
+		setToOriginalStatus();
+
 		health = 100;
 		health_regen = 0;
 
@@ -1260,7 +1234,7 @@ void PlayerCharacter::changeToPinto()
 		in_pinto_form = true;
 		pinto_mesh->node->setVisible(true);
 		jet_pack->node->setVisible(false);
-		hair->node->setVisible(false);
+		current_hair->node->setVisible(false);
 		mesh->node->setVisible(false);
 
 		body_box->Disable();
@@ -1276,11 +1250,13 @@ void PlayerCharacter::changeToPinto()
 		GameState::instance()->team_id = PINTO_TEAM;
 
 		controller->base_movement_speed += 0.3f;
-		controller->controller->m_jumpSpeed += 80;
+		controller->controller->m_jumpSpeed += 100;
 
 		if(is_yourself)
 		{
 			GameState::instance()->carrying_pinto_seed = false;
+			AudioManager::instance()->startPinto();
+			AudioManager::instance()->playPintoSpawn(Ogre::Vector3(transform->posX, transform->posY, transform->posZ));
 		}
 		GameState::instance()->player_pinto_seeds[player_id] = false;
 	}
@@ -1291,4 +1267,74 @@ void PlayerCharacter::switchToBlueTeam()
 	mesh->entity->setMaterialName("PixelManMaterialBlue");
 	team_id = BLUE_TEAM;
 	GameState::instance()->team_id = BLUE_TEAM;
+}
+
+void PlayerCharacter::setToOriginalStatus()
+{
+	if(is_yourself)
+	{
+		controller->base_movement_speed = 1.0f;
+		controller->jet_cost = 20;
+		health_regen = 3;
+	}
+}
+
+void PlayerCharacter::changeHair(int index)
+{
+	if(!in_pinto_form)
+	{
+		setToOriginalStatus();
+
+		current_hair->node->setVisible(false);
+
+		hair_shooting_animation_state = hairs[index]->shooting_animation_state;
+		hair_shooting_animation_state->setLoop(false);
+		hair_shooting_animation_state->setWeight(0);
+
+		hair_reload_animation_state = hairs[index]->reload_animation_state;
+		hair_reload_animation_state->setLoop(false);
+		hair_reload_animation_state->setWeight(0);
+
+		hair_running_animation_state = hairs[index]->running_animation_state;
+		hair_running_animation_state->setLoop(true);
+		hair_running_animation_state->setWeight(0);
+
+		hair_idle_animation_state = hairs[index]->idle_animation_state;
+		hair_idle_animation_state->setLoop(true);
+		hair_idle_animation_state->setWeight(0);
+
+		hair_jumping_animation_state = hairs[index]->jumping_animation_state;
+		hair_jumping_animation_state->setLoop(false);
+		hair_jumping_animation_state->setWeight(0);
+
+		hair_die_animation_state = hairs[index]->die_animation_state;
+		hair_die_animation_state->setLoop(false);
+		hair_die_animation_state->setWeight(0);
+
+		current_hair = hairs[index];
+		current_hair->node->setVisible(true);
+
+		if(is_yourself)
+		{
+			NetworkManager::instance()->vital->setChangeHair(index);
+
+			switch(index)
+			{
+				case JOE_HAIR_ID:
+					controller->jet_cost = 12;
+					break;
+				case MIKE_HAIR_ID:
+					health_regen = 6;
+					break;
+				case KEEGAN_HAIR_ID:
+					controller->base_movement_speed += 0.2f;
+					break;
+				case JACKY_HAIR_ID:
+					health += 100;
+					if(health > 100)
+						health = 100;
+					break;
+			}
+		}
+	}
 }

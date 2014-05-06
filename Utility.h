@@ -67,6 +67,7 @@ enum collisiontypes {
 #define PLAYER_DISCONNECT 21
 #define PING 22
 #define GAME_OVER 23
+#define HAIR_CHANGE 24
 
 // network stuff
 #define PING_INTERVAL 1000
@@ -77,10 +78,13 @@ enum collisiontypes {
 #define FLOORTILE "FloorTiled"
 #define PLATFORMDIRT "PlatformDirt"
 #define PLATFORMGREY "PlatformGrey"
-#define PLAYERSPAWNER "Spawner.Player"
+#define PLAYERREDSPAWNER "Spawner.Player.Red"
+#define PLAYERBLUESPAWNER "Spawner.Player.Blue"
+#define PLAYERFREESPAWNER "Spawner.Player.Free"
 #define LIGHT "Sun"
 #define SKY "SkyHemi"
 #define WEAPONSPAWNER "Spawner.Weapon"
+#define FLOORSAND "FloorSand"
 
 //current_state
 #define MAIN_MENU 1
@@ -90,7 +94,6 @@ enum collisiontypes {
 #define LOBBY_AS_CLIENT 5
 #define LOADING 6
 #define IN_GAME 7
-
 
 //game_mode
 #define ELIMINATION 1
@@ -111,9 +114,18 @@ enum collisiontypes {
 #define BLASTER_ID 3
 #define MELEE_ID 4
 
+#define NORMAL_HAIR_ID 0
+#define JOE_HAIR_ID 1
+#define MIKE_HAIR_ID 2
+#define KEEGAN_HAIR_ID 3
+#define JACKY_HAIR_ID 4
+
 //team id
 #define RED_TEAM 0
 #define BLUE_TEAM 1
 #define PINTO_TEAM 1
+
+#define WEAPON_PICKUP 0
+#define HAIR_PICKUP 1
 
 #endif // #ifndef __Utility_h_

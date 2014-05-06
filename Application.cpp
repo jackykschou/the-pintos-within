@@ -1,6 +1,6 @@
 #include "Application.h"
 
-#define APPLICATION_NAME "Ball Blaster 2000"
+#define APPLICATION_NAME "The PintOS Within"
 
 void initializeGame()
 {

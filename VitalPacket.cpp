@@ -18,7 +18,7 @@ void VitalPacket::setDamage(int damage, uint32_t player_id)
 
 void VitalPacket::receiveDamage(PlayerDamageInfo* info_p)
 {
-	if (info_p->player_id == NetworkManager::instance()->player_id)
+	if (info_p->player_id == NetworkManager::instance()->player_id || !GameState::instance()->isRunning())
 		return;
 
 	if( GameState::instance()->player != NULL &&
@@ -96,7 +96,7 @@ void VitalPacket::setPlayerRespawn(float posX, float posY, float posZ, uint32_t 
 
 void VitalPacket::receivePlayerRespawn(PlayerRespawnInfo* info_p)
 {
-	if (info_p->player_id == NetworkManager::instance()->player_id)
+	if (info_p->player_id == NetworkManager::instance()->player_id || !GameState::instance()->isRunning())
 		return;
 
 	if(GameState::instance()->players[info_p->player_respawn_id] != NULL)
@@ -119,7 +119,7 @@ void VitalPacket::setPlayerDie()
 
 void VitalPacket::receivePlayerDie(PlayerDieInfo* info_p)
 {
-	if (info_p->player_id == NetworkManager::instance()->player_id)
+	if (info_p->player_id == NetworkManager::instance()->player_id || !GameState::instance()->isRunning())
 		return;
 	
 	if(GameState::instance()->players[info_p->player_id] != NULL)
@@ -149,14 +149,14 @@ void VitalPacket::setChangeWeapon(uint32_t index)
 
 void VitalPacket::receiveChangeWeapon(ChangeWeaponInfo* info_p)
 {
-	if (info_p->player_id == NetworkManager::instance()->player_id)
+	if (info_p->player_id == NetworkManager::instance()->player_id || !GameState::instance()->isRunning())
 		return;
 
 	if(GameState::instance()->players[info_p->player_id] != NULL)
 		GameState::instance()->players[info_p->player_id]->changeWeapon(info_p->weapon_index);
 }
 
-void VitalPacket::setSpawnWeapon(uint32_t id, float x, float y, float z, int pick_up_id)
+void VitalPacket::setSpawnWeapon(uint32_t id, float x, float y, float z, int pick_up_id, int pick_up_type)
 {
 	WeaponSpawnInfo info;
 	info.type = WEAPON_SPAWN;
@@ -166,15 +166,16 @@ void VitalPacket::setSpawnWeapon(uint32_t id, float x, float y, float z, int pic
  	info.spawnY = y;
   	info.spawnZ = z;
   	info.pick_up_id = pick_up_id;
+  	info.pick_up_type = pick_up_type;
 	NetworkManager::instance()->send(&info, sizeof(WeaponSpawnInfo), true);
 }
 
 void VitalPacket::receiveSpawnWeapon(WeaponSpawnInfo* info)
 {
-	if (info->player_id == NetworkManager::instance()->player_id)
+	if (info->player_id == NetworkManager::instance()->player_id || !GameState::instance()->isRunning())
 		return;
 	
-	GameState::instance()->weapon_spawner->spawnWeapon(info->spawnX, info->spawnY, info->spawnZ, info->weapon_id, info->pick_up_id);
+	GameState::instance()->weapon_spawner->spawnWeapon(info->spawnX, info->spawnY, info->spawnZ, info->weapon_id, info->pick_up_id, info->pick_up_type);
 }
 
 void VitalPacket::setPlayerFireSound()
@@ -188,7 +189,7 @@ void VitalPacket::setPlayerFireSound()
 
 void VitalPacket::receivePlayFireSound(PlayFireSoundInfo* info_p)
 {
-	if (info_p->player_id == NetworkManager::instance()->player_id)
+	if (info_p->player_id == NetworkManager::instance()->player_id || !GameState::instance()->isRunning())
 		return;
 
 	if(GameState::instance()->players[info_p->player_id] != NULL)
@@ -212,7 +213,7 @@ void VitalPacket::setChangePinto(uint32_t to_pinto_player_id)
 
 void VitalPacket::receiveChangePinto(ChangePintoInfo* info_p)
 {
-	if (info_p->player_id == NetworkManager::instance()->player_id)
+	if (info_p->player_id == NetworkManager::instance()->player_id || !GameState::instance()->isRunning())
 		return;
 
 	if(GameState::instance()->players[info_p->to_pinto_player_id] == NULL
@@ -239,6 +240,9 @@ void VitalPacket::setIncreaseScore(uint32_t player_id, uint32_t amount, uint32_t
 
 void VitalPacket::receiveIncreaseScore(IncreaseScoreInfo* info_p)
 {
+	if(!GameState::instance()->isRunning())
+		return;
+
 	if((info_p->receive_team_id == GameState::instance()->team_id) && 
 		(GameState::instance()->team_mode == TEAM && GameState::instance()->game_mode != PINTO))
 	{
@@ -262,9 +266,26 @@ void VitalPacket::setTimeLeft(uint32_t time_left)
 
 void VitalPacket::receiveTimeLeft(TimeLeftInfo* info_p)
 {
-	if (info_p->player_id == NetworkManager::instance()->player_id)
+	if (info_p->player_id == NetworkManager::instance()->player_id || !GameState::instance()->isRunning())
 		return;
 
 	GameState::instance()->timeLeft = info_p->time_left;
 }
 
+void VitalPacket::setChangeHair(uint32_t index)
+{
+	ChangeHairInfo info;
+	info.type = HAIR_CHANGE;
+	info.player_id = NetworkManager::instance()->player_id;
+	info.hair_index = index;
+	NetworkManager::instance()->send(&info, sizeof(ChangeHairInfo), true);
+}
+
+void VitalPacket::receiveChangeHair(ChangeHairInfo* info_p)
+{
+	if (info_p->player_id == NetworkManager::instance()->player_id || !GameState::instance()->isRunning())
+		return;
+
+	if(GameState::instance()->players[info_p->player_id] != NULL)
+		GameState::instance()->players[info_p->player_id]->changeHair(info_p->hair_index);
+}

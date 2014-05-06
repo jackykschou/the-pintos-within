@@ -26,7 +26,7 @@ public:
 
 	void startGame();
 	void addSpawnPoint(Ogre::Vector3);
-	void spawnWeapon(float, float, float, uint32_t, int);
+	void spawnWeapon(float, float, float, uint32_t, int, int);
 	void spawnWeapon();
 	Ogre::Vector3 spawnPlayer(uint32_t);
 
