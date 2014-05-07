@@ -15,7 +15,7 @@ AssaultRifle::AssaultRifle(PlayerCharacter* player_p, std::string mesh_name, flo
     Transform* tran = ((GameObject*)player_p)->getComponent<Transform>();
     node->setPosition(player->mesh->node->convertWorldToLocalPosition(
         Ogre::Vector3(tran->posX + posX, tran->posY + posY, tran->posZ + posZ)));
-    damage = 9;
+    damage = 10;
     shoot_distance = 2000;
 
     reload_time = reload_animation_state->getLength() * reload_speed;
