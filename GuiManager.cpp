@@ -343,6 +343,7 @@ void Hud::HideMessage(){
 }
 
 MainMenu::MainMenu():Gui("MainMenu.layout"){
+  _root->getChild("MainMenu/Instructions")->disable();
   _hostGame=static_cast<CEGUI::PushButton*>(_root->getChild("MainMenu/HostGame"));
   _joinGame=static_cast<CEGUI::PushButton*>(_root->getChild("MainMenu/JoinGame"));
   _exit=static_cast<CEGUI::PushButton*>(_root->getChild("MainMenu/Exit"));

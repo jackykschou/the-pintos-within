@@ -9,23 +9,58 @@
     <Property Name="TitlebarEnabled" Value="True" />
     <Property Name="SizingEnabled" Value="False" />
     <Property Name="DragMovingEnabled" Value="False" />
-    <Property Name="UnifiedMaxSize" Value="{{1,200},{1,200}}" />
-    <Property Name="UnifiedAreaRect" Value="{{0,-50},{0,-50},{1,100},{1,100}}" />
+    <Property Name="UnifiedAreaRect" Value="{{0,0},{0,0},{1,0},{1,0}}" />
     <Property Name="CloseButtonEnabled" Value="False" />
     <Window Type="TaharezLook/Button" Name="MainMenu/HostGame" >
       <Property Name="Text" Value="Host Game" />
-      <Property Name="UnifiedMaxSize" Value="{{0.33,0},{0,40}}" />
-      <Property Name="UnifiedAreaRect" Value="{{0.33,0},{0.5,0},{0.66,0},{0.7,0}}" />
+      <Property Name="UnifiedPosition" Value="{{0.3333,0},{0.55,0}}" />
+      <Property Name="UnifiedSize" Value="{{0.3333,0},{0.1,0}}" />
     </Window>
     <Window Type="TaharezLook/Button" Name="MainMenu/JoinGame" >
       <Property Name="Text" Value="Join Game" />
-      <Property Name="UnifiedMaxSize" Value="{{0.33,0},{0,40}}" />
-      <Property Name="UnifiedAreaRect" Value="{{0.33,0},{0.6,0},{0.66,0},{0.8,0}}" />
+      <Property Name="UnifiedPosition" Value="{{0.3333,0},{0.7,0}}" />
+      <Property Name="UnifiedSize" Value="{{0.3333,0},{0.1,0}}" />
     </Window>
     <Window Type="TaharezLook/Button" Name="MainMenu/Exit" >
       <Property Name="Text" Value="Exit" />
-      <Property Name="UnifiedMaxSize" Value="{{0.33,0},{0,40}}" />
-      <Property Name="UnifiedAreaRect" Value="{{0.33,0},{0.7,0},{0.66,0},{0.9,0}}" />
+      <Property Name="UnifiedPosition" Value="{{0.3333,0},{0.85,0}}" />
+      <Property Name="UnifiedSize" Value="{{0.3333,0},{0.1,0}}" />
+    </Window>
+    <Window Type="TaharezLook/ItemListbox" Name="MainMenu/Instructions" >
+      <Property Name="HorzFormatting" Value="HorzCentred" />
+      <Property Name="VertFormatting" Value="VertCentred" />
+      <Property Name="FrameEnabled" Value="False" />
+      <Property Name="UnifiedPosition" Value="{{0.25,0},{0.2,0}}" />
+      <Property Name="UnifiedSize" Value="{{0.5,0},{0,155}}" />
+      <Property Name="BackgroundEnabled" Value="False" />
+      <Window Type="TaharezLook/ListboxItem" >
+        <Property Name="Text" Value="WASD to move" />
+      </Window>
+      <Window Type="TaharezLook/ListboxItem" >
+        <Property Name="Text" Value="Hold Left-Shift to run" />
+      </Window>
+      <Window Type="TaharezLook/ListboxItem" >
+        <Property Name="Text" Value="Space to jump" />
+      </Window>
+      <Window Type="TaharezLook/ListboxItem" >
+        <Property Name="Text" Value="R to reload" />
+      </Window>
+      <Window Type="TaharezLook/ListboxItem" >
+        <Property Name="Text" Value="Right-click to use jetpack or vanish" />
+      </Window>
+      <Window Type="TaharezLook/ListboxItem" >
+        <Property Name="Text" Value="~ to toggle chat" />
+      </Window>
+      <Window Type="TaharezLook/ListboxItem" >
+        <Property Name="Text" Value="Esc to rage-quit (as host, you'll break the game)" />
+      </Window>
+      <Window Type="TaharezLook/ListboxItem" >
+        <Property Name="Text" Value="Pinto mode: you become Pinto by killing it, can only score as Pinto" />
+      </Window>
+      <Window Type="TaharezLook/ListboxItem" >
+        <Property Name="Text" Value="Elimination: you have only one life" />
+      </Window>
+
     </Window>
   </Window>
 </GUILayout>
