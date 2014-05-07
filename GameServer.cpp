@@ -200,13 +200,7 @@ void GameServer::bootInactivePlayers() {
         if (diff.total_seconds() > CLIENT_TIMEOUT) {
         	LOG("CLIENT " << i << " TIMED OUT... DISCONNECTING THIS CLIENT");
 
-        	// if player alive, send out player DIE
-        	if (GameState::instance()->isRunning()) {
-	        	PlayerDieInfo die_info;
-	        	die_info.type = PLAYER_DIE;
-	        	die_info.player_id = i;
-	        	NetworkManager::instance()->vital->receivePlayerDie(&die_info);
-        	}
+
 
         	PlayerDisconnectPacket p;
         	p.type = PLAYER_DISCONNECT;
@@ -214,13 +208,6 @@ void GameServer::bootInactivePlayers() {
         	broadcastData(&p, sizeof(PlayerDisconnectPacket), true);
 
 			GameState::instance()->removePlayer(i);
-
-        	if(GameState::instance()->players[i] != NULL)
-			{
-				((GameObject*)(GameState::instance()->players[i]))->scene->removeGameObject((GameObject*)GameState::instance()->players[i]);
-				delete GameState::instance()->players[i];
-				GameState::instance()->players[i] = NULL;
-			}
         }
 	}
 }

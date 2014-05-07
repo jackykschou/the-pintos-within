@@ -306,10 +306,6 @@ void GameClient::processPacket(UDPpacket* packet) {
 		case PLAYER_DISCONNECT:
 			PlayerDisconnectPacket* disconnect;
 			disconnect = (PlayerDisconnectPacket*)packetData;
-			PlayerDieInfo die;
-			die.type = PLAYER_DIE;
-			die.player_id = disconnect->playerId;
-			NetworkManager::instance()->vital->receivePlayerDie(&die);
 			GameState::instance()->removePlayer(disconnect->playerId);
 			LOG("REMOVED PALYER "<<disconnect->playerId);
 			break;
@@ -323,5 +319,6 @@ void GameClient::processPacket(UDPpacket* packet) {
 			ChangeHairInfo *hair;
 			hair =  (ChangeHairInfo*) packetData;
 			NetworkManager::instance()->vital->receiveChangeHair(hair);
+			break;
 	}
 }

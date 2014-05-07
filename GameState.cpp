@@ -133,6 +133,14 @@ void GameState::clear_old_games(){
 			++i;
 		}
 	}
+
+	GameState::instance()->current_state = MAIN_MENU;
+
+	if(SceneManager::instance()->current_scene != NULL)
+	{
+		delete (SceneManager::instance()->current_scene);
+		SceneManager::instance()->current_scene = NULL;
+	}
 }
 
 bool GameState::nameIsTaken(char* name) {
@@ -158,7 +166,12 @@ std::string GameState::getPlayerName(int id) {
 void GameState::removePlayer(int id) {
 	playerConnections.erase(id);
 	playerNames.erase(id);
-	if (players[id]) delete players[id];
+	if (players[id]) {
+		if (((GameObject*)players[id])->scene) {
+			((GameObject*)players[id])->scene->removeGameObject((GameObject*)players[id]);
+		}
+		delete players[id];
+	}
 	players[id] = NULL;
 }
 
