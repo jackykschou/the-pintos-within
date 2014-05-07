@@ -48,7 +48,10 @@ PlayerPickUp::PlayerPickUp(std::string tag, Scene* scene, std::string mesh_name,
 
 PlayerPickUp::~PlayerPickUp()
 {
-	GameState::instance()->weapon_spawner->positions_with_weapons.erase(pick_up_id);
+	if(!GameState::instance()->_gameOver)
+	{
+		GameState::instance()->weapon_spawner->positions_with_weapons.erase(pick_up_id);
+	}
 	delete pick_debouncer;
 }
 

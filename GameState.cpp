@@ -111,10 +111,10 @@ void GameState::update()
 			SceneManager::instance()->current_scene = NULL;
 		}
 
-		reset();
-
-	    delete end_game_debouncer;
+		delete end_game_debouncer;
 		end_game_debouncer = NULL;
+
+		reset();
 	}
 }
 

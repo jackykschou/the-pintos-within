@@ -59,11 +59,12 @@ class GameState : public Singleton<GameState>
     void removePlayer(int id);
     void stop(std::string);
 
+    bool _gameOver;
+
   private:
 
   	boost::posix_time::ptime _start;
   	bool _running;
-    bool _gameOver;
   	void clear_old_games();
 };
 
