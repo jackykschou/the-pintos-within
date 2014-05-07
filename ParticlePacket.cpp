@@ -67,5 +67,5 @@ void ParticlePacket::receiveBlasterExplosion(BlasterExplodeInfo* info_p)
 	if (info_p->player_id == NetworkManager::instance()->player_id || !GameState::instance()->isRunning())
 		return;
 	
-	ParticleManager::instance()->EmitRocketExplosion(Ogre::Vector3(info_p->posX, info_p->posY, info_p->posZ));
+	ParticleManager::instance()->EmitRocketExplosion(Ogre::Vector3(info_p->posX, info_p->posY, info_p->posZ), info_p->radius);
 }

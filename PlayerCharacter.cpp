@@ -203,6 +203,7 @@ PlayerCharacter::PlayerCharacter(bool is_yourself_p, Scene* scene, std::string m
 										0, 0, 0, 1,
 										1, 1, 1,
 										COL_NOTHING, COL_NOTHING);
+	jet_pack->node->setVisible(true);
 
 	hairs[NORMAL_HAIR_ID] = new Hair(this, "PixelMan.002.mesh", NORMAL_HAIR_ID, 0, 
 			0, 0, 0, 0, 0, 1,
@@ -744,7 +745,7 @@ void PlayerCharacter::update()
 					weapon_idle_animation_state->setEnabled(false);
 					weapon_jumping_animation_state->setWeight(0.5);
 					weapon_jumping_animation_state->setEnabled(false);
-					weapon_die_animation_state->setWeight(0.5);
+					weapon_die_animation_state->setWeight(0);
 					weapon_die_animation_state->setEnabled(false);
 					jet_pack_idle_animation_state->setWeight(0.5);
 					jet_pack_idle_animation_state->setEnabled(false);
@@ -758,7 +759,7 @@ void PlayerCharacter::update()
 					jet_pack_jumping_animation_state->setEnabled(false);
 					hair_jumping_animation_state->setWeight(0.5);
 					hair_jumping_animation_state->setEnabled(false);
-					die_animation_state->setWeight(0.5);
+					die_animation_state->setWeight(0);
 					die_animation_state->setEnabled(false);
 					jumping_animation_state->setWeight(0.5);
 					jumping_animation_state->setEnabled(false);
@@ -991,24 +992,64 @@ void PlayerCharacter::update()
 				if(in_pinto_form)
 				{
 					running_animation_state->setWeight(0);
+					running_animation_state->setEnabled(false);
 					weapon_running_animation_state->setWeight(0);
+					weapon_running_animation_state->setEnabled(false);
 					idle_animation_state->setWeight(0);
+					idle_animation_state->setEnabled(false);
 					weapon_idle_animation_state->setWeight(0);
+					weapon_idle_animation_state->setEnabled(false);
+					weapon_jumping_animation_state->setWeight(0);
+					weapon_jumping_animation_state->setEnabled(false);
+					weapon_die_animation_state->setWeight(0);
+					weapon_die_animation_state->setEnabled(false);
 					jet_pack_idle_animation_state->setWeight(0);
-					jet_pack_running_animation_state->setWeight(0);
+					jet_pack_idle_animation_state->setEnabled(false);
 					hair_idle_animation_state->setWeight(0);
+					hair_idle_animation_state->setEnabled(false);
+					jet_pack_running_animation_state->setWeight(0);
+					jet_pack_running_animation_state->setEnabled(false);
 					hair_running_animation_state->setWeight(0);
+					hair_running_animation_state->setEnabled(false);
+					jet_pack_jumping_animation_state->setWeight(0);
+					jet_pack_jumping_animation_state->setEnabled(false);
+					hair_jumping_animation_state->setWeight(0);
+					hair_jumping_animation_state->setEnabled(false);
+					die_animation_state->setWeight(0);
+					die_animation_state->setEnabled(false);
+					jumping_animation_state->setWeight(0);
+					jumping_animation_state->setEnabled(false);
 				}
 				else
 				{
 					running_animation_state->setWeight(0.5);
+					running_animation_state->setEnabled(false);
 					weapon_running_animation_state->setWeight(0.5);
+					weapon_running_animation_state->setEnabled(false);
 					idle_animation_state->setWeight(0.5);
+					idle_animation_state->setEnabled(false);
 					weapon_idle_animation_state->setWeight(0.5);
+					weapon_idle_animation_state->setEnabled(false);
+					weapon_jumping_animation_state->setWeight(0.5);
+					weapon_jumping_animation_state->setEnabled(false);
+					weapon_die_animation_state->setWeight(0.5);
+					weapon_die_animation_state->setEnabled(false);
 					jet_pack_idle_animation_state->setWeight(0.5);
-					jet_pack_running_animation_state->setWeight(0.5);
+					jet_pack_idle_animation_state->setEnabled(false);
 					hair_idle_animation_state->setWeight(0.5);
+					hair_idle_animation_state->setEnabled(false);
+					jet_pack_running_animation_state->setWeight(0.5);
+					jet_pack_running_animation_state->setEnabled(false);
 					hair_running_animation_state->setWeight(0.5);
+					hair_running_animation_state->setEnabled(false);
+					jet_pack_jumping_animation_state->setWeight(0.5);
+					jet_pack_jumping_animation_state->setEnabled(false);
+					hair_jumping_animation_state->setWeight(0.5);
+					hair_jumping_animation_state->setEnabled(false);
+					die_animation_state->setWeight(0.5);
+					die_animation_state->setEnabled(false);
+					jumping_animation_state->setWeight(0.5);
+					jumping_animation_state->setEnabled(false);
 				}
 
 				current_shooting_animation_state->setEnabled(true);
@@ -1076,10 +1117,10 @@ void PlayerCharacter::update()
 				weapon_running_animation_state->setWeight(0.5);
 				idle_animation_state->setWeight(0.5);
 				weapon_idle_animation_state->setWeight(0.5);
-				jet_pack_idle_animation_state->setWeight(0.5);
-				jet_pack_running_animation_state->setWeight(0.5);
 				hair_idle_animation_state->setWeight(0.5);
+				jet_pack_idle_animation_state->setWeight(0.5);
 				hair_running_animation_state->setWeight(0.5);
+				jet_pack_running_animation_state->setWeight(0.5);
 
 				current_reload_animation_state->setEnabled(true);
 				current_reload_animation_state->setWeight(1);
@@ -1288,28 +1329,13 @@ void PlayerCharacter::changeHair(int index)
 		current_hair->node->setVisible(false);
 
 		hair_shooting_animation_state = hairs[index]->shooting_animation_state;
-		hair_shooting_animation_state->setLoop(false);
-		hair_shooting_animation_state->setWeight(0);
-
 		hair_reload_animation_state = hairs[index]->reload_animation_state;
-		hair_reload_animation_state->setLoop(false);
-		hair_reload_animation_state->setWeight(0);
-
 		hair_running_animation_state = hairs[index]->running_animation_state;
-		hair_running_animation_state->setLoop(true);
-		hair_running_animation_state->setWeight(0);
-
 		hair_idle_animation_state = hairs[index]->idle_animation_state;
-		hair_idle_animation_state->setLoop(true);
-		hair_idle_animation_state->setWeight(0);
-
 		hair_jumping_animation_state = hairs[index]->jumping_animation_state;
-		hair_jumping_animation_state->setLoop(false);
-		hair_jumping_animation_state->setWeight(0);
-
 		hair_die_animation_state = hairs[index]->die_animation_state;
-		hair_die_animation_state->setLoop(false);
-		hair_die_animation_state->setWeight(0);
+		current_hair_reload_animation_state = hair_reload_animation_state;
+		current_hair_shooting_animation_state = hair_shooting_animation_state;
 
 		current_hair = hairs[index];
 		current_hair->node->setVisible(true);

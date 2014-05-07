@@ -1,7 +1,7 @@
 #include "PlayerSpawner.h"
 #include "NetworkManager.h"
 
-#define SPAWN_RAND_RADIUS_MAX 50
+#define SPAWN_RAND_RADIUS_MAX 80
 
 PlayerSpawner::PlayerSpawner(std::string tag, Scene* s) : GameObject(tag, s), free_positions()
 {
@@ -41,8 +41,8 @@ void PlayerSpawner::startGame()
 		    {
 		        int i = iter->first;	
 				uint32_t version = RAND_RANGE(0, 5);
-				float rand_x = RAND_RANGE(0, SPAWN_RAND_RADIUS_MAX) - 50;
-				float rand_z = RAND_RANGE(0, SPAWN_RAND_RADIUS_MAX) - 50;
+				float rand_x = RAND_RANGE(0, SPAWN_RAND_RADIUS_MAX) - SPAWN_RAND_RADIUS_MAX;
+				float rand_z = RAND_RANGE(0, SPAWN_RAND_RADIUS_MAX) - SPAWN_RAND_RADIUS_MAX;
 				Ogre::Vector3 position;
 				if(NetworkManager::instance()->player_team_id_map[i] == RED_TEAM)
 				{
@@ -127,7 +127,7 @@ void PlayerSpawner::spawnPlayer(float x, float y, float z, uint32_t player_id, u
 		self = true;
 
 	PlayerCharacter *player = new PlayerCharacter(self, scene, "PixelMan.mesh",
-            x, y + 5, z,
+            x, y + 50, z,
             0, 0, 0, 1,
             10, 10, 10,
             player_id, version, is_pinto);
@@ -154,8 +154,8 @@ Ogre::Vector3 PlayerSpawner::spawnPlayer(uint32_t player_id, bool is_pinto)
 	}
 	else
 	{
-		float rand_x = RAND_RANGE(0, SPAWN_RAND_RADIUS_MAX) - 50;
-		float rand_z = RAND_RANGE(0, SPAWN_RAND_RADIUS_MAX) - 50;
+		float rand_x = RAND_RANGE(0, SPAWN_RAND_RADIUS_MAX) - SPAWN_RAND_RADIUS_MAX;
+		float rand_z = RAND_RANGE(0, SPAWN_RAND_RADIUS_MAX) - SPAWN_RAND_RADIUS_MAX;
 		if(NetworkManager::instance()->player_team_id_map[player_id] == RED_TEAM)
 		{
 			position = red_position;
@@ -180,7 +180,7 @@ Ogre::Vector3 PlayerSpawner::spawnPlayer(uint32_t player_id, bool is_pinto)
 	uint32_t version = RAND_RANGE(0, 5);
 
 	PlayerCharacter *player = new PlayerCharacter(self, scene, "PixelMan.mesh",
-            position.x, position.y + 5, position.z,
+            position.x, position.y + 50, position.z,
             0, 0, 0, 1,
             10, 10, 10,
             player_id, version, is_pinto);

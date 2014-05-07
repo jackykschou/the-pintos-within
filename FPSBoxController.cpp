@@ -9,7 +9,7 @@ FPSBoxController::FPSBoxController(bool is_yourself_p, GameObject* gameObject, s
 
 	is_yourself = is_yourself_p;
 
-	jet_pack_max = 1900;
+	jet_pack_max = 1500;
 	jet_pack_current = jet_pack_max;
 
 	is_jet_started = false;
@@ -105,11 +105,12 @@ void FPSBoxController::detectInput()
 				is_walking = true;
 		}
 
-		if(jet_pack_current >= 1900 && InputManager::instance()->isMouseRightClicked() && player->in_pinto_form)
+		if(jet_pack_current >= 1500 && InputManager::instance()->isMouseRightClicked() && player->in_pinto_form)
 		{
 			jet_pack_current = 0;
 			player->pinto_mesh->node->setVisible(false);
 			player->is_invisible = true;
+			AudioManager::instance()->playPintoSpawn(Ogre::Vector3(player->transform->posX, player->transform->posY, player->transform->posZ));
 		}
 		else if(player->in_pinto_form && jet_pack_current > 1000)
 		{

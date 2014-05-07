@@ -71,11 +71,11 @@ void VitalPacket::receiveDamage(PlayerDamageInfo* info_p)
 					}
 				}
 			}
+		}
 
-			AudioManager::instance()->playBlootSplat(Ogre::Vector3(GameState::instance()->player->transform->posX,
+		AudioManager::instance()->playBlootSplat(Ogre::Vector3(GameState::instance()->player->transform->posX,
 													GameState::instance()->player->transform->posY,
 													GameState::instance()->player->transform->posZ));
-		}
 	}
 }
 

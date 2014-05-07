@@ -84,8 +84,8 @@ Melee::Melee(PlayerCharacter* player_p, std::string mesh_name, float posX,
     node->setPosition(player->mesh->node->convertWorldToLocalPosition(
         Ogre::Vector3(tran->posX + posX, tran->posY + posY, tran->posZ + posZ)));
     
-    damage = 30 + (GameState::instance()->num_player * 2);
-    damage_radius = 17;
+    damage = 40 + (GameState::instance()->num_player * 5);
+    damage_radius = 20;
 
     shooting_animation_state->setTimePosition(0);
 

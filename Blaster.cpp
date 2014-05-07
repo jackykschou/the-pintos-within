@@ -21,8 +21,8 @@ Blaster::Blaster(PlayerCharacter* player_p, std::string mesh_name, float posX,
 
     is_charging = false;
     charge_scale = 0;
-    charge_rate = 0.004f;
-    blast_radius = 180;
+    charge_rate = 0.003f;
+    blast_radius = 150;
     max_ammot_cost = 25;
 
     charge_sound_debouncer = new Debouncer(0.3 * 1000, [this]()
@@ -104,8 +104,8 @@ void Blaster::shoot_hook()
         float radius = blast_radius * charge_scale;
         int damage_sent = damage * charge_scale;
 
-        ParticleManager::instance()->EmitRocketExplosion(Ogre::Vector3(point.x(), point.y(), point.z()));
-        NetworkManager::instance()->particle->setBlasterExplosion(point.x(), point.y(), point.z(), radius);
+        ParticleManager::instance()->EmitRocketExplosion(Ogre::Vector3(point.x(), point.y(), point.z()), radius / blast_radius);
+        NetworkManager::instance()->particle->setBlasterExplosion(point.x(), point.y(), point.z(), radius / blast_radius);
 
         for(std::map<int,bool>::iterator iter = GameState::instance()->playerConnections.begin();
             iter != GameState::instance()->playerConnections.end(); ++iter)
