@@ -316,10 +316,8 @@ void GameClient::processPacket(UDPpacket* packet) {
 		case GAME_OVER:
 			GameOverPacket* gameOver;
 			gameOver = (GameOverPacket*)packetData;
-
-			GameState::instance()->stop();
-			//GuiManager::instance()->showGameOver(gameOver->message);
-			LOG("SHOWING GAME OVER MESSAGE "<<gameOver->message);
+			GameState::instance()->stop(gameOver->message);
+			LOG("SHOWING GAME OVER MESSAGE " << gameOver->message);
 			break;
 		case HAIR_CHANGE:
 			ChangeHairInfo *hair;

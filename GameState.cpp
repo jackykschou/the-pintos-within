@@ -3,6 +3,7 @@
 #include "PlayerCharacter.h"
 #include "NetworkManager.h"
 #include "SceneManager.h"
+#include "Debouncer.h"
 
 namespace pt = boost::posix_time;
 
@@ -15,6 +16,8 @@ GameState::GameState()
 
 void GameState::reset() 
 {
+	_gameOver = false;
+	end_game_debouncer = NULL;
 	score = 0;
 	timeLeft = originalTime;
 	_start = pt::second_clock::local_time();
@@ -55,9 +58,9 @@ bool GameState::isRunning() {
 
 void GameState::update() 
 {
-	if (NetworkManager::instance()->isServer()) {
+	if (NetworkManager::instance()->isServer() && !_gameOver) 
+	{
 		std::string msg;
-		bool gameOver = false;
 
 		if (!(timeLeft < 1 || !_running) && (GameState::instance()->game_mode != ELIMINATION))
 		{
@@ -74,29 +77,44 @@ void GameState::update()
 		}
 		else if(timeLeft < 1 && _running && (GameState::instance()->game_mode != ELIMINATION))
 		{
-			//display end game message
-			//hang for some time
-			//send message to end the game to return to main menu
 			msg = "This game is over";
-			gameOver = true;
+			_gameOver = true;
+			NetworkManager::instance()->sendGameOverPacket(msg);
+			GameState::instance()->stop(msg);
 		}
 		else if(_running && GameState::instance()->game_mode == ELIMINATION)
 		{
 			if(num_player_left_elimination <= 1)
 			{
-				//display end game message
-				//hang for some time
-				//send message to end the game to return to main menu
 				msg = "This game is over 2";
-				gameOver = true;
+				_gameOver = true;
+				NetworkManager::instance()->sendGameOverPacket(msg);
+				GameState::instance()->stop(msg);
 			}
 		}
+	}
 
-		if (gameOver) {
-			NetworkManager::instance()->sendGameOverPacket(msg);
-			GameState::instance()->stop();
-			LOG("SHOWING GAME OVER MESSAGE "<<msg);
+	if(end_game_debouncer != NULL && end_game_debouncer->run(NULL) && _running)
+	{
+		GuiManager::instance()->HideMessage();
+
+		player_pinto_seeds.clear();
+	    playerNames.clear();
+	    playerConnections.clear();
+	    players.clear();
+
+	    GameState::instance()->current_state = MAIN_MENU;
+
+		if(SceneManager::instance()->current_scene != NULL)
+		{
+			delete (SceneManager::instance()->current_scene);
+			SceneManager::instance()->current_scene = NULL;
 		}
+
+		reset();
+
+	    delete end_game_debouncer;
+		end_game_debouncer = NULL;
 	}
 }
 
@@ -104,24 +122,14 @@ void GameState::clear_old_games(){
 
 	pt::ptime now=pt::second_clock::local_time();
 	auto i=games.begin();
-	while(i!=games.end()){
-		if((now-(*i).second.second).total_seconds()>4){
+	while(i!=games.end())
+	{
+		if((now-(*i).second.second).total_seconds() > 4 ){
 			games.erase(i++);
 		}else{
 			++i;
 		}
 	}
-
-
-	//????????????????????
-	GameState::instance()->current_state = MAIN_MENU;
-
-	if(SceneManager::instance()->current_scene != NULL)
-	{
-		delete (SceneManager::instance()->current_scene);
-		SceneManager::instance()->current_scene = NULL;
-	}
-	//??????????????????????
 }
 
 bool GameState::nameIsTaken(char* name) {
@@ -151,6 +159,9 @@ void GameState::removePlayer(int id) {
 	players[id] = NULL;
 }
 
-void GameState::stop() {
-	_running = false;
+void GameState::stop(std::string message) 
+{
+	end_game_debouncer = new Debouncer(5.0 * 1000);
+	end_game_debouncer->run();
+	GuiManager::instance()->DisplayMessage(message);
 }

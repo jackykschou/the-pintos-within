@@ -1,4 +1,5 @@
 #include "Scene.h"
+#include "GraphicsManager.h"
 
 Scene::Scene(std::string n)
 {
@@ -11,14 +12,17 @@ Scene::Scene(std::string n)
 
 Scene::~Scene()
 {
-	for(auto gameObject : game_objects)
+	for(int i = 0; i < game_objects.size();++i)
 	{
-		delete gameObject;
+		LOG(game_objects[i]->tag);
+		delete game_objects[i];
 	}
 
-	// OgreFramework::getSingletonPtr()->m_pRoot->destroySceneManager(manager);
+	manager->getRootSceneNode()->removeAndDestroyAllChildren();
+	manager->destroyAllCameras();
+	manager->clearScene();
+	GraphicsManager::instance()->getRenderRoot()->destroySceneManager(manager);
 
-	delete manager;
 	delete physics_world;
 }
 

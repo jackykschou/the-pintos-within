@@ -9,6 +9,7 @@
 class PlayerSpawner;
 class PlayerCharacter;
 class WeaponSpawner;
+class Debouncer;
 
 #define DEFAULT_CLOCK 2 // 2 minutes
 
@@ -42,6 +43,7 @@ class GameState : public Singleton<GameState>
     PlayerCharacter* player;
     PlayerSpawner* spawner;
     WeaponSpawner* weapon_spawner;
+    Debouncer* end_game_debouncer;
 
     std::map<int, bool> player_pinto_seeds;
     std::map<int, std::string> playerNames;
@@ -55,12 +57,13 @@ class GameState : public Singleton<GameState>
     void setPlayerName(int id, std::string name);
     std::string getPlayerName(int id);
     void removePlayer(int id);
-    void stop();
+    void stop(std::string);
 
   private:
 
   	boost::posix_time::ptime _start;
   	bool _running;
+    bool _gameOver;
   	void clear_old_games();
 };
 
