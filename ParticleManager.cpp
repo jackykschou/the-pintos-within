@@ -7,22 +7,22 @@ ParticleManager::~ParticleManager(){
 }
 
 Ogre::ParticleSystem* ParticleManager::Emit(std::string particleSystemName,Ogre::Vector3 origin,
-    Ogre::Vector3 direction){
+    Ogre::Vector3 direction, float duration){
   Ogre::SceneManager* sceneManager=SceneManager::instance()->current_scene->manager;
   Ogre::SceneNode* node=sceneManager->createSceneNode();
   sceneManager->getRootSceneNode()->addChild(node);
   positionAndDirectSceneNode(node,origin,direction);
-  return Emit(particleSystemName,node);
+  return Emit(particleSystemName,node, duration);
 }
 
 Ogre::ParticleSystem* ParticleManager::Emit(std::string particleSystemName,Ogre::Vector3 origin,
-    Ogre::Vector3 direction,Ogre::SceneNode* parentNode){
+    Ogre::Vector3 direction,Ogre::SceneNode* parentNode, float duration){
   Ogre::SceneNode* node{parentNode->createChildSceneNode()};
   positionAndDirectSceneNode(node,origin,direction);
-  return Emit(particleSystemName,node);
+  return Emit(particleSystemName,node, duration);
 }
 
-Ogre::ParticleSystem* ParticleManager::Emit(std::string particleSystemName,Ogre::SceneNode* node){
+Ogre::ParticleSystem* ParticleManager::Emit(std::string particleSystemName,Ogre::SceneNode* node, float duration){
   Ogre::ParticleSystem* system{lookUpSystem(particleSystemName)};
   if(system->isInScene()){
     Ogre::SceneNode* formerNode = system->getParentSceneNode();
@@ -31,8 +31,15 @@ Ogre::ParticleSystem* ParticleManager::Emit(std::string particleSystemName,Ogre:
   }
   node->attachObject(system);
   unsigned short numberOfEmitters{system->getNumEmitters()};
-  for(unsigned short i; i!=numberOfEmitters;++i){
-    system->getEmitter(i)->setEnabled(true);
+  for(unsigned short i; i!=numberOfEmitters;++i)
+  {
+    Ogre::ParticleEmitter* emitter = system->getEmitter(i);
+    if(duration >= 0)
+    {
+      emitter->setEmissionRate(2000 * duration);
+      emitter->setTimeToLive(duration);
+    }
+    emitter->setEnabled(true);
   }
   return system;
 }
@@ -61,11 +68,11 @@ void ParticleManager::positionAndDirectSceneNode(Ogre::SceneNode* node,Ogre::Vec
   node->setDirection(direction);
 }
 
-std::tuple<Ogre::ParticleSystem*,Ogre::ParticleSystem*,Ogre::ParticleSystem*> ParticleManager::EmitRocketExplosion(Ogre::Vector3 origin){
+std::tuple<Ogre::ParticleSystem*,Ogre::ParticleSystem*,Ogre::ParticleSystem*> ParticleManager::EmitRocketExplosion(Ogre::Vector3 origin, float radius){
   return std::make_tuple(ParticleManager::instance()->Emit("OrangeExplosion",origin,
-      Ogre::Vector3{0,1,0}),ParticleManager::instance()->Emit("YellowExplosion",
-      origin,Ogre::Vector3{0,1,0}),ParticleManager::instance()->Emit("OrangeExplosionCloud",
-      origin,Ogre::Vector3{0,1,0}));
+      Ogre::Vector3{0,1,0}, radius),ParticleManager::instance()->Emit("YellowExplosion",
+      origin,Ogre::Vector3{0,1,0}, radius),ParticleManager::instance()->Emit("OrangeExplosionCloud",
+      origin,Ogre::Vector3{0,1,0}, radius));
 }
 std::tuple<Ogre::ParticleSystem*,Ogre::ParticleSystem*,Ogre::ParticleSystem*> ParticleManager::EmitSparks(Ogre::Vector3 origin,Ogre::Vector3 direction){
   return std::make_tuple(ParticleManager::instance()->Emit("JetPackYellowSparks",origin,

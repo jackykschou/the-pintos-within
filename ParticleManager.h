@@ -15,11 +15,11 @@ class ParticleManager:public Singleton<ParticleManager>{
     ParticleManager();
     virtual ~ParticleManager();
     Ogre::ParticleSystem* Emit(std::string particleSystemName,Ogre::Vector3 origin,
-        Ogre::Vector3 direction);
+        Ogre::Vector3 direction, float duration = -1);
     Ogre::ParticleSystem* Emit(std::string particleSystemName,Ogre::Vector3 origin,
-        Ogre::Vector3 direction,Ogre::SceneNode* parentNode);
-    Ogre::ParticleSystem* Emit(std::string particleSystemName,Ogre::SceneNode* node);
-    std::tuple<Ogre::ParticleSystem*,Ogre::ParticleSystem*,Ogre::ParticleSystem*> EmitRocketExplosion(Ogre::Vector3 origin);
+        Ogre::Vector3 direction,Ogre::SceneNode* parentNode, float duration = -1);
+    Ogre::ParticleSystem* Emit(std::string particleSystemName,Ogre::SceneNode* node, float duration = -1);
+    std::tuple<Ogre::ParticleSystem*,Ogre::ParticleSystem*,Ogre::ParticleSystem*> EmitRocketExplosion(Ogre::Vector3 origin, float radius);
     std::tuple<Ogre::ParticleSystem*,Ogre::ParticleSystem*,Ogre::ParticleSystem*> EmitSparks(Ogre::Vector3 origin,Ogre::Vector3 direction);
     Ogre::ParticleSystem* EmitBloodSpurt(Ogre::Vector3 origin,Ogre::Vector3 direction);
     Ogre::ParticleSystem* EmitDust(Ogre::Vector3 origin,Ogre::Vector3 direction);

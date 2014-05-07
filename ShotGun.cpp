@@ -40,8 +40,8 @@ void ShotGun::shoot_hook()
     for (int i = 0; i < SHOOT_NUM; ++i)
     {
         int rand_shoot_offset = 300;
-        to = pre_to + btVector3(RAND_RANGE(0, rand_shoot_offset) - rand_shoot_offset / 2, RAND_RANGE(0, rand_shoot_offset) - rand_shoot_offset / 2, 
-            RAND_RANGE(0, rand_shoot_offset) - rand_shoot_offset / 2);
+        to = pre_to + btVector3(RAND_RANGE(0, rand_shoot_offset) - rand_shoot_offset, RAND_RANGE(0, rand_shoot_offset) - rand_shoot_offset, 
+            RAND_RANGE(0, rand_shoot_offset) - rand_shoot_offset);
 
         btCollisionWorld::ClosestRayResultCallback rayCallback(from, to);
 
