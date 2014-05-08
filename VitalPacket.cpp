@@ -233,11 +233,11 @@ void VitalPacket::setIncreaseScore(uint32_t player_id, uint32_t amount, uint32_t
 	if (NetworkManager::instance()->isServer()) {
 		if((GameState::instance()->team_mode == TEAM && GameState::instance()->game_mode != PINTO))
 		{
-			if (team_id == GameState::instance()->team_id)
+			if (team_id == GameState::instance()->team_id){
 				GameState::instance()->score += amount;
-		} 
-		else 
-		{
+				GameState::instance()->playerScores[player_id] += amount;
+			}
+		} else {
 			GameState::instance()->playerScores[player_id] += amount;
 		}
 	}
@@ -256,44 +256,37 @@ void VitalPacket::receiveIncreaseScore(IncreaseScoreInfo* info_p)
 	if(!GameState::instance()->isRunning())
 		return;
 
-	if (GameState::instance()->team_mode == TEAM && GameState::instance()->game_mode != PINTO) 
+	if( (GameState::instance()->team_mode == TEAM && GameState::instance()->game_mode != PINTO))
 	{
-        	if (NetworkManager::instance()->isServer()) 
-        	{
-        		for(auto iter = GameState::instance()->playerConnections.begin();
-                 iter != GameState::instance()->playerConnections.end(); ++iter)
-		        {
-		        	int id = iter->first;
-	        		LOG("SERVERMODE");
-					int team = NetworkManager::instance()->player_team_id_map[info_p->receive_player_id];
-		        	if (NetworkManager::instance()->player_team_id_map[id] == team) 
-		        	{
-		        		GameState::instance()->playerScores[id] += info_p->amount;
-		        	}
-		        	if (info_p->receive_team_id == GameState::instance()->team_id)
-		        	{
-						GameState::instance()->score += info_p->amount;
-					}
-				}
-	        } 
-	        else 
-	        {
-	        	LOG("CLIENTMODE");
-	        	if (GameState::instance()->team_id == info_p->receive_team_id)
-		        	GameState::instance()->score += info_p->amount;
-	        }
-	}
-	else 
-	{
-		LOG("INCREMENTING "<<GameState::instance()->playerScores[info_p->receive_player_id]<< " BY "<<info_p->amount);
-
-		if(NetworkManager::instance()->isServer())
-			GameState::instance()->playerScores[info_p->receive_player_id] += info_p->amount;
-
-		if(info_p->receive_player_id == NetworkManager::instance()->player_id)
-		{
+		if (info_p->receive_team_id == GameState::instance()->team_id)
 			GameState::instance()->score += info_p->amount;
-		}
+	}
+	else if(info_p->receive_player_id == NetworkManager::instance()->player_id)
+	{
+		GameState::instance()->score += info_p->amount;
+	}
+
+	if (GameState::instance()->team_mode == TEAM && GameState::instance()->game_mode != PINTO) {
+		LOG("TEAMMODE");
+		
+		if (NetworkManager::instance()->isServer()) {
+
+			for(auto iter = GameState::instance()->playerConnections.begin();
+	                 iter != GameState::instance()->playerConnections.end(); ++iter)
+	        {
+        		int id = iter->first;
+        		LOG("SERVERMODE");
+				int team = NetworkManager::instance()->player_team_id_map[info_p->receive_player_id];
+	        	if (NetworkManager::instance()->player_team_id_map[id] == team) {
+	        		GameState::instance()->playerScores[id] += info_p->amount;
+	        	}
+	        } 
+        }
+    	if (GameState::instance()->team_id == info_p->receive_team_id)
+        	GameState::instance()->score += info_p->amount;
+	} else {
+		LOG("INCREMENTING "<<GameState::instance()->playerScores[info_p->receive_player_id]<< " BY "<<info_p->amount);
+		GameState::instance()->playerScores[info_p->receive_player_id] += info_p->amount;
 	}
 }
 
