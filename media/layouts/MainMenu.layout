@@ -30,8 +30,8 @@
       <Property Name="HorzFormatting" Value="HorzCentred" />
       <Property Name="VertFormatting" Value="VertCentred" />
       <Property Name="FrameEnabled" Value="False" />
-      <Property Name="UnifiedPosition" Value="{{0.2,0},{0.15,0}}" />
-      <Property Name="UnifiedSize" Value="{{0.6,0},{0,160}}" />
+      <Property Name="UnifiedPosition" Value="{{0.2,0},{0.20,0}}" />
+      <Property Name="UnifiedSize" Value="{{0.6,0},{0.3,0}}" />
       <Property Name="BackgroundEnabled" Value="False" />
       <Window Type="TaharezLook/ListboxItem" >
         <Property Name="Text" Value="WASD to move" />
