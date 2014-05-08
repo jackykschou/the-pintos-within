@@ -110,6 +110,9 @@ void GameState::update()
 		delete end_game_debouncer;
 		end_game_debouncer = NULL;
 
+		NetworkManager::instance()->stopServer();
+		NetworkManager::instance()->stopClient();
+
 		reset();
 	}
 }
