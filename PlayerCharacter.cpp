@@ -17,6 +17,7 @@ PlayerCharacter::PlayerCharacter(bool is_yourself_p, Scene* scene, std::string m
 
 	team_id = RED_TEAM;
 
+	is_yourself = is_yourself_p;
 	if(is_yourself)
 	{
 		GameState::instance()->team_id = RED_TEAM;
@@ -24,7 +25,7 @@ PlayerCharacter::PlayerCharacter(bool is_yourself_p, Scene* scene, std::string m
 
 	player_id = player_id_p;
 
-	is_yourself = is_yourself_p;
+	
 	is_shooting = false;
 	is_idle = false;
 	is_dead = false;
