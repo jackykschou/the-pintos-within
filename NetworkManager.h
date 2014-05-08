@@ -135,7 +135,7 @@ class NetworkManager : public Singleton<NetworkManager>
 
 	// sends game state to every client
 	void broadcastHeartbeat();
-	void sendGameOverPacket(std::string message);
+	void sendGameOverPacket();
 
 	GameServer* server;
 	GameClient* client;

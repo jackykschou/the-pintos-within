@@ -41,6 +41,9 @@ public:
   // sends a chunk of data to a single client
   void sendDataToClient(void* data, int len, IPaddress* ip, bool ack, AckId id=0, bool isResponse=false);
 
+  // sends a chunk of data to a single client id
+  void sendDataToClient(void* data, int len, int cliId, bool ack, AckId id=0, bool isResponse=false);
+
   // advertise ourselves as a game server over UDP broadcast
   void sendAdvertisement();
 

@@ -133,6 +133,15 @@ void GameServer::sendDataToClient(void* data, int len, IPaddress* ip, bool ack,
 	sendPacketToClient(_tmpSendPacket, ip);
 }
 
+// shells out to the above implementation
+void GameServer::sendDataToClient(void* data, int len, int cliId, bool ack,
+								  AckId id, bool isResponse) {
+	if (cliId <= 0) return;
+	IPaddress ip = _clients.at(cliId-1);
+	sendDataToClient(data, len, &ip, ack, id, isResponse);
+}
+
+
 // broadcasts a single chunk of data to a bunch of clients
 // this method can be used for binary or cstring (NULL terminated) buffer
 void GameServer::broadcastData(void* data, int len, bool ack) {
@@ -199,8 +208,6 @@ void GameServer::bootInactivePlayers() {
         pt::time_duration diff = now - _lastReceived[i];
         if (diff.total_seconds() > CLIENT_TIMEOUT) {
         	LOG("CLIENT " << i << " TIMED OUT... DISCONNECTING THIS CLIENT");
-
-
 
         	PlayerDisconnectPacket p;
         	p.type = PLAYER_DISCONNECT;
@@ -318,6 +325,7 @@ void GameServer::processPacket(UDPpacket* packet) {
 			hair =  (ChangeHairInfo*) packetData;
 			NetworkManager::instance()->vital->receiveChangeHair(hair);
 			broadcastData(hair, sizeof(ChangeHairInfo), true);
+			break;
 	}
 }
 

@@ -313,7 +313,7 @@ void GameClient::processPacket(UDPpacket* packet) {
 			GameOverPacket* gameOver;
 			gameOver = (GameOverPacket*)packetData;
 			GameState::instance()->stop(gameOver->message);
-			LOG("SHOWING GAME OVER MESSAGE " << gameOver->message);
+			LOG("SHOWING GAME OVER MESSAGE "<<gameOver->message);
 			break;
 		case HAIR_CHANGE:
 			ChangeHairInfo *hair;

@@ -61,7 +61,6 @@ void GameState::update()
 	clear_old_games();
 	if (NetworkManager::instance()->isServer() && !_gameOver) 
 	{
-		std::string msg;
 
 		if (!(timeLeft < 1 || !_running) && (GameState::instance()->game_mode != ELIMINATION))
 		{
@@ -78,19 +77,16 @@ void GameState::update()
 		}
 		else if(timeLeft < 1 && _running && (GameState::instance()->game_mode != ELIMINATION))
 		{
-			msg = "This game is over";
 			_gameOver = true;
-			NetworkManager::instance()->sendGameOverPacket(msg);
-			GameState::instance()->stop(msg);
+			NetworkManager::instance()->sendGameOverPacket();
 		}
 		else if(_running && GameState::instance()->game_mode == ELIMINATION)
 		{
 			if(num_player_left_elimination <= 1)
 			{
-				msg = "This game is over 2";
 				_gameOver = true;
-				NetworkManager::instance()->sendGameOverPacket(msg);
-				GameState::instance()->stop(msg);
+				NetworkManager::instance()->sendGameOverPacket();
+				gameOver = true;
 			}
 		}
 	}
@@ -157,6 +153,7 @@ bool GameState::nameIsTaken(char* name) {
 void GameState::setPlayerName(int id, std::string name) {
 	playerConnections[id] = true;
 	playerNames[id] = name;
+	playerScores[id] = 0;
 }
 
 std::string GameState::getPlayerName(int id) {
@@ -175,9 +172,11 @@ void GameState::removePlayer(int id) {
 	players[id] = NULL;
 }
 
+
 void GameState::stop(std::string message) 
 {
 	end_game_debouncer = new Debouncer(5.0 * 1000);
 	end_game_debouncer->run();
 	GuiManager::instance()->DisplayMessage(message);
+	LOG("STOPPING MESSAGE: "<<message);
 }

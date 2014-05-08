@@ -49,6 +49,7 @@ class GameState : public Singleton<GameState>
     std::map<int, std::string> playerNames;
     std::map<int, bool> playerConnections;
     std::map<int, PlayerCharacter*> players;
+    std::map<int, int> playerScores;
 
     std::map<std::string,std::pair<std::string,boost::posix_time::ptime>> games;
 
@@ -57,9 +58,8 @@ class GameState : public Singleton<GameState>
     void setPlayerName(int id, std::string name);
     std::string getPlayerName(int id);
     void removePlayer(int id);
-    void stop(std::string);
-
     bool _gameOver;
+    void stop(std::string message);
 
   private:
 

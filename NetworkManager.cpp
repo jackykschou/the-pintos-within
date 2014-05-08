@@ -81,13 +81,58 @@ void NetworkManager::stopServer() {
 	}
 }
 
-void NetworkManager::sendGameOverPacket(std::string message) {
+void NetworkManager::sendGameOverPacket() {
 	if (state == NetworkStateServer) {
-		GameOverPacket p;
-		p.type = GAME_OVER;
-		strncpy(p.message, message.c_str(), GAME_OVER_MSG_MAX_LEN);
-		p.message[GAME_OVER_MSG_MAX_LEN-1] = '\0';
-		send(&p, sizeof(GameOverPacket), true);
+		int max = -1;
+		std::string winner;
+		for(auto iter = GameState::instance()->playerScores.begin();
+                 iter != GameState::instance()->playerScores.end(); ++iter)
+        {
+        	if (max < iter->second) {
+        		max = iter->second;
+        		winner = GameState::instance()->getPlayerName(iter->first);
+        	}
+        }
+
+        LOG("WINNER HAS "<<max);
+        bool teamModeOn = (GameState::instance()->team_mode == TEAM && GameState::instance()->game_mode != PINTO);
+
+        for(auto iter = GameState::instance()->playerConnections.begin();
+                 iter != GameState::instance()->playerConnections.end(); ++iter)
+        {
+        	int id = iter->first;
+
+        	std::stringstream str;
+        	if (GameState::instance()->playerScores[id] == max) {
+        		str << "You win!";
+        	} else {
+        		if (teamModeOn) {
+					str << "You lose!";
+				} else {
+	        		str << "You lose! " << winner << " is the winner.";
+	        	}
+        	}
+
+			GameOverPacket p;
+			p.type = GAME_OVER;
+			strncpy(p.message, str.str().c_str(), GAME_OVER_MSG_MAX_LEN);
+			p.message[GAME_OVER_MSG_MAX_LEN-1] = '\0';
+
+			server->sendDataToClient(&p, sizeof(GameOverPacket), id, true);
+		}
+
+		std::stringstream str;
+		if (GameState::instance()->playerScores[0] == max) {
+			str << "You win!";
+		} else {
+			if (teamModeOn) {
+				str << "You lose!";
+			} else {
+				str << "You lose! " << winner << " is the winner.";
+			}
+		}
+
+		GameState::instance()->stop(str.str());
 	}
 }
 

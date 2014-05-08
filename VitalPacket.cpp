@@ -252,6 +252,20 @@ void VitalPacket::receiveIncreaseScore(IncreaseScoreInfo* info_p)
 	{
 		GameState::instance()->score += info_p->amount;
 	}
+
+	if (GameState::instance()->team_mode == TEAM && GameState::instance()->game_mode != PINTO) {
+		int team = NetworkManager::instance()->player_team_id_map[info_p->receive_player_id];
+		 for(auto iter = GameState::instance()->playerConnections.begin();
+                 iter != GameState::instance()->playerConnections.end(); ++iter)
+        {
+        	int id = iter->first;
+        	if (NetworkManager::instance()->player_team_id_map[id] == team) {
+        		GameState::instance()->playerScores[id] += info_p->amount;
+        	}
+        }
+	} else {
+		GameState::instance()->playerScores[info_p->receive_player_id] += info_p->amount;
+	}
 }
 
 void VitalPacket::setTimeLeft(uint32_t time_left)
