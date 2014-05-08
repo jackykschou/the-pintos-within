@@ -77,16 +77,13 @@ void GameState::update()
 		}
 		else if(timeLeft < 1 && _running && (GameState::instance()->game_mode != ELIMINATION))
 		{
-			_gameOver = true;
 			NetworkManager::instance()->sendGameOverPacket();
 		}
 		else if(_running && GameState::instance()->game_mode == ELIMINATION)
 		{
 			if(num_player_left_elimination <= 1)
 			{
-				_gameOver = true;
 				NetworkManager::instance()->sendGameOverPacket();
-				gameOver = true;
 			}
 		}
 	}
@@ -175,8 +172,8 @@ void GameState::removePlayer(int id) {
 
 void GameState::stop(std::string message) 
 {
+	_gameOver = true;
 	end_game_debouncer = new Debouncer(5.0 * 1000);
 	end_game_debouncer->run();
 	GuiManager::instance()->DisplayMessage(message);
-	LOG("STOPPING MESSAGE: "<<message);
 }

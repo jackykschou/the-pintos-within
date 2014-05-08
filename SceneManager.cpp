@@ -36,7 +36,7 @@ void SceneManager::changeCurrentScene(uint32_t scene_type)
 
 void SceneManager::updateScene(float time)
 {
-	if(current_scene != NULL)
+	if(current_scene != NULL && !GameState::instance()->_gameOver)
 		current_scene->update(time);
 }
 
