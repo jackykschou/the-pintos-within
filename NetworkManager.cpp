@@ -179,6 +179,7 @@ void NetworkManager::stopClientDiscovery() {
 	client->stopListeningForAdvertisements();
 	delete client;
 	client = NULL;
+	state=NetworkStateReady;
 }
 
 void NetworkManager::update()

@@ -152,7 +152,7 @@ bool GuiManager::JoinGame(const CEGUI::EventArgs& e){
   GameState::instance()->current_state=CLIENT_MENU;
   _current=_joinGameMenu;
   _current->Display();
-  NetworkManager::instance()->state=NetworkStateReady;
+  NetworkManager::instance()->stopClientDiscovery();
   NetworkManager::instance()->startClientDiscovery();
   return false;
 }
@@ -165,8 +165,6 @@ bool GuiManager::Back(const CEGUI::EventArgs& e){
     NetworkManager::instance()->stopServer();
     return CreateGame(e);
   }else{
-    NetworkManager::instance()->stopClient();
-    NetworkManager::instance()->startClientDiscovery();
     return JoinGame(e);
   }
 }

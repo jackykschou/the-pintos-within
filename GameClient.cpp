@@ -26,6 +26,7 @@ GameClient::GameClient(const char* host, int port) {
 GameClient::~GameClient() {
 	SDLNet_FreePacket(_tmpSendPacket);
 	SDLNet_FreePacket(_tmpRecvPacket);
+	stopListeningForAdvertisements();
 	delete _ackBuffer;
 }
 
@@ -64,6 +65,7 @@ int GameClient::connect() {
 }
 
 void GameClient::startListeningForAdvertisements() {
+        if(state!=GameClientReady){return;}
 	LOG("LISTENING FOR ADS");
 	state = GameClientDiscovering;
 	if (!(_discoverySocket = SDLNet_UDP_Open(DISCOVERY_PORT))) {
@@ -74,6 +76,7 @@ void GameClient::startListeningForAdvertisements() {
 }
 
 void GameClient::stopListeningForAdvertisements() {
+        if(state!=GameClientDiscovering){return;}
 	state = GameClientReady;
 	if (_discoverySocket) SDLNet_UDP_Close(_discoverySocket);
 	_discoverySocket = NULL;
