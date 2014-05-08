@@ -39,6 +39,7 @@ void VitalPacket::receiveDamage(PlayerDamageInfo* info_p)
 				}
 				else if((GameState::instance()->team_mode == TEAM) && (GameState::instance()->game_mode != PINTO))
 				{
+					LOG("TEAM MODE!");
 					if(GameState::instance()->player->team_id == RED_TEAM)
 					{
 						NetworkManager::instance()->vital->setIncreaseScore(info_p->damage_dealer_id, 1, BLUE_TEAM);
@@ -232,7 +233,7 @@ void VitalPacket::setIncreaseScore(uint32_t player_id, uint32_t amount, uint32_t
 	if (NetworkManager::instance()->isServer()) {
 		if((GameState::instance()->team_mode == TEAM && GameState::instance()->game_mode != PINTO))
 		{
-			if (team_id == GameState::instance()->team_id) 
+			if (team_id == GameState::instance()->team_id)
 				GameState::instance()->score += amount;
 		} else {
 			GameState::instance()->playerScores[player_id] += amount;
@@ -265,14 +266,21 @@ void VitalPacket::receiveIncreaseScore(IncreaseScoreInfo* info_p)
 
 	if (GameState::instance()->team_mode == TEAM && GameState::instance()->game_mode != PINTO) {
 		LOG("TEAMMODE");
-		int team = NetworkManager::instance()->player_team_id_map[info_p->receive_player_id];
 		 for(auto iter = GameState::instance()->playerConnections.begin();
                  iter != GameState::instance()->playerConnections.end(); ++iter)
         {
         	int id = iter->first;
-        	if (NetworkManager::instance()->player_team_id_map[id] == team) {
-        		GameState::instance()->playerScores[id] += info_p->amount;
-        	}
+        	if (NetworkManager::instance()->isServer()) {
+        		LOG("SERVERMODE");
+				int team = NetworkManager::instance()->player_team_id_map[info_p->receive_player_id];
+	        	if (NetworkManager::instance()->player_team_id_map[id] == team) {
+	        		GameState::instance()->playerScores[id] += info_p->amount;
+	        	}
+	        } else {
+	        	LOG("CLIENTMODE");
+	        	if (GameState::instance()->team_id == info_p->receive_team_id)
+		        	GameState::instance()->score += info_p->amount;
+	        }
         }
 	} else {
 		LOG("INCREMENTING "<<GameState::instance()->playerScores[info_p->receive_player_id]<< " BY "<<info_p->amount);
