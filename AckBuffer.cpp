@@ -49,9 +49,7 @@ AckId AckBuffer::injectAck(UDPpacket* packet, IPaddress addr) {
 }
 
 void AckBuffer::forgetAck(AckId id) {
-  LOG("CHECKING FOR ACK "<<id);
   if (hasAckId(id)) {
-    LOG("FORGETTING ACK.");
     delete buffer[id];
     buffer.erase(id);
   }

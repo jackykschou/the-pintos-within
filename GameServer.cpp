@@ -342,6 +342,7 @@ void GameServer::processPacket(UDPpacket* packet) {
 			broadcastData(change_pinto_info, sizeof(ChangePintoInfo), true);
 			break;
 		case INCREASE_SCORE:
+			LOG("INCREASE_SCORE PACKET FOUND!");
 			IncreaseScoreInfo* score_info;
 			score_info =  (IncreaseScoreInfo*) packetData;
 			NetworkManager::instance()->vital->receiveIncreaseScore(score_info);
