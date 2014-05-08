@@ -184,7 +184,7 @@ void GameServer::sendAdvertisement() {
 	ServerAdvertisement ad;
 	strncpy(ad.magic, DISCOVERY_SIGNATURE, 5);
 	strncpy(ad.name, _hostname, 256);
-	strncpy(ad.description, "JOES COOL GAME", 256);
+	strncpy(ad.description, GameState::instance()->GetGameDescription().c_str(), 256);
 	sendDataToClient(&ad, sizeof(ServerAdvertisement), &_udpBroadcastAddress, false);
 }
 
