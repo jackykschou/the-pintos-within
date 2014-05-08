@@ -74,7 +74,7 @@ void AssaultRifle::shoot_hook()
                 uint32_t enemy_id = hit_box->player->player_id;
 
                 NetworkManager::instance()->vital->setDamage(damage_sent, enemy_id);
-
+                AudioManager::instance()->playBlootSplat(Ogre::Vector3(point.x(), point.y(), point.z()));
                 ParticleManager::instance()->EmitBloodSpurt(Ogre::Vector3(point.x(), point.y(), point.z()), -cam_dir);
                 NetworkManager::instance()->particle->setBlood(point.x(), point.y() , point.z(), -cam_dir.x, -cam_dir.y, -cam_dir.z);
             }

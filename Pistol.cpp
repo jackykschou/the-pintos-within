@@ -57,6 +57,7 @@ void Pistol::shoot_hook()
 
                 ParticleManager::instance()->EmitBloodSpurt(Ogre::Vector3(point.x(), point.y(), point.z()), -cam_dir);
                 NetworkManager::instance()->particle->setBlood(point.x(), point.y() , point.z(), -cam_dir.x, -cam_dir.y, -cam_dir.z);
+                AudioManager::instance()->playBlootSplat(Ogre::Vector3(point.x(), point.y(), point.z()));
             }
         }
         else
