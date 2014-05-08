@@ -256,9 +256,8 @@ void VitalPacket::receiveIncreaseScore(IncreaseScoreInfo* info_p)
 	if(!GameState::instance()->isRunning())
 		return;
 
-	if (GameState::instance()->team_mode == TEAM && GameState::instance()->game_mode != PINTO) {
-		LOG("TEAMMODE");
-		 
+	if (GameState::instance()->team_mode == TEAM && GameState::instance()->game_mode != PINTO) 
+	{
         	if (NetworkManager::instance()->isServer()) 
         	{
         		for(auto iter = GameState::instance()->playerConnections.begin();
@@ -276,13 +275,15 @@ void VitalPacket::receiveIncreaseScore(IncreaseScoreInfo* info_p)
 						GameState::instance()->score += info_p->amount;
 					}
 				}
-	        } else {
+	        } 
+	        else 
+	        {
 	        	LOG("CLIENTMODE");
 	        	if (GameState::instance()->team_id == info_p->receive_team_id)
 		        	GameState::instance()->score += info_p->amount;
 	        }
-        }
-	} else 
+	}
+	else 
 	{
 		LOG("INCREMENTING "<<GameState::instance()->playerScores[info_p->receive_player_id]<< " BY "<<info_p->amount);
 
