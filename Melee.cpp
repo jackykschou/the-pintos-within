@@ -110,6 +110,7 @@ void Melee::shoot_hook()
             {
                 uint32_t enemy_id = GameState::instance()->players[i]->player_id;
                 NetworkManager::instance()->vital->setDamage(damage, enemy_id);
+                AudioManager::instance()->playBlootSplat(Ogre::Vector3(point.x(), point.y(), point.z()));
             }
         }
     }
