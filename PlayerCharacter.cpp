@@ -13,6 +13,7 @@ PlayerCharacter::PlayerCharacter(bool is_yourself_p, Scene* scene, std::string m
 	float posX, float posY, float posZ, float rotX, float rotY, float rotZ, float rotW,
 	float scaleX, float scaleY, float scaleZ, uint32_t player_id_p, uint32_t version, bool is_pinto) : GameObject("Player", scene)
 {
+
 	is_invisible = false;
 
 	team_id = RED_TEAM;
@@ -59,6 +60,8 @@ PlayerCharacter::PlayerCharacter(bool is_yourself_p, Scene* scene, std::string m
 	tran->scaleZ = scaleZ;
 
 	mesh = new Mesh(this, "PixelMan.mesh");
+
+	mesh->entity->setMaterialName("PixelManMaterial");
 
 	pinto_mesh = new Mesh(this, "Pinto.mesh");
 	pinto_mesh->node->setVisible(false);
@@ -1310,12 +1313,10 @@ void PlayerCharacter::changeToPinto()
 
 void PlayerCharacter::switchToBlueTeam()
 {
-	LOG("Switching to blue teammmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmm");
 	mesh->entity->setMaterialName("PixelManMaterialBlue");
 	team_id = BLUE_TEAM;
 	if(is_yourself)
 	{
-		LOG("I am blue team id nowwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwww");
 		GameState::instance()->team_id = BLUE_TEAM;
 	}
 }
