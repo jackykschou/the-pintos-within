@@ -23,6 +23,10 @@ void GameState::reset()
 	_start = pt::second_clock::local_time();
 	_running = false;
 	players.clear();
+	playerConnections.clear();
+	player_pinto_seeds.clear();
+	playerScores.clear();
+
 
 	AudioManager::instance()->stopMusic();
 }

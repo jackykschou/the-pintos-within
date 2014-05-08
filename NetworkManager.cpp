@@ -88,6 +88,7 @@ void NetworkManager::sendGameOverPacket() {
 		for(auto iter = GameState::instance()->playerScores.begin();
                  iter != GameState::instance()->playerScores.end(); ++iter)
         {
+        	LOG("PLAYER "<<GameState::instance()->getPlayerName(iter->first)<<" HAS "<<iter->second);
         	if (max < iter->second) {
         		max = iter->second;
         		winner = GameState::instance()->getPlayerName(iter->first);
