@@ -108,7 +108,6 @@ class NetworkManager : public Singleton<NetworkManager>
 	ParticlePacket*  particle;
 
 	uint32_t player_id;
-	uint32_t team_id;
 
 	std::map<int, uint32_t> player_team_id_map;
 

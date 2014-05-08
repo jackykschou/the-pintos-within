@@ -16,7 +16,11 @@ PlayerCharacter::PlayerCharacter(bool is_yourself_p, Scene* scene, std::string m
 	is_invisible = false;
 
 	team_id = RED_TEAM;
-	GameState::instance()->team_id = RED_TEAM;
+
+	if(is_yourself)
+	{
+		GameState::instance()->team_id = RED_TEAM;
+	}
 
 	player_id = player_id_p;
 
@@ -1307,7 +1311,10 @@ void PlayerCharacter::switchToBlueTeam()
 {
 	mesh->entity->setMaterialName("PixelManMaterialBlue");
 	team_id = BLUE_TEAM;
-	GameState::instance()->team_id = BLUE_TEAM;
+	if(is_yourself)
+	{
+		GameState::instance()->team_id = BLUE_TEAM;
+	}
 }
 
 void PlayerCharacter::setToOriginalStatus()
