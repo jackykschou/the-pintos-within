@@ -229,7 +229,15 @@ void VitalPacket::receiveChangePinto(ChangePintoInfo* info_p)
 
 void VitalPacket::setIncreaseScore(uint32_t player_id, uint32_t amount, uint32_t team_id)
 {
-	GameState::instance()->playerScores[player_id] += amount;
+	if (NetworkManager::instance()->isServer()) {
+		if((GameState::instance()->team_mode == TEAM && GameState::instance()->game_mode != PINTO))
+		{
+			if (team_id == GameState::instance()->team_id) 
+				GameState::instance()->score += amount;
+		} else {
+			GameState::instance()->playerScores[player_id] += amount;
+		}
+	}
 
 	IncreaseScoreInfo info;
 	info.type = INCREASE_SCORE;
@@ -245,10 +253,10 @@ void VitalPacket::receiveIncreaseScore(IncreaseScoreInfo* info_p)
 	if(!GameState::instance()->isRunning())
 		return;
 
-	if((info_p->receive_team_id == GameState::instance()->team_id) && 
-		(GameState::instance()->team_mode == TEAM && GameState::instance()->game_mode != PINTO))
+	if( (GameState::instance()->team_mode == TEAM && GameState::instance()->game_mode != PINTO))
 	{
-		GameState::instance()->score += info_p->amount;
+		if (info_p->receive_team_id == GameState::instance()->team_id)
+			GameState::instance()->score += info_p->amount;
 	}
 	else if(info_p->receive_player_id == NetworkManager::instance()->player_id)
 	{
