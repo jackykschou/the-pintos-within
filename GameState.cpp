@@ -126,14 +126,6 @@ void GameState::clear_old_games(){
 			++i;
 		}
 	}
-
-	GameState::instance()->current_state = MAIN_MENU;
-
-	if(SceneManager::instance()->current_scene != NULL)
-	{
-		delete (SceneManager::instance()->current_scene);
-		SceneManager::instance()->current_scene = NULL;
-	}
 }
 
 bool GameState::nameIsTaken(char* name) {
