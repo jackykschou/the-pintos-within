@@ -21,7 +21,7 @@ Blaster::Blaster(PlayerCharacter* player_p, std::string mesh_name, float posX,
 
     is_charging = false;
     charge_scale = 0;
-    charge_rate = 0.003f;
+    charge_rate = 0.004f;
     blast_radius = 150;
     max_ammot_cost = 25;
 
