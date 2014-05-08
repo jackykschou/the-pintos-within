@@ -1309,10 +1309,12 @@ void PlayerCharacter::changeToPinto()
 
 void PlayerCharacter::switchToBlueTeam()
 {
+	LOG("Switching to blue teammmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmm");
 	mesh->entity->setMaterialName("PixelManMaterialBlue");
 	team_id = BLUE_TEAM;
 	if(is_yourself)
 	{
+		LOG("I am blue team id nowwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwww");
 		GameState::instance()->team_id = BLUE_TEAM;
 	}
 }

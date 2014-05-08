@@ -246,7 +246,8 @@ void VitalPacket::setIncreaseScore(uint32_t player_id, uint32_t amount, uint32_t
 	        	}
 	        } 
 
-			if (team_id == GameState::instance()->team_id){
+			if (team_id == GameState::instance()->team_id)
+			{
 				LOG("RECEIVE INC MY SCORE "<<amount);
 				GameState::instance()->score += amount;
 			}
