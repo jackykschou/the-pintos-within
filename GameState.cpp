@@ -23,10 +23,6 @@ void GameState::reset()
 	_start = pt::second_clock::local_time();
 	_running = false;
 	players.clear();
-	playerConnections.clear();
-	player_pinto_seeds.clear();
-	playerScores.clear();
-
 
 	AudioManager::instance()->stopMusic();
 }
@@ -100,6 +96,7 @@ void GameState::update()
 	    playerNames.clear();
 	    playerConnections.clear();
 	    players.clear();
+	    playerScores.clear();
 
 	    GameState::instance()->current_state = MAIN_MENU;
 
@@ -165,6 +162,7 @@ void GameState::removePlayer(int id) {
 		}
 		delete players[id];
 	}
+	playerScores.erase(id);
 	players[id] = NULL;
 }
 

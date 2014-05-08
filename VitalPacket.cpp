@@ -264,6 +264,7 @@ void VitalPacket::receiveIncreaseScore(IncreaseScoreInfo* info_p)
         	}
         }
 	} else {
+		LOG("INCREMENTING "<<GameState::instance()->playerScores[info_p->receive_player_id]<< " BY "<<info_p->amount);
 		GameState::instance()->playerScores[info_p->receive_player_id] += info_p->amount;
 	}
 }

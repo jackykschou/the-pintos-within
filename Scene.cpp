@@ -14,7 +14,6 @@ Scene::~Scene()
 {
 	for(int i = 0; i < game_objects.size();++i)
 	{
-		LOG(game_objects[i]->tag);
 		delete game_objects[i];
 	}
 

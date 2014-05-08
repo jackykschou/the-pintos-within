@@ -85,12 +85,14 @@ void NetworkManager::sendGameOverPacket() {
 	if (state == NetworkStateServer) {
 		int max = -1;
 		std::string winner;
-		for(auto iter = GameState::instance()->playerScores.begin();
-                 iter != GameState::instance()->playerScores.end(); ++iter)
+		for(auto iter = GameState::instance()->playerConnections.begin();
+                 iter != GameState::instance()->playerConnections.end(); ++iter)
         {
-        	LOG("PLAYER "<<GameState::instance()->getPlayerName(iter->first)<<" HAS "<<iter->second);
-        	if (max < iter->second) {
-        		max = iter->second;
+        	int score = GameState::instance()->playerScores[iter->first];
+        	LOG("PLAYER "<<GameState::instance()->getPlayerName(iter->first)<<" HAS "<<score);
+        	
+        	if (max < score) {
+        		max = score;
         		winner = GameState::instance()->getPlayerName(iter->first);
         	}
         }
