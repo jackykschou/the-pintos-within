@@ -296,6 +296,9 @@ void GameClient::processPacket(UDPpacket* packet) {
 			}
 			GameState::instance()->setPlayerName(p->playerId, p->name);
 			++GameState::instance()->num_player;
+			GameState::instance()->game_mode = p->game_mode;
+			GameState::instance()->team_mode = p->team_mode;
+			GameState::instance()->current_map = p->current_map;
 			break;
 		case PING:
 			PingPacket ping;

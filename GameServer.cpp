@@ -374,6 +374,10 @@ void GameServer::handleJoinPacket(UDPpacket *packet, void* data) {
 		PlayerJoinPacket p;
 		p.type = PLAYER_JOIN;
 		p.playerId = i;
+		p.game_mode = GameState::instance()->game_mode;
+		p.team_mode = GameState::instance()->team_mode;
+		p.current_map = GameState::instance()->current_map;
+
 		strncpy(p.name, GameState::instance()->getPlayerName(i).c_str(), PLAYER_NAME_MAX_LEN);
 		p.name[PLAYER_NAME_MAX_LEN-1] = '\0';
 		sendDataToClient(&p, sizeof(PlayerJoinPacket), &ip, true);

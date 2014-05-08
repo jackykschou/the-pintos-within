@@ -13,7 +13,7 @@
 
 #define DISCOVERY_PORT 9999
 #define GAME_PORT 5555
-#define HEARTBEATS_PER_SEC 10
+#define HEARTBEATS_PER_SEC 20
 #define HEARTBEAT_MAX_DELAY 1000.0f/HEARTBEATS_PER_SEC
 #define DISCOVERY_SIGNATURE "JOEV"
 
@@ -55,6 +55,9 @@ struct PlayerJoinPacket
 	char type;
 	char playerId;
 	char name[PLAYER_NAME_MAX_LEN];
+	uint32_t game_mode;
+	uint32_t team_mode;
+	uint32_t current_map;
 };
 
 struct JoinRequestPacket
