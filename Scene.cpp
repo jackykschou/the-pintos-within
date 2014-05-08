@@ -19,7 +19,7 @@ Scene::~Scene()
 	}
 
 	manager->getRootSceneNode()->removeAndDestroyAllChildren();
-	// delete manager;
+	manager->destroyAllCameras();
 
 	delete physics_world;
 }

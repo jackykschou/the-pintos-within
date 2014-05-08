@@ -58,6 +58,7 @@ bool GameState::isRunning() {
 
 void GameState::update() 
 {
+	clear_old_games();
 	if (NetworkManager::instance()->isServer() && !_gameOver) 
 	{
 		std::string msg;
@@ -110,6 +111,8 @@ void GameState::update()
 			delete (SceneManager::instance()->current_scene);
 			SceneManager::instance()->current_scene = NULL;
 		}
+
+		GuiManager::instance()->Reinitialize();
 
 		delete end_game_debouncer;
 		end_game_debouncer = NULL;
