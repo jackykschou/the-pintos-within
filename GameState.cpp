@@ -97,6 +97,7 @@ void GameState::update()
 	    playerConnections.clear();
 	    players.clear();
 	    playerScores.clear();
+	    NetworkManager::instance()->player_team_id_map.clear();
 
 	    GameState::instance()->current_state = MAIN_MENU;
 
