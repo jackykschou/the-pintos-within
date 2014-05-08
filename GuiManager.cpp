@@ -534,36 +534,7 @@ bool Lobby::ChatSubmitted(const CEGUI::EventArgs& e) {
   return false;
 }
 void Lobby::UpdateGameDescription(){
-  std::string description{};
-  auto gameState=GameState::instance();
-  switch(gameState->current_map){
-    case THEGAUNTLET:
-      description+="The Gauntlet / ";
-      break;
-    case DUSTTWO:
-      description+="Dust Two / ";
-      break;
-  }
-  switch(gameState->game_mode){
-    case ELIMINATION:
-      description+="Elimination / ";
-      break;
-    case DEATHMATCH:
-      description+="Death Match / ";
-      break;
-    case PINTO:
-      description+="Pinto / ";
-      break;
-  }
-  switch(gameState->team_mode){
-    case FFA:
-      description+="Free-for-All";
-      break;
-    case TEAM:
-      description+="Team";
-      break;
-  }
-  _gameDescription->setText(description.c_str());
+  _gameDescription->setText(GameState::instance()->GetGameDescription().c_str());
 }
 
 WaitingPrompt::WaitingPrompt():Gui("WaitingPrompt.layout"){}

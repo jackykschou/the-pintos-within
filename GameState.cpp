@@ -172,3 +172,34 @@ void GameState::stop(std::string message)
 	end_game_debouncer->run();
 	GuiManager::instance()->DisplayMessage(message);
 }
+std::string GameState::GetGameDescription(){
+  std::string description{};
+  switch(current_map){
+    case THEGAUNTLET:
+      description+="The Gauntlet / ";
+      break;
+    case DUSTTWO:
+      description+="Dust Two / ";
+      break;
+  }
+  switch(game_mode){
+    case ELIMINATION:
+      description+="Elimination / ";
+      break;
+    case DEATHMATCH:
+      description+="Death Match / ";
+      break;
+    case PINTO:
+      description+="Pinto / ";
+      break;
+  }
+  switch(team_mode){
+    case FFA:
+      description+="Free-for-All";
+      break;
+    case TEAM:
+      description+="Team";
+      break;
+  }
+  return description;
+}

@@ -60,6 +60,7 @@ class GameState : public Singleton<GameState>
     void removePlayer(int id);
     bool _gameOver;
     void stop(std::string message);
+    std::string GetGameDescription();
 
   private:
 
