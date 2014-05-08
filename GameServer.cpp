@@ -198,7 +198,8 @@ void GameServer::broadcastGameStart()
 	broadcastData(&start_packet, sizeof(GameStartPacket), true);
 }
 
-void GameServer::bootInactivePlayers() {
+void GameServer::bootInactivePlayers() 
+{
 	pt::ptime now = pt::second_clock::local_time();
 	for(std::map<int,bool>::iterator iter = GameState::instance()->playerConnections.begin();
             iter != GameState::instance()->playerConnections.end(); ++iter)
@@ -206,12 +207,43 @@ void GameServer::bootInactivePlayers() {
         int i = iter->first; // the server always be active yo
         if (i == 0) continue;
         pt::time_duration diff = now - _lastReceived[i];
-        if (diff.total_seconds() > CLIENT_TIMEOUT) {
+        if (diff.total_seconds() > CLIENT_TIMEOUT) 
+        {
         	LOG("CLIENT " << i << " TIMED OUT... DISCONNECTING THIS CLIENT");
 
         	PlayerDisconnectPacket p;
         	p.type = PLAYER_DISCONNECT;
         	p.playerId = i;
+
+        	if((GameState::instance()->players[i] != NULL && GameState::instance()->players[i]->in_pinto_form
+        		&& !GameState::instance()->players[i]->is_dead) ||
+        		(GameState::instance()->player_pinto_seeds[i]))
+			{
+				uint random_pinto_index;
+				do
+				{
+					random_pinto_index = RAND_RANGE(0, GameState::instance()->num_player);
+
+					int loop = 0;
+					for(std::map<int,bool>::iterator iter = GameState::instance()->playerConnections.begin();
+			            iter != GameState::instance()->playerConnections.end(); ++iter) {
+						if (loop == random_pinto_index) { random_pinto_index = iter->first; break; }
+						loop++;
+					}
+				}while(random_pinto_index == i);
+
+				if(GameState::instance()->players[random_pinto_index] == NULL
+					|| (GameState::instance()->players[random_pinto_index]->is_dead))
+				{
+					GameState::instance()->player_pinto_seeds[random_pinto_index] = true;
+				}
+				else
+				{
+					GameState::instance()->players[random_pinto_index]->changeToPinto();
+				}
+				NetworkManager::instance()->vital->setChangePinto(random_pinto_index);
+			}
+
         	broadcastData(&p, sizeof(PlayerDisconnectPacket), true);
 
 			GameState::instance()->removePlayer(i);
