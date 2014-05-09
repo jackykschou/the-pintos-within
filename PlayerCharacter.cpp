@@ -61,8 +61,6 @@ PlayerCharacter::PlayerCharacter(bool is_yourself_p, Scene* scene, std::string m
 
 	mesh = new Mesh(this, "PixelMan.mesh");
 
-	mesh->entity->setMaterialName("PixelManMaterial");
-
 	pinto_mesh = new Mesh(this, "Pinto.mesh");
 	pinto_mesh->node->setVisible(false);
 

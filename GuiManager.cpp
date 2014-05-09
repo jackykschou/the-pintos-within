@@ -161,12 +161,7 @@ bool GuiManager::Exit(const CEGUI::EventArgs& e){
   return false;
 }
 bool GuiManager::Back(const CEGUI::EventArgs& e){
-  if(GameState::instance()->current_state==LOBBY_AS_HOST){
-    NetworkManager::instance()->stopServer();
-    return CreateGame(e);
-  }else{
-    return JoinGame(e);
-  }
+  return false;
 }
 void GuiManager::Start() {
   if (NetworkManager::instance()->isServer()) 
