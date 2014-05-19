@@ -1,4 +1,4 @@
-Assignment Two
+PintOS Within
 
 Keegan Standifer 
 Joe Vennix 
@@ -7,10 +7,4 @@ Michael Passaloukos
 
 To build: ./buildit
 To make:  ./makeit
-To start a 1P game: ./OgreApp
-To host a 2P game:  ./OgreApp -h
-To join a 2P game:  ./OgreApp -c hostname.utexas.edu
-
-INSTRUCTIONS:
-
-Mouse and WASD to control the character. Press ` to toggle the chat box.
+To start the game: ./OgreApp
